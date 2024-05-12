@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
@@ -54,7 +54,7 @@ public class ArmoredStatue extends Statue {
 	public void createWeapon(boolean useDecks) {
 		super.createWeapon(useDecks);
 
-		armor = Generator.randomArmor();
+		armor = ItemGenerator.randomArmor();
 		armor.cursed = false;
 		armor.inscribe(Armor.Glyph.random());
 	}

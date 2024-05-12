@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
@@ -69,15 +69,15 @@ public class PitRoom extends SpecialRoom {
 		do {
 			switch (Random.Int(3)){
 				case 0:
-					mainLoot = Generator.random(Generator.Category.RING);
+					mainLoot = ItemGenerator.random(ItemGenerator.Category.RING);
 					break;
 				case 1:
-					mainLoot = Generator.random(Generator.Category.ARTIFACT);
+					mainLoot = ItemGenerator.random(ItemGenerator.Category.ARTIFACT);
 					break;
 				case 2:
-					mainLoot = Generator.random(Random.oneOf(
-							Generator.Category.WEAPON,
-							Generator.Category.ARMOR));
+					mainLoot = ItemGenerator.random(Random.oneOf(
+							ItemGenerator.Category.WEAPON,
+							ItemGenerator.Category.ARMOR));
 					break;
 			}
 		} while ( mainLoot == null || Challenges.isItemBlocked(mainLoot));
@@ -92,11 +92,11 @@ public class PitRoom extends SpecialRoom {
 	}
 	
 	private static Item prize( Level level ) {
-		return Generator.random( Random.oneOf(
-			Generator.Category.POTION,
-			Generator.Category.SCROLL,
-			Generator.Category.FOOD,
-			Generator.Category.GOLD
+		return ItemGenerator.random( Random.oneOf(
+			ItemGenerator.Category.POTION,
+			ItemGenerator.Category.SCROLL,
+			ItemGenerator.Category.FOOD,
+			ItemGenerator.Category.GOLD
 		) );
 	}
 	

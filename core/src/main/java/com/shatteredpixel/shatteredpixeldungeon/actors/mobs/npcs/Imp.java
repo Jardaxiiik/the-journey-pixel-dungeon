@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DwarfToken;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -214,8 +214,8 @@ public class Imp extends NPC {
 						level.traps.get( npc.pos) != null ||
 						level.findMob( npc.pos ) != null ||
 						//The imp doesn't move, so he cannot obstruct a passageway
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[0]] && level.passable[npc.pos + PathFinder.CIRCLE4[2]]) ||
-						!(level.passable[npc.pos + PathFinder.CIRCLE4[1]] && level.passable[npc.pos + PathFinder.CIRCLE4[3]]));
+						!(level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[0]] && level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[2]]) ||
+						!(level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[1]] && level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[3]]));
 				level.mobs.add( npc );
 				
 				spawned = true;
@@ -236,7 +236,7 @@ public class Imp extends NPC {
 				given = false;
 				
 				do {
-					reward = (Ring)Generator.random( Generator.Category.RING );
+					reward = (Ring) ItemGenerator.random( ItemGenerator.Category.RING );
 				} while (reward.cursed);
 				reward.upgrade( 2 );
 				reward.cursed = true;

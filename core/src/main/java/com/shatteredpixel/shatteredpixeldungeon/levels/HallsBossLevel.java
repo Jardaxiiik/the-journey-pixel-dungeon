@@ -215,7 +215,7 @@ public class HallsBossLevel extends Level {
 	@Override
 	public int randomRespawnCell( Char ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
@@ -258,7 +258,7 @@ public class HallsBossLevel extends Level {
 		//push any char that is already here away
 		if (Actor.findChar(boss.pos) != null){
 			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Actor.findChar(boss.pos + i) == null){
 					candidates.add(boss.pos + i);
 				}

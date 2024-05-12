@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -48,7 +48,7 @@ public class Scorpio extends Mob {
 		EXP = 14;
 		maxLvl = 27;
 		
-		loot = Generator.Category.POTION;
+		loot = ItemGenerator.Category.POTION;
 		lootChance = 0.5f;
 
 		properties.add(Property.DEMONIC);
@@ -106,7 +106,7 @@ public class Scorpio extends Mob {
 	public Item createLoot() {
 		Class<?extends Potion> loot;
 		do{
-			loot = (Class<? extends Potion>) Random.oneOf(Generator.Category.POTION.classes);
+			loot = (Class<? extends Potion>) Random.oneOf(ItemGenerator.Category.POTION.classes);
 		} while (loot == PotionOfHealing.class || loot == PotionOfStrength.class);
 
 		return Reflection.newInstance(loot);

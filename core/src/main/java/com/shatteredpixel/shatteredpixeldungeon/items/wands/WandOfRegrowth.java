@@ -42,7 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -177,7 +177,7 @@ public class WandOfRegrowth extends Wand {
 		if (!cells.isEmpty() && Random.Float() > furrowedChance &&
 				(Random.Int(3) < chrgUsed)){ // 33%/66%/100% chance to spawn a plant
 			int cell = cells.remove(0);
-			Dungeon.level.plant((Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED), cell);
+			Dungeon.level.plant((Plant.Seed) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), cell);
 		}
 
 		for (int cell : cells){
@@ -338,7 +338,7 @@ public class WandOfRegrowth extends Wand {
 			int nDrops = Random.NormalIntRange(3, 6);
 
 			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[pos+i]
 						&& pos+i != Dungeon.level.entrance()
 						&& pos+i != Dungeon.level.exit()){
@@ -378,7 +378,7 @@ public class WandOfRegrowth extends Wand {
 			int nSeeds = Random.NormalIntRange(2, 4);
 
 			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[pos+i]
 						&& pos+i != Dungeon.level.entrance()
 						&& pos+i != Dungeon.level.exit()){
@@ -388,7 +388,7 @@ public class WandOfRegrowth extends Wand {
 
 			for (int i = 0; i < nSeeds && !candidates.isEmpty(); i++){
 				Integer c = Random.element(candidates);
-				Dungeon.level.drop(Generator.randomUsingDefaults(Generator.Category.SEED), c).sprite.drop(pos);
+				Dungeon.level.drop(ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), c).sprite.drop(pos);
 				candidates.remove(c);
 			}
 

@@ -180,7 +180,7 @@ public class ScrollOfTeleportation extends Scroll {
 				SpecialRoom room = (SpecialRoom) level.room(pos);
 				if (room.entrance() != null){
 					doorPos = level.pointToCell(room.entrance());
-					for (int i : PathFinder.NEIGHBOURS8){
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (!room.inside(level.cellToPoint(doorPos + i))
 								&& level.passable[doorPos + i]
 								&& Actor.findChar(doorPos + i) == null){

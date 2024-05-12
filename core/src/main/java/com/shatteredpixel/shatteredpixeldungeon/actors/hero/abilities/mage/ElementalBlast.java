@@ -233,7 +233,7 @@ public class ElementalBlast extends ArmorAbility {
 
 							//*** Wand of Prismatic Light ***
 							} else if (finalWandCls == WandOfPrismaticLight.class){
-								for (int n : PathFinder.NEIGHBOURS9) {
+								for (int n : PathFinder.OFFSETS_NEIGHBOURS9) {
 									int c = cell+n;
 
 									if (Dungeon.level.discoverable[c]) {

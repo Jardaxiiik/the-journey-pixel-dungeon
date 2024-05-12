@@ -41,19 +41,19 @@ public class PathFinder {
 
 	//performance-light shortcuts for some common pathfinder cases
 	//they are in array-access order for increased memory performance
-	public static int[] NEIGHBOURS4;
-	public static int[] NEIGHBOURS8;
-	public static int[] NEIGHBOURS9;
+	public static int[] OFFSETS_NEIGHBOURS4; // up, down, left, right offsets
+	public static int[] OFFSETS_NEIGHBOURS8;
+	public static int[] OFFSETS_NEIGHBOURS9;
 
 	//similar to their equivalent neighbour arrays, but the order is clockwise.
 	//Useful for some logic functions, but is slower due to lack of array-access order.
-	public static int[] CIRCLE4;
-	public static int[] CIRCLE8;
+	public static int[] OFFSETS_NEIGHBOURS4_CLOCKWISE;
+	public static int[] OFFSETS_NEIGHBOURS8_CLOCKWISE;
 	
-	public static void setMapSize( int width, int height ) {
+	public static void setMapSize( int levelWidth, int levelHeight ) {
 		
-		PathFinder.width = width;
-		PathFinder.size = width * height;
+		PathFinder.width = levelWidth;
+		PathFinder.size = levelWidth * levelHeight;
 		
 		distance = new int[size];
 		goals = new boolean[size];
@@ -63,15 +63,15 @@ public class PathFinder {
 		maxVal = new int[size];
 		Arrays.fill(maxVal, Integer.MAX_VALUE);
 
-		dir = new int[]{-1, +1, -width, +width, -width-1, -width+1, +width-1, +width+1};
-		dirLR = new int[]{-1-width, -1, -1+width, -width, +width, +1-width, +1, +1+width};
+		dir = new int[]{-1, +1, -levelWidth, +levelWidth, -levelWidth-1, -levelWidth+1, +levelWidth-1, +levelWidth+1};
+		dirLR = new int[]{-1-levelWidth, -1, -1+levelWidth, -levelWidth, +levelWidth, +1-levelWidth, +1, +1+levelWidth};
 
-		NEIGHBOURS4 = new int[]{-width, -1, +1, +width};
-		NEIGHBOURS8 = new int[]{-width-1, -width, -width+1, -1, +1, +width-1, +width, +width+1};
-		NEIGHBOURS9 = new int[]{-width-1, -width, -width+1, -1, 0, +1, +width-1, +width, +width+1};
+		OFFSETS_NEIGHBOURS4 = new int[]{-levelWidth, -1, +1, +levelWidth};
+		OFFSETS_NEIGHBOURS8 = new int[]{-levelWidth-1, -levelWidth, -levelWidth+1, -1, +1, +levelWidth-1, +levelWidth, +levelWidth+1};
+		OFFSETS_NEIGHBOURS9 = new int[]{-levelWidth-1, -levelWidth, -levelWidth+1, -1, 0, +1, +levelWidth-1, +levelWidth, +levelWidth+1};
 
-		CIRCLE4 = new int[]{-width, +1, +width, -1};
-		CIRCLE8 = new int[]{-width-1, -width, -width+1, +1, +width+1, +width, +width-1, -1};
+		OFFSETS_NEIGHBOURS4_CLOCKWISE = new int[]{-levelWidth, +1, +levelWidth, -1};
+		OFFSETS_NEIGHBOURS8_CLOCKWISE = new int[]{-levelWidth-1, -levelWidth, -levelWidth+1, +1, +levelWidth+1, +levelWidth, +levelWidth-1, -1};
 	}
 
 	public static Path find( int from, int to, boolean[] passable ) {

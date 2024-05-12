@@ -393,7 +393,7 @@ public class DwarfKing extends Mob {
 			} else {
 				bestDist = Dungeon.level.trueDistance(pos, enemy.pos);
 
-				for (int i : PathFinder.NEIGHBOURS8){
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					if (Actor.findChar(pos+i) == null
 							&& !Dungeon.level.solid[pos+i]
 							&& Dungeon.level.trueDistance(pos+i, enemy.pos) > bestDist){
@@ -409,7 +409,7 @@ public class DwarfKing extends Mob {
 			//find closest cell that's adjacent to enemy, place subject there
 			bestDist = Dungeon.level.trueDistance(enemy.pos, pos);
 			bestPos = enemy.pos;
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Actor.findChar(enemy.pos+i) == null
 						&& !Dungeon.level.solid[enemy.pos+i]
 						&& Dungeon.level.trueDistance(enemy.pos+i, pos) < bestDist){
@@ -659,7 +659,7 @@ public class DwarfKing extends Mob {
 
 				if (Actor.findChar(pos) != null){
 					ArrayList<Integer> candidates = new ArrayList<>();
-					for (int i : PathFinder.NEIGHBOURS8){
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (Dungeon.level.passable[pos+i] && Actor.findChar(pos+i) == null){
 							candidates.add(pos+i);
 						}

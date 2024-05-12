@@ -32,6 +32,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+/**
+ *
+ * @param <T> is potion / scroll / ring because all of these have random images and player does not know them at start.
+ */
 public class ItemStatusHandler<T extends Item> {
 
 	private Class<? extends T>[] items;

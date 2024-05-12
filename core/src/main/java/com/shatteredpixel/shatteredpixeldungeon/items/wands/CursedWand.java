@@ -49,7 +49,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
@@ -193,7 +193,7 @@ public class CursedWand {
 						&& !Dungeon.level.pit[pos]
 						&& Dungeon.level.traps.get(pos) == null
 						&& !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
-					Dungeon.level.plant((Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED), pos);
+					Dungeon.level.plant((Plant.Seed) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), pos);
 					tryForWandProc(Actor.findChar(pos), origin);
 				} else {
 					return cursedEffect(origin, user, targetPos);
@@ -348,7 +348,7 @@ public class CursedWand {
 				int spawnCell = targetPos;
 				if (ch != null){
 					ArrayList<Integer> candidates = new ArrayList<Integer>();
-					for (int n : PathFinder.NEIGHBOURS8) {
+					for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 						int cell = targetPos + n;
 						if (Dungeon.level.passable[cell] && Actor.findChar( cell ) == null) {
 							candidates.add( cell );
@@ -366,8 +366,8 @@ public class CursedWand {
 				mimic.alignment = Char.Alignment.ENEMY;
 				Item reward;
 				do {
-					reward = Generator.randomUsingDefaults(Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR,
-							Generator.Category.RING, Generator.Category.WAND));
+					reward = ItemGenerator.randomUsingDefaults(Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR,
+							ItemGenerator.Category.RING, ItemGenerator.Category.WAND));
 				} while (reward.level() < 1);
 				//play vfx/sfx manually as mimic isn't in the scene yet
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 0.85f);
@@ -429,8 +429,8 @@ public class CursedWand {
 				origin.detach(Dungeon.hero.belongings.backpack);
 				Item result;
 				do {
-					result = Generator.randomUsingDefaults(Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR,
-							Generator.Category.RING, Generator.Category.ARTIFACT));
+					result = ItemGenerator.randomUsingDefaults(Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR,
+							ItemGenerator.Category.RING, ItemGenerator.Category.ARTIFACT));
 				} while (result.cursed);
 				if (result.isUpgradable()) result.upgrade();
 				result.cursed = result.cursedKnown = true;

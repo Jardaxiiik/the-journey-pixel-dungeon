@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -53,8 +53,8 @@ public class GnollTrickster extends Gnoll {
 		state = WANDERING;
 
 		//at half quantity, see createLoot()
-		loot = Generator.Category.MISSILE;
-		lootChance = 1f;
+		//loot = ItemGenerator.Category.MISSILE;
+		//lootChance = 1f;
 
 		properties.add(Property.MINIBOSS);
 	}

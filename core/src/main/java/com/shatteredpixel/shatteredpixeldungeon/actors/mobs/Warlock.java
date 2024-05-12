@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -54,7 +54,7 @@ public class Warlock extends Mob implements Callback {
 		EXP = 11;
 		maxLvl = 21;
 		
-		loot = Generator.Category.POTION;
+		loot = ItemGenerator.Category.POTION;
 		lootChance = 0.5f;
 
 		properties.add(Property.UNDEAD);
@@ -149,7 +149,7 @@ public class Warlock extends Mob implements Callback {
 		} else {
 			Item i;
 			do {
-				i = Generator.randomUsingDefaults(Generator.Category.POTION);
+				i = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.POTION);
 			} while (i instanceof PotionOfHealing);
 			return i;
 		}

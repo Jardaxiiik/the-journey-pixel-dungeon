@@ -50,7 +50,7 @@ public class FungalSpinner extends Spinner {
 	@Override
 	public void damage(int dmg, Object src) {
 		int grassCells = 0;
-		for (int i : PathFinder.NEIGHBOURS9) {
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (Dungeon.level.map[pos+i] == Terrain.FURROWED_GRASS
 					|| Dungeon.level.map[pos+i] == Terrain.HIGH_GRASS){
 				grassCells++;

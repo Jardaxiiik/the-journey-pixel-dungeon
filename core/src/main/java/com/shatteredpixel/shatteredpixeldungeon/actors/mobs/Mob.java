@@ -57,7 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -540,7 +540,7 @@ public abstract class Mob extends Char {
 					newPath = true;
 					//If the next cell on the path can't be moved into, see if there is another cell that could replace it
 					if (!path.isEmpty()) {
-						for (int i : PathFinder.NEIGHBOURS8) {
+						for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
 							if (Dungeon.level.adjacent(pos, nextCell + i) && Dungeon.level.adjacent(nextCell + i, path.getFirst())) {
 								if (cellIsPathable(nextCell+i)){
 									path.addFirst(nextCell+i);
@@ -916,13 +916,13 @@ public abstract class Mob extends Char {
 	@SuppressWarnings("unchecked")
 	public Item createLoot() {
 		Item item;
-		if (loot instanceof Generator.Category) {
+		if (loot instanceof ItemGenerator.Category) {
 
-			item = Generator.randomUsingDefaults( (Generator.Category)loot );
+			item = ItemGenerator.randomUsingDefaults( (ItemGenerator.Category)loot );
 
 		} else if (loot instanceof Class<?>) {
 
-			item = Generator.random( (Class<? extends Item>)loot );
+			item = ItemGenerator.random( (Class<? extends Item>)loot );
 
 		} else {
 
@@ -1267,7 +1267,7 @@ public abstract class Mob extends Char {
 		if (!heldAllies.isEmpty()){
 			
 			ArrayList<Integer> candidatePositions = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8) {
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
 				if (!Dungeon.level.solid[i+pos] && !Dungeon.level.avoid[i+pos] && level.findMob(i+pos) == null){
 					candidatePositions.add(i+pos);
 				}

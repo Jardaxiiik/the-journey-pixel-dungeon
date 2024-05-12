@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShaftParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -60,12 +60,12 @@ public class TormentedSpirit extends Wraith {
 		//50/50 between weapon or armor, always uncursed
 		Item prize;
 		if (Random.Int(2) == 0){
-			prize = Generator.randomWeapon(true);
+			prize = ItemGenerator.randomWeapon(true);
 			if (((MeleeWeapon)prize).hasCurseEnchant()){
 				((MeleeWeapon) prize).enchantment = null;
 			}
 		} else {
-			prize = Generator.randomArmor();
+			prize = ItemGenerator.randomArmor();
 			if (((Armor) prize).hasCurseGlyph()){
 				((Armor) prize).glyph = null;
 			}

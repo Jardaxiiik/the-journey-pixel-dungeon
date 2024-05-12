@@ -77,7 +77,7 @@ public class MiningLevelPainter extends CavesPainter {
 
 					if (level.insideMap(i) && goldToAdd > 0 && map[i] == Terrain.WALL){
 
-						for (int j : PathFinder.NEIGHBOURS4){
+						for (int j : PathFinder.OFFSETS_NEIGHBOURS4){
 							if (level.insideMap(i+j) && map[i+j] != Terrain.WALL){
 								goldPosCandidates.add(i);
 								break;
@@ -93,13 +93,13 @@ public class MiningLevelPainter extends CavesPainter {
 					goldToAdd--;
 
 					if (goldToAdd > 0){
-						int i = PathFinder.NEIGHBOURS4[Random.Int(4)];
+						int i = PathFinder.OFFSETS_NEIGHBOURS4[Random.Int(4)];
 						if (level.insideMap(pos+i) && map[pos+i] == Terrain.WALL){
 							map[pos+i] = Terrain.WALL_DECO;
 							goldToAdd--;
 						}
 						if (Random.Int(2) == 0){
-							i = PathFinder.NEIGHBOURS4[Random.Int(4)];
+							i = PathFinder.OFFSETS_NEIGHBOURS4[Random.Int(4)];
 							if (level.insideMap(pos+i) && map[pos+i] == Terrain.WALL){
 								map[pos+i] = Terrain.WALL_DECO;
 								goldToAdd--;

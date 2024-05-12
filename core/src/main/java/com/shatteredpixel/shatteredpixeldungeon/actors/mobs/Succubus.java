@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
@@ -62,7 +62,7 @@ public class Succubus extends Mob {
 		EXP = 12;
 		maxLvl = 25;
 		
-		loot = Generator.Category.SCROLL;
+		loot = ItemGenerator.Category.SCROLL;
 		lootChance = 0.33f;
 
 		properties.add(Property.DEMONIC);
@@ -137,7 +137,7 @@ public class Succubus extends Mob {
 
 		if (Dungeon.level.avoid[ cell ] || (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[cell])){
 			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int n : PathFinder.NEIGHBOURS8) {
+			for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 				cell = route.collisionPos + n;
 				if (Dungeon.level.passable[cell]
 						&& Actor.findChar( cell ) == null
@@ -173,7 +173,7 @@ public class Succubus extends Mob {
 	public Item createLoot() {
 		Class<?extends Scroll> loot;
 		do{
-			loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
+			loot = (Class<? extends Scroll>) Random.oneOf(ItemGenerator.Category.SCROLL.classes);
 		} while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
 
 		return Reflection.newInstance(loot);

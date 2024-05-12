@@ -76,7 +76,7 @@ public class RotHeart extends Mob {
 	public int defenseProc(Char enemy, int damage) {
 		//rot heart spreads less gas in enclosed spaces
 		int openNearby = 0;
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[pos+i]){
 				openNearby++;
 			}

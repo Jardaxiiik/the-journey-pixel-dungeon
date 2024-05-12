@@ -126,7 +126,7 @@ public class CrystalMimic extends Mimic {
 
 		} else {
 			ArrayList<Integer> candidates = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[pos+i] && Actor.findChar(pos+i) == null){
 					candidates.add(pos + i);
 				}

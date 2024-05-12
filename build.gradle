@@ -13,7 +13,7 @@ buildscript {
 allprojects {
 
     ext {
-        appName = 'Pixel Dungeon: The Journey'
+        appName = 'Journey Pixel Dungeon'
         appPackageName = 'com.journeypixel.journeypixeldungeon'
 
         appVersionCode = 769

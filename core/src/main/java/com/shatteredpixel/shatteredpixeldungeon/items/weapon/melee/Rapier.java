@@ -95,7 +95,7 @@ public class Rapier extends MeleeWeapon {
 		}
 
 		int lungeCell = -1;
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (Dungeon.level.distance(hero.pos+i, target) <= wep.reachFactor(hero)
 					&& Actor.findChar(hero.pos+i) == null
 					&& (Dungeon.level.passable[hero.pos+i] || (Dungeon.level.avoid[hero.pos+i] && hero.flying))){

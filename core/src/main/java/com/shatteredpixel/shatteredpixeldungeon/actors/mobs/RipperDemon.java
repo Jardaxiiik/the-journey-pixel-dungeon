@@ -157,7 +157,7 @@ public class RipperDemon extends Mob {
 				//ensure there is somewhere to land after leaping
 				if (leapVictim != null){
 					int bouncepos = -1;
-					for (int i : PathFinder.NEIGHBOURS8){
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if ((bouncepos == -1 || Dungeon.level.trueDistance(pos, leapPos+i) < Dungeon.level.trueDistance(pos, bouncepos))
 								&& Actor.findChar(leapPos+i) == null && Dungeon.level.passable[leapPos+i]){
 							bouncepos = leapPos+i;

@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
@@ -80,8 +80,8 @@ public class UnstableSpellbook extends Artifact {
 	public UnstableSpellbook() {
 		super();
 
-		Class<?>[] scrollClasses = Generator.Category.SCROLL.classes;
-		float[] probs = Generator.Category.SCROLL.defaultProbs.clone(); //array of primitives, clone gives deep copy.
+		Class<?>[] scrollClasses = ItemGenerator.Category.SCROLL.classes;
+		float[] probs = ItemGenerator.Category.SCROLL.defaultProbs.clone(); //array of primitives, clone gives deep copy.
 		int i = Random.chances(probs);
 
 		while (i != -1){
@@ -123,7 +123,7 @@ public class UnstableSpellbook extends Artifact {
 
 				Scroll scroll;
 				do {
-					scroll = (Scroll) Generator.randomUsingDefaults(Generator.Category.SCROLL);
+					scroll = (Scroll) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SCROLL);
 				} while (scroll == null
 						//reduce the frequency of these scrolls by half
 						||((scroll instanceof ScrollOfIdentify ||

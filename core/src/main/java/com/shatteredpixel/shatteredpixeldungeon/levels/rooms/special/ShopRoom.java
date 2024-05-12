@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
 import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -205,26 +205,26 @@ public class ShopRoom extends SpecialRoom {
 		MeleeWeapon w;
 		switch (Dungeon.depth) {
 		case 6: default:
-			w = (MeleeWeapon) Generator.random(Generator.wepTiers[1]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[1]).quantity(2).identify(false) );
+			w = (MeleeWeapon) ItemGenerator.random(ItemGenerator.wepTiers[1]);
+			//itemsToSpawn.add( ItemGenerator.random(ItemGenerator.misTiers[1]).quantity(2).identify(false) ); // REMOVE_MISSILES
 			itemsToSpawn.add( new LeatherArmor().identify(false) );
 			break;
 			
 		case 11:
-			w = (MeleeWeapon) Generator.random(Generator.wepTiers[2]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[2]).quantity(2).identify(false) );
+			w = (MeleeWeapon) ItemGenerator.random(ItemGenerator.wepTiers[2]);
+			//itemsToSpawn.add( ItemGenerator.random(ItemGenerator.misTiers[2]).quantity(2).identify(false) ); // REMOVE_MISSILES
 			itemsToSpawn.add( new MailArmor().identify(false) );
 			break;
 			
 		case 16:
-			w = (MeleeWeapon) Generator.random(Generator.wepTiers[3]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[3]).quantity(2).identify(false) );
+			w = (MeleeWeapon) ItemGenerator.random(ItemGenerator.wepTiers[3]);
+			//itemsToSpawn.add( ItemGenerator.random(ItemGenerator.misTiers[3]).quantity(2).identify(false) ); // REMOVE_MISSILES
 			itemsToSpawn.add( new ScaleArmor().identify(false) );
 			break;
 
 		case 20: case 21:
-			w = (MeleeWeapon) Generator.random(Generator.wepTiers[4]);
-			itemsToSpawn.add( Generator.random(Generator.misTiers[4]).quantity(2).identify(false) );
+			w = (MeleeWeapon) ItemGenerator.random(ItemGenerator.wepTiers[4]);
+			//itemsToSpawn.add( ItemGenerator.random(ItemGenerator.misTiers[4]).quantity(2).identify(false) ); // REMOVE_MISSILES
 			itemsToSpawn.add( new PlateArmor().identify(false) );
 			itemsToSpawn.add( new Torch() );
 			itemsToSpawn.add( new Torch() );
@@ -247,8 +247,8 @@ public class ShopRoom extends SpecialRoom {
 		}
 
 		itemsToSpawn.add( new PotionOfHealing() );
-		itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
-		itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
+		itemsToSpawn.add( ItemGenerator.randomUsingDefaults( ItemGenerator.Category.POTION ) );
+		itemsToSpawn.add( ItemGenerator.randomUsingDefaults( ItemGenerator.Category.POTION ) );
 
 		itemsToSpawn.add( new ScrollOfIdentify() );
 		itemsToSpawn.add( new ScrollOfRemoveCurse() );
@@ -256,8 +256,8 @@ public class ShopRoom extends SpecialRoom {
 
 		for (int i=0; i < 2; i++)
 			itemsToSpawn.add( Random.Int(2) == 0 ?
-					Generator.randomUsingDefaults( Generator.Category.POTION ) :
-					Generator.randomUsingDefaults( Generator.Category.SCROLL ) );
+					ItemGenerator.randomUsingDefaults( ItemGenerator.Category.POTION ) :
+					ItemGenerator.randomUsingDefaults( ItemGenerator.Category.SCROLL ) );
 
 
 		itemsToSpawn.add( new SmallRation() );
@@ -304,15 +304,15 @@ public class ShopRoom extends SpecialRoom {
 		Item rare;
 		switch (Random.Int(10)){
 			case 0:
-				rare = Generator.random( Generator.Category.WAND );
+				rare = ItemGenerator.random( ItemGenerator.Category.WAND );
 				rare.level( 0 );
 				break;
 			case 1:
-				rare = Generator.random(Generator.Category.RING);
+				rare = ItemGenerator.random(ItemGenerator.Category.RING);
 				rare.level( 0 );
 				break;
 			case 2:
-				rare = Generator.random( Generator.Category.ARTIFACT );
+				rare = ItemGenerator.random( ItemGenerator.Category.ARTIFACT );
 				break;
 			default:
 				rare = new Stylus();

@@ -1168,7 +1168,7 @@ public class Hero extends Char {
 					public void call() {
 
 						boolean crystalAdjacent = false;
-						for (int i : PathFinder.NEIGHBOURS8) {
+						for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
 							if (Dungeon.level.map[action.dst + i] == Terrain.MINE_CRYSTAL){
 								crystalAdjacent = true;
 								break;
@@ -1220,10 +1220,10 @@ public class Hero extends Char {
 							Level.set( action.dst, Terrain.EMPTY_DECO );
 						}
 
-						for (int i : PathFinder.NEIGHBOURS9) {
+						for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 							Dungeon.level.discoverable[action.dst + i] = true;
 						}
-						for (int i : PathFinder.NEIGHBOURS9) {
+						for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 							GameScene.updateMap( action.dst+i );
 						}
 
@@ -1232,7 +1232,7 @@ public class Hero extends Char {
 								@Override
 								protected void onComplete() {
 									boolean broke = false;
-									for (int i : PathFinder.NEIGHBOURS8) {
+									for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
 										if (Dungeon.level.map[action.dst+i] == Terrain.MINE_CRYSTAL){
 											Splash.at(action.dst+i, 0xFFFFFF, 5);
 											Level.set( action.dst+i, Terrain.EMPTY );
@@ -1243,7 +1243,7 @@ public class Hero extends Char {
 										Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 									}
 
-									for (int i : PathFinder.NEIGHBOURS9) {
+									for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 										GameScene.updateMap( action.dst+i );
 									}
 									spendAndNext(TICK);
@@ -2003,7 +2003,7 @@ public class Hero extends Char {
 		int pos = Dungeon.hero.pos;
 
 		ArrayList<Integer> passable = new ArrayList<>();
-		for (Integer ofs : PathFinder.NEIGHBOURS8) {
+		for (Integer ofs : PathFinder.OFFSETS_NEIGHBOURS8) {
 			int cell = pos + ofs;
 			if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Dungeon.level.heaps.get( cell ) == null) {
 				passable.add( cell );

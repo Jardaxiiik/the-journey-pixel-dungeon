@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SlimeSprite;
@@ -76,8 +76,8 @@ public class Slime extends Mob {
 	@Override
 	public Item createLoot() {
 		Dungeon.LimitedDrops.SLIME_WEP.count++;
-		Generator.Category c = Generator.Category.WEP_T2;
-		MeleeWeapon w = (MeleeWeapon)Generator.randomUsingDefaults(Generator.Category.WEP_T2);
+		ItemGenerator.Category c = ItemGenerator.Category.WEP_T2;
+		MeleeWeapon w = (MeleeWeapon) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.WEP_T2);
 		w.level(0);
 		return w;
 	}

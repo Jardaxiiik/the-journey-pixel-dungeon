@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.watabou.utils.Bundle;
 
@@ -58,43 +58,43 @@ public enum Catalog {
 	}
 	
 	static {
-		for (Class weapon : Generator.Category.WEP_T1.classes){
+		for (Class weapon : ItemGenerator.Category.WEP_T1.classes){
 			WEAPONS.seen.put( weapon, false);
 		}
-		for (Class weapon : Generator.Category.WEP_T2.classes){
+		for (Class weapon : ItemGenerator.Category.WEP_T2.classes){
 			WEAPONS.seen.put( weapon, false);
 		}
-		for (Class weapon : Generator.Category.WEP_T3.classes){
+		for (Class weapon : ItemGenerator.Category.WEP_T3.classes){
 			WEAPONS.seen.put( weapon, false);
 		}
-		for (Class weapon : Generator.Category.WEP_T4.classes){
+		for (Class weapon : ItemGenerator.Category.WEP_T4.classes){
 			WEAPONS.seen.put( weapon, false);
 		}
-		for (Class weapon : Generator.Category.WEP_T5.classes){
+		for (Class weapon : ItemGenerator.Category.WEP_T5.classes){
 			WEAPONS.seen.put( weapon, false);
 		}
 
-		for (Class armor : Generator.Category.ARMOR.classes){
+		for (Class armor : ItemGenerator.Category.ARMOR.classes){
 			ARMOR.seen.put( armor, false);
 		}
 
-		for (Class wand : Generator.Category.WAND.classes){
+		for (Class wand : ItemGenerator.Category.WAND.classes){
 			WANDS.seen.put( wand, false);
 		}
 
-		for (Class ring : Generator.Category.RING.classes){
+		for (Class ring : ItemGenerator.Category.RING.classes){
 			RINGS.seen.put( ring, false);
 		}
 
-		for (Class artifact : Generator.Category.ARTIFACT.classes){
+		for (Class artifact : ItemGenerator.Category.ARTIFACT.classes){
 			ARTIFACTS.seen.put( artifact, false);
 		}
 
-		for (Class potion : Generator.Category.POTION.classes){
+		for (Class potion : ItemGenerator.Category.POTION.classes){
 			POTIONS.seen.put( potion, false);
 		}
 
-		for (Class scroll : Generator.Category.SCROLL.classes){
+		for (Class scroll : ItemGenerator.Category.SCROLL.classes){
 			SCROLLS.seen.put( scroll, false);
 		}
 

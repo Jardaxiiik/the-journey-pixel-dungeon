@@ -55,7 +55,7 @@ public class GatewayTrap extends Trap {
 	public void activate() {
 
 		if (telePos == -1){
-			for (int i : PathFinder.NEIGHBOURS9){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 				Char ch = Actor.findChar(pos + i);
 				if (ch != null){
 					if (ScrollOfTeleportation.teleportChar(ch)) {
@@ -84,7 +84,7 @@ public class GatewayTrap extends Trap {
 		if (telePos != -1){
 
 			ArrayList<Integer> telePositions = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[telePos+i]
 						&& Actor.findChar( telePos+i ) == null){
 					telePositions.add(telePos+i);
@@ -104,7 +104,7 @@ public class GatewayTrap extends Trap {
 				}
 			}
 
-			for (int i : PathFinder.NEIGHBOURS9){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 
 				Char ch = Actor.findChar(pos + i);
 				if (ch != null && !Char.hasProp(ch, Char.Property.IMMOVABLE)){

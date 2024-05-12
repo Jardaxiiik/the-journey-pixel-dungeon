@@ -64,6 +64,15 @@ public class Belongings implements Iterable<Item> {
 			}
 			return cap;
 		}
+
+		@Override
+		public boolean canHold( Item item ) {
+			if (item instanceof Wand){
+				return false;
+			} else {
+				return super.canHold(item);
+			}
+		}
 	}
 
 	public Backpack backpack;

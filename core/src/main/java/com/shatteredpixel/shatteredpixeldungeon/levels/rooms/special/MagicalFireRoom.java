@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
@@ -121,11 +121,11 @@ public class MagicalFireRoom extends SpecialRoom {
 				return prize;
 		}
 
-		return Generator.random( Random.oneOf(
-				Generator.Category.POTION,
-				Generator.Category.SCROLL,
-				Generator.Category.FOOD,
-				Generator.Category.GOLD
+		return ItemGenerator.random( Random.oneOf(
+				ItemGenerator.Category.POTION,
+				ItemGenerator.Category.SCROLL,
+				ItemGenerator.Category.FOOD,
+				ItemGenerator.Category.GOLD
 		) );
 	}
 
@@ -145,7 +145,7 @@ public class MagicalFireRoom extends SpecialRoom {
 			if (l.map[cell] == Terrain.EMPTY_SP) return false;
 
 			if (fire.cur[cell] > 0)     return false;
-			for (int i : PathFinder.NEIGHBOURS4){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS4){
 				if (fire.cur[cell+i] > 0)   return false;
 			}
 		}
@@ -188,7 +188,7 @@ public class MagicalFireRoom extends SpecialRoom {
 						}
 
 						//clears itself if there is frost/blizzard on or next to it
-						for (int k : PathFinder.NEIGHBOURS9) {
+						for (int k : PathFinder.OFFSETS_NEIGHBOURS9) {
 							if (freeze != null && freeze.volume > 0 && freeze.cur[cell+k] > 0) {
 								freeze.clear(cell);
 								cur[cell] = 0;

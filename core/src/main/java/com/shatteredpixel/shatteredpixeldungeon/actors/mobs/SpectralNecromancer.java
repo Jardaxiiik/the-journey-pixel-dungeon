@@ -66,7 +66,7 @@ public class SpectralNecromancer extends Necromancer {
 
 		int ofs;
 		do {
-			ofs = PathFinder.NEIGHBOURS8[Random.Int(8)];
+			ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 		} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
 		Dungeon.level.drop( new ScrollOfRemoveCurse(), pos + ofs ).sprite.drop( pos );
 	}
@@ -115,7 +115,7 @@ public class SpectralNecromancer extends Necromancer {
 			}
 
 			int pushPos = pos;
-			for (int c : PathFinder.NEIGHBOURS8) {
+			for (int c : PathFinder.OFFSETS_NEIGHBOURS8) {
 				if (Actor.findChar(summoningPos + c) == null
 						&& Dungeon.level.passable[summoningPos + c]
 						&& (Dungeon.level.openSpace[summoningPos + c] || !hasProp(Actor.findChar(summoningPos), Property.LARGE))

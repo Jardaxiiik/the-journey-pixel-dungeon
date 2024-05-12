@@ -172,7 +172,7 @@ public class GnollSapper extends Mob {
 
 				if (abilityCooldown-- <= 0){
 					boolean targetNextToBarricade = false;
-					for (int i : PathFinder.NEIGHBOURS8){
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (Dungeon.level.map[enemy.pos+i] == Terrain.BARRICADE
 							|| Dungeon.level.map[enemy.pos+i] == Terrain.ENTRANCE){
 							targetNextToBarricade = true;

@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
@@ -85,17 +85,17 @@ public class CrystalVaultRoom extends SpecialRoom {
 	}
 	
 	private Item prize() {
-		Generator.Category cat = prizeClasses.remove(0);
+		ItemGenerator.Category cat = prizeClasses.remove(0);
 		prizeClasses.add(cat);
 		Item prize;
 		do {
-			prize = Generator.random(cat);
+			prize = ItemGenerator.random(cat);
 		} while (prize == null || Challenges.isItemBlocked(prize));
 		return prize;
 	}
 	
-	private ArrayList<Generator.Category> prizeClasses = new ArrayList<>(
-			Arrays.asList(Generator.Category.WAND,
-					Generator.Category.RING,
-					Generator.Category.ARTIFACT));
+	private ArrayList<ItemGenerator.Category> prizeClasses = new ArrayList<>(
+			Arrays.asList(ItemGenerator.Category.WAND,
+					ItemGenerator.Category.RING,
+					ItemGenerator.Category.ARTIFACT));
 }

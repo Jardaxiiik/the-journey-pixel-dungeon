@@ -38,7 +38,7 @@ public class MagicalHolster extends Bag {
 	
 	@Override
 	public boolean canHold( Item item ) {
-		if (item instanceof Wand || item instanceof MissileWeapon || item instanceof Bomb){
+		if (item instanceof Wand){
 			return super.canHold(item);
 		} else {
 			return false;
@@ -46,7 +46,7 @@ public class MagicalHolster extends Bag {
 	}
 
 	public int capacity(){
-		return 19;
+		return 4;
 	}
 	
 	@Override

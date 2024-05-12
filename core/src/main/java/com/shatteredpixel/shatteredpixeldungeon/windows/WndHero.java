@@ -55,7 +55,7 @@ public class WndHero extends WndTabbed {
 	private static final int HEIGHT		= 120;
 	
 	private StatsTab stats;
-	private TalentsTab talents;
+//	private TalentsTab talents;
 	private BuffsTab buffs;
 
 	public static int lastIdx = 0;
@@ -69,9 +69,10 @@ public class WndHero extends WndTabbed {
 		stats = new StatsTab();
 		add( stats );
 
-		talents = new TalentsTab();
+		/*talents = new TalentsTab();
 		add(talents);
 		talents.setRect(0, 0, WIDTH, HEIGHT);
+		*/
 
 		buffs = new BuffsTab();
 		add( buffs );
@@ -90,7 +91,7 @@ public class WndHero extends WndTabbed {
 				stats.visible = stats.active = selected;
 			}
 		} );
-		add( new IconTab( Icons.get(Icons.TALENT) ) {
+		/*add( new IconTab( Icons.get(Icons.TALENT) ) {
 			protected void select( boolean value ) {
 				super.select( value );
 				if (selected) lastIdx = 1;
@@ -98,6 +99,7 @@ public class WndHero extends WndTabbed {
 				talents.visible = talents.active = selected;
 			}
 		} );
+		 */
 		add( new IconTab( Icons.get(Icons.BUFFS) ) {
 			protected void select( boolean value ) {
 				super.select( value );
@@ -108,9 +110,9 @@ public class WndHero extends WndTabbed {
 
 		layoutTabs();
 
-		talents.setRect(0, 0, WIDTH, HEIGHT);
-		talents.pane.scrollTo(0, talents.pane.content().height() - talents.pane.height());
-		talents.layout();
+		//talents.setRect(0, 0, WIDTH, HEIGHT);
+		//talents.pane.scrollTo(0, talents.pane.content().height() - talents.pane.height());
+		//talents.layout();
 
 		select( lastIdx );
 	}
@@ -118,7 +120,7 @@ public class WndHero extends WndTabbed {
 	@Override
 	public void offset(int xOffset, int yOffset) {
 		super.offset(xOffset, yOffset);
-		talents.layout();
+		//talents.layout();
 		buffs.layout();
 	}
 

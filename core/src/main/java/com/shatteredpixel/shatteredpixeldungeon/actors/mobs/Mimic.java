@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -313,16 +313,16 @@ public class Mimic extends Mob {
 					reward = new Gold().random();
 					break;
 				case 1:
-					reward = Generator.randomMissile(!useDecks);
+					reward = ItemGenerator.randomMissile(!useDecks);
 					break;
 				case 2:
-					reward = Generator.randomArmor();
+					reward = ItemGenerator.randomArmor();
 					break;
 				case 3:
-					reward = Generator.randomWeapon(!useDecks);
+					reward = ItemGenerator.randomWeapon(!useDecks);
 					break;
 				case 4:
-					reward = useDecks ? Generator.random(Generator.Category.RING) : Generator.randomUsingDefaults(Generator.Category.RING);
+					reward = useDecks ? ItemGenerator.random(ItemGenerator.Category.RING) : ItemGenerator.randomUsingDefaults(ItemGenerator.Category.RING);
 					break;
 			}
 		} while (reward == null || Challenges.isItemBlocked(reward));

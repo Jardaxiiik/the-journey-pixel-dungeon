@@ -43,7 +43,7 @@ public class ShockingTrap extends Trap {
 			Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		}
 		
-		for( int i : PathFinder.NEIGHBOURS9) {
+		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
 				GameScene.add(Blob.seed(pos + i, 10, Electricity.class));
 			}

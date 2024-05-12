@@ -116,8 +116,8 @@ public class LloydsBeacon extends Artifact {
 				return;
 			}
 			
-			for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
-				Char ch = Actor.findChar(hero.pos + PathFinder.NEIGHBOURS8[i]);
+			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
+				Char ch = Actor.findChar(hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i]);
 				if (ch != null && ch.alignment == Char.Alignment.ENEMY) {
 					GLog.w( Messages.get(this, "creatures") );
 					return;
@@ -162,7 +162,7 @@ public class LloydsBeacon extends Artifact {
 				for(Mob m : Dungeon.level.mobs){
 					if (m.pos == hero.pos){
 						//displace mob
-						for(int i : PathFinder.NEIGHBOURS8){
+						for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
 							if (Actor.findChar(m.pos+i) == null && Dungeon.level.passable[m.pos + i]){
 								m.pos += i;
 								m.sprite.point(m.sprite.worldToCamera(m.pos));

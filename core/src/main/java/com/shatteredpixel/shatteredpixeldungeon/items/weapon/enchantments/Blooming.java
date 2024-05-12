@@ -66,7 +66,7 @@ public class Blooming extends Weapon.Enchantment {
 			}
 			
 			ArrayList<Integer> positions = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS8){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (defender.pos + i != attacker.pos) {
 					positions.add(defender.pos + i);
 				}

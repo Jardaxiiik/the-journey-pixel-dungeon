@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
@@ -104,9 +104,9 @@ public class CrystalChoiceRoom extends SpecialRoom {
 
 		int n = Random.NormalIntRange(3, 4);
 		for (int i = 0; i < n; i++){
-			Item reward = Generator.random(Random.oneOf(
-					Generator.Category.POTION,
-					Generator.Category.SCROLL
+			Item reward = ItemGenerator.random(Random.oneOf(
+					ItemGenerator.Category.POTION,
+					ItemGenerator.Category.SCROLL
 			));
 			int pos;
 			do {
@@ -119,10 +119,10 @@ public class CrystalChoiceRoom extends SpecialRoom {
 			level.drop(reward, pos);
 		}
 
-		Item hidden = Generator.random(Random.oneOf(
-				Generator.Category.WAND,
-				Generator.Category.RING,
-				Generator.Category.ARTIFACT
+		Item hidden = ItemGenerator.random(Random.oneOf(
+				ItemGenerator.Category.WAND,
+				ItemGenerator.Category.RING,
+				ItemGenerator.Category.ARTIFACT
 		));
 		Heap chest = level.drop(hidden, level.pointToCell(room2.center()));
 		chest.type = Heap.Type.CHEST;

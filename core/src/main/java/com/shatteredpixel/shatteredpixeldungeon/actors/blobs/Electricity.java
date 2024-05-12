@@ -108,7 +108,7 @@ public class Electricity extends Blob {
 		}
 		cur[cell] = Math.max(cur[cell], power);
 		
-		for (int c : PathFinder.NEIGHBOURS4){
+		for (int c : PathFinder.OFFSETS_NEIGHBOURS4){
 			if (water[cell + c] && cur[cell + c] < power){
 				spreadFromCell(cell + c, power);
 			}

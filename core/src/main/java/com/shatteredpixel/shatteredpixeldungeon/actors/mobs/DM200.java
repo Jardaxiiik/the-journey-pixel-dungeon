@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -46,7 +46,7 @@ public class DM200 extends Mob {
 		EXP = 9;
 		maxLvl = 17;
 
-		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
+		loot = Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR);
 		lootChance = 0.125f; //initially, see lootChance()
 
 		properties.add(Property.INORGANIC);
@@ -80,10 +80,10 @@ public class DM200 extends Mob {
 	public Item createLoot() {
 		Dungeon.LimitedDrops.DM200_EQUIP.count++;
 		//uses probability tables for dwarf city
-		if (loot == Generator.Category.WEAPON){
-			return Generator.randomWeapon(4, true);
+		if (loot == ItemGenerator.Category.WEAPON){
+			return ItemGenerator.randomWeapon(4, true);
 		} else {
-			return Generator.randomArmor(4);
+			return ItemGenerator.randomArmor(4);
 		}
 	}
 

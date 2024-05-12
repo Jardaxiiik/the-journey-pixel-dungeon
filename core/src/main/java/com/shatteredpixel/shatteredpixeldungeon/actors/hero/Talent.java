@@ -566,7 +566,7 @@ public enum Talent {
 		}
 		if (hero.hasTalent(LIQUID_NATURE)){
 			ArrayList<Integer> grassCells = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS9){
+			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 				grassCells.add(cell+i);
 			}
 			Random.shuffle(grassCells);

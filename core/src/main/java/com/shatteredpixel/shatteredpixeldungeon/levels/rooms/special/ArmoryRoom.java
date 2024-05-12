@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
@@ -77,11 +77,12 @@ public class ArmoryRoom extends SpecialRoom {
 			case 0:
 				return new Bomb().random();
 			case 1:
-				return Generator.randomWeapon();
+				return ItemGenerator.randomWeapon();
 			case 2:
-				return Generator.randomArmor();
+				return ItemGenerator.randomArmor();
 			case 3: default:
-				return Generator.randomMissile();
+				return new Bomb().random();
+				//return ItemGenerator.randomMissile(); // REMOVE_MISSILES
 		}
 	}
 }

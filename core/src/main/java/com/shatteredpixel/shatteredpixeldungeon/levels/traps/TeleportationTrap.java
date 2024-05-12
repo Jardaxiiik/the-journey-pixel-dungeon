@@ -45,7 +45,7 @@ public class TeleportationTrap extends Trap {
 	@Override
 	public void activate() {
 
-		for (int i : PathFinder.NEIGHBOURS9){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 			Char ch = Actor.findChar(pos + i);
 			if (ch != null){
 				if (ScrollOfTeleportation.teleportChar(ch)) {

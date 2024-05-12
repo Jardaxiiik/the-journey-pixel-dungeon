@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
@@ -412,18 +412,18 @@ public class Blacksmith extends NPC {
 
 		public static void generateRewards( boolean useDecks ){
 			smithRewards = new ArrayList<>();
-			smithRewards.add(Generator.randomWeapon(3, useDecks));
-			smithRewards.add(Generator.randomWeapon(3, useDecks));
+			smithRewards.add(ItemGenerator.randomWeapon(3, useDecks));
+			smithRewards.add(ItemGenerator.randomWeapon(3, useDecks));
 			ArrayList<Item> toUndo = new ArrayList<>();
 			while (smithRewards.get(0).getClass() == smithRewards.get(1).getClass()) {
 				if (useDecks)   toUndo.add(smithRewards.get(1));
 				smithRewards.remove(1);
-				smithRewards.add(Generator.randomWeapon(3, useDecks));
+				smithRewards.add(ItemGenerator.randomWeapon(3, useDecks));
 			}
 			for (Item i : toUndo){
-				Generator.undoDrop(i);
+				ItemGenerator.undoDrop(i);
 			}
-			smithRewards.add(Generator.randomArmor(3));
+			smithRewards.add(ItemGenerator.randomArmor(3));
 
 			//30%:+0, 45%:+1, 20%:+2, 5%:+3
 			int rewardLevel;

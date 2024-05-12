@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -215,11 +215,11 @@ public class RingOfWealth extends Ring {
 				Item i = new Gold().random();
 				return i.quantity(i.quantity()/2);
 			case 1:
-				return Generator.randomUsingDefaults(Generator.Category.STONE);
+				return ItemGenerator.randomUsingDefaults(ItemGenerator.Category.STONE);
 			case 2:
-				return Generator.randomUsingDefaults(Generator.Category.POTION);
+				return ItemGenerator.randomUsingDefaults(ItemGenerator.Category.POTION);
 			case 3:
-				return Generator.randomUsingDefaults(Generator.Category.SCROLL);
+				return ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SCROLL);
 		}
 	}
 
@@ -229,10 +229,10 @@ public class RingOfWealth extends Ring {
 				Item i = genLowValueConsumable();
 				return i.quantity(i.quantity()*2);
 			case 1:
-				i = Generator.randomUsingDefaults(Generator.Category.POTION);
+				i = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.POTION);
 				return Reflection.newInstance(ExoticPotion.regToExo.get(i.getClass()));
 			case 2:
-				i = Generator.randomUsingDefaults(Generator.Category.SCROLL);
+				i = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SCROLL);
 				return Reflection.newInstance(ExoticScroll.regToExo.get(i.getClass()));
 			case 3:
 				return Random.Int(2) == 0 ? new ArcaneCatalyst() : new AlchemicalCatalyst();
@@ -267,22 +267,22 @@ public class RingOfWealth extends Ring {
 		int floorset = (Dungeon.depth + level)/5;
 		switch (Random.Int(5)){
 			default: case 0: case 1:
-				Weapon w = Generator.randomWeapon(floorset, true);
+				Weapon w = ItemGenerator.randomWeapon(floorset, true);
 				if (!w.hasGoodEnchant() && Random.Int(10) < level)      w.enchant();
 				else if (w.hasCurseEnchant())                           w.enchant(null);
 				result = w;
 				break;
 			case 2:
-				Armor a = Generator.randomArmor(floorset);
+				Armor a = ItemGenerator.randomArmor(floorset);
 				if (!a.hasGoodGlyph() && Random.Int(10) < level)        a.inscribe();
 				else if (a.hasCurseGlyph())                             a.inscribe(null);
 				result = a;
 				break;
 			case 3:
-				result = Generator.randomUsingDefaults(Generator.Category.RING);
+				result = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.RING);
 				break;
 			case 4:
-				result = Generator.random(Generator.Category.ARTIFACT);
+				result = ItemGenerator.random(ItemGenerator.Category.ARTIFACT);
 				break;
 		}
 		//minimum level is 1/2/3/4/5/6 when ring level is 1/3/5/7/9/11

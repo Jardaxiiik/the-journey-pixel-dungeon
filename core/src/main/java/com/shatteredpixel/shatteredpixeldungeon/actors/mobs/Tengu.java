@@ -562,7 +562,7 @@ public class Tengu extends Mob {
 		int targetCell = -1;
 		
 		//Targets closest cell which is adjacent to target and has no existing bombs
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = target.pos + i;
 			boolean bombHere = false;
 			for (BombAbility b : thrower.buffs(BombAbility.class)){
@@ -928,7 +928,7 @@ public class Tengu extends Mob {
 		int targetCell = -1;
 		
 		//Targets closest cell which is adjacent to target, and not adjacent to thrower or another shocker
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = target.pos + i;
 			if (Dungeon.level.distance(cell, thrower.pos) >= 2 && !Dungeon.level.solid[cell]){
 				boolean validTarget = true;

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard;
 
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -111,7 +111,7 @@ public class PlantsRoom extends StandardRoom {
 	private static Plant.Seed randomSeed(){
 		Plant.Seed result;
 		do {
-			result = (Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED);
+			result = (Plant.Seed) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED);
 		} while (result instanceof Firebloom.Seed);
 		return result;
 	}

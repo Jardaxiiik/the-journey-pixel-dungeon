@@ -183,7 +183,17 @@ import com.watabou.utils.Reflection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class Generator {
+/**
+ * Use this method to return random items of some specific categories.
+ * Current Categories:
+ * WEAPON_T1 - T5
+ * ARMOR (want T1 - T5)
+ * MISSILE (I want remove it)
+ * WAND (I want tiers)
+ * RING (I want tiers)
+ * ARTIFACT (I want tiers)
+ */
+public class ItemGenerator {
 
 	public enum Category {
 		WEAPON	( 2, 2, MeleeWeapon.class),
@@ -427,8 +437,8 @@ public class Generator {
 			ARMOR.probs = new float[]{ 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
 			
 			//see Generator.randomMissile
-			MISSILE.classes = new Class<?>[]{};
-			MISSILE.probs = new float[]{};
+			//MISSILE.classes = new Class<?>[]{}; // REMOVE_MISSILES
+			//MISSILE.probs = new float[]{}; // REMOVE_MISSILES
 			
 			MIS_T1.classes = new Class<?>[]{
 					ThrowingStone.class,
@@ -588,7 +598,7 @@ public class Generator {
 		categoryProbs.put( cat, categoryProbs.get( cat ) - 1);
 
 		if (cat == Category.SEED) {
-			//We specifically use defaults for seeds here because, unlike other item categories
+			// We specifically use defaults for seeds here because, unlike other item categories
 			// their predominant source of drops is grass, not levelgen. This way the majority
 			// of seed drops still use a deck, but the few that are spawned by levelgen are consistent
 			return randomUsingDefaults(cat);
@@ -607,8 +617,8 @@ public class Generator {
 				return randomArmor();
 			case WEAPON:
 				return randomWeapon();
-			case MISSILE:
-				return randomMissile();
+			//case MISSILE:
+			//	return randomMissile(); // REMOVE_MISSILES
 			case ARTIFACT:
 				Item item = randomArtifact();
 				//if we're out of artifacts, return a ring instead.
@@ -640,8 +650,8 @@ public class Generator {
 	public static Item randomUsingDefaults( Category cat ){
 		if (cat == Category.WEAPON){
 			return randomWeapon(true);
-		} else if (cat == Category.MISSILE){
-			return randomMissile(true);
+		//} else if (cat == Category.MISSILE){ // REMOVE_MISSILES
+		//	return randomMissile(true);
 		} else if (cat.defaultProbs == null || cat == Category.ARTIFACT) {
 			return random(cat);
 		} else if (cat.defaultProbsTotal != null){

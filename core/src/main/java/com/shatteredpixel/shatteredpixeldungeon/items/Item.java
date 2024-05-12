@@ -98,7 +98,7 @@ public class Item implements Bundlable {
 	public static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
-			return Generator.Category.order( lhs ) - Generator.Category.order( rhs );
+			return ItemGenerator.Category.order( lhs ) - ItemGenerator.Category.order( rhs );
 		}
 	};
 	

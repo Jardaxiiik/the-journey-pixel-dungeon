@@ -46,7 +46,7 @@ public class PotionOfFrost extends Potion {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 		}
 		
-		for (int offset : PathFinder.NEIGHBOURS9){
+		for (int offset : PathFinder.OFFSETS_NEIGHBOURS9){
 			if (!Dungeon.level.solid[cell+offset]) {
 				
 				GameScene.add(Blob.seed(cell + offset, 10, Freezing.class));

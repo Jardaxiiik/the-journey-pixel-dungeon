@@ -56,7 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WindParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Stylus;
@@ -189,13 +189,78 @@ public abstract class Level implements Bundlable {
 	private static final String FEELING		= "feeling";
 
 	public void create() {
+		Random.pushGenerator( Dungeon.seedCurDepth() );
+		addItemToSpawn(ItemGenerator.random(ItemGenerator.Category.FOOD));
+		addItemToSpawn( new PotionOfStrength() );
+		addItemToSpawn( new ScrollOfUpgrade());
+		addItemToSpawn( new Stylus() );
+		addItemToSpawn( new StoneOfEnchantment() );
+		addItemToSpawn( new StoneOfIntuition() );
+		setLevelFeeling();
+		buildTheLevel();
+		buildFlagMaps();
+		cleanWalls();
 
+		createMobs();
+		createItems();
+
+		Random.popGenerator();
+	}
+	private void buildTheLevel() {
+		do {
+			width = height = length = 0;
+
+			transitions = new ArrayList<>();
+
+			mobs = new HashSet<>();
+			heaps = new SparseArray<>();
+			blobs = new HashMap<>();
+			plants = new SparseArray<>();
+			traps = new SparseArray<>();
+			customTiles = new HashSet<>();
+			customWalls = new HashSet<>();
+
+		} while (!build());
+	}
+	private void setLevelFeeling() {
+		if (Dungeon.depth > 1) {
+			//50% chance of getting a level feeling
+			//~7.15% chance for each feeling
+			switch (Random.Int(14)) {
+				case 0:
+					feeling = Feeling.CHASM;
+					break;
+				case 1:
+					feeling = Feeling.WATER;
+					break;
+				case 2:
+					feeling = Feeling.GRASS;
+					break;
+				case 3:
+					feeling = Feeling.DARK;
+					addItemToSpawn(new Torch());
+					viewDistance = Math.round(viewDistance / 2f);
+					break;
+				case 4:
+					feeling = Feeling.LARGE;
+					addItemToSpawn(ItemGenerator.random(ItemGenerator.Category.FOOD));
+					break;
+				case 5:
+					feeling = Feeling.TRAPS;
+					break;
+				case 6:
+					feeling = Feeling.SECRETS;
+					break;
+			}
+		}
+	}
+	public void create_OLD() {
 		Random.pushGenerator( Dungeon.seedCurDepth() );
 
 		//TODO maybe just make this part of RegularLevel?
 		if (!Dungeon.bossLevel() && Dungeon.branch == 0) {
 
-			addItemToSpawn(Generator.random(Generator.Category.FOOD));
+			addItemToSpawn(ItemGenerator.random(ItemGenerator.Category.FOOD));
 
 			if (Dungeon.posNeeded()) {
 				Dungeon.LimitedDrops.STRENGTH_POTIONS.count++;
@@ -246,7 +311,7 @@ public abstract class Level implements Bundlable {
 						break;
 					case 4:
 						feeling = Feeling.LARGE;
-						addItemToSpawn(Generator.random(Generator.Category.FOOD));
+						addItemToSpawn(ItemGenerator.random(ItemGenerator.Category.FOOD));
 						break;
 					case 5:
 						feeling = Feeling.TRAPS;
@@ -863,8 +928,8 @@ public abstract class Level implements Bundlable {
 			
 			boolean d = false;
 			
-			for (int j=0; j < PathFinder.NEIGHBOURS9.length; j++) {
-				int n = i + PathFinder.NEIGHBOURS9[j];
+			for (int j = 0; j < PathFinder.OFFSETS_NEIGHBOURS9.length; j++) {
+				int n = i + PathFinder.OFFSETS_NEIGHBOURS9[j];
 				if (n >= 0 && n < length() && map[n] != Terrain.WALL && map[n] != Terrain.WALL_DECO) {
 					d = true;
 					break;
@@ -896,7 +961,7 @@ public abstract class Level implements Bundlable {
 		level.pit[cell]			    = (flags & Terrain.PIT) != 0;
 		level.water[cell]			= terrain == Terrain.WATER;
 
-		for (int i : PathFinder.NEIGHBOURS9){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 			i = cell + i;
 			if (level.solid[i]){
 				level.openSpace[i] = false;
@@ -946,7 +1011,7 @@ public abstract class Level implements Bundlable {
 			
 			int n;
 			do {
-				n = cell + PathFinder.NEIGHBOURS8[Random.Int( 8 )];
+				n = cell + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int( 8 )];
 			} while (!passable[n] && !avoid[n]);
 			return drop( item, n );
 			
@@ -1308,7 +1373,7 @@ public abstract class Level implements Bundlable {
 			for (Mob mob : mobs) {
 				int p = mob.pos;
 				if (!fieldOfView[p] && distance(c.pos, p) <= range) {
-					for (int i : PathFinder.NEIGHBOURS9) {
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 						fieldOfView[mob.pos + i] = true;
 					}
 				}
@@ -1327,7 +1392,7 @@ public abstract class Level implements Bundlable {
 			Dungeon.hero.mindVisionEnemies.clear();
 			if (c.buff( MindVision.class ) != null) {
 				for (Mob mob : mobs) {
-					for (int i : PathFinder.NEIGHBOURS9) {
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 						heroMindFov[mob.pos + i] = true;
 					}
 				}
@@ -1337,7 +1402,7 @@ public abstract class Level implements Bundlable {
 				for (Mob mob : mobs) {
 					int p = mob.pos;
 					if (!fieldOfView[p] && distance(c.pos, p) <= range) {
-						for (int i : PathFinder.NEIGHBOURS9) {
+						for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 							heroMindFov[mob.pos + i] = true;
 						}
 					}
@@ -1347,7 +1412,7 @@ public abstract class Level implements Bundlable {
 			if (c.buff( Awareness.class ) != null) {
 				for (Heap heap : heaps.valueList()) {
 					int p = heap.pos;
-					for (int i : PathFinder.NEIGHBOURS9) heroMindFov[p+i] = true;
+					for (int i : PathFinder.OFFSETS_NEIGHBOURS9) heroMindFov[p+i] = true;
 				}
 			}
 
@@ -1357,12 +1422,12 @@ public abstract class Level implements Bundlable {
 					continue;
 				}
 				int p = ch.pos;
-				for (int i : PathFinder.NEIGHBOURS9) heroMindFov[p+i] = true;
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) heroMindFov[p+i] = true;
 			}
 
 			for (TalismanOfForesight.HeapAwareness h : c.buffs(TalismanOfForesight.HeapAwareness.class)){
 				if (Dungeon.depth != h.depth || Dungeon.branch != h.branch) continue;
-				for (int i : PathFinder.NEIGHBOURS9) heroMindFov[h.pos+i] = true;
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) heroMindFov[h.pos+i] = true;
 			}
 
 			for (Mob m : mobs){
@@ -1379,7 +1444,7 @@ public abstract class Level implements Bundlable {
 
 			for (RevealedArea a : c.buffs(RevealedArea.class)){
 				if (Dungeon.depth != a.depth || Dungeon.branch != a.branch) continue;
-				for (int i : PathFinder.NEIGHBOURS9) heroMindFov[a.pos+i] = true;
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) heroMindFov[a.pos+i] = true;
 			}
 
 			//set mind vision chars

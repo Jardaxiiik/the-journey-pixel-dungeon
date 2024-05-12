@@ -41,7 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Wandmaker;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
@@ -245,7 +245,7 @@ public class Dungeon {
 			SpecialRoom.initForRun();
 			SecretRoom.initForRun();
 
-			Generator.fullReset();
+			ItemGenerator.fullReset();
 
 		Random.resetGenerators();
 		
@@ -484,7 +484,7 @@ public class Dungeon {
 		for(Mob m : level.mobs){
 			if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)){
 				//displace mob
-				for(int i : PathFinder.NEIGHBOURS8){
+				for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					if (Actor.findChar(m.pos+i) == null && level.passable[m.pos + i]){
 						m.pos += i;
 						break;
@@ -624,7 +624,7 @@ public class Dungeon {
 			
 			Statistics.storeInBundle( bundle );
 			Notes.storeInBundle( bundle );
-			Generator.storeInBundle( bundle );
+			ItemGenerator.storeInBundle( bundle );
 
 			int[] bundleArr = new int[generatedLevels.size()];
 			for (int i = 0; i < generatedLevels.size(); i++){
@@ -759,7 +759,7 @@ public class Dungeon {
 		energy = bundle.getInt( ENERGY );
 
 		Statistics.restoreFromBundle( bundle );
-		Generator.restoreFromBundle( bundle );
+		ItemGenerator.restoreFromBundle( bundle );
 
 		generatedLevels.clear();
 		if (bundle.contains(GENERATED_LEVELS)){

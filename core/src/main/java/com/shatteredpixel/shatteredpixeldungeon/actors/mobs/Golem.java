@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -48,7 +48,7 @@ public class Golem extends Mob {
 		EXP = 12;
 		maxLvl = 22;
 
-		loot = Random.oneOf(Generator.Category.WEAPON, Generator.Category.ARMOR);
+		loot = Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR);
 		lootChance = 0.125f; //initially, see lootChance()
 
 		properties.add(Property.INORGANIC);
@@ -89,10 +89,10 @@ public class Golem extends Mob {
 	public Item createLoot() {
 		Dungeon.LimitedDrops.GOLEM_EQUIP.count++;
 		//uses probability tables for demon halls
-		if (loot == Generator.Category.WEAPON){
-			return Generator.randomWeapon(5, true);
+		if (loot == ItemGenerator.Category.WEAPON){
+			return ItemGenerator.randomWeapon(5, true);
 		} else {
-			return Generator.randomArmor(5);
+			return ItemGenerator.randomArmor(5);
 		}
 	}
 
@@ -148,7 +148,7 @@ public class Golem extends Mob {
 		spend(TICK);
 
 		int bestPos = enemy.pos;
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (Dungeon.level.passable[pos + i]
 				&& Actor.findChar(pos+i) == null
 				&& Dungeon.level.trueDistance(pos+i, enemy.pos) > Dungeon.level.trueDistance(bestPos, enemy.pos)){

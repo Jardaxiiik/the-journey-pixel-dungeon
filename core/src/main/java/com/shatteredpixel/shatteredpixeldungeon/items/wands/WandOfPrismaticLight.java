@@ -111,7 +111,7 @@ public class WandOfPrismaticLight extends DamageWand {
 			if (!Dungeon.level.insideMap(c)){
 				continue;
 			}
-			for (int n : PathFinder.NEIGHBOURS9){
+			for (int n : PathFinder.OFFSETS_NEIGHBOURS9){
 				int cell = c+n;
 
 				if (Dungeon.level.discoverable[cell])

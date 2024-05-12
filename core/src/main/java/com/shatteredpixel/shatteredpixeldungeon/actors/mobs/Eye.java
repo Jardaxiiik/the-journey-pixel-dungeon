@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PurpleParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DisintegrationTrap;
@@ -220,7 +220,7 @@ public class Eye extends Mob {
 				loot = new Dewdrop();
 				int ofs;
 				do {
-					ofs = PathFinder.NEIGHBOURS8[Random.Int(8)];
+					ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 				} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
 				if (Dungeon.level.heaps.get(pos+ofs) == null) {
 					Dungeon.level.drop(new Dewdrop(), pos + ofs).sprite.drop(pos);
@@ -229,10 +229,10 @@ public class Eye extends Mob {
 				}
 				break;
 			case 2:
-				loot = Generator.randomUsingDefaults(Generator.Category.SEED);
+				loot = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED);
 				break;
 			case 3:
-				loot = Generator.randomUsingDefaults(Generator.Category.STONE);
+				loot = ItemGenerator.randomUsingDefaults(ItemGenerator.Category.STONE);
 				break;
 		}
 		return loot;

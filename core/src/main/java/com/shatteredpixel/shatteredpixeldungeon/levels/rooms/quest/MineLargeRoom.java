@@ -133,7 +133,7 @@ public class MineLargeRoom extends CaveRoom {
 
 			int guardPos;
 			do {
-				guardPos = sapperPos+PathFinder.NEIGHBOURS8[Random.Int(8)];
+				guardPos = sapperPos+PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 			} while (level.map[guardPos] != Terrain.EMPTY);
 			GnollGuard g = new GnollGuard();
 			g.pos = guardPos;
@@ -142,7 +142,7 @@ public class MineLargeRoom extends CaveRoom {
 
 			int barricades = Random.Int(2) == 0 ? 2 : 1;
 			for (int i = 0; i < barricades; i ++){
-				int barricadePos = sapperPos+PathFinder.NEIGHBOURS8[Random.Int(8)];
+				int barricadePos = sapperPos+PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 				if (level.map[barricadePos] == Terrain.EMPTY && barricadePos != guardPos){
 					Painter.set(level, barricadePos, Terrain.BARRICADE);
 				} else {
@@ -215,7 +215,7 @@ public class MineLargeRoom extends CaveRoom {
 	}
 
 	private void findInternalCells(Level level, int cell, ArrayList<Integer> internalCells){
-		for (int i : PathFinder.NEIGHBOURS4){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS4){
 			if (!internalCells.contains(cell+i) && level.map[cell+i] != Terrain.MINE_CRYSTAL){
 				internalCells.add(cell+i);
 				findInternalCells(level, cell+i, internalCells);

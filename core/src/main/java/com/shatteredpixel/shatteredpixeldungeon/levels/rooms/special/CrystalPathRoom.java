@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
@@ -164,20 +164,20 @@ public class CrystalPathRoom extends SpecialRoom {
 		ArrayList<Item> duplicates = new ArrayList<>();
 
 		if (Random.Int(2) == 0){
-			addRewardItem(Generator.Category.POTION, potions, duplicates);
+			addRewardItem(ItemGenerator.Category.POTION, potions, duplicates);
 			scrolls.add(new ScrollOfTransmutation());
 		} else {
 			potions.add(new PotionOfExperience());
-			addRewardItem(Generator.Category.SCROLL, scrolls, duplicates);
+			addRewardItem(ItemGenerator.Category.SCROLL, scrolls, duplicates);
 		}
-		addRewardItem(Generator.Category.POTION, potions, duplicates);
-		addRewardItem(Generator.Category.SCROLL, scrolls, duplicates);
-		addRewardItem(Generator.Category.POTION, potions, duplicates);
-		addRewardItem(Generator.Category.SCROLL, scrolls, duplicates);
+		addRewardItem(ItemGenerator.Category.POTION, potions, duplicates);
+		addRewardItem(ItemGenerator.Category.SCROLL, scrolls, duplicates);
+		addRewardItem(ItemGenerator.Category.POTION, potions, duplicates);
+		addRewardItem(ItemGenerator.Category.SCROLL, scrolls, duplicates);
 
 		//need to undo the changes to spawn chances that the duplicates created
 		for (Item i : duplicates){
-			Generator.undoDrop(i);
+			ItemGenerator.undoDrop(i);
 		}
 
 		//rarer potions/scrolls go later in the order
@@ -185,9 +185,9 @@ public class CrystalPathRoom extends SpecialRoom {
 			@Override
 			public int compare(Item a, Item b) {
 				int aVal = 0, bVal = 0;
-				for (int i = 0; i < Generator.Category.POTION.classes.length; i++){
-					if (a.getClass() == Generator.Category.POTION.classes[i]) aVal = (int)Generator.Category.POTION.defaultProbsTotal[i];
-					if (b.getClass() == Generator.Category.POTION.classes[i]) bVal = (int)Generator.Category.POTION.defaultProbsTotal[i];
+				for (int i = 0; i < ItemGenerator.Category.POTION.classes.length; i++){
+					if (a.getClass() == ItemGenerator.Category.POTION.classes[i]) aVal = (int) ItemGenerator.Category.POTION.defaultProbsTotal[i];
+					if (b.getClass() == ItemGenerator.Category.POTION.classes[i]) bVal = (int) ItemGenerator.Category.POTION.defaultProbsTotal[i];
 				}
 				return bVal - aVal;
 			}
@@ -196,9 +196,9 @@ public class CrystalPathRoom extends SpecialRoom {
 			@Override
 			public int compare(Item a, Item b) {
 				int aVal = 0, bVal = 0;
-				for (int i = 0; i < Generator.Category.SCROLL.classes.length; i++){
-					if (a.getClass() == Generator.Category.SCROLL.classes[i]) aVal = (int)Generator.Category.SCROLL.defaultProbsTotal[i];
-					if (b.getClass() == Generator.Category.SCROLL.classes[i]) bVal = (int)Generator.Category.SCROLL.defaultProbsTotal[i];
+				for (int i = 0; i < ItemGenerator.Category.SCROLL.classes.length; i++){
+					if (a.getClass() == ItemGenerator.Category.SCROLL.classes[i]) aVal = (int) ItemGenerator.Category.SCROLL.defaultProbsTotal[i];
+					if (b.getClass() == ItemGenerator.Category.SCROLL.classes[i]) bVal = (int) ItemGenerator.Category.SCROLL.defaultProbsTotal[i];
 				}
 				return bVal - aVal;
 			}
@@ -225,9 +225,9 @@ public class CrystalPathRoom extends SpecialRoom {
 	}
 
 	//this prevents duplicates
-	public void addRewardItem(Generator.Category cat, ArrayList<Item> items, ArrayList<Item> dupes){
+	public void addRewardItem(ItemGenerator.Category cat, ArrayList<Item> items, ArrayList<Item> dupes){
 		while (true) {
-			Item reward = Generator.random(cat);
+			Item reward = ItemGenerator.random(cat);
 
 			boolean dupe = false;
 			for (Item i : items){

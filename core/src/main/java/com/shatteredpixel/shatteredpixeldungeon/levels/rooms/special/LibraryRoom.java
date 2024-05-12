@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
@@ -68,7 +68,7 @@ public class LibraryRoom extends SpecialRoom {
 		
 		Item prize = level.findPrizeItem( Scroll.class );
 		if (prize == null)
-			prize = Generator.random( Generator.Category.SCROLL );
+			prize = ItemGenerator.random( ItemGenerator.Category.SCROLL );
 		
 		return prize;
 	}

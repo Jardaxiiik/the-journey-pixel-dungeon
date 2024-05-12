@@ -58,7 +58,7 @@ public class PitfallTrap extends Trap {
 		p.branch = Dungeon.branch;
 		p.pos = pos;
 
-		for (int i : PathFinder.NEIGHBOURS9){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 			if (!Dungeon.level.solid[pos+i] || Dungeon.level.passable[pos+i]){
 				CellEmitter.floor(pos+i).burst(PitfallParticle.FACTORY4, 8);
 			}
@@ -87,7 +87,7 @@ public class PitfallTrap extends Trap {
 
 			boolean herofell = false;
 			if (depth == Dungeon.depth && branch == Dungeon.branch) {
-				for (int i : PathFinder.NEIGHBOURS9) {
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 
 					int cell = pos + i;
 

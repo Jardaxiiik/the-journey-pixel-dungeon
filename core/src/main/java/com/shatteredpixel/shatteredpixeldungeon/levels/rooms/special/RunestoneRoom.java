@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
@@ -67,7 +67,7 @@ public class RunestoneRoom extends SpecialRoom {
 		
 		Item prize = level.findPrizeItem( Runestone.class );
 		if (prize == null)
-			prize = Generator.random( Generator.Category.STONE );
+			prize = ItemGenerator.random( ItemGenerator.Category.STONE );
 		
 		return prize;
 	}

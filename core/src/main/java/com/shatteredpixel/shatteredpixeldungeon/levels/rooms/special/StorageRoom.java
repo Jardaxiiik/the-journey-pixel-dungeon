@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
@@ -65,11 +65,11 @@ public class StorageRoom extends SpecialRoom {
 				return prize;
 		}
 		
-		return Generator.random( Random.oneOf(
-			Generator.Category.POTION,
-			Generator.Category.SCROLL,
-			Generator.Category.FOOD,
-			Generator.Category.GOLD
+		return ItemGenerator.random( Random.oneOf(
+			ItemGenerator.Category.POTION,
+			ItemGenerator.Category.SCROLL,
+			ItemGenerator.Category.FOOD,
+			ItemGenerator.Category.GOLD
 		) );
 	}
 }

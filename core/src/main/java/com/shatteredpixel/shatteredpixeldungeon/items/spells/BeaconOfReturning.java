@@ -119,7 +119,7 @@ public class BeaconOfReturning extends Spell {
 				Char toPush = !Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
 
 				ArrayList<Integer> candidates = new ArrayList<>();
-				for (int n : PathFinder.NEIGHBOURS8) {
+				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = returnPos + n;
 					if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
 							&& (!Char.hasProp(toPush, Char.Property.LARGE) || Dungeon.level.openSpace[cell])) {

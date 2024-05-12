@@ -108,9 +108,9 @@ public class Pickaxe extends MeleeWeapon {
 				return;
 			}
 			
-			for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
+			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				
-				final int pos = hero.pos + PathFinder.NEIGHBOURS8[i];
+				final int pos = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
 				if (Dungeon.level.map[pos] == Terrain.WALL_DECO) {
 				
 					hero.spend( TIME_TO_MINE );

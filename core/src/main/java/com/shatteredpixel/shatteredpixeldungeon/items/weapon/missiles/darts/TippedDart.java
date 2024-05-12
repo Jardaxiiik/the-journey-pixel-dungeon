@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
@@ -219,7 +219,7 @@ public abstract class TippedDart extends Dart {
 	public static TippedDart randomTipped( int quantity ){
 		Plant.Seed s;
 		do{
-			s = (Plant.Seed) Generator.randomUsingDefaults(Generator.Category.SEED);
+			s = (Plant.Seed) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED);
 		} while (!types.containsKey(s.getClass()));
 		
 		return getTipped(s, quantity );

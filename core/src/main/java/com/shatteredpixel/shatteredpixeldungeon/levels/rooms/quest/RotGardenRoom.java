@@ -141,12 +141,12 @@ public class RotGardenRoom extends SpecialRoom {
 		//if almost every open cell next to the heart has a lasher threatening it, clear one lasher
 		int safeHeartcells = 0;
 		HashSet<Mob> adjacentLashers = new HashSet<>();
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (level.map[heartPos+i] == Terrain.WALL) {
 				continue;
 			}
 			boolean foundLasher = false;
-			for (int j : PathFinder.NEIGHBOURS8){
+			for (int j : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (heartPos+i+j != heartPos
 						&& level.map[heartPos+i+j] != Terrain.WALL
 						&& level.findMob(heartPos+i+j) != null){
@@ -172,14 +172,14 @@ public class RotGardenRoom extends SpecialRoom {
 			return false;
 		}
 
-		for (int i : PathFinder.NEIGHBOURS9){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 			if (level.findMob(pos+i) != null){
 				return false;
 			}
 		}
 
 		newPassable[pos] = false;
-		for (int i : PathFinder.NEIGHBOURS4){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS4){
 			newPassable[pos+i] = false;
 		}
 

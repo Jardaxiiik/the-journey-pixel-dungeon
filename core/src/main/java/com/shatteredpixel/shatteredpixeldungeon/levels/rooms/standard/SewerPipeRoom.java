@@ -151,7 +151,7 @@ public class SewerPipeRoom extends StandardRoom {
 		for(Point p : getPoints()){
 			int cell = level.pointToCell(p);
 			if (level.map[cell] == Terrain.WATER){
-				for (int i : PathFinder.NEIGHBOURS8){
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					if (level.map[cell + i] == Terrain.WALL){
 						Painter.set(level, cell + i, Terrain.EMPTY);
 					}

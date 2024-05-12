@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotHeart;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CeremonialCandle;
@@ -317,18 +317,18 @@ public class Wandmaker extends NPC {
 				spawned = true;
 
 				given = false;
-				wand1 = (Wand) Generator.random(Generator.Category.WAND);
+				wand1 = (Wand) ItemGenerator.random(ItemGenerator.Category.WAND);
 				wand1.cursed = false;
 				wand1.upgrade();
 
-				wand2 = (Wand) Generator.random(Generator.Category.WAND);
+				wand2 = (Wand) ItemGenerator.random(ItemGenerator.Category.WAND);
 				ArrayList<Item> toUndo = new ArrayList<>();
 				while (wand2.getClass() == wand1.getClass()) {
 					toUndo.add(wand2);
-					wand2 = (Wand) Generator.random(Generator.Category.WAND);
+					wand2 = (Wand) ItemGenerator.random(ItemGenerator.Category.WAND);
 				}
 				for (Item i :toUndo){
-					Generator.undoDrop(i);
+					ItemGenerator.undoDrop(i);
 				}
 				wand2.cursed = false;
 				wand2.upgrade();

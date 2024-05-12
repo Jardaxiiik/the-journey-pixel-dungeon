@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FungalSpinner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGuard;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
-import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Torch;
@@ -196,7 +196,7 @@ public class MiningLevel extends CavesLevel {
 			map[cell] = Terrain.GRASS;
 			losBlocking[cell] = false;
 		}
-		drop( Generator.randomUsingDefaults(Generator.Category.FOOD), cell );
+		drop( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
 		if (Blacksmith.Quest.Type() == Blacksmith.Quest.GNOLL){
 			//drop a second ration for the gnoll quest type, more mining required!
 			cell = randomDropCell();
@@ -204,7 +204,7 @@ public class MiningLevel extends CavesLevel {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
 			}
-			drop( Generator.randomUsingDefaults(Generator.Category.FOOD), cell );
+			drop( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
 		}
 
 		if (Dungeon.isChallenged(Challenges.DARKNESS)){

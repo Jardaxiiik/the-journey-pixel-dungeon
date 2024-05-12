@@ -69,7 +69,7 @@ public class GeyserTrap extends Trap {
 			}
 		}
 
-		for (int i : PathFinder.NEIGHBOURS8){
+		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			Char ch = Actor.findChar(pos + i);
 			if (ch != null){
 
@@ -101,7 +101,7 @@ public class GeyserTrap extends Trap {
 			} else if (ch == Dungeon.hero){
 				//if it is the hero, random direction that isn't into a hazard
 				ArrayList<Integer> candidates = new ArrayList<>();
-				for (int i : PathFinder.NEIGHBOURS8){
+				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					//add as a candidate if both cells on the trajectory are safe
 					if (!Dungeon.level.avoid[pos + i] && !Dungeon.level.avoid[pos + i + i]){
 						candidates.add(pos + i);
@@ -112,7 +112,7 @@ public class GeyserTrap extends Trap {
 				}
 			} else {
 				//random direction if it isn't the hero
-				targetpos = pos + PathFinder.NEIGHBOURS8[Random.Int(8)];
+				targetpos = pos + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 			}
 
 			//does the equivalent of a bomb's damage against fiery enemies.
