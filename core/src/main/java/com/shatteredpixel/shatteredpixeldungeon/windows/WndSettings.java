@@ -159,7 +159,7 @@ public class WndSettings extends WndTabbed {
 		langs = new LangsTab();
 		langs.setSize(width, 0);
 		height = Math.max(height, langs.height());
-		//add( langs );
+		//add( langs ); // makes no other language possible
 
 
 		IconTab langsTab = new IconTab(Icons.get(Icons.LANGS)){
@@ -184,7 +184,7 @@ public class WndSettings extends WndTabbed {
 			}
 
 		};
-		//add( langsTab );
+		//add( langsTab ); // Makes no other language possible
 
 		resize(width, (int)Math.ceil(height));
 
