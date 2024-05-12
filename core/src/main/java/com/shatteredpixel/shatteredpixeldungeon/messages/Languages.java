@@ -24,7 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.messages;
 import java.util.Locale;
 
 public enum Languages {
-	ENGLISH("english",      "",   Status._COMPLETE_, null, null),
+	ENGLISH("english",      "",   Status._COMPLETE_, null, null);
+	/* I am unable to maintain other languages from the translation page. So I comment them.
 	CHINESE("中文",          "zh", Status.UNREVIEWED, new String[]{"Chronie_Lynn_Iwa", "Jinkeloid(zdx00793)", "endlesssolitude"}, new String[]{"931451545", "Budding", "Fatir", "Fishbone", "Hcat", "HoofBumpBlurryface", "Horr_lski", "Lery", "Lyn_0401", "Lyx0527", "Ooooscar", "RainSlide", "ShatteredFlameBlast", "SpaceAnchor", "SunsetGlowTheDOGE", "Teller", "hmdzl001", "leo", "tempest102", "户方狸奴"}),
 	KOREAN("한국어",         "ko", Status.UNREVIEWED, new String[]{"Cocoa", "Flameblast12", "GameConqueror", "Korean2017"}, new String[]{"AFS", "N8fall", "WondarRabb1t", "chlrhwnstkd", "ddojin0115", "eeeei", "enjuxx", "hancyel", "linterpreteur", "lemonam", "lsiebnie", "sora0430"}),
 	RUSSIAN("русский",      "ru", Status._COMPLETE_, new String[]{"AprilRain(Vadzim Navumaû)", "ConsideredHamster", "Dominowood371", "Inevielle", "apxwn", "yarikonline"}, new String[]{"AttHawk46", "BlueberryShortcake", "CatGirlSasha", "Enwviun", "HerrGotlieb", "HoloTheWise", "Ilbko", "JleHuBbluKoT", "KirStaLong", "MrXantar", "Nikets", "Originalej0name", "Raymundo", "Shamahan", "Thomasg63", "XAutumn", "Ya6lo4ko", "dasfan123", "ifritdiezel", "kirusyaga", "long_live_the_9", "pancreper1", "perefrazz", "roman.yagodin", "tibby", "un_logic", "vivatimperia", "Вoвa"}),
@@ -44,12 +45,12 @@ public enum Languages {
 	HUNGARIAN("magyar",     "hu", Status.UNREVIEWED, new String[]{"dorheim", "szalaik"}, new String[]{"Csanevox", "Navetelen", "acszoltan111", "clarovani", "dhialub", "nanometer", "nardomaa", "savarall", "summoner001", "szemetvodor"}),
 	//FINNISH("suomi", 		"fi", Status.UNFINISHED, new String[]{"TenguKnight"}, new String[]{"Allugaattori10", "Dakkus", "Jaskas123", "MailBoxGod", "Oftox", "Sautari", "Tikkari"} ),
 	GREEK("ελληνικά",       "el", Status._COMPLETE_, new String[]{"Aeonius", "Saxy"}, new String[]{"DU_Clouds", "VasKyr", "YiorgosH", "fr3sh", "stefboi", "toumbo", "val.exe"}),
-	BELARUSIAN("беларуская","be", Status.UNFINISHED, new String[]{"AprilRain(Vadzim Navumaû)"}, new String[]{"4ebotar"});
+	BELARUSIAN("беларуская","be", Status.UNREVIEWED, new String[]{"AprilRain(Vadzim Navumaû)"}, new String[]{"4ebotar"});
 	//CATALAN("català",     "ca", Status.UNFINISHED, new String[]{"Illyatwo2"}, new String[]{"Elosy", "n1ngu"})
 	//GALICIAN("galego",    "gl", Status.UNFINISHED, new String[]{"xecarballido"}, null),
 	//BASQUE("euskara",     "eu", Status.UNFINISHED, new String[]{"Deathrevenge", "Osoitz"}, null),
 	//ESPERANTO("esperanto","eo", Status.UNFINISHED, new String[]{"Verdulo"}, new String[]{"Raizin"});
-
+	*/
 	public enum Status{
 		//below 80% translated languages are not added or removed
 		UNFINISHED, //80-99% translated

@@ -159,7 +159,7 @@ public class TitleScene extends PixelScene {
 
 		StyledButton btnNews = new NewsButton(GREY_TR, Messages.get(this, "news"));
 		btnNews.icon(Icons.get(Icons.NEWS));
-		add(btnNews);
+		//add(btnNews); // Enables news feed for shattered pixel dungeon
 
 		StyledButton btnChanges = new ChangesButton(GREY_TR, Messages.get(this, "changes"));
 		btnChanges.icon(Icons.get(Icons.CHANGES));
