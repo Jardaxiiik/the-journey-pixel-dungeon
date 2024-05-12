@@ -69,7 +69,7 @@ public class BlacksmithRoom extends StandardRoom {
 			level.drop(
 				ItemGenerator.random( Random.oneOf(
 					ItemGenerator.Category.ARMOR,
-					ItemGenerator.Category.WEAPON,
+					ItemGenerator.Category.WEAPON
 					//ItemGenerator.Category.MISSILE // REMOVE_MISSILES
 				) ), pos );
 		}
