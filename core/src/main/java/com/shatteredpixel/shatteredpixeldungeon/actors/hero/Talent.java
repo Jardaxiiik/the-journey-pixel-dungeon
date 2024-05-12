@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
@@ -969,7 +969,7 @@ public enum Talent {
 					try {
 						hero.metamorphedTalents.put(Talent.valueOf(key), Talent.valueOf(value));
 					} catch (Exception e) {
-						ShatteredPixelDungeon.reportException(e);
+						JourneyPixelDungeon.reportException(e);
 					}
 				}
 			}
@@ -994,7 +994,7 @@ public enum Talent {
 								tier.put(talent, Math.min(points, talent.maxPoints()));
 							}
 						} catch (Exception e) {
-							ShatteredPixelDungeon.reportException(e);
+							JourneyPixelDungeon.reportException(e);
 						}
 					}
 				}

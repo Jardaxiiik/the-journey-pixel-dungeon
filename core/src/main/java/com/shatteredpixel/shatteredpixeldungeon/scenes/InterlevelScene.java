@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.scenes;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -328,7 +328,7 @@ public class InterlevelScene extends PixelScene {
 				}
 				//we care about reporting game logic exceptions, not slow IO
 				if (!s.contains("FileUtils.bundleToFile")){
-					ShatteredPixelDungeon.reportException(
+					JourneyPixelDungeon.reportException(
 							new RuntimeException("waited more than 10 seconds on levelgen. " +
 									"Seed:" + Dungeon.seed + " depth:" + Dungeon.depth + " trace:" +
 									s));

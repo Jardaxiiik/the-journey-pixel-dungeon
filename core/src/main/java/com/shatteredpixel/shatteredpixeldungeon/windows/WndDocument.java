@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ScrollingListPane;
@@ -47,7 +47,7 @@ public class WndDocument extends Window {
 				@Override
 				public boolean onClick(float x, float y) {
 					if (inside( x, y ) && found) {
-						ShatteredPixelDungeon.scene().addToFront( new WndStory(
+						JourneyPixelDungeon.scene().addToFront( new WndStory(
 								doc.pageSprite(page),
 								doc.pageTitle(page),
 								doc.pageBody(page) ));

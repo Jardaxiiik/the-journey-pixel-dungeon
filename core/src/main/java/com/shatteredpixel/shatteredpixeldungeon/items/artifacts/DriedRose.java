@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
@@ -225,7 +225,7 @@ public class DriedRose extends Artifact {
 	@Override
 	public String desc() {
 		if (!Ghost.Quest.completed()
-				&& (ShatteredPixelDungeon.scene() instanceof GameScene || ShatteredPixelDungeon.scene() instanceof AlchemyScene)){
+				&& (JourneyPixelDungeon.scene() instanceof GameScene || JourneyPixelDungeon.scene() instanceof AlchemyScene)){
 			return Messages.get(this, "desc_no_quest");
 		}
 		
@@ -279,7 +279,7 @@ public class DriedRose extends Artifact {
 					ghostID = 0;
 				}
 			} catch ( ClassCastException e ){
-				ShatteredPixelDungeon.reportException(e);
+				JourneyPixelDungeon.reportException(e);
 				ghostID = 0;
 			}
 		}
@@ -803,7 +803,7 @@ public class DriedRose extends Artifact {
 						break;
 				}
 			}
-			if (ShatteredPixelDungeon.scene() instanceof GameScene) {
+			if (JourneyPixelDungeon.scene() instanceof GameScene) {
 				Sample.INSTANCE.play( Assets.Sounds.GHOST );
 			}
 		}

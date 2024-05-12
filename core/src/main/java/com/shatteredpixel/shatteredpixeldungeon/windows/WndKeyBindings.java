@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -358,15 +358,15 @@ public class WndKeyBindings extends Window {
 			if (inside(x, y)){
 				//assigning third key
 				if (x >= this.x + 4*width()/5 - 1 && key2 != 0) {
-					ShatteredPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 3, key3, key1, key2));
+					JourneyPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 3, key3, key1, key2));
 
 				//assigning second key
 				} else if (x >= this.x + 3*width()/5 - 1 && key1 != 0) {
-					ShatteredPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 2, key2, key1, key3));
+					JourneyPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 2, key2, key1, key3));
 
 				//assigning first key
 				} else if (x >= this.x + 2*width()/5){
-					ShatteredPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 1, key1, key2, key3));
+					JourneyPixelDungeon.scene().addToFront( new WndChangeBinding(gameAction, this, 1, key1, key2, key3));
 
 				}
 				return true;
@@ -430,7 +430,7 @@ public class WndKeyBindings extends Window {
 				@Override
 				protected void onClick() {
 					if (action == GameAction.LEFT_CLICK && listItem.key2 == 0 && listItem.key3 == 0){
-						ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(WndChangeBinding.class, "cant_unbind")));
+						JourneyPixelDungeon.scene().addToFront(new WndMessage(Messages.get(WndChangeBinding.class, "cant_unbind")));
 					} else {
 						onSignal(new KeyEvent(0, true));
 					}

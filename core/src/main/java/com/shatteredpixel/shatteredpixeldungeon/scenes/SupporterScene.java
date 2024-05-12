@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
@@ -82,7 +82,7 @@ public class SupporterScene extends PixelScene {
 				link += "?utm_source=shatteredpd";
 				link += "&utm_medium=supporter_page";
 				link += "&utm_campaign=ingame_link";
-				ShatteredPixelDungeon.platform.openURI(link);
+				JourneyPixelDungeon.platform.openURI(link);
 			}
 		};
 		link.icon(Icons.get(Icons.GOLD));
@@ -105,7 +105,7 @@ public class SupporterScene extends PixelScene {
 
 	@Override
 	protected void onBackPressed() {
-		ShatteredPixelDungeon.switchNoFade( TitleScene.class );
+		JourneyPixelDungeon.switchNoFade( TitleScene.class );
 	}
 
 	private static class SupporterMessage extends Component {

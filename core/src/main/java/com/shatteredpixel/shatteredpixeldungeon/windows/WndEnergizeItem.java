@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -115,10 +115,10 @@ public class WndEnergizeItem extends WndInfoItem {
 		}
 		item.detachAll( hero.belongings.backpack );
 
-		if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+		if (JourneyPixelDungeon.scene() instanceof AlchemyScene){
 
 			Dungeon.energy += item.energyVal();
-			((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
+			((AlchemyScene) JourneyPixelDungeon.scene()).createEnergy();
 
 		} else {
 
@@ -140,10 +140,10 @@ public class WndEnergizeItem extends WndInfoItem {
 
 			item = item.detach( hero.belongings.backpack );
 
-			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
+			if (JourneyPixelDungeon.scene() instanceof AlchemyScene){
 
 				Dungeon.energy += item.energyVal();
-				((AlchemyScene) ShatteredPixelDungeon.scene()).createEnergy();
+				((AlchemyScene) JourneyPixelDungeon.scene()).createEnergy();
 
 			} else {
 
@@ -156,11 +156,11 @@ public class WndEnergizeItem extends WndInfoItem {
 	}
 
 	public static WndBag openItemSelector(){
-		if (ShatteredPixelDungeon.scene() instanceof GameScene) {
+		if (JourneyPixelDungeon.scene() instanceof GameScene) {
 			return GameScene.selectItem( selector );
 		} else {
 			WndBag window = WndBag.getBag( selector );
-			ShatteredPixelDungeon.scene().addToFront(window);
+			JourneyPixelDungeon.scene().addToFront(window);
 			return window;
 		}
 	}
@@ -180,10 +180,10 @@ public class WndEnergizeItem extends WndInfoItem {
 		public void onSelect(Item item) {
 			if (item != null) {
 				WndBag parentWnd = openItemSelector();
-				if (ShatteredPixelDungeon.scene() instanceof GameScene) {
+				if (JourneyPixelDungeon.scene() instanceof GameScene) {
 					GameScene.show(new WndEnergizeItem(item, parentWnd));
 				} else {
-					ShatteredPixelDungeon.scene().addToFront(new WndEnergizeItem(item, parentWnd));
+					JourneyPixelDungeon.scene().addToFront(new WndEnergizeItem(item, parentWnd));
 				}
 			}
 		}

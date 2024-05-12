@@ -249,7 +249,7 @@ public class Badges {
 					badges.add( Badge.valueOf( names[i] ) );
 				}
 			} catch (Exception e) {
-				ShatteredPixelDungeon.reportException(e);
+				JourneyPixelDungeon.reportException(e);
 			}
 		}
 
@@ -304,7 +304,7 @@ public class Badges {
 				FileUtils.bundleToFile(BADGES_FILE, bundle);
 				saveNeeded = false;
 			} catch (IOException e) {
-				ShatteredPixelDungeon.reportException(e);
+				JourneyPixelDungeon.reportException(e);
 			}
 		}
 	}

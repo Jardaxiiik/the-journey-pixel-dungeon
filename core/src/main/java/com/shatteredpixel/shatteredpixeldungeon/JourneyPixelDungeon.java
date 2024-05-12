@@ -31,7 +31,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
 
-public class ShatteredPixelDungeon extends Game {
+public class JourneyPixelDungeon extends Game {
 
 	//variable constants for specific older versions of shattered, used for data conversion
 	public static final int v1_2_3 = 628; //v1.2.3 is kept for now, for old rankings score logic
@@ -44,7 +44,7 @@ public class ShatteredPixelDungeon extends Game {
 	public static final int v2_2_1 = 755; //iOS was 755 (also called v2.2.2), other platforms were 754
 	public static final int v2_3_0 = 765;
 	
-	public ShatteredPixelDungeon( PlatformSupport platform ) {
+	public JourneyPixelDungeon(PlatformSupport platform ) {
 		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
 
 		//pre-v2.3.0

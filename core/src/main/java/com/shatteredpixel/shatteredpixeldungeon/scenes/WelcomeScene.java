@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Fireball;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
@@ -53,7 +53,7 @@ import java.util.Collections;
 
 public class WelcomeScene extends PixelScene {
 
-	private static final int LATEST_UPDATE = ShatteredPixelDungeon.v2_3_0;
+	private static final int LATEST_UPDATE = JourneyPixelDungeon.v2_3_0;
 
 	//used so that the game does not keep showing the window forever if cleaning fails
 	private static boolean triedCleaningTemp = false;
@@ -74,14 +74,14 @@ public class WelcomeScene extends PixelScene {
 				public void hide() {
 					super.hide();
 					triedCleaningTemp = true;
-					ShatteredPixelDungeon.resetScene();
+					JourneyPixelDungeon.resetScene();
 				}
 			});
 			return;
 		}
 
-		if (ShatteredPixelDungeon.versionCode == previousVersion && !SPDSettings.intro()) {
-			ShatteredPixelDungeon.switchNoFade(TitleScene.class);
+		if (JourneyPixelDungeon.versionCode == previousVersion && !SPDSettings.intro()) {
+			JourneyPixelDungeon.switchNoFade(TitleScene.class);
 			return;
 		}
 
@@ -144,18 +144,18 @@ public class WelcomeScene extends PixelScene {
 						updateVersion(previousVersion);
 					}
 
-					SPDSettings.version(ShatteredPixelDungeon.versionCode);
+					SPDSettings.version(JourneyPixelDungeon.versionCode);
 					GamesInProgress.selectedClass = null;
 					GamesInProgress.curSlot = GamesInProgress.firstEmpty();
 					if (GamesInProgress.curSlot == -1 || Rankings.INSTANCE.totalNumber > 0){
 						SPDSettings.intro(false);
-						ShatteredPixelDungeon.switchScene(TitleScene.class);
+						JourneyPixelDungeon.switchScene(TitleScene.class);
 					} else {
-						ShatteredPixelDungeon.switchScene(HeroSelectScene.class);
+						JourneyPixelDungeon.switchScene(HeroSelectScene.class);
 					}
 				} else {
 					updateVersion(previousVersion);
-					ShatteredPixelDungeon.switchScene(TitleScene.class);
+					JourneyPixelDungeon.switchScene(TitleScene.class);
 				}
 			}
 		};
@@ -168,7 +168,7 @@ public class WelcomeScene extends PixelScene {
 				protected void onClick() {
 					super.onClick();
 					updateVersion(previousVersion);
-					ShatteredPixelDungeon.switchScene(ChangesScene.class);
+					JourneyPixelDungeon.switchScene(ChangesScene.class);
 				}
 			};
 			okay.setRect(title.x, buttonY, (title.width()/2)-2, 20);
@@ -188,7 +188,7 @@ public class WelcomeScene extends PixelScene {
 		String message;
 		if (previousVersion == 0 || SPDSettings.intro()) {
 			message = Document.INTROS.pageBody(0);
-		} else if (previousVersion <= ShatteredPixelDungeon.versionCode) {
+		} else if (previousVersion <= JourneyPixelDungeon.versionCode) {
 			if (previousVersion < LATEST_UPDATE){
 				message = Messages.get(this, "update_intro");
 				message += "\n\n" + Messages.get(this, "update_msg");
@@ -240,7 +240,7 @@ public class WelcomeScene extends PixelScene {
 			Journal.loadGlobal();
 
 			//pre-unlock Duelist for those who already have a win
-			if (previousVersion <= ShatteredPixelDungeon.v2_0_2){
+			if (previousVersion <= JourneyPixelDungeon.v2_0_2){
 				if (Badges.isUnlocked(Badges.Badge.VICTORY) && !Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST)){
 					Badges.unlock(Badges.Badge.UNLOCK_DUELIST);
 				}
@@ -282,7 +282,7 @@ public class WelcomeScene extends PixelScene {
 
 		}
 
-		SPDSettings.version(ShatteredPixelDungeon.versionCode);
+		SPDSettings.version(JourneyPixelDungeon.versionCode);
 	}
 	
 }

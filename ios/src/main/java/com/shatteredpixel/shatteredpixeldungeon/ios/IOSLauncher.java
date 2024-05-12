@@ -27,7 +27,7 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 import com.badlogic.gdx.backends.iosrobovm.IOSPreferences;
 import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.services.news.News;
 import com.shatteredpixel.shatteredpixeldungeon.services.news.NewsImpl;
 import com.shatteredpixel.shatteredpixeldungeon.services.updates.UpdateImpl;
@@ -170,7 +170,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 		config.addIosDevice("IPAD_PRO_12.9_6G",             "iPad14,5", 264);
 		config.addIosDevice("IPAD_PRO_12.9_6G",             "iPad14,6", 264);
 
-		return new IOSApplication(new ShatteredPixelDungeon(new IOSPlatformSupport()), config);
+		return new IOSApplication(new JourneyPixelDungeon(new IOSPlatformSupport()), config);
 	}
 
 	public static void main(String[] argv) {

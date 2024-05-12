@@ -108,14 +108,14 @@ public class GamesInProgress {
 				Dungeon.preview(info, bundle);
 				
 				//saves from before v1.4.3 are not supported
-				if (info.version < ShatteredPixelDungeon.v1_4_3) {
+				if (info.version < JourneyPixelDungeon.v1_4_3) {
 					info = null;
 				}
 
 			} catch (IOException e) {
 				info = null;
 			} catch (Exception e){
-				ShatteredPixelDungeon.reportException( e );
+				JourneyPixelDungeon.reportException( e );
 				info = null;
 			}
 			

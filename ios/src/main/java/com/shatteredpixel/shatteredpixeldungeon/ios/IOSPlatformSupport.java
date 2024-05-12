@@ -29,7 +29,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.watabou.input.ControllerHandler;
 import com.watabou.noosa.Game;
 import com.watabou.utils.PlatformSupport;
@@ -73,7 +73,7 @@ public class IOSPlatformSupport extends PlatformSupport {
 		int prevInset = Game.bottomInset;
 		updateDisplaySize();
 		if (prevInset != Game.bottomInset) {
-			ShatteredPixelDungeon.seamlessResetScene();
+			JourneyPixelDungeon.seamlessResetScene();
 		}
 	}
 

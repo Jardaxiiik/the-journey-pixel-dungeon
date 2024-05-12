@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -157,7 +157,7 @@ public class HeroSelectScene extends PixelScene {
 				if (landscape()){
 					w.offset(Camera.main.width/6, 0);
 				}
-				ShatteredPixelDungeon.scene().addToFront(w);
+				JourneyPixelDungeon.scene().addToFront(w);
 			}
 
 			@Override
@@ -499,7 +499,7 @@ public class HeroSelectScene extends PixelScene {
 	@Override
 	protected void onBackPressed() {
 		if (btnExit.active){
-			ShatteredPixelDungeon.switchScene(TitleScene.class);
+			JourneyPixelDungeon.switchScene(TitleScene.class);
 		} else {
 			super.onBackPressed();
 		}
@@ -540,13 +540,13 @@ public class HeroSelectScene extends PixelScene {
 			super.onClick();
 
 			if( !cl.isUnlocked() ){
-				ShatteredPixelDungeon.scene().addToFront( new WndMessage(cl.unlockMsg()));
+				JourneyPixelDungeon.scene().addToFront( new WndMessage(cl.unlockMsg()));
 			} else if (GamesInProgress.selectedClass == cl) {
 				Window w = new WndHeroInfo(cl);
 				if (landscape()){
 					w.offset(Camera.main.width/6, 0);
 				}
-				ShatteredPixelDungeon.scene().addToFront(w);
+				JourneyPixelDungeon.scene().addToFront(w);
 			} else {
 				setSelectedHero(cl);
 			}
@@ -573,7 +573,7 @@ public class HeroSelectScene extends PixelScene {
 					@Override
 					protected void onClick() {
 						String existingSeedtext = SPDSettings.customSeed();
-						ShatteredPixelDungeon.scene().addToFront( new WndTextInput(Messages.get(HeroSelectScene.class, "custom_seed_title"),
+						JourneyPixelDungeon.scene().addToFront(new WndTextInput(Messages.get(HeroSelectScene.class, "custom_seed_title"),
 								Messages.get(HeroSelectScene.class, "custom_seed_desc"),
 								existingSeedtext,
 								20,
@@ -591,7 +591,7 @@ public class HeroSelectScene extends PixelScene {
 										if (info.customSeed.isEmpty() && info.seed == seed){
 											SPDSettings.customSeed("");
 											icon.resetColor();
-											ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "custom_seed_duplicate")));
+											JourneyPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "custom_seed_duplicate")));
 											return;
 										}
 									}
@@ -626,13 +626,13 @@ public class HeroSelectScene extends PixelScene {
 
 						long diff = (SPDSettings.lastDaily() + DAY) - Game.realTime;
 						if (diff > 24*HOUR){
-							ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_unavailable_long", (diff / DAY)+1)));
+							JourneyPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_unavailable_long", (diff / DAY)+1)));
 							return;
 						}
 
 						for (GamesInProgress.Info game : GamesInProgress.checkAll()){
 							if (game.daily){
-								ShatteredPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_existing")));
+								JourneyPixelDungeon.scene().addToFront(new WndMessage(Messages.get(HeroSelectScene.class, "daily_existing")));
 								return;
 							}
 						}
@@ -640,7 +640,7 @@ public class HeroSelectScene extends PixelScene {
 						Image icon = Icons.get(Icons.CALENDAR);
 						if (diff <= 0)  icon.hardlight(0.5f, 1f, 2f);
 						else            icon.hardlight(1f, 0.5f, 2f);
-						ShatteredPixelDungeon.scene().addToFront(new WndOptions(
+						JourneyPixelDungeon.scene().addToFront(new WndOptions(
 								icon,
 								Messages.get(HeroSelectScene.class, "daily"),
 								diff > 0 ?
@@ -712,7 +712,7 @@ public class HeroSelectScene extends PixelScene {
 				StyledButton challengeButton = new StyledButton(Chrome.Type.BLANK, Messages.get(WndChallenges.class, "title"), 6){
 					@Override
 					protected void onClick() {
-						ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
+						JourneyPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
 							public void onBackPressed() {
 								super.onBackPressed();
 								icon(Icons.get(SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
