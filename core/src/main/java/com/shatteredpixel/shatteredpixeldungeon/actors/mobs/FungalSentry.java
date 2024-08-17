@@ -34,7 +34,7 @@ public class FungalSentry extends Mob {
 	{
 		spriteClass = FungalSentrySprite.class;
 
-		HP = HT = 200;
+		healthPoints = healthMax = 200;
 		defenseSkill = 12;
 
 		EXP = 10;

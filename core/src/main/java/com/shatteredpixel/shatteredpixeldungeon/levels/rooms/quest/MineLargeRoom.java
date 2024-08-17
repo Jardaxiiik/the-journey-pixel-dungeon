@@ -83,7 +83,7 @@ public class MineLargeRoom extends CaveRoom {
 
 			//we want to ensure that every internal cell has no way out, even diagonally
 			for (int i : internalcells){
-				for (int j : PathFinder.CIRCLE8){
+				for (int j : PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE){
 					if (!internalcells.contains(i+j) && level.map[i+j] != Terrain.MINE_CRYSTAL){
 						level.map[i] = Terrain.MINE_CRYSTAL;
 						break;

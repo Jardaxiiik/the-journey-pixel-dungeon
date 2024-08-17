@@ -286,7 +286,7 @@ public class DriedRose extends Artifact {
 		if (ghost == null){
 			return super.status();
 		} else {
-			return ((ghost.HP*100) / ghost.HT) + "%";
+			return ((ghost.healthPoints *100) / ghost.healthMax) + "%";
 		}
 	}
 	
@@ -309,9 +309,9 @@ public class DriedRose extends Artifact {
 				}
 				updateQuickslot();
 			}
-		} else if (ghost.HP < ghost.HT) {
+		} else if (ghost.healthPoints < ghost.healthMax) {
 			int heal = Math.round((1 + level()/3f)*amount);
-			ghost.HP = Math.min( ghost.HT, ghost.HP + heal);
+			ghost.healthPoints = Math.min( ghost.healthMax, ghost.healthPoints + heal);
 			ghost.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 			updateQuickslot();
 		}
@@ -400,12 +400,12 @@ public class DriedRose extends Artifact {
 			if (ghost != null && !cursed && target.buff(MagicImmune.class) == null){
 				
 				//heals to full over 500 turns
-				if (ghost.HP < ghost.HT && Regeneration.regenOn()) {
-					partialCharge += (ghost.HT / 500f) * RingOfEnergy.artifactChargeMultiplier(target);
+				if (ghost.healthPoints < ghost.healthMax && Regeneration.regenOn()) {
+					partialCharge += (ghost.healthMax / 500f) * RingOfEnergy.artifactChargeMultiplier(target);
 					updateQuickslot();
 					
 					if (partialCharge > 1) {
-						ghost.HP++;
+						ghost.healthPoints++;
 						partialCharge--;
 					}
 				} else {
@@ -542,7 +542,7 @@ public class DriedRose extends Artifact {
 			super();
 			this.rose = rose;
 			updateRose();
-			HP = HT;
+			healthPoints = healthMax;
 		}
 
 		@Override
@@ -571,7 +571,7 @@ public class DriedRose extends Artifact {
 			//same dodge as the hero
 			defenseSkill = (Dungeon.hero.lvl+4);
 			if (rose == null) return;
-			HT = 20 + 8*rose.level();
+			healthMax = 20 + 8*rose.level();
 		}
 
 		@Override

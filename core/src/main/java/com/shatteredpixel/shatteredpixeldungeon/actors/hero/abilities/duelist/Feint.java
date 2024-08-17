@@ -161,7 +161,7 @@ public class Feint extends ArmorAbility {
 			alignment = Alignment.ALLY;
 			state = PASSIVE;
 
-			HP = HT = 1;
+			healthPoints = healthMax = 1;
 
 			//fades just before the hero's next action
 			actPriority = Actor.HERO_PRIO+1;

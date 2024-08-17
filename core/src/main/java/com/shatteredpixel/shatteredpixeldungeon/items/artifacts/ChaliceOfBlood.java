@@ -74,7 +74,7 @@ public class ChaliceOfBlood extends Artifact {
 
 			int damage = 5 + 3*(level()*level());
 
-			if (damage > hero.HP*0.75) {
+			if (damage > hero.healthPoints *0.75) {
 
 				GameScene.show(
 					new WndOptions(new ItemSprite(this),
@@ -168,11 +168,11 @@ public class ChaliceOfBlood extends Artifact {
 		if (Random.Float() < heal%1){
 			heal++;
 		}
-		if (heal >= 1f && target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + (int)heal);
+		if (heal >= 1f && target.healthPoints < target.healthMax) {
+			target.healthPoints = Math.min(target.healthMax, target.healthPoints + (int)heal);
 			target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString((int)heal), FloatingText.HEALING);
 
-			if (target.HP == target.HT && target instanceof Hero) {
+			if (target.healthPoints == target.healthMax && target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
 		}

@@ -93,7 +93,7 @@ public class Multiplicity extends Armor.Glyph {
 							attacker.storeInBundle(store);
 							m.restoreFromBundle(store);
 							m.pos = 0;
-							m.HP = m.HT;
+							m.healthPoints = m.healthMax;
 
 							//don't duplicate stuck projectiles
 							m.remove(m.buff(PinCushion.class));

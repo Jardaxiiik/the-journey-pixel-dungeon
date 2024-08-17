@@ -147,7 +147,7 @@ public class ShadowClone extends ArmorAbility {
 		{
 			spriteClass = ShadowSprite.class;
 
-			HP = HT = 80;
+			healthPoints = healthMax = 80;
 
 			immunities.add(AllyBuff.class);
 
@@ -163,8 +163,8 @@ public class ShadowClone extends ArmorAbility {
 			int hpBonus = 15 + 5*heroLevel;
 			hpBonus = Math.round(0.1f * Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY) * hpBonus);
 			if (hpBonus > 0){
-				HT += hpBonus;
-				HP += hpBonus;
+				healthMax += hpBonus;
+				healthPoints += hpBonus;
 			}
 			defenseSkill = heroLevel + 5; //equal to base hero defense skill
 		}

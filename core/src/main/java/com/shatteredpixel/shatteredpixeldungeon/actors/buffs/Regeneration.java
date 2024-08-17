@@ -40,10 +40,10 @@ public class Regeneration extends Buff {
 	public boolean act() {
 		if (target.isAlive()) {
 
-			if (target.HP < regencap() && !((Hero)target).isStarving()) {
+			if (target.healthPoints < regencap() && !((Hero)target).isStarving()) {
 				if (regenOn()) {
-					target.HP += 1;
-					if (target.HP == regencap()) {
+					target.healthPoints += 1;
+					if (target.healthPoints == regencap()) {
 						((Hero) target).resting = false;
 					}
 				}
@@ -73,7 +73,7 @@ public class Regeneration extends Buff {
 	}
 	
 	public int regencap(){
-		return target.HT;
+		return target.healthMax;
 	}
 
 	public static boolean regenOn(){

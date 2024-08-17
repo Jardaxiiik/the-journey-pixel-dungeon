@@ -116,7 +116,7 @@ public class MeleeWeapon extends Weapon {
 				}
 			} else if (hero.heroClass != HeroClass.DUELIST){
 				//do nothing
-			} else if (STRReq() > hero.STR()){
+			} else if (STRReq() > hero.getAttributeStrength()){
 				GLog.w(Messages.get(this, "ability_low_str"));
 			} else if (hero.belongings.weapon == this &&
 					(Buff.affect(hero, Charger.class).charges + Buff.affect(hero, Charger.class).partialCharge) < abilityChargeUse(hero, null)) {
@@ -215,7 +215,7 @@ public class MeleeWeapon extends Weapon {
 
 		if (hero.heroClass == HeroClass.DUELIST
 				&& hero.hasTalent(Talent.AGGRESSIVE_BARRIER)
-				&& (hero.HP / (float)hero.HT) < 0.20f*(1+hero.pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
+				&& (hero.healthPoints / (float)hero.healthMax) < 0.20f*(1+hero.pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
 			Buff.affect(hero, Barrier.class).setShield(3);
 			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 		}
@@ -346,7 +346,7 @@ public class MeleeWeapon extends Weapon {
 		int damage = augment.damageFactor(super.damageRoll( owner ));
 
 		if (owner instanceof Hero) {
-			int exStr = ((Hero)owner).STR() - STRReq();
+			int exStr = ((Hero)owner).getAttributeStrength() - STRReq();
 			if (exStr > 0) {
 				damage += Random.IntRange( 0, exStr );
 			}
@@ -362,14 +362,14 @@ public class MeleeWeapon extends Weapon {
 
 		if (levelKnown) {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
-			if (STRReq() > Dungeon.hero.STR()) {
+			if (STRReq() > Dungeon.hero.getAttributeStrength()) {
 				info += " " + Messages.get(Weapon.class, "too_heavy");
-			} else if (Dungeon.hero.STR() > STRReq()){
-				info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
+			} else if (Dungeon.hero.getAttributeStrength() > STRReq()){
+				info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.getAttributeStrength() - STRReq());
 			}
 		} else {
 			info += "\n\n" + Messages.get(MeleeWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
-			if (STRReq(0) > Dungeon.hero.STR()) {
+			if (STRReq(0) > Dungeon.hero.getAttributeStrength()) {
 				info += " " + Messages.get(MeleeWeapon.class, "probably_too_heavy");
 			}
 		}

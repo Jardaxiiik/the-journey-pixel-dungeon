@@ -441,7 +441,7 @@ public class GameScene extends PixelScene {
 				break;
 		}
 
-		ArrayList<Item> dropped = Dungeon.droppedItems.get( Dungeon.depth );
+		ArrayList<Item> dropped = Dungeon.droppedItemsToChasm.get( Dungeon.depth );
 		if (dropped != null) {
 			for (Item item : dropped) {
 				int pos = Dungeon.level.randomRespawnCell( null );
@@ -456,7 +456,7 @@ public class GameScene extends PixelScene {
 					Dungeon.level.drop(item, pos);
 				}
 			}
-			Dungeon.droppedItems.remove( Dungeon.depth );
+			Dungeon.droppedItemsToChasm.remove( Dungeon.depth );
 		}
 
 		Dungeon.hero.next();

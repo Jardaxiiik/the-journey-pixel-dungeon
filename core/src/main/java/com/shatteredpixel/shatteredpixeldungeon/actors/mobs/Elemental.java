@@ -66,7 +66,7 @@ import java.util.ArrayList;
 public abstract class Elemental extends Mob {
 
 	{
-		HP = HT = 60;
+		healthPoints = healthMax = 60;
 		defenseSkill = 20;
 		
 		EXP = 10;
@@ -102,7 +102,7 @@ public abstract class Elemental extends Mob {
 		//sewers are prison are equivalent, otherwise scales as normal (2/2/3/4/5)
 		int regionScale = Math.max(2, (1 + Dungeon.scalingDepth()/5));
 		defenseSkill = 5*regionScale;
-		HT = 15*regionScale;
+		healthMax = 15*regionScale;
 	}
 	
 	@Override
@@ -182,7 +182,7 @@ public abstract class Elemental extends Mob {
 	@Override
 	public boolean add( Buff buff ) {
 		if (harmfulBuffs.contains( buff.getClass() )) {
-			damage( Random.NormalIntRange( HT/2, HT * 3/5 ), buff );
+			damage( Random.NormalIntRange( healthMax /2, healthMax * 3/5 ), buff );
 			return false;
 		} else {
 			return super.add( buff );

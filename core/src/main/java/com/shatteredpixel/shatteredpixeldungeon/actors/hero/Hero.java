@@ -179,7 +179,7 @@ public class Hero extends Char {
 	
 	public static final int MAX_LEVEL = 30;
 
-	public static final int STARTING_STR = 10;
+	public static final int STARTING_STRENGTH = 10;
 	
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
@@ -205,14 +205,14 @@ public class Hero extends Char {
 	
 	public Belongings belongings;
 	
-	public int STR;
+	public int attributeStrength;
 	
 	public float awareness;
 	
 	public int lvl = 1;
 	public int exp = 0;
 	
-	public int HTBoost = 0;
+	public int healthMaxBoost = 0;
 	
 	private ArrayList<Mob> visibleEnemies;
 
@@ -223,8 +223,8 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 
-		HP = HT = 20;
-		STR = STARTING_STR;
+		healthPoints = healthMax = 20;
+		attributeStrength = STARTING_STRENGTH;
 		
 		belongings = new Belongings( this );
 		
@@ -232,23 +232,23 @@ public class Hero extends Char {
 	}
 	
 	public void updateHT( boolean boostHP ){
-		int curHT = HT;
+		int curHealthMax = healthMax;
 		
-		HT = 20 + 5*(lvl-1) + HTBoost;
+		healthMax = 20 + 5*(lvl-1) + healthMaxBoost;
 		float multiplier = RingOfMight.HTMultiplier(this);
-		HT = Math.round(multiplier * HT);
+		healthMax = Math.round(multiplier * healthMax);
 		
 		if (buff(ElixirOfMight.HTBoost.class) != null){
-			HT += buff(ElixirOfMight.HTBoost.class).boost();
+			healthMax += buff(ElixirOfMight.HTBoost.class).boost();
 		}
 		
 		if (boostHP){
-			HP += Math.max(HT - curHT, 0);
+			healthPoints += Math.max(healthMax - curHealthMax, 0);
 		}
-		HP = Math.min(HP, HT);
+		healthPoints = Math.min(healthPoints, healthMax);
 	}
 
-	public int STR() {
+	public int getAttributeStrength() {
 		int strBonus = 0;
 
 		strBonus += RingOfMight.strengthBonus( this );
@@ -259,10 +259,10 @@ public class Hero extends Char {
 		}
 
 		if (hasTalent(Talent.STRONGMAN)){
-			strBonus += (int)Math.floor(STR * (0.03f + 0.05f*pointsInTalent(Talent.STRONGMAN)));
+			strBonus += (int)Math.floor(attributeStrength * (0.03f + 0.05f*pointsInTalent(Talent.STRONGMAN)));
 		}
 
-		return STR + strBonus;
+		return attributeStrength + strBonus;
 	}
 
 	private static final String CLASS       = "class";
@@ -289,12 +289,12 @@ public class Hero extends Char {
 		bundle.put( ATTACK, attackSkill );
 		bundle.put( DEFENSE, defenseSkill );
 		
-		bundle.put( STRENGTH, STR );
+		bundle.put( STRENGTH, attributeStrength);
 		
 		bundle.put( LEVEL, lvl );
 		bundle.put( EXPERIENCE, exp );
 		
-		bundle.put( HTBOOST, HTBoost );
+		bundle.put( HTBOOST, healthMaxBoost);
 
 		belongings.storeInBundle( bundle );
 	}
@@ -305,7 +305,7 @@ public class Hero extends Char {
 		lvl = bundle.getInt( LEVEL );
 		exp = bundle.getInt( EXPERIENCE );
 
-		HTBoost = bundle.getInt(HTBOOST);
+		healthMaxBoost = bundle.getInt(HTBOOST);
 
 		super.restoreFromBundle( bundle );
 
@@ -317,7 +317,7 @@ public class Hero extends Char {
 		attackSkill = bundle.getInt( ATTACK );
 		defenseSkill = bundle.getInt( DEFENSE );
 		
-		STR = bundle.getInt( STRENGTH );
+		attributeStrength = bundle.getInt( STRENGTH );
 
 		belongings.restoreFromBundle( bundle );
 	}
@@ -326,9 +326,9 @@ public class Hero extends Char {
 		info.level = bundle.getInt( LEVEL );
 		info.str = bundle.getInt( STRENGTH );
 		info.exp = bundle.getInt( EXPERIENCE );
-		info.hp = bundle.getInt( Char.TAG_HP );
+		info.healthPoint = bundle.getInt( Char.TAG_HP );
 		info.ht = bundle.getInt( Char.TAG_HT );
-		info.shld = bundle.getInt( Char.TAG_SHLD );
+		info.shield = bundle.getInt( Char.TAG_SHLD );
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		Belongings.preview( info, bundle );
@@ -404,7 +404,7 @@ public class Hero extends Char {
 			belongings.attackingWeapon().hitSound(pitch);
 		} else if (RingOfForce.getBuffedBonus(this, RingOfForce.Force.class) > 0) {
 			//pitch deepens by 2.5% (additive) per point of strength, down to 75%
-			super.hitSound( pitch * GameMath.gate( 0.75f, 1.25f - 0.025f*STR(), 1f) );
+			super.hitSound( pitch * GameMath.gate( 0.75f, 1.25f - 0.025f* getAttributeStrength(), 1f) );
 		} else {
 			super.hitSound(pitch * 1.1f);
 		}
@@ -563,15 +563,15 @@ public class Hero extends Char {
 
 		if (belongings.armor() != null) {
 			int armDr = Random.NormalIntRange( belongings.armor().DRMin(), belongings.armor().DRMax());
-			if (STR() < belongings.armor().STRReq()){
-				armDr -= 2*(belongings.armor().STRReq() - STR());
+			if (getAttributeStrength() < belongings.armor().STRReq()){
+				armDr -= 2*(belongings.armor().STRReq() - getAttributeStrength());
 			}
 			if (armDr > 0) dr += armDr;
 		}
 		if (belongings.weapon() != null && !RingOfForce.fightingUnarmed(this))  {
 			int wepDr = Random.NormalIntRange( 0 , belongings.weapon().defenseFactor( this ) );
-			if (STR() < ((Weapon)belongings.weapon()).STRReq()){
-				wepDr -= 2*(((Weapon)belongings.weapon()).STRReq() - STR());
+			if (getAttributeStrength() < ((Weapon)belongings.weapon()).STRReq()){
+				wepDr -= 2*(((Weapon)belongings.weapon()).STRReq() - getAttributeStrength());
 			}
 			if (wepDr > 0) dr += wepDr;
 		}
@@ -654,7 +654,7 @@ public class Hero extends Char {
 		KindOfWeapon w = belongings.attackingWeapon();
 		if (!(w instanceof Weapon))             return true;
 		if (RingOfForce.fightingUnarmed(this))  return true;
-		if (STR() < ((Weapon)w).STRReq())       return false;
+		if (getAttributeStrength() < ((Weapon)w).STRReq())       return false;
 		if (w instanceof Flail)                 return false;
 
 		return super.canSurpriseAttack();
@@ -1310,7 +1310,7 @@ public class Hero extends Char {
 			if (heroClass != HeroClass.DUELIST
 					&& hasTalent(Talent.AGGRESSIVE_BARRIER)
 					&& buff(Talent.AggressiveBarrierCooldown.class) == null
-					&& (HP / (float)HT) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
+					&& (healthPoints / (float) healthMax) < 0.20f*(1+pointsInTalent(Talent.AGGRESSIVE_BARRIER))){
 				Buff.affect(this, Barrier.class).setShield(3);
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 				Buff.affect(this, Talent.AggressiveBarrierCooldown.class, 50f);
@@ -1467,10 +1467,10 @@ public class Hero extends Char {
 			else if (pointsInTalent(Talent.IRON_STOMACH) == 2)  dmg = Math.round(dmg*0.00f);
 		}
 
-		int preHP = HP + shielding();
+		int preHP = healthPoints + shielding();
 		if (src instanceof Hunger) preHP -= shielding();
 		super.damage( dmg, src );
-		int postHP = HP + shielding();
+		int postHP = healthPoints + shielding();
 		if (src instanceof Hunger) postHP -= shielding();
 		int effectiveDamage = preHP - postHP;
 
@@ -1482,7 +1482,7 @@ public class Hero extends Char {
 
 		//flash red when hit for serious damage.
 		float percentDMG = effectiveDamage / (float)preHP; //percent of current HP that was taken
-		float percentHP = 1 - ((HT - postHP) / (float)HT); //percent health after damage was taken
+		float percentHP = 1 - ((healthMax - postHP) / (float) healthMax); //percent health after damage was taken
 		// The flash intensity increases primarily based on damage taken and secondarily on missing HP.
 		float flashIntensity = 0.25f * (percentDMG * percentDMG) / percentHP;
 		//if the intensity is very low don't flash at all
@@ -1921,7 +1921,7 @@ public class Hero extends Char {
 			interrupt();
 
 			if (ankh.isBlessed()) {
-				this.HP = HT / 4;
+				this.healthPoints = healthMax / 4;
 
 				PotionOfHealing.cure(this);
 				Buff.prolong(this, AnkhInvulnerability.class, AnkhInvulnerability.DURATION);
@@ -1981,11 +1981,8 @@ public class Hero extends Char {
 		boolean[] discoverable = Dungeon.level.discoverable;
 		
 		for (int i=0; i < length; i++) {
-			
 			int terr = map[i];
-			
 			if (discoverable[i]) {
-				
 				visited[i] = true;
 				if ((Terrain.flags[terr] & Terrain.SECRET) != 0) {
 					Dungeon.level.discover( i );
@@ -2051,7 +2048,7 @@ public class Hero extends Char {
 	@Override
 	public boolean isAlive() {
 		
-		if (HP <= 0){
+		if (healthPoints <= 0){
 			if (berserk == null) berserk = buff(Berserk.class);
 			return berserk != null && berserk.berserking();
 		} else {
@@ -2361,7 +2358,7 @@ public class Hero extends Char {
 	}
 	
 	public void resurrect() {
-		HP = HT;
+		healthPoints = healthMax;
 		live();
 
 		MagicalHolster holster = belongings.getItem(MagicalHolster.class);

@@ -47,7 +47,7 @@ public class Sheep extends NPC {
 	@Override
 	protected boolean act() {
 		if (initialized) {
-			HP = 0;
+			healthPoints = 0;
 
 			destroy();
 			sprite.die();

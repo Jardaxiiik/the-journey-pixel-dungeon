@@ -64,7 +64,7 @@ import java.util.ArrayList;
 public class GnollGeomancer extends Mob {
 
 	{
-		HP = HT = 150;
+		healthPoints = healthMax = 150;
 		spriteClass = GnollGeomancerSprite.class;
 
 		EXP = 20;
@@ -255,9 +255,9 @@ public class GnollGeomancer extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		int hpBracket = HT / 3;
+		int hpBracket = healthMax / 3;
 
-		int curbracket = HP / hpBracket;
+		int curbracket = healthPoints / hpBracket;
 		if (curbracket == 3) curbracket--; //full HP isn't its own bracket
 
 		inFinalBracket = curbracket == 0;
@@ -266,13 +266,13 @@ public class GnollGeomancer extends Mob {
 
 		abilityCooldown -= dmg/10f;
 
-		int newBracket =  HP / hpBracket;
+		int newBracket =  healthPoints / hpBracket;
 		if (newBracket == 3) newBracket--; //full HP isn't its own bracket
 
 		if (newBracket != curbracket) {
 			//cannot be hit through multiple brackets at a time
-			if (HP <= (curbracket-1)*hpBracket){
-				HP = (curbracket-1)*hpBracket + 1;
+			if (healthPoints <= (curbracket-1)*hpBracket){
+				healthPoints = (curbracket-1)*hpBracket + 1;
 			}
 
 			BossHealthBar.bleed(newBracket <= 0);
@@ -570,9 +570,9 @@ public class GnollGeomancer extends Mob {
 					// 50/50 to either throw a rock or do rockfall, but never do rockfall twice
 					// unless target is next to a barricade, then always try to throw
 					// unless nothing to throw, then always rockfall
-					int hpBracket = HT / 3;
+					int hpBracket = healthMax / 3;
 
-					int curbracket = HP / hpBracket;
+					int curbracket = healthPoints / hpBracket;
 					if (curbracket == 3) curbracket--; //full HP isn't its own bracket
 
 					Ballistica aim = GnollGeomancer.prepRockThrowAttack(enemy, GnollGeomancer.this);

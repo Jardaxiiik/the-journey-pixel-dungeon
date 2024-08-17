@@ -174,12 +174,12 @@ public class WndHero extends WndTabbed {
 
 			pos = title.bottom() + 2*GAP;
 
-			int strBonus = hero.STR() - hero.STR;
-			if (strBonus > 0)           statSlot( Messages.get(this, "str"), hero.STR + " + " + strBonus );
-			else if (strBonus < 0)      statSlot( Messages.get(this, "str"), hero.STR + " - " + -strBonus );
-			else                        statSlot( Messages.get(this, "str"), hero.STR() );
-			if (hero.shielding() > 0)   statSlot( Messages.get(this, "health"), hero.HP + "+" + hero.shielding() + "/" + hero.HT );
-			else                        statSlot( Messages.get(this, "health"), (hero.HP) + "/" + hero.HT );
+			int strBonus = hero.getAttributeStrength() - hero.attributeStrength;
+			if (strBonus > 0)           statSlot( Messages.get(this, "str"), hero.attributeStrength + " + " + strBonus );
+			else if (strBonus < 0)      statSlot( Messages.get(this, "str"), hero.attributeStrength + " - " + -strBonus );
+			else                        statSlot( Messages.get(this, "str"), hero.getAttributeStrength() );
+			if (hero.shielding() > 0)   statSlot( Messages.get(this, "health"), hero.healthPoints + "+" + hero.shielding() + "/" + hero.healthMax);
+			else                        statSlot( Messages.get(this, "health"), (hero.healthPoints) + "/" + hero.healthMax);
 			statSlot( Messages.get(this, "exp"), hero.exp + "/" + hero.maxExp() );
 
 			pos += GAP;

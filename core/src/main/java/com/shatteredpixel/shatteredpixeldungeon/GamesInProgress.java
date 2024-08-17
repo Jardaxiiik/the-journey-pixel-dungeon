@@ -138,12 +138,12 @@ public class GamesInProgress {
 		info.dailyReplay = Dungeon.dailyReplay;
 		
 		info.level = Dungeon.hero.lvl;
-		info.str = Dungeon.hero.STR;
-		info.strBonus = Dungeon.hero.STR() - Dungeon.hero.STR;
+		info.str = Dungeon.hero.attributeStrength;
+		info.strBonus = Dungeon.hero.getAttributeStrength() - Dungeon.hero.attributeStrength;
 		info.exp = Dungeon.hero.exp;
-		info.hp = Dungeon.hero.HP;
-		info.ht = Dungeon.hero.HT;
-		info.shld = Dungeon.hero.shielding();
+		info.healthPoint = Dungeon.hero.healthPoints;
+		info.ht = Dungeon.hero.healthMax;
+		info.shield = Dungeon.hero.shielding();
 		info.heroClass = Dungeon.hero.heroClass;
 		info.subClass = Dungeon.hero.subClass;
 		info.armorTier = Dungeon.hero.tier();
@@ -163,6 +163,7 @@ public class GamesInProgress {
 	}
 	
 	public static class Info {
+
 		public int slot;
 		
 		public int depth;
@@ -178,9 +179,9 @@ public class GamesInProgress {
 		public int str;
 		public int strBonus;
 		public int exp;
-		public int hp;
+		public int healthPoint;
 		public int ht;
-		public int shld;
+		public int shield;
 		public HeroClass heroClass;
 		public HeroSubClass subClass;
 		public int armorTier;

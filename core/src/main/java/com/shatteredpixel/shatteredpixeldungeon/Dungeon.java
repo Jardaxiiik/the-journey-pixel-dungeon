@@ -201,7 +201,7 @@ public class Dungeon {
 	
 	public static HashSet<Integer> chapters;
 
-	public static SparseArray<ArrayList<Item>> droppedItems;
+	public static SparseArray<ArrayList<Item>> droppedItemsToChasm;
 
 	//first variable is only assigned when game is started, second is updated every time game is saved
 	public static int initialVersion;
@@ -263,7 +263,7 @@ public class Dungeon {
 		gold = 0;
 		energy = 0;
 
-		droppedItems = new SparseArray<>();
+		droppedItemsToChasm = new SparseArray<>();
 
 		LimitedDrops.reset();
 		
@@ -510,9 +510,9 @@ public class Dungeon {
 
 	public static void dropToChasm( Item item ) {
 		int depth = Dungeon.depth + 1;
-		ArrayList<Item> dropped = Dungeon.droppedItems.get( depth );
+		ArrayList<Item> dropped = Dungeon.droppedItemsToChasm.get( depth );
 		if (dropped == null) {
-			Dungeon.droppedItems.put( depth, dropped = new ArrayList<>() );
+			Dungeon.droppedItemsToChasm.put( depth, dropped = new ArrayList<>() );
 		}
 		dropped.add( item );
 	}
@@ -595,8 +595,8 @@ public class Dungeon {
 			bundle.put( GOLD, gold );
 			bundle.put( ENERGY, energy );
 
-			for (int d : droppedItems.keyArray()) {
-				bundle.put(Messages.format(DROPPED, d), droppedItems.get(d));
+			for (int d : droppedItemsToChasm.keyArray()) {
+				bundle.put(Messages.format(DROPPED, d), droppedItemsToChasm.get(d));
 			}
 
 			quickslot.storePlaceholders( bundle );
@@ -773,7 +773,7 @@ public class Dungeon {
 			}
 		}
 
-		droppedItems = new SparseArray<>();
+		droppedItemsToChasm = new SparseArray<>();
 		for (int i=1; i <= 26; i++) {
 			
 			//dropped items
@@ -783,7 +783,7 @@ public class Dungeon {
 					items.add( (Item)b );
 				}
 			if (!items.isEmpty()) {
-				droppedItems.put( i, items );
+				droppedItemsToChasm.put( i, items );
 			}
 
 		}

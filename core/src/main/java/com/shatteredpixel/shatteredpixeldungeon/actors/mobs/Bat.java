@@ -35,7 +35,7 @@ public class Bat extends Mob {
 	{
 		spriteClass = BatSprite.class;
 		
-		HP = HT = 30;
+		healthPoints = healthMax = 30;
 		defenseSkill = 15;
 		baseSpeed = 2f;
 		
@@ -66,10 +66,10 @@ public class Bat extends Mob {
 	@Override
 	public int attackProc( Char enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
-		int reg = Math.min( damage - 4, HT - HP );
+		int reg = Math.min( damage - 4, healthMax - healthPoints);
 		
 		if (reg > 0) {
-			HP += reg;
+			healthPoints += reg;
 			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(reg), FloatingText.HEALING);
 		}
 		

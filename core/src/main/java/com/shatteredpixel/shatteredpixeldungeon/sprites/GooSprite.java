@@ -81,7 +81,7 @@ public class GooSprite extends MobSprite {
 	@Override
 	public void link(Char ch) {
 		super.link(ch);
-		if (ch.HP*2 <= ch.HT)
+		if (ch.healthPoints *2 <= ch.healthMax)
 			spray(true);
 	}
 

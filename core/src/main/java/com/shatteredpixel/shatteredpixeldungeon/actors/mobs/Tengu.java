@@ -86,7 +86,7 @@ public class Tengu extends Mob {
 	{
 		spriteClass = TenguSprite.class;
 		
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
+		healthPoints = healthMax = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 250 : 200;
 		EXP = 20;
 		defenseSkill = 15;
 		
@@ -137,20 +137,20 @@ public class Tengu extends Mob {
 
 		PrisonBossLevel.State state = ((PrisonBossLevel)Dungeon.level).state();
 		
-		int hpBracket = HT / 8;
+		int hpBracket = healthMax / 8;
 
-		int curbracket = HP / hpBracket;
+		int curbracket = healthPoints / hpBracket;
 
-		int beforeHitHP = HP;
+		int beforeHitHP = healthPoints;
 		super.damage(dmg, src);
 
 		//cannot be hit through multiple brackets at a time
-		if (HP <= (curbracket-1)*hpBracket){
-			HP = (curbracket-1)*hpBracket + 1;
+		if (healthPoints <= (curbracket-1)*hpBracket){
+			healthPoints = (curbracket-1)*hpBracket + 1;
 		}
 
-		int newBracket =  HP / hpBracket;
-		dmg = beforeHitHP - HP;
+		int newBracket =  healthPoints / hpBracket;
+		dmg = beforeHitHP - healthPoints;
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (lock != null) {
@@ -159,7 +159,7 @@ public class Tengu extends Mob {
 		}
 
 		//phase 2 of the fight is over
-		if (HP == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
+		if (healthPoints == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
 			//let full attack action complete first
 			Actor.add(new Actor() {
 
@@ -178,8 +178,8 @@ public class Tengu extends Mob {
 		}
 
 		//phase 1 of the fight is over
-		if (state == PrisonBossLevel.State.FIGHT_START && HP <= HT/2){
-			HP = (HT/2);
+		if (state == PrisonBossLevel.State.FIGHT_START && healthPoints <= healthMax /2){
+			healthPoints = (healthMax /2);
 			yell(Messages.get(this, "interesting"));
 			((PrisonBossLevel)Dungeon.level).progress();
 			BossHealthBar.bleed(true);
@@ -276,7 +276,7 @@ public class Tengu extends Mob {
 				if (level.heroFOV[newPos]) CellEmitter.get( newPos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
-				float fill = 0.9f - 0.5f*((HP-(HT/2f))/(HT/2f));
+				float fill = 0.9f - 0.5f*((healthPoints -(healthMax /2f))/(healthMax /2f));
 				level.placeTrapsInTenguCell(fill);
 				
 			//otherwise, jump in a larger possible area, as the room is bigger
@@ -333,8 +333,8 @@ public class Tengu extends Mob {
 		super.notice();
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
-			if (HP <= HT/2) BossHealthBar.bleed(true);
-			if (HP == HT) {
+			if (healthPoints <= healthMax /2) BossHealthBar.bleed(true);
+			if (healthPoints == healthMax) {
 				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.name()));
 				for (Char ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
@@ -378,7 +378,7 @@ public class Tengu extends Mob {
 		abilityCooldown = bundle.getInt( ABILITY_COOLDOWN );
 		
 		BossHealthBar.assignBoss(this);
-		if (HP <= HT/2) BossHealthBar.bleed(true);
+		if (healthPoints <= healthMax /2) BossHealthBar.bleed(true);
 	}
 	
 	//don't bother bundling this, as its purely cosmetic
@@ -445,7 +445,7 @@ public class Tengu extends Mob {
 	//expects to be called once per turn;
 	public boolean canUseAbility(){
 		
-		if (HP > HT/2) return false;
+		if (healthPoints > healthMax /2) return false;
 		
 		if (abilitiesUsed >= targetAbilityUses()){
 			return false;
@@ -744,8 +744,8 @@ public class Tengu extends Mob {
 		
 		Ballistica aim = new Ballistica(thrower.pos, target.pos, Ballistica.WONT_STOP);
 		
-		for (int i = 0; i < PathFinder.CIRCLE8.length; i++){
-			if (aim.sourcePos+PathFinder.CIRCLE8[i] == aim.path.get(1)){
+		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i++){
+			if (aim.sourcePos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i] == aim.path.get(1)){
 				thrower.sprite.zap(target.pos);
 				Buff.append(thrower, Tengu.FireAbility.class).direction = i;
 				
@@ -801,14 +801,14 @@ public class Tengu extends Mob {
 		}
 		
 		private void spreadFromCell( int cell ){
-			if (!Dungeon.level.solid[cell + PathFinder.CIRCLE8[left(direction)]]){
-				toCells.add(cell + PathFinder.CIRCLE8[left(direction)]);
+			if (!Dungeon.level.solid[cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[left(direction)]]){
+				toCells.add(cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[left(direction)]);
 			}
-			if (!Dungeon.level.solid[cell + PathFinder.CIRCLE8[direction]]){
-				toCells.add(cell + PathFinder.CIRCLE8[direction]);
+			if (!Dungeon.level.solid[cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[direction]]){
+				toCells.add(cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[direction]);
 			}
-			if (!Dungeon.level.solid[cell + PathFinder.CIRCLE8[right(direction)]]){
-				toCells.add(cell + PathFinder.CIRCLE8[right(direction)]);
+			if (!Dungeon.level.solid[cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[right(direction)]]){
+				toCells.add(cell + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[right(direction)]);
 			}
 		}
 		
@@ -1008,9 +1008,9 @@ public class Tengu extends Mob {
 		
 		private void spreadblob(){
 			GameScene.add(Blob.seed(shockerPos, 1, ShockerBlob.class));
-			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.CIRCLE8.length; i += 2){
-				if (!Dungeon.level.solid[shockerPos+PathFinder.CIRCLE8[i]]) {
-					GameScene.add(Blob.seed(shockerPos + PathFinder.CIRCLE8[i], 2, ShockerBlob.class));
+			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i += 2){
+				if (!Dungeon.level.solid[shockerPos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]]) {
+					GameScene.add(Blob.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerBlob.class));
 				}
 			}
 		}

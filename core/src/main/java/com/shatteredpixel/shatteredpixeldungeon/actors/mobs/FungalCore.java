@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalCoreSprite;
 public class FungalCore extends Mob {
 
 	{
-		HP = HT = 300;
+		healthPoints = healthMax = 300;
 		spriteClass = FungalCoreSprite.class;
 
 		EXP = 20;

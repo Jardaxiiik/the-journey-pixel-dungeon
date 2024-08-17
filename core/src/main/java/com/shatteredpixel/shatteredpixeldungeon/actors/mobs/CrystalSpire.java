@@ -63,7 +63,7 @@ public class CrystalSpire extends Mob {
 
 	{
 		//this translates to roughly 33/27/23/20/18/16 pickaxe hits at +0/1/2/3/4/5
-		HP = HT = 300;
+		healthPoints = healthMax = 300;
 		spriteClass = CrystalSpireSprite.class;
 
 		EXP = 20;
@@ -218,10 +218,10 @@ public class CrystalSpire extends Mob {
 		aoeCells.addAll(spreadDiamondAOE(aoeCells));
 		targetedCells.add(new ArrayList<>(aoeCells));
 
-		if (HP < 2*HT/3f){
+		if (healthPoints < 2* healthMax /3f){
 			aoeCells.addAll(spreadDiamondAOE(aoeCells));
 			targetedCells.add(new ArrayList<>(aoeCells));
-			if (HP < HT/3f) {
+			if (healthPoints < healthMax /3f) {
 				aoeCells.addAll(spreadDiamondAOE(aoeCells));
 				targetedCells.add(aoeCells);
 			}
@@ -255,10 +255,10 @@ public class CrystalSpire extends Mob {
 		}
 
 		targetedCells.add(new ArrayList<>(lineCells));
-		if (HP < 2*HT/3f){
+		if (healthPoints < 2* healthMax /3f){
 			lineCells.addAll(spreadDiamondAOE(lineCells));
 			targetedCells.add(new ArrayList<>(lineCells));
-			if (HP < HT/3f) {;
+			if (healthPoints < healthMax /3f) {;
 				lineCells.addAll(spreadDiamondAOE(lineCells));
 				targetedCells.add(lineCells);
 			}
@@ -329,7 +329,7 @@ public class CrystalSpire extends Mob {
 					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
 					sprite.flash();
 
-					BossHealthBar.bleed(HP <= HT/3);
+					BossHealthBar.bleed(healthPoints <= healthMax /3);
 
 					if (isAlive()) {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER, 1f, Random.Float(1.15f, 1.25f));
@@ -356,7 +356,7 @@ public class CrystalSpire extends Mob {
 						for (Char ch : Actor.chars()){
 							if (fieldOfView[ch.pos]) {
 								if (ch instanceof CrystalGuardian) {
-									ch.damage(ch.HT, new SpireSpike());
+									ch.damage(ch.healthMax, new SpireSpike());
 								}
 								if (ch instanceof CrystalWisp) {
 									Buff.affect(ch, Blindness.class, 5f);

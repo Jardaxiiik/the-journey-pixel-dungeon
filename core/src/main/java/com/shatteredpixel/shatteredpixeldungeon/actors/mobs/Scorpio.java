@@ -41,7 +41,7 @@ public class Scorpio extends Mob {
 	{
 		spriteClass = ScorpioSprite.class;
 		
-		HP = HT = 110;
+		healthPoints = healthMax = 110;
 		defenseSkill = 24;
 		viewDistance = Light.DISTANCE;
 		

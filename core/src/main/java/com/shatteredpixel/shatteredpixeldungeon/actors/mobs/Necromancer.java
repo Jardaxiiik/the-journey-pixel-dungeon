@@ -51,7 +51,7 @@ public class Necromancer extends Mob {
 	{
 		spriteClass = NecromancerSprite.class;
 		
-		HP = HT = 40;
+		healthPoints = healthMax = 40;
 		defenseSkill = 14;
 		
 		EXP = 7;
@@ -159,15 +159,15 @@ public class Necromancer extends Mob {
 		}
 		
 		//heal skeleton first
-		if (mySkeleton.HP < mySkeleton.HT){
+		if (mySkeleton.healthPoints < mySkeleton.healthMax){
 
 			if (sprite.visible || mySkeleton.sprite.visible) {
 				sprite.parent.add(new Beam.HealthRay(sprite.center(), mySkeleton.sprite.center()));
 			}
 			
-			mySkeleton.HP = Math.min(mySkeleton.HP + mySkeleton.HT/5, mySkeleton.HT);
+			mySkeleton.healthPoints = Math.min(mySkeleton.healthPoints + mySkeleton.healthMax /5, mySkeleton.healthMax);
 			if (mySkeleton.sprite.visible) {
-				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.HT/5 ), FloatingText.HEALING );
+				mySkeleton.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( mySkeleton.healthMax /5 ), FloatingText.HEALING );
 			}
 			
 		//otherwise give it adrenaline
@@ -348,7 +348,7 @@ public class Necromancer extends Mob {
 				} else {
 					
 					//zap skeleton
-					if (mySkeleton.HP < mySkeleton.HT || mySkeleton.buff(Adrenaline.class) == null) {
+					if (mySkeleton.healthPoints < mySkeleton.healthMax || mySkeleton.buff(Adrenaline.class) == null) {
 						if (sprite != null && sprite.visible){
 							sprite.zap(mySkeleton.pos);
 							return false;
@@ -379,7 +379,7 @@ public class Necromancer extends Mob {
 			maxLvl = -5;
 			
 			//20/25 health to start
-			HP = 20;
+			healthPoints = 20;
 		}
 
 		@Override

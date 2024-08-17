@@ -143,8 +143,8 @@ public abstract class Char extends Actor {
 	
 	public CharSprite sprite;
 	
-	public int HT;
-	public int HP;
+	public int healthMax;
+	public int healthPoints;
 	
 	protected float baseSpeed	= 1;
 	protected PathFinder.Path path;
@@ -314,8 +314,8 @@ public abstract class Char extends Actor {
 		super.storeInBundle( bundle );
 		
 		bundle.put( POS, pos );
-		bundle.put( TAG_HP, HP );
-		bundle.put( TAG_HT, HT );
+		bundle.put( TAG_HP, healthPoints);
+		bundle.put( TAG_HT, healthMax);
 		bundle.put( BUFFS, buffs );
 	}
 	
@@ -325,8 +325,8 @@ public abstract class Char extends Actor {
 		super.restoreFromBundle( bundle );
 		
 		pos = bundle.getInt( POS );
-		HP = bundle.getInt( TAG_HP );
-		HT = bundle.getInt( TAG_HT );
+		healthPoints = bundle.getInt( TAG_HP );
+		healthMax = bundle.getInt( TAG_HT );
 		
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
@@ -463,7 +463,7 @@ public abstract class Char extends Actor {
 			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
 
 			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
-				enemy.HP = 0;
+				enemy.healthPoints = 0;
 				if (!enemy.isAlive()) {
 					enemy.die(this);
 				} else {
@@ -480,8 +480,8 @@ public abstract class Char extends Actor {
 			if (combinedLethality != null){
 				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
 						&& !Char.hasProp(enemy, Property.MINIBOSS) && this instanceof Hero &&
-						(enemy.HP/(float)enemy.HT) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
-					enemy.HP = 0;
+						(enemy.healthPoints /(float)enemy.healthMax) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
+					enemy.healthPoints = 0;
 					if (!enemy.isAlive()) {
 						enemy.die(this);
 					} else {
@@ -771,17 +771,17 @@ public abstract class Char extends Actor {
 			}
 		}
 		shielded -= dmg;
-		HP -= dmg;
+		healthPoints -= dmg;
 
-		if (HP > 0 && buff(Grim.GrimTracker.class) != null){
+		if (healthPoints > 0 && buff(Grim.GrimTracker.class) != null){
 
 			float finalChance = buff(Grim.GrimTracker.class).maxChance;
-			finalChance *= (float)Math.pow( ((HT - HP) / (float)HT), 2);
+			finalChance *= (float)Math.pow( ((healthMax - healthPoints) / (float) healthMax), 2);
 
 			if (Random.Float() < finalChance) {
-				int extraDmg = Math.round(HP*resist(Grim.class));
+				int extraDmg = Math.round(healthPoints *resist(Grim.class));
 				dmg += extraDmg;
-				HP -= extraDmg;
+				healthPoints -= extraDmg;
 
 				sprite.emitter().burst( ShadowParticle.UP, 5 );
 				if (!isAlive() && buff(Grim.GrimTracker.class).qualifiesForBadge){
@@ -790,9 +790,9 @@ public abstract class Char extends Actor {
 			}
 		}
 
-		if (HP < 0 && src instanceof Char && alignment == Alignment.ENEMY){
+		if (healthPoints < 0 && src instanceof Char && alignment == Alignment.ENEMY){
 			if (((Char) src).buff(Kinetic.KineticTracker.class) != null){
-				int dmgToAdd = -HP;
+				int dmgToAdd = -healthPoints;
 				dmgToAdd -= ((Char) src).buff(Kinetic.KineticTracker.class).conservedDamage;
 				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Char) src));
 				if (dmgToAdd > 0) {
@@ -835,11 +835,11 @@ public abstract class Char extends Actor {
 			sprite.showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
 		}
 
-		if (HP < 0) HP = 0;
+		if (healthPoints < 0) healthPoints = 0;
 
 		if (!isAlive()) {
 			die( src );
-		} else if (HP == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
+		} else if (healthPoints == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
 	}
@@ -861,7 +861,7 @@ public abstract class Char extends Actor {
 	}
 	
 	public void destroy() {
-		HP = 0;
+		healthPoints = 0;
 		Actor.remove( this );
 
 		for (Char ch : Actor.chars().toArray(new Char[0])){
@@ -899,7 +899,7 @@ public abstract class Char extends Actor {
 	public boolean deathMarked = false;
 	
 	public boolean isAlive() {
-		return HP > 0 || deathMarked;
+		return healthPoints > 0 || deathMarked;
 	}
 
 	public boolean isActive() {

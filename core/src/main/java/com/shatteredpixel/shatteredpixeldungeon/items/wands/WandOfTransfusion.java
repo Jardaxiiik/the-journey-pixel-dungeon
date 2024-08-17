@@ -80,10 +80,10 @@ public class WandOfTransfusion extends Wand {
 			if (ch.alignment == Char.Alignment.ALLY || ch.buff(Charm.class) != null){
 				
 				// 5% of max hp
-				int selfDmg = Math.round(curUser.HT*0.05f);
+				int selfDmg = Math.round(curUser.healthMax *0.05f);
 				
 				int healing = selfDmg + 3*buffedLvl();
-				int shielding = (ch.HP + healing) - ch.HT;
+				int shielding = (ch.healthPoints + healing) - ch.healthMax;
 				if (shielding > 0){
 					healing -= shielding;
 					Buff.affect(ch, Barrier.class).setShield(shielding);
@@ -91,7 +91,7 @@ public class WandOfTransfusion extends Wand {
 					shielding = 0;
 				}
 				
-				ch.HP += healing;
+				ch.healthPoints += healing;
 				
 				ch.sprite.emitter().burst(Speck.factory(Speck.HEALING), 2 + buffedLvl() / 2);
 				if (healing > 0) {
@@ -179,7 +179,7 @@ public class WandOfTransfusion extends Wand {
 
 	@Override
 	public String statsDesc() {
-		int selfDMG = Math.round(Dungeon.hero.HT*0.05f);
+		int selfDMG = Math.round(Dungeon.hero.healthMax *0.05f);
 		if (levelKnown)
 			return Messages.get(this, "stats_desc", selfDMG, selfDMG + 3*buffedLvl(), 5+buffedLvl(), 3+buffedLvl()/2, 6+ buffedLvl());
 		else

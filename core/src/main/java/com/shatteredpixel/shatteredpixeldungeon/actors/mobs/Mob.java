@@ -122,9 +122,9 @@ public abstract class Mob extends Char {
 	protected void onAdd(){
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
-			float percent = HP / (float) HT;
-			HT = Math.round(HT * AscensionChallenge.statModifier(this));
-			HP = Math.round(HT * percent);
+			float percent = healthPoints / (float) healthMax;
+			healthMax = Math.round(healthMax * AscensionChallenge.statModifier(this));
+			healthPoints = Math.round(healthMax * percent);
 			firstAdded = false;
 		}
 	}
@@ -687,7 +687,7 @@ public abstract class Mob extends Char {
 		}
 
 		if (buff(SoulMark.class) != null) {
-			int restoration = Math.min(damage, HP+shielding());
+			int restoration = Math.min(damage, healthPoints +shielding());
 			
 			//physical damage that doesn't come from the hero is less effective
 			if (enemy != Dungeon.hero){
@@ -696,9 +696,9 @@ public abstract class Mob extends Char {
 			if (restoration > 0) {
 				Buff.affect(Dungeon.hero, Hunger.class).affectHunger(restoration*Dungeon.hero.pointsInTalent(Talent.SOUL_EATER)/3f);
 
-				if (Dungeon.hero.HP < Dungeon.hero.HT) {
+				if (Dungeon.hero.healthPoints < Dungeon.hero.healthMax) {
 					int heal = (int)Math.ceil(restoration * 0.4f);
-					Dungeon.hero.HP = Math.min(Dungeon.hero.HT, Dungeon.hero.HP + heal);
+					Dungeon.hero.healthPoints = Math.min(Dungeon.hero.healthMax, Dungeon.hero.healthPoints + heal);
 					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(heal), FloatingText.HEALING);
 				}
 			}

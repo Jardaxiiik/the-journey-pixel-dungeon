@@ -50,7 +50,7 @@ public class PrismaticImage extends NPC {
 	{
 		spriteClass = PrismaticSprite.class;
 		
-		HP = HT = 10;
+		healthPoints = healthMax = 10;
 		defenseSkill = 1;
 		
 		alignment = Alignment.ALLY;
@@ -145,8 +145,8 @@ public class PrismaticImage extends NPC {
 	public void duplicate( Hero hero, int HP ) {
 		this.hero = hero;
 		heroID = this.hero.id();
-		this.HP = HP;
-		HT = PrismaticGuard.maxHP( hero );
+		this.healthPoints = HP;
+		healthMax = PrismaticGuard.maxHP( hero );
 	}
 	
 	@Override
@@ -269,7 +269,7 @@ public class PrismaticImage extends NPC {
 		@Override
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			if (!enemyInFOV){
-				Buff.affect(hero, PrismaticGuard.class).set( HP );
+				Buff.affect(hero, PrismaticGuard.class).set(healthPoints);
 				destroy();
 				CellEmitter.get(pos).start( Speck.factory(Speck.LIGHT), 0.2f, 3 );
 				sprite.die();

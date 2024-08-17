@@ -58,7 +58,7 @@ public class Kunai extends MissileWeapon {
 				int damage = augment.damageFactor(Random.NormalIntRange(
 						min() + Math.round(diff*0.6f),
 						max()));
-				int exStr = hero.STR() - STRReq();
+				int exStr = hero.getAttributeStrength() - STRReq();
 				if (exStr > 0) {
 					damage += Random.IntRange(0, exStr);
 				}

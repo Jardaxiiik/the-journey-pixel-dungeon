@@ -43,10 +43,10 @@ public class PotionOfStrength extends Potion {
 	public void apply( Hero hero ) {
 		identify();
 
-		hero.STR++;
+		hero.attributeStrength++;
 		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
 
-		GLog.p( Messages.get(this, "msg", hero.STR()) );
+		GLog.p( Messages.get(this, "msg", hero.getAttributeStrength()) );
 		
 		Badges.validateStrengthAttained();
 		Badges.validateDuelistUnlock();

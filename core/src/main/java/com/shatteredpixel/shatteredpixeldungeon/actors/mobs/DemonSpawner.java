@@ -49,7 +49,7 @@ public class DemonSpawner extends Mob {
 	{
 		spriteClass = SpawnerSprite.class;
 
-		HP = HT = 120;
+		healthPoints = healthMax = 120;
 		defenseSkill = 0;
 
 		EXP = 15;

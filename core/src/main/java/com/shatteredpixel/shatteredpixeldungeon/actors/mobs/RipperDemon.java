@@ -47,7 +47,7 @@ public class RipperDemon extends Mob {
 	{
 		spriteClass = RipperSprite.class;
 
-		HP = HT = 60;
+		healthPoints = healthMax = 60;
 		defenseSkill = 22;
 		viewDistance = Light.DISTANCE;
 
@@ -225,13 +225,13 @@ public class RipperDemon extends Mob {
 					int targetPos = enemy.pos;
 					if (lastEnemyPos != enemy.pos){
 						int closestIdx = 0;
-						for (int i = 1; i < PathFinder.CIRCLE8.length; i++){
-							if (Dungeon.level.trueDistance(lastEnemyPos, enemy.pos+PathFinder.CIRCLE8[i])
-									< Dungeon.level.trueDistance(lastEnemyPos, enemy.pos+PathFinder.CIRCLE8[closestIdx])){
+						for (int i = 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i++){
+							if (Dungeon.level.trueDistance(lastEnemyPos, enemy.pos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i])
+									< Dungeon.level.trueDistance(lastEnemyPos, enemy.pos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[closestIdx])){
 								closestIdx = i;
 							}
 						}
-						targetPos = enemy.pos + PathFinder.CIRCLE8[(closestIdx+4)%8];
+						targetPos = enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(closestIdx+4)%8];
 					}
 
 					Ballistica b = new Ballistica(pos, targetPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);

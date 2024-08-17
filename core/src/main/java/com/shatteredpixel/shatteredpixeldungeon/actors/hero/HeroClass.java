@@ -103,10 +103,10 @@ public enum HeroClass {
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
 
-		Waterskin waterskin = new Waterskin();
-		waterskin.collect();
-
 		new ScrollOfIdentify().identify();
+
+		MagicalHolster holster = new MagicalHolster();
+		holster.quantity(1).collect();
 
 		switch (this) {
 			case WARRIOR:
@@ -130,14 +130,14 @@ public enum HeroClass {
 				break;
 		}
 
-		if (SPDSettings.quickslotWaterskin()) {
+		/*if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {
 					Dungeon.quickslot.setSlot(s, waterskin);
 					break;
 				}
 			}
-		}
+		}*/
 
 	}
 
@@ -162,9 +162,6 @@ public enum HeroClass {
 		ThrowingStone stones = new ThrowingStone();
 		stones.quantity(3).collect();
 		Dungeon.quickslot.setSlot(0, stones);
-
-		MagicalHolster holster = new MagicalHolster();
-		holster.quantity(1).collect();
 
 		for(int i = 0; i<6; i++) {
 			WandOfMagicMissile wand = new WandOfMagicMissile();

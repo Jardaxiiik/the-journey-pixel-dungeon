@@ -48,7 +48,7 @@ public class ElixirOfMight extends Elixir {
 	public void apply( Hero hero ) {
 		identify();
 		
-		hero.STR++;
+		hero.attributeStrength++;
 		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "1", FloatingText.STRENGTH);
 		
 		Buff.affect(hero, HTBoost.class).reset();
@@ -56,14 +56,14 @@ public class ElixirOfMight extends Elixir {
 		boost.reset();
 		
 		hero.updateHT( true );
-		GLog.p( Messages.get(this, "msg", hero.STR()) );
+		GLog.p( Messages.get(this, "msg", hero.getAttributeStrength()) );
 
 		Badges.validateStrengthAttained();
 		Badges.validateDuelistUnlock();
 	}
 	
 	public String desc() {
-		return Messages.get(this, "desc", HTBoost.boost(Dungeon.hero.HT));
+		return Messages.get(this, "desc", HTBoost.boost(Dungeon.hero.healthMax));
 	}
 	
 	@Override

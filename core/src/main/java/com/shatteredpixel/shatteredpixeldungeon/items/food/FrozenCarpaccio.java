@@ -59,7 +59,7 @@ public class FrozenCarpaccio extends Food {
 				break;
 			case 1:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "hard") );
-				Barkskin.conditionallyAppend( hero, hero.HT / 4, 1 );
+				Barkskin.conditionallyAppend( hero, hero.healthMax / 4, 1 );
 				break;
 			case 2:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "refresh") );
@@ -67,8 +67,8 @@ public class FrozenCarpaccio extends Food {
 				break;
 			case 3:
 				GLog.i( Messages.get(FrozenCarpaccio.class, "better") );
-				hero.HP = Math.min( hero.HP + hero.HT / 4, hero.HT );
-				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.HT / 4), FloatingText.HEALING );
+				hero.healthPoints = Math.min( hero.healthPoints + hero.healthMax / 4, hero.healthMax);
+				hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.healthMax / 4), FloatingText.HEALING );
 				break;
 		}
 	}

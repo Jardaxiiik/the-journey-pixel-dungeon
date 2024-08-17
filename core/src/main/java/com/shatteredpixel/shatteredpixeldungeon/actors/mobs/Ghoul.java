@@ -47,7 +47,7 @@ public class Ghoul extends Mob {
 	{
 		spriteClass = GhoulSprite.class;
 		
-		HP = HT = 45;
+		healthPoints = healthMax = 45;
 		defenseSkill = 20;
 		
 		EXP = 5;
@@ -287,14 +287,14 @@ public class Ghoul extends Mob {
 						return true;
 					}
 				}
-				ghoul.HP = Math.round(ghoul.HT/10f);
+				ghoul.healthPoints = Math.round(ghoul.healthMax /10f);
 				ghoul.beingLifeLinked = false;
 				Actor.add(ghoul);
 				ghoul.timeToNow();
 				Dungeon.level.mobs.add(ghoul);
 				Dungeon.level.occupyCell( ghoul );
 				ghoul.sprite.idle();
-				ghoul.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.HT/10f)), FloatingText.HEALING);
+				ghoul.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(ghoul.healthMax /10f)), FloatingText.HEALING);
 				super.detach();
 				return true;
 			}

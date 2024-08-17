@@ -145,7 +145,7 @@ public class SpiritHawk extends ArmorAbility {
 		{
 			spriteClass = HawkSprite.class;
 
-			HP = HT = 10;
+			healthPoints = healthMax = 10;
 			defenseSkill = 60;
 
 			flying = true;

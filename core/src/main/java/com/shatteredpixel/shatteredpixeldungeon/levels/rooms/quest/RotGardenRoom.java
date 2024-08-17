@@ -127,13 +127,13 @@ public class RotGardenRoom extends SpecialRoom {
 		//If the only open cells next to the heart are a diagonal, open one additional adjacent cell
 		//This is important so that the heart can spread gas
 		boolean openCardinal = false;
-		for (int i = 1; i < PathFinder.CIRCLE8.length; i+=2){
-			if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL) openCardinal = true;
+		for (int i = 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i+=2){
+			if (level.map[heartPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]] != Terrain.WALL) openCardinal = true;
 		}
 		if (!openCardinal){
-			for (int i = 0; i < PathFinder.CIRCLE8.length; i+=2){
-				if (level.map[heartPos + PathFinder.CIRCLE8[i]] != Terrain.WALL){
-					Painter.set(level, heartPos + PathFinder.CIRCLE8[i+1], Terrain.HIGH_GRASS);
+			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i+=2){
+				if (level.map[heartPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]] != Terrain.WALL){
+					Painter.set(level, heartPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i+1], Terrain.HIGH_GRASS);
 				}
 			}
 		}

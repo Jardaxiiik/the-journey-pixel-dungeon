@@ -172,7 +172,7 @@ public class SmokeBomb extends ArmorAbility {
 
 			alignment = Alignment.ALLY;
 
-			HP = HT = 20*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT);
+			healthPoints = healthMax = 20*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT);
 		}
 
 		@Override

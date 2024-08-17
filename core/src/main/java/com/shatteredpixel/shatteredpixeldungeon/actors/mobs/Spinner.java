@@ -43,7 +43,7 @@ public class Spinner extends Mob {
 	{
 		spriteClass = SpinnerSprite.class;
 
-		HP = HT = 50;
+		healthPoints = healthMax = 50;
 		defenseSkill = 17;
 
 		EXP = 9;
@@ -181,15 +181,15 @@ public class Spinner extends Mob {
 		int webPos = webPos();
 		if (webPos != -1){
 			int i;
-			for ( i = 0; i < PathFinder.CIRCLE8.length; i++){
-				if ((enemy.pos + PathFinder.CIRCLE8[i]) == webPos){
+			for (i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i++){
+				if ((enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]) == webPos){
 					break;
 				}
 			}
 			
 			//spread to the tile hero was moving towards and the two adjacent ones
-			int leftPos = enemy.pos + PathFinder.CIRCLE8[left(i)];
-			int rightPos = enemy.pos + PathFinder.CIRCLE8[right(i)];
+			int leftPos = enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[left(i)];
+			int rightPos = enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[right(i)];
 			
 			if (Dungeon.level.passable[leftPos]) applyWebToCell(leftPos);
 			if (Dungeon.level.passable[webPos])  applyWebToCell(webPos);

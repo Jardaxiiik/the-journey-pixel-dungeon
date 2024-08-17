@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 public abstract class NPC extends Mob {
 
 	{
-		HP = HT = 1;
+		healthPoints = healthMax = 1;
 		EXP = 0;
 
 		alignment = Alignment.NEUTRAL;

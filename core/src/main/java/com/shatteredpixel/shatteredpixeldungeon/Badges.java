@@ -411,26 +411,26 @@ public class Badges {
 	public static void validateStrengthAttained() {
 		Badge badge = null;
 		
-		if (!local.contains( Badge.STRENGTH_ATTAINED_1 ) && Dungeon.hero.STR >= 12) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_1 ) && Dungeon.hero.attributeStrength >= 12) {
 			badge = Badge.STRENGTH_ATTAINED_1;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_2 ) && Dungeon.hero.STR >= 14) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_2 ) && Dungeon.hero.attributeStrength >= 14) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_2;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_3 ) && Dungeon.hero.STR >= 16) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_3 ) && Dungeon.hero.attributeStrength >= 16) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_3;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_4 ) && Dungeon.hero.STR >= 18) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_4 ) && Dungeon.hero.attributeStrength >= 18) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_4;
 			local.add( badge );
 		}
-		if (!local.contains( Badge.STRENGTH_ATTAINED_5 ) && Dungeon.hero.STR >= 20) {
+		if (!local.contains( Badge.STRENGTH_ATTAINED_5 ) && Dungeon.hero.attributeStrength >= 20) {
 			if (badge != null) unlock(badge);
 			badge = Badge.STRENGTH_ATTAINED_5;
 			local.add( badge );
@@ -884,14 +884,14 @@ public class Badges {
 		if (!isUnlocked(Badge.UNLOCK_DUELIST) && Dungeon.hero != null
 				&& Dungeon.hero.belongings.weapon instanceof MeleeWeapon
 				&& ((MeleeWeapon) Dungeon.hero.belongings.weapon).tier >= 2
-				&& ((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq() <= Dungeon.hero.STR()){
+				&& ((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq() <= Dungeon.hero.getAttributeStrength()){
 
 			if (Dungeon.hero.belongings.weapon.isIdentified() &&
-					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq() <= Dungeon.hero.STR()) {
+					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq() <= Dungeon.hero.getAttributeStrength()) {
 				displayBadge(Badge.UNLOCK_DUELIST);
 
 			} else if (!Dungeon.hero.belongings.weapon.isIdentified() &&
-					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq(0) <= Dungeon.hero.STR()){
+					((MeleeWeapon) Dungeon.hero.belongings.weapon).STRReq(0) <= Dungeon.hero.getAttributeStrength()){
 				displayBadge(Badge.UNLOCK_DUELIST);
 			}
 		}

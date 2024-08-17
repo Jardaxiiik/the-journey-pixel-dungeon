@@ -50,10 +50,10 @@ public class PhantomMeat extends Food {
 
 	public static void effect(Hero hero){
 
-		Barkskin.conditionallyAppend( hero, hero.HT / 4, 1 );
+		Barkskin.conditionallyAppend( hero, hero.healthMax / 4, 1 );
 		Buff.affect( hero, Invisibility.class, Invisibility.DURATION );
-		hero.HP = Math.min( hero.HP + hero.HT / 4, hero.HT );
-		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.HT / 4), FloatingText.HEALING );
+		hero.healthPoints = Math.min( hero.healthPoints + hero.healthMax / 4, hero.healthMax);
+		hero.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(hero.healthMax / 4), FloatingText.HEALING );
 		PotionOfHealing.cure(hero);
 
 	}

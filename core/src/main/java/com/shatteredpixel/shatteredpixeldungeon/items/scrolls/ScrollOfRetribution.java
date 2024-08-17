@@ -48,7 +48,7 @@ public class ScrollOfRetribution extends Scroll {
 		GameScene.flash( 0x80FFFFFF );
 		
 		//scales from 0x to 1x power, maxing at ~10% HP
-		float hpPercent = (curUser.HT - curUser.HP)/(float)(curUser.HT);
+		float hpPercent = (curUser.healthMax - curUser.healthPoints)/(float)(curUser.healthMax);
 		float power = Math.min( 4f, 4.45f*hpPercent);
 		
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
@@ -65,7 +65,7 @@ public class ScrollOfRetribution extends Scroll {
 
 		for (Mob mob : targets){
 			//deals 10%HT, plus 0-90%HP based on scaling
-			mob.damage(Math.round(mob.HT/10f + (mob.HP * power * 0.225f)), this);
+			mob.damage(Math.round(mob.healthMax /10f + (mob.healthPoints * power * 0.225f)), this);
 			if (mob.isAlive()) {
 				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}

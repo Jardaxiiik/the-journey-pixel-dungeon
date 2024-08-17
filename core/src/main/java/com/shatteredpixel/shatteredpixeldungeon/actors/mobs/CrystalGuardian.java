@@ -45,7 +45,7 @@ public class CrystalGuardian extends Mob{
 	{
 		spriteClass = CrystalGuardianSprite.class;
 
-		HP = HT = 100;
+		healthPoints = healthMax = 100;
 		defenseSkill = 14;
 
 		EXP = 10;
@@ -68,11 +68,11 @@ public class CrystalGuardian extends Mob{
 	protected boolean act() {
 		if (recovering){
 			throwItems();
-			HP = Math.min(HT, HP+5);
+			healthPoints = Math.min(healthMax, healthPoints +5);
 			if (Dungeon.level.heroFOV[pos]) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
-			if (HP == HT){
+			if (healthPoints == healthMax){
 				recovering = false;
 				if (sprite instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) sprite).endCrumple();
 			}
@@ -118,7 +118,7 @@ public class CrystalGuardian extends Mob{
 	public int defenseProc(Char enemy, int damage) {
 		if (recovering){
 			sprite.showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
-			HP = Math.max(1, HP-damage);
+			healthPoints = Math.max(1, healthPoints -damage);
 			damage = -1;
 		}
 
@@ -127,8 +127,8 @@ public class CrystalGuardian extends Mob{
 
 	@Override
 	public boolean isAlive() {
-		if (HP <= 0){
-			HP = 1;
+		if (healthPoints <= 0){
+			healthPoints = 1;
 
 			for (Buff b : buffs()){
 				if (!(b instanceof Doom || b instanceof Cripple)) {

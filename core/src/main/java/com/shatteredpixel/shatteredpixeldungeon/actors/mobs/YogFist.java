@@ -65,7 +65,7 @@ import com.watabou.utils.Random;
 public abstract class YogFist extends Mob {
 
 	{
-		HP = HT = 300;
+		healthPoints = healthMax = 300;
 		defenseSkill = 20;
 
 		viewDistance = Light.DISTANCE;
@@ -147,9 +147,9 @@ public abstract class YogFist extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		int preHP = HP;
+		int preHP = healthPoints;
 		super.damage(dmg, src);
-		int dmgTaken = preHP - HP;
+		int dmgTaken = preHP - healthPoints;
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
 		if (dmgTaken > 0 && lock != null){
@@ -384,9 +384,9 @@ public abstract class YogFist extends Mob {
 			//ensures toxic gas acts at the appropriate time when added
 			GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
 
-			if (Dungeon.level.water[pos] && HP < HT) {
-				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(HT/50), FloatingText.HEALING);
-				HP = Math.min(HT, HP + HT/50);
+			if (Dungeon.level.water[pos] && healthPoints < healthMax) {
+				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthMax /50), FloatingText.HEALING);
+				healthPoints = Math.min(healthMax, healthPoints + healthMax /50);
 			}
 
 			return super.act();
@@ -517,10 +517,10 @@ public abstract class YogFist extends Mob {
 
 		@Override
 		public void damage(int dmg, Object src) {
-			int beforeHP = HP;
+			int beforeHP = healthPoints;
 			super.damage(dmg, src);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
+			if (isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
+				healthPoints = healthMax /2;
 				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*1.5f );
 				int i;
 				do {
@@ -587,10 +587,10 @@ public abstract class YogFist extends Mob {
 
 		@Override
 		public void damage(int dmg, Object src) {
-			int beforeHP = HP;
+			int beforeHP = healthPoints;
 			super.damage(dmg, src);
-			if (isAlive() && beforeHP > HT/2 && HP < HT/2){
-				HP = HT/2;
+			if (isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
+				healthPoints = healthMax /2;
 				Light l = Dungeon.hero.buff(Light.class);
 				if (l != null){
 					l.detach();

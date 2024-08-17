@@ -47,10 +47,10 @@ public class Healing extends Buff {
 	@Override
 	public boolean act(){
 
-		if (target.HP < target.HT) {
-			target.HP = Math.min(target.HT, target.HP + healingThisTick());
+		if (target.healthPoints < target.healthMax) {
+			target.healthPoints = Math.min(target.healthMax, target.healthPoints + healingThisTick());
 
-			if (target.HP == target.HT && target instanceof Hero) {
+			if (target.healthPoints == target.healthMax && target instanceof Hero) {
 				((Hero) target).resting = false;
 			}
 

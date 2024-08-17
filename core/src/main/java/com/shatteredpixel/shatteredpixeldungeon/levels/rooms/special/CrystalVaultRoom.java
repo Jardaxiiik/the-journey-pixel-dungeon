@@ -64,9 +64,9 @@ public class CrystalVaultRoom extends SpecialRoom {
 		int i1Pos, i2Pos;
 		int doorPos = level.pointToCell(entrance());
 		do {
-			int neighbourIdx = Random.Int(PathFinder.CIRCLE8.length);
-			i1Pos = c + PathFinder.CIRCLE8[neighbourIdx];
-			i2Pos = c + PathFinder.CIRCLE8[(neighbourIdx+4)%8];
+			int neighbourIdx = Random.Int(PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length);
+			i1Pos = c + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[neighbourIdx];
+			i2Pos = c + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(neighbourIdx+4)%8];
 		} while (level.adjacent(i1Pos, doorPos) || level.adjacent(i2Pos, doorPos));
 
 		level.drop( i1, i1Pos ).type = Heap.Type.CRYSTAL_CHEST;

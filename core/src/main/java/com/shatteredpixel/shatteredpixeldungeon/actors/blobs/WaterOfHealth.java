@@ -55,9 +55,9 @@ public class WaterOfHealth extends WellWater {
 		hero.belongings.uncurseEquipped();
 		hero.buff( Hunger.class ).satisfy( Hunger.STARVING );
 
-		hero.HP = hero.HT;
+		hero.healthPoints = hero.healthMax;
 		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
-		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(hero.HT), FloatingText.HEALING);
+		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(hero.healthMax), FloatingText.HEALING);
 		
 		CellEmitter.get( hero.pos ).start( ShaftParticle.FACTORY, 0.2f, 3 );
 

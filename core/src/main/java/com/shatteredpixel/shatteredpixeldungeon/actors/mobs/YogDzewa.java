@@ -75,7 +75,7 @@ public class YogDzewa extends Mob {
 	{
 		spriteClass = YogSprite.class;
 
-		HP = HT = 1000;
+		healthPoints = healthMax = 1000;
 
 		EXP = 50;
 
@@ -267,7 +267,7 @@ public class YogDzewa extends Mob {
 
 			if (abilityCooldown <= 0){
 
-				int beams = 1 + (HT - HP)/400;
+				int beams = 1 + (healthMax - healthPoints)/400;
 				HashSet<Integer> affectedCells = new HashSet<>();
 				for (int i = 0; i < beams; i++){
 
@@ -388,24 +388,24 @@ public class YogDzewa extends Mob {
 	@Override
 	public void damage( int dmg, Object src ) {
 
-		int preHP = HP;
+		int preHP = healthPoints;
 		super.damage( dmg, src );
 
 		if (phase == 0 || findFist() != null) return;
 
 		if (phase < 4) {
-			HP = Math.max(HP, HT - 300 * phase);
+			healthPoints = Math.max(healthPoints, healthMax - 300 * phase);
 		} else if (phase == 4) {
-			HP = Math.max(HP, 100);
+			healthPoints = Math.max(healthPoints, 100);
 		}
-		int dmgTaken = preHP - HP;
+		int dmgTaken = preHP - healthPoints;
 
 		if (dmgTaken > 0) {
 			abilityCooldown -= dmgTaken / 10f;
 			summonCooldown -= dmgTaken / 10f;
 		}
 
-		if (phase < 4 && HP <= HT - 300*phase){
+		if (phase < 4 && healthPoints <= healthMax - 300*phase){
 
 			phase++;
 
@@ -642,7 +642,7 @@ public class YogDzewa extends Mob {
 		{
 			spriteClass = LarvaSprite.class;
 
-			HP = HT = 20;
+			healthPoints = healthMax = 20;
 			defenseSkill = 12;
 			viewDistance = Light.DISTANCE;
 

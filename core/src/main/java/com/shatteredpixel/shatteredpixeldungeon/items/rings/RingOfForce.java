@@ -81,11 +81,11 @@ public class RingOfForce extends Ring {
 		if (hero.buff(Force.class) != null
 				&& hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
 			int level = getBuffedBonus(hero, Force.class);
-			float tier = tier(hero.STR());
+			float tier = tier(hero.getAttributeStrength());
 			return Random.NormalIntRange(min(level, tier), max(level, tier));
 		} else {
 			//attack without any ring of force influence
-			return Random.NormalIntRange(1, Math.max(hero.STR()-8, 1));
+			return Random.NormalIntRange(1, Math.max(hero.getAttributeStrength()-8, 1));
 		}
 	}
 
@@ -111,7 +111,7 @@ public class RingOfForce extends Ring {
 
 	@Override
 	public String statsInfo() {
-		float tier = tier(Dungeon.hero.STR());
+		float tier = tier(Dungeon.hero.getAttributeStrength());
 		if (isIdentified()) {
 			int level = soloBuffedBonus();
 			String info = Messages.get(this, "stats", min(level, tier), max(level, tier), level);

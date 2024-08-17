@@ -79,7 +79,7 @@ public class DwarfKing extends Mob {
 	{
 		spriteClass = KingSprite.class;
 
-		HP = HT = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 300;
+		healthPoints = healthMax = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 450 : 300;
 		EXP = 40;
 		defenseSkill = 22;
 
@@ -472,7 +472,7 @@ public class DwarfKing extends Mob {
 			}
 			return;
 		}
-		int preHP = HP;
+		int preHP = healthPoints;
 		super.damage(dmg, src);
 
 		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
@@ -482,18 +482,18 @@ public class DwarfKing extends Mob {
 		}
 
 		if (phase == 1) {
-			int dmgTaken = preHP - HP;
+			int dmgTaken = preHP - healthPoints;
 			abilityCooldown -= dmgTaken/8f;
 			summonCooldown -= dmgTaken/8f;
-			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
-				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
+			if (healthPoints <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
+				healthPoints = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
 				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 				ScrollOfTeleportation.appear(this, CityBossLevel.throne);
 				properties.add(Property.IMMOVABLE);
 				phase = 2;
 				summonsMade = 0;
 				sprite.idle();
-				Buff.affect(this, DKBarrior.class).setShield(HT);
+				Buff.affect(this, DKBarrior.class).setShield(healthMax);
 				for (Summoning s : buffs(Summoning.class)) {
 					s.detach();
 				}
@@ -522,7 +522,7 @@ public class DwarfKing extends Mob {
 					});
 				}
 			});
-		} else if (phase == 3 && preHP > 20 && HP < 20){
+		} else if (phase == 3 && preHP > 20 && healthPoints < 20){
 			yell( Messages.get(this, "losing") );
 		}
 	}
@@ -689,9 +689,9 @@ public class DwarfKing extends Mob {
 					ch.damage(Random.NormalIntRange(20, 40), this);
 					if (((DwarfKing)target).phase == 2){
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-							target.damage(target.HT/18, new KingDamager());
+							target.damage(target.healthMax /18, new KingDamager());
 						} else {
-							target.damage(target.HT/12, new KingDamager());
+							target.damage(target.healthMax /12, new KingDamager());
 						}
 					}
 					if (!ch.isAlive() && ch == Dungeon.hero) {
@@ -764,7 +764,7 @@ public class DwarfKing extends Mob {
 			super.detach();
 			for (Mob m : Dungeon.level.mobs){
 				if (m instanceof DwarfKing){
-					int damage = m.HT / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12);
+					int damage = m.healthMax / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12);
 					m.damage(damage, this);
 				}
 			}

@@ -165,9 +165,9 @@ public class BossHealthBar extends Component {
 				}
 			} else {
 
-				int health = boss.HP;
+				int health = boss.healthPoints;
 				int shield = boss.shielding();
-				int max = boss.HT;
+				int max = boss.healthMax;
 
 				hp.scale.x = Math.max( 0, (health-shield)/(float)max);
 				shieldedHP.scale.x = health/(float)max;

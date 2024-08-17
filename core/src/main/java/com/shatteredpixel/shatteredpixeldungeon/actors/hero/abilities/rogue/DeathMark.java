@@ -89,7 +89,7 @@ public class DeathMark extends ArmorAbility {
 		}
 
 		if (ch != null){
-			Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.HP);
+			Buff.affect(ch, DeathMarkTracker.class, DeathMarkTracker.DURATION).setInitialHP(ch.healthPoints);
 		}
 
 		armor.charge -= chargeUse( hero );
@@ -107,7 +107,7 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	public static void processFearTheReaper( Char ch ){
-		if (ch.HP > 0 || ch.buff(DeathMarkTracker.class) == null){
+		if (ch.healthPoints > 0 || ch.buff(DeathMarkTracker.class) == null){
 			return;
 		}
 
@@ -194,7 +194,7 @@ public class DeathMark extends ArmorAbility {
 			target.deathMarked = false;
 			if (!target.isAlive()){
 				target.sprite.flash();
-				target.sprite.bloodBurstA(target.sprite.center(), target.HT*2);
+				target.sprite.bloodBurstA(target.sprite.center(), target.healthMax *2);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(this);

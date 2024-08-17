@@ -321,7 +321,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			@Override
 			public String desc() {
 				//hero unarmed damage
-				return Messages.get(this, "desc", 1, Dungeon.hero.STR()-8);
+				return Messages.get(this, "desc", 1, Dungeon.hero.getAttributeStrength()-8);
 			}
 
 			@Override
@@ -533,7 +533,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			@Override
 			public String desc() {
 				//3x hero unarmed damage
-				return Messages.get(this, "desc", 3, 3*(Dungeon.hero.STR()-8));
+				return Messages.get(this, "desc", 3, 3*(Dungeon.hero.getAttributeStrength()-8));
 			}
 
 			@Override
@@ -643,7 +643,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				for (int i = 0; i < 5; i++) hero.spendConstant(Actor.TICK);
 
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
-					int toHeal = Math.round((hero.HT - hero.HP)/5f);
+					int toHeal = Math.round((hero.healthMax - hero.healthPoints)/5f);
 					if (toHeal > 0) {
 						Buff.affect(hero, Healing.class).setHeal(toHeal, 0, 1);
 					}

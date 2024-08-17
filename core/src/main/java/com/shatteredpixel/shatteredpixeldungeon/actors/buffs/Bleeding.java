@@ -102,7 +102,7 @@ public class Bleeding extends Buff {
 				target.damage( dmg, this );
 				if (target.sprite.visible) {
 					Splash.at( target.sprite.center(), -PointF.PI / 2, PointF.PI / 6,
-							target.sprite.blood(), Math.min( 10 * dmg / target.HT, 10 ) );
+							target.sprite.blood(), Math.min( 10 * dmg / target.healthMax, 10 ) );
 				}
 				
 				if (target == Dungeon.hero && !target.isAlive()) {

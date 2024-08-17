@@ -39,7 +39,7 @@ public class CrystalWisp extends Mob{
 	{
 		spriteClass = CrystalWispSprite.class;
 
-		HP = HT = 30;
+		healthPoints = healthMax = 30;
 		defenseSkill = 16;
 
 		EXP = 7;

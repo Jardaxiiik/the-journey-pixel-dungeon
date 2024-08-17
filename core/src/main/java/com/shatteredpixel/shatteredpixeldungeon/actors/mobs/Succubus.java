@@ -55,7 +55,7 @@ public class Succubus extends Mob {
 	{
 		spriteClass = SuccubusSprite.class;
 		
-		HP = HT = 80;
+		healthPoints = healthMax = 80;
 		defenseSkill = 25;
 		viewDistance = Light.DISTANCE;
 		
@@ -78,9 +78,9 @@ public class Succubus extends Mob {
 		damage = super.attackProc( enemy, damage );
 		
 		if (enemy.buff(Charm.class) != null ){
-			int shield = (HP - HT) + (5 + damage);
+			int shield = (healthPoints - healthMax) + (5 + damage);
 			if (shield > 0){
-				HP = HT;
+				healthPoints = healthMax;
 				if (shield < 5){
 					sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(5-shield), FloatingText.HEALING);
 				}
@@ -88,7 +88,7 @@ public class Succubus extends Mob {
 				Buff.affect(this, Barrier.class).setShield(shield);
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
 			} else {
-				HP += 5 + damage;
+				healthPoints += 5 + damage;
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (Dungeon.level.heroFOV[pos]) {

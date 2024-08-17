@@ -37,7 +37,7 @@ public class GnollGuard extends Mob {
 	{
 		spriteClass = GnollGuardSprite.class;
 
-		HP = HT = 35;
+		healthPoints = healthMax = 35;
 		defenseSkill = 15;
 
 		EXP = 7;
