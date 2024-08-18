@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -53,11 +53,11 @@ public class DelayedRockFall extends FlavourBuff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		for (int i : rockPositions){
 			CellEmitter.get( i ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 
-			Char ch = Actor.findChar(i);
+			Character ch = Actor.findChar(i);
 			if (ch != null){
 				affectChar(ch);
 			} else {
@@ -69,10 +69,10 @@ public class DelayedRockFall extends FlavourBuff {
 		Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
 		detach();
-		return super.act();
+		return super.playGameTurn();
 	}
 
-	public void affectChar( Char ch ){
+	public void affectChar( Character ch ){
 		//do nothing by default
 	}
 

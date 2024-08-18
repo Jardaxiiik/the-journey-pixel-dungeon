@@ -21,9 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -61,8 +61,8 @@ public class ToxicImbue extends Buff {
 	}
 
 	@Override
-	public boolean act() {
-		GameScene.add(Blob.seed(target.pos, 50, ToxicGas.class));
+	public boolean playGameTurn() {
+		GameScene.add(Emitter.seed(target.pos, 50, ToxicGas.class));
 
 		spend(TICK);
 		left -= TICK;
@@ -104,7 +104,7 @@ public class ToxicImbue extends Buff {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			Buff.detach(target, Poison.class);
 			return true;

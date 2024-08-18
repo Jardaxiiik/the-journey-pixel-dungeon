@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Golem;
@@ -56,7 +56,7 @@ public class Imp extends NPC {
 	private boolean seenBefore = false;
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
@@ -71,11 +71,11 @@ public class Imp extends NPC {
 			seenBefore = false;
 		}
 		
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		return INFINITE_EVASION;
 	}
 
@@ -95,7 +95,7 @@ public class Imp extends NPC {
 	}
 	
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		
 		sprite.turnTo( pos, Dungeon.hero.pos );
 

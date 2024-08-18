@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Ghoul;
@@ -98,7 +98,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (cooldown > 0){
 			cooldown--;
 			if (cooldown == 0 && energy >= 1){
@@ -151,8 +151,8 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 		float energyGain;
 
 		//bosses and minibosses give extra energy, certain enemies give half, otherwise give 1
-		if (Char.hasProp(enemy, Char.Property.BOSS))            energyGain = 5;
-		else if (Char.hasProp(enemy, Char.Property.MINIBOSS))   energyGain = 3;
+		if (Character.hasProp(enemy, Character.Property.BOSS))            energyGain = 5;
+		else if (Character.hasProp(enemy, Character.Property.MINIBOSS))   energyGain = 3;
 		else if (enemy instanceof Ghoul)                        energyGain = 0.5f;
 		else if (enemy instanceof RipperDemon)                  energyGain = 0.5f;
 		else if (enemy instanceof YogDzewa.Larva)               energyGain = 0.5f;
@@ -335,7 +335,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				Char enemy = Actor.findChar(target);
+				Character enemy = Actor.findChar(target);
 				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
@@ -356,13 +356,13 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					@Override
 					public void call() {
 						AttackIndicator.target(enemy);
-						hero.attack(enemy, 1, 0, Char.INFINITE_ACCURACY);
+						hero.attack(enemy, 1, 0, Character.INFINITE_ACCURACY);
 
 						if (enemy.isAlive()){
 							hero.sprite.attack(enemy.pos, new Callback() {
 								@Override
 								public void call() {
-									hero.attack(enemy, 1, 0, Char.INFINITE_ACCURACY);
+									hero.attack(enemy, 1, 0, Character.INFINITE_ACCURACY);
 									Invisibility.dispel();
 									hero.next();
 									tracker.detach();
@@ -547,7 +547,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				Char enemy = Actor.findChar(target);
+				Character enemy = Actor.findChar(target);
 				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
@@ -567,7 +567,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						boolean empowered = Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero);
 
 						int oldPos = enemy.pos;
-						if (hero.attack(enemy, empowered ? 4.5f : 3f, 0, Char.INFINITE_ACCURACY)){
+						if (hero.attack(enemy, empowered ? 4.5f : 3f, 0, Character.INFINITE_ACCURACY)){
 							Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 						}
 
@@ -589,9 +589,9 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						Buff.affect(hero, MonkEnergy.class).abilityUsed(DragonKick.this);
 
 						if (empowered){
-							for (Char ch : Actor.chars()){
+							for (Character ch : Actor.chars()){
 								if (ch != enemy
-										&& ch.alignment == Char.Alignment.ENEMY
+										&& ch.alignment == Character.Alignment.ENEMY
 										&& Dungeon.level.adjacent(ch.pos, hero.pos)){
 									//trace a ballistica to our target (which will also extend past them
 									Ballistica trajectory = new Ballistica(hero.pos, ch.pos, Ballistica.STOP_TARGET);
@@ -657,7 +657,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					}
 
 					@Override
-					protected boolean act() {
+					protected boolean playGameTurn() {
 						Buff.affect(hero, Recharging.class, 8f);
 						Buff.affect(hero, ArtifactRecharge.class).prolong(8f).ignoreHornOfPlenty = false;
 						Actor.remove(this);

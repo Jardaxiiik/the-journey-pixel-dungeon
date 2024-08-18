@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -61,11 +61,11 @@ public abstract class ChampionEnemy extends Buff {
 		else target.sprite.clearAura();
 	}
 
-	public void onAttackProc(Char enemy ){
+	public void onAttackProc(Character enemy ){
 
 	}
 
-	public boolean canAttackWithExtraReach( Char enemy ){
+	public boolean canAttackWithExtraReach( Character enemy ){
 		return false;
 	}
 
@@ -115,7 +115,7 @@ public abstract class ChampionEnemy extends Buff {
 		}
 
 		@Override
-		public void onAttackProc(Char enemy) {
+		public void onAttackProc(Character enemy) {
 			if (!Dungeon.level.water[enemy.pos]) {
 				Buff.affect(enemy, Burning.class).reignite(enemy);
 			}
@@ -127,7 +127,7 @@ public abstract class ChampionEnemy extends Buff {
 			if (target.flying || !Dungeon.level.pit[target.pos]) {
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 					if (!Dungeon.level.solid[target.pos + i] && !Dungeon.level.water[target.pos + i]) {
-						GameScene.add(Blob.seed(target.pos + i, 2, Fire.class));
+						GameScene.add(Emitter.seed(target.pos + i, 2, Fire.class));
 					}
 				}
 			}
@@ -156,12 +156,12 @@ public abstract class ChampionEnemy extends Buff {
 		}
 
 		@Override
-		public boolean canAttackWithExtraReach(Char enemy) {
+		public boolean canAttackWithExtraReach(Character enemy) {
 			if (Dungeon.level.distance( target.pos, enemy.pos ) > 4){
 				return false;
 			} else {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				for (Char ch : Actor.chars()) {
+				for (Character ch : Actor.chars()) {
 					//our own tile is always passable
 					passable[ch.pos] = ch == target;
 				}
@@ -190,7 +190,7 @@ public abstract class ChampionEnemy extends Buff {
 
 	}
 
-	//Also makes target large, see Char.properties()
+	//Also makes target large, see Character.properties()
 	public static class Giant extends ChampionEnemy {
 
 		{
@@ -203,12 +203,12 @@ public abstract class ChampionEnemy extends Buff {
 		}
 
 		@Override
-		public boolean canAttackWithExtraReach(Char enemy) {
+		public boolean canAttackWithExtraReach(Character enemy) {
 			if (Dungeon.level.distance( target.pos, enemy.pos ) > 2){
 				return false;
 			} else {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				for (Char ch : Actor.chars()) {
+				for (Character ch : Actor.chars()) {
 					//our own tile is always passable
 					passable[ch.pos] = ch == target;
 				}
@@ -241,7 +241,7 @@ public abstract class ChampionEnemy extends Buff {
 		private float multiplier = 1.19f;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			multiplier += 0.01f;
 			spend(4*TICK);
 			return true;

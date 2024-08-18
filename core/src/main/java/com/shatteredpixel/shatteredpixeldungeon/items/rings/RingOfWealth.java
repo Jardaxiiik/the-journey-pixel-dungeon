@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -94,11 +94,11 @@ public class RingOfWealth extends Ring {
 		return new Wealth();
 	}
 	
-	public static float dropChanceMultiplier( Char target ){
+	public static float dropChanceMultiplier( Character target ){
 		return (float)Math.pow(1.20, getBuffedBonus(target, Wealth.class));
 	}
 	
-	public static ArrayList<Item> tryForBonusDrop(Char target, int tries ){
+	public static ArrayList<Item> tryForBonusDrop(Character target, int tries ){
 		int bonus = getBuffedBonus(target, Wealth.class);
 
 		if (bonus <= 0) return null;

@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
 
@@ -37,7 +37,7 @@ public class CorrosionTrap extends Trap {
 	@Override
 	public void activate() {
 
-		CorrosiveGas corrosiveGas = Blob.seed(pos, 80 + 5 * scalingDepth(), CorrosiveGas.class);
+		CorrosiveGas corrosiveGas = Emitter.seed(pos, 80 + 5 * scalingDepth(), CorrosiveGas.class);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 		corrosiveGas.setStrength(1+scalingDepth()/4);

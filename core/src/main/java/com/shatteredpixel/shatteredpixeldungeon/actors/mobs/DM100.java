@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
@@ -63,7 +63,7 @@ public class DM100 extends Mob implements Callback {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 11;
 	}
 	
@@ -73,7 +73,7 @@ public class DM100 extends Mob implements Callback {
 	}
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return super.canAttack(enemy)
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
@@ -82,7 +82,7 @@ public class DM100 extends Mob implements Callback {
 	public static class LightningBolt{}
 	
 	@Override
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 
 		if (Dungeon.level.adjacent( pos, enemy.pos )
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {

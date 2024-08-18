@@ -47,7 +47,7 @@ public class PathFinder {
 
 	//similar to their equivalent neighbour arrays, but the order is clockwise.
 	//Useful for some logic functions, but is slower due to lack of array-access order.
-	public static int[] OFFSETS_NEIGHBOURS4_CLOCKWISE;
+	public static int[] OFFSETS_NEIGHBOURS4_CLOCKWISE; // up, right, down, left
 	public static int[] OFFSETS_NEIGHBOURS8_CLOCKWISE;
 	
 	public static void setMapSize( int levelWidth, int levelHeight ) {

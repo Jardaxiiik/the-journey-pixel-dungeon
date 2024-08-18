@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -60,10 +60,10 @@ public class Dagger extends MeleeWeapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
-			Char enemy = hero.enemy();
+			Character enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
@@ -90,7 +90,7 @@ public class Dagger extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Character target){
 		return 2;
 	}
 

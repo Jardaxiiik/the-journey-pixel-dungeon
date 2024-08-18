@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
@@ -60,7 +60,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		//find the shopkeeper in the current level
 		Shopkeeper shop = null;
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof Shopkeeper){
 				shop = (Shopkeeper) ch;
 				break;

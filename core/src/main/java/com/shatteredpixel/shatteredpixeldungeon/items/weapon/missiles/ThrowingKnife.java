@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -48,10 +48,10 @@ public class ThrowingKnife extends MissileWeapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
-			Char enemy = hero.enemy();
+			Character enemy = hero.enemy();
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();

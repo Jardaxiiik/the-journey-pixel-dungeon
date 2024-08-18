@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Shopkeeper;
@@ -99,7 +99,7 @@ public class Heap implements Bundlable {
 				hero.damage( hero.healthPoints / 2, this );
 				if (!hero.isAlive()){
 					Dungeon.fail(Wraith.class);
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", Messages.get(Wraith.class, "name"))));
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", Messages.get(Wraith.class, "name"))));
 				}
 			}
 			Sample.INSTANCE.play( Assets.Sounds.CURSED );

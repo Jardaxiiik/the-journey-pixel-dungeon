@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Regrowth extends Blob {
+public class Regrowth extends Emitter {
 	
 	@Override
 	protected void evolve() {
@@ -59,7 +59,7 @@ public class Regrowth extends Blob {
 							GameScene.updateMap( cell );
 						}
 
-						Char ch = Actor.findChar( cell );
+						Character ch = Actor.findChar( cell );
 						if (ch != null
 								&& !ch.isImmune(this.getClass())
 								&& off[cell] > 1) {

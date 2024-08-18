@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -36,7 +36,7 @@ public class Lucky extends Weapon.Enchantment {
 	private static ItemSprite.Glowing GREEN = new ItemSprite.Glowing( 0x00FF00 );
 	
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage ) {
 		int level = Math.max( 0, weapon.buffedLvl() );
 
 		// lvl 0 - 10%
@@ -76,7 +76,7 @@ public class Lucky extends Weapon.Enchantment {
 		private int ringLevel = -5;
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}

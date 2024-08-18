@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -44,7 +44,7 @@ public class Explosive extends Weapon.Enchantment {
 	private int durability = 100;
 
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage ) {
 
 		//average value of 5, or 20 hits to an explosion
 		int durToReduce = Math.round(Random.IntRange(0, 10) * procChanceMultiplier(attacker));

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.noosa.Game;
@@ -40,7 +40,7 @@ public class Enchanting extends ItemSprite {
 
 	private int color;
 
-	private Char target;
+	private Character target;
 
 	private Phase phase;
 	private float duration;
@@ -99,7 +99,7 @@ public class Enchanting extends ItemSprite {
 		}
 	}
 
-	public static void show( Char ch, Item item ) {
+	public static void show(Character ch, Item item ) {
 
 		if (!ch.sprite.visible) {
 			return;

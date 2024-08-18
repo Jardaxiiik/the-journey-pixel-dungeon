@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Berserk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -108,7 +108,7 @@ abstract public class Weapon extends KindOfWeapon {
 	public boolean masteryPotionBonus = false;
 	
 	@Override
-	public int proc( Char attacker, Char defender, int damage ) {
+	public int proc(Character attacker, Character defender, int damage ) {
 		
 		if (enchantment != null && attacker.buff(MagicImmune.class) == null) {
 			damage = enchantment.proc( this, attacker, defender, damage );
@@ -177,7 +177,7 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 	
 	@Override
-	public float accuracyFactor(Char owner, Char target) {
+	public float accuracyFactor(Character owner, Character target) {
 		
 		int encumbrance = 0;
 		
@@ -195,11 +195,11 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 	
 	@Override
-	public float delayFactor( Char owner ) {
+	public float delayFactor( Character owner ) {
 		return baseDelay(owner) * (1f/speedMultiplier(owner));
 	}
 
-	protected float baseDelay( Char owner ){
+	protected float baseDelay( Character owner ){
 		float delay = augment.delayFactor(this.DLY);
 		if (owner instanceof Hero) {
 			int encumbrance = STRReq() - ((Hero)owner).getAttributeStrength();
@@ -211,7 +211,7 @@ abstract public class Weapon extends KindOfWeapon {
 		return delay;
 	}
 
-	protected float speedMultiplier(Char owner ){
+	protected float speedMultiplier(Character owner ){
 		float multi = RingOfFuror.attackSpeedMultiplier(owner);
 
 		if (owner.buff(Scimitar.SwordDance.class) != null){
@@ -222,7 +222,7 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 
 	@Override
-	public int reachFactor(Char owner) {
+	public int reachFactor(Character owner) {
 		int reach = RCH;
 		if (owner instanceof Hero && RingOfForce.fightingUnarmed((Hero) owner)){
 			reach = 1; //brawlers stance benefits from enchantments, but not innate reach
@@ -341,7 +341,7 @@ abstract public class Weapon extends KindOfWeapon {
 		return enchant( ench );
 	}
 
-	public boolean hasEnchant(Class<?extends Enchantment> type, Char owner) {
+	public boolean hasEnchant(Class<?extends Enchantment> type, Character owner) {
 		return enchantment != null && enchantment.getClass() == type && owner.buff(MagicImmune.class) == null;
 	}
 	
@@ -383,13 +383,13 @@ abstract public class Weapon extends KindOfWeapon {
 		};
 		
 			
-		public abstract int proc( Weapon weapon, Char attacker, Char defender, int damage );
+		public abstract int proc(Weapon weapon, Character attacker, Character defender, int damage );
 
-		protected float procChanceMultiplier( Char attacker ){
+		protected float procChanceMultiplier( Character attacker ){
 			return genericProcChanceMultiplier( attacker );
 		}
 
-		public static float genericProcChanceMultiplier( Char attacker ){
+		public static float genericProcChanceMultiplier( Character attacker ){
 			float multi = RingOfArcana.enchantPowerMultiplier(attacker);
 			Berserk rage = attacker.buff(Berserk.class);
 			if (rage != null) {

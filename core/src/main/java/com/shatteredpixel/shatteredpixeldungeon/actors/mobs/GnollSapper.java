@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -63,7 +63,7 @@ public class GnollSapper extends Mob {
 	public int throwingRockFromPos = -1;
 	public int throwingRockToPos = -1;
 
-	public void linkPartner(Char c){
+	public void linkPartner(Character c){
 		losePartner();
 		partnerID = c.id();
 		if (c instanceof GnollGuard) {
@@ -100,7 +100,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 18;
 	}
 
@@ -126,7 +126,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (throwingRockFromPos != -1){
 
 			boolean attacked = Dungeon.level.map[throwingRockFromPos] == Terrain.MINE_BOULDER;
@@ -141,7 +141,7 @@ public class GnollSapper extends Mob {
 			spend(TICK);
 			return !attacked;
 		} else {
-			return super.act();
+			return super.playGameTurn();
 		}
 
 	}

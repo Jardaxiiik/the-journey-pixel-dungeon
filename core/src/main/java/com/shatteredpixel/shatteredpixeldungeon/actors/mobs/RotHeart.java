@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -56,9 +56,9 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		alerted = false;
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		//rot heart spreads less gas in enclosed spaces
 		int openNearby = 0;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
@@ -82,7 +82,7 @@ public class RotHeart extends Mob {
 			}
 		}
 
-		GameScene.add(Blob.seed(pos, 5 + 3*openNearby, ToxicGas.class));
+		GameScene.add(Emitter.seed(pos, 5 + 3*openNearby, ToxicGas.class));
 
 		return super.defenseProc(enemy, damage);
 	}
@@ -125,7 +125,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 0;
 	}
 

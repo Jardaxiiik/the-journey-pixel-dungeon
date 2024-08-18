@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -68,7 +68,7 @@ abstract public class ClassArmor extends Armor {
 	}
 
 	@Override
-	public void activate(Char ch) {
+	public void activate(Character ch) {
 		super.activate(ch);
 		charger = new Charger();
 		charger.attachTo(ch);
@@ -313,7 +313,7 @@ abstract public class ClassArmor extends Armor {
 	public class Charger extends Buff {
 
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
@@ -325,7 +325,7 @@ abstract public class ClassArmor extends Armor {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (Regeneration.regenOn()) {
 				float chargeGain = 100 / 500f; //500 turns to full charge
 				chargeGain *= RingOfEnergy.armorChargeMultiplier(target);

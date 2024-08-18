@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
@@ -32,7 +32,7 @@ import java.util.HashSet;
 
 public class Buff extends Actor {
 	
-	public Char target;
+	public Character target;
 
 	{
 		actPriority = BUFF_PRIO; //low priority, towards the end of a turn
@@ -60,7 +60,7 @@ public class Buff extends Actor {
 		return new HashSet<>(immunities);
 	}
 	
-	public boolean attachTo( Char target ) {
+	public boolean attachTo( Character target ) {
 
 		if (target.isImmune( getClass() )) {
 			return false;
@@ -82,7 +82,7 @@ public class Buff extends Actor {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		diactivate();
 		return true;
 	}
@@ -139,20 +139,20 @@ public class Buff extends Actor {
 	}
 
 	//creates a fresh instance of the buff and attaches that, this allows duplication.
-	public static<T extends Buff> T append( Char target, Class<T> buffClass ) {
+	public static<T extends Buff> T append(Character target, Class<T> buffClass ) {
 		T buff = Reflection.newInstance(buffClass);
 		buff.attachTo( target );
 		return buff;
 	}
 
-	public static<T extends FlavourBuff> T append( Char target, Class<T> buffClass, float duration ) {
+	public static<T extends FlavourBuff> T append(Character target, Class<T> buffClass, float duration ) {
 		T buff = append( target, buffClass );
 		buff.spend( duration * target.resist(buffClass) );
 		return buff;
 	}
 
 	//same as append, but prevents duplication.
-	public static<T extends Buff> T affect( Char target, Class<T> buffClass ) {
+	public static<T extends Buff> T affect(Character target, Class<T> buffClass ) {
 		T buff = target.buff( buffClass );
 		if (buff != null) {
 			return buff;
@@ -161,26 +161,26 @@ public class Buff extends Actor {
 		}
 	}
 	
-	public static<T extends FlavourBuff> T affect( Char target, Class<T> buffClass, float duration ) {
+	public static<T extends FlavourBuff> T affect(Character target, Class<T> buffClass, float duration ) {
 		T buff = affect( target, buffClass );
 		buff.spend( duration * target.resist(buffClass) );
 		return buff;
 	}
 
 	//postpones an already active buff, or creates & attaches a new buff and delays that.
-	public static<T extends FlavourBuff> T prolong( Char target, Class<T> buffClass, float duration ) {
+	public static<T extends FlavourBuff> T prolong(Character target, Class<T> buffClass, float duration ) {
 		T buff = affect( target, buffClass );
 		buff.postpone( duration * target.resist(buffClass) );
 		return buff;
 	}
 
-	public static<T extends CounterBuff> T count( Char target, Class<T> buffclass, float count ) {
+	public static<T extends CounterBuff> T count(Character target, Class<T> buffclass, float count ) {
 		T buff = affect( target, buffclass );
 		buff.countUp( count );
 		return buff;
 	}
 	
-	public static void detach( Char target, Class<? extends Buff> cl ) {
+	public static void detach(Character target, Class<? extends Buff> cl ) {
 		for ( Buff b : target.buffs( cl )){
 			b.detach();
 		}

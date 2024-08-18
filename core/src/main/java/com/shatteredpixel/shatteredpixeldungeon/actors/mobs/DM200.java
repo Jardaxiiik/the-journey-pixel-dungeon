@@ -22,9 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -61,7 +61,7 @@ public class DM200 extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 
@@ -104,9 +104,9 @@ public class DM200 extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		ventCooldown--;
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	public void onZapComplete(){
@@ -121,9 +121,9 @@ public class DM200 extends Mob {
 		Ballistica trajectory = new Ballistica(pos, enemy.pos, Ballistica.STOP_TARGET);
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Blob.seed(i, 20, ToxicGas.class));
+			GameScene.add(Emitter.seed(i, 20, ToxicGas.class));
 		}
-		GameScene.add(Blob.seed(trajectory.collisionPos, 100, ToxicGas.class));
+		GameScene.add(Emitter.seed(trajectory.collisionPos, 100, ToxicGas.class));
 
 	}
 

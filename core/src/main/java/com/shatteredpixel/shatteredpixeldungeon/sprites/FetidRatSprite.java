@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.particles.Emitter;
@@ -54,7 +54,7 @@ public class FetidRatSprite extends MobSprite {
 	}
 	
 	@Override
-	public void link( Char ch ) {
+	public void link( Character ch ) {
 		super.link( ch );
 		
 		if (cloud == null) {

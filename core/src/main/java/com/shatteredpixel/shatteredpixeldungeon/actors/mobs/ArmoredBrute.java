@@ -72,7 +72,7 @@ public class ArmoredBrute extends Brute {
 	public static class ArmoredRage extends Brute.BruteRage {
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			
 			if (target.healthPoints > 0){
 				detach();

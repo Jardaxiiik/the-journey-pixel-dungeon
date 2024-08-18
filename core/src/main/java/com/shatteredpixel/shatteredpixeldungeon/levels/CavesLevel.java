@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
@@ -119,7 +119,7 @@ public class CavesLevel extends RegularLevel {
 				&& (!Blacksmith.Quest.given() || Blacksmith.Quest.oldQuestMineBlocked() || Blacksmith.Quest.completed() || !Blacksmith.Quest.started())) {
 
 			Blacksmith smith = null;
-			for (Char c : Actor.chars()){
+			for (Character c : Actor.chars()){
 				if (c instanceof Blacksmith){
 					smith = (Blacksmith) c;
 					break;

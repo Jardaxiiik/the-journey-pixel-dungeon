@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -55,7 +55,7 @@ public class Shadows extends Invisibility {
 	}
 	
 	@Override
-	public boolean attachTo( Char target ) {
+	public boolean attachTo( Character target ) {
 		if (Dungeon.level != null) {
 			for (Mob m : Dungeon.level.mobs) {
 				if (Dungeon.level.adjacent(m.pos, target.pos) && m.alignment != target.alignment) {
@@ -81,7 +81,7 @@ public class Shadows extends Invisibility {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
 			spend( TICK );

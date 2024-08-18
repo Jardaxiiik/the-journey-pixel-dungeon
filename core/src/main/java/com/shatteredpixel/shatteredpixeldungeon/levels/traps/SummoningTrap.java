@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -74,7 +74,7 @@ public class SummoningTrap extends Trap {
 
 		for (Integer point : respawnPoints) {
 			Mob mob = Dungeon.level.createMob();
-			while (Char.hasProp(mob, Char.Property.LARGE) && !Dungeon.level.openSpace[point]){
+			while (Character.hasProp(mob, Character.Property.LARGE) && !Dungeon.level.openSpace[point]){
 				mob = Dungeon.level.createMob();
 			}
 			if (mob != null) {

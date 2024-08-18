@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -54,12 +54,12 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (healthPoints < healthMax && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
 			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, healthMax - healthPoints)), FloatingText.HEALING);
 			healthPoints = Math.min(healthMax, healthPoints + 5);
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public int attackProc(Char enemy, int damage) {
+	public int attackProc(Character enemy, int damage) {
 		damage = super.attackProc( enemy, damage );
 		Buff.affect( enemy, Cripple.class, 2f );
 		return super.attackProc(enemy, damage);
@@ -100,7 +100,7 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 25;
 	}
 

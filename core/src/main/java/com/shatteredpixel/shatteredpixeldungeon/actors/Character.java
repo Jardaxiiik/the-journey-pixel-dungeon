@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArcaneArmor;
@@ -137,7 +137,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public abstract class Char extends Actor {
+public abstract class Character extends Actor {
 	
 	public int pos = 0;
 	
@@ -169,7 +169,7 @@ public abstract class Char extends Actor {
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
 		}
@@ -203,7 +203,7 @@ public abstract class Char extends Actor {
 		return Messages.get(this, "name");
 	}
 
-	public boolean canInteract(Char c){
+	public boolean canInteract(Character c){
 		if (Dungeon.level.adjacent( pos, c.pos )){
 			return true;
 		} else if (c instanceof Hero
@@ -217,7 +217,7 @@ public abstract class Char extends Actor {
 	}
 	
 	//swaps places by default
-	public boolean interact(Char c){
+	public boolean interact(Character c){
 
 		//don't allow char to swap onto hazard unless they're flying
 		//you can swap onto a hazard though, as you're not the one instigating the swap
@@ -335,11 +335,11 @@ public abstract class Char extends Actor {
 		}
 	}
 
-	final public boolean attack( Char enemy ){
+	final public boolean attack( Character enemy ){
 		return attack(enemy, 1f, 0f, 1f);
 	}
 	
-	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
+	public boolean attack(Character enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 
 		if (enemy == null) return false;
 		
@@ -478,8 +478,8 @@ public abstract class Char extends Actor {
 
 			Talent.CombinedLethalityTriggerTracker combinedLethality = buff(Talent.CombinedLethalityTriggerTracker.class);
 			if (combinedLethality != null){
-				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
-						&& !Char.hasProp(enemy, Property.MINIBOSS) && this instanceof Hero &&
+				if ( enemy.isAlive() && enemy.alignment != alignment && !Character.hasProp(enemy, Property.BOSS)
+						&& !Character.hasProp(enemy, Property.MINIBOSS) && this instanceof Hero &&
 						(enemy.healthPoints /(float)enemy.healthMax) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
 					enemy.healthPoints = 0;
 					if (!enemy.isAlive()) {
@@ -513,10 +513,10 @@ public abstract class Char extends Actor {
 						Badges.validateDeathFromFriendlyMagic();
 					}
 					Dungeon.fail( this );
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 					
 				} else if (this == Dungeon.hero) {
-					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
+					GLog.i( Messages.capitalize(Messages.get(Character.class, "defeat", enemy.name())) );
 				}
 			}
 			
@@ -538,11 +538,11 @@ public abstract class Char extends Actor {
 	public static int INFINITE_ACCURACY = 1_000_000;
 	public static int INFINITE_EVASION = 1_000_000;
 
-	final public static boolean hit( Char attacker, Char defender, boolean magic ) {
+	final public static boolean hit(Character attacker, Character defender, boolean magic ) {
 		return hit(attacker, defender, magic ? 2f : 1f, magic);
 	}
 
-	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
+	public static boolean hit(Character attacker, Character defender, float accMulti, boolean magic ) {
 		float acuStat = attacker.attackSkill( defender );
 		float defStat = defender.defenseSkill( attacker );
 
@@ -590,11 +590,11 @@ public abstract class Char extends Actor {
 		return (acuRoll * accMulti) >= defRoll;
 	}
 	
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 0;
 	}
 	
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		return 0;
 	}
 	
@@ -617,14 +617,14 @@ public abstract class Char extends Actor {
 	//TODO it would be nice to have a pre-armor and post-armor proc.
 	// atm attack is always post-armor and defence is already pre-armor
 	
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
 			buff.onAttackProc( enemy );
 		}
 		return damage;
 	}
 	
-	public int defenseProc( Char enemy, int damage ) {
+	public int defenseProc(Character enemy, int damage ) {
 
 		Earthroot.Armor armor = buff( Earthroot.Armor.class );
 		if (armor != null) {
@@ -691,7 +691,7 @@ public abstract class Char extends Actor {
 			}
 			dmg = (int)Math.ceil(dmg / (float)(links.size()+1));
 			for (LifeLink link : links){
-				Char ch = (Char)Actor.findById(link.object);
+				Character ch = (Character)Actor.findById(link.object);
 				if (ch != null) {
 					ch.damage(dmg, link);
 					if (!ch.isAlive()) {
@@ -790,15 +790,15 @@ public abstract class Char extends Actor {
 			}
 		}
 
-		if (healthPoints < 0 && src instanceof Char && alignment == Alignment.ENEMY){
-			if (((Char) src).buff(Kinetic.KineticTracker.class) != null){
+		if (healthPoints < 0 && src instanceof Character && alignment == Alignment.ENEMY){
+			if (((Character) src).buff(Kinetic.KineticTracker.class) != null){
 				int dmgToAdd = -healthPoints;
-				dmgToAdd -= ((Char) src).buff(Kinetic.KineticTracker.class).conservedDamage;
-				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Char) src));
+				dmgToAdd -= ((Character) src).buff(Kinetic.KineticTracker.class).conservedDamage;
+				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Character) src));
 				if (dmgToAdd > 0) {
-					Buff.affect((Char) src, Kinetic.ConservedDamage.class).setBonus(dmgToAdd);
+					Buff.affect((Character) src, Kinetic.ConservedDamage.class).setBonus(dmgToAdd);
 				}
-				((Char) src).buff(Kinetic.KineticTracker.class).detach();
+				((Character) src).buff(Kinetic.KineticTracker.class).detach();
 			}
 		}
 		
@@ -864,7 +864,7 @@ public abstract class Char extends Actor {
 		healthPoints = 0;
 		Actor.remove( this );
 
-		for (Char ch : Actor.chars().toArray(new Char[0])){
+		for (Character ch : Actor.chars().toArray(new Character[0])){
 			if (ch.buff(Charm.class) != null && ch.buff(Charm.class).object == id()){
 				ch.buff(Charm.class).detach();
 			}
@@ -967,7 +967,7 @@ public abstract class Char extends Actor {
 		return null;
 	}
 
-	public synchronized boolean isCharmedBy( Char ch ) {
+	public synchronized boolean isCharmedBy( Character ch ) {
 		int chID = ch.id();
 		for (Buff b : buffs) {
 			if (b instanceof Charm && ((Charm)b).object == chID) {
@@ -1077,7 +1077,7 @@ public abstract class Char extends Actor {
 		Dungeon.level.occupyCell(this );
 	}
 	
-	public int distance( Char other ) {
+	public int distance( Character other ) {
 		return Dungeon.level.distance( pos, other.pos );
 	}
 
@@ -1201,7 +1201,7 @@ public abstract class Char extends Actor {
 
 	}
 
-	public static boolean hasProp( Char ch, Property p){
+	public static boolean hasProp(Character ch, Property p){
 		return (ch != null && ch.properties().contains(p));
 	}
 }

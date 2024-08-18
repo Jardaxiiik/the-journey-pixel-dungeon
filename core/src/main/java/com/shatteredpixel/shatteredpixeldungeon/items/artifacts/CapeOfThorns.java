@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -77,7 +77,7 @@ public class CapeOfThorns extends Artifact {
 	public class Thorns extends ArtifactBuff{
 
 		@Override
-		public boolean act(){
+		public boolean playGameTurn(){
 			if (cooldown > 0) {
 				cooldown--;
 				if (cooldown == 0) {
@@ -89,7 +89,7 @@ public class CapeOfThorns extends Artifact {
 			return true;
 		}
 
-		public int proc(int damage, Char attacker, Char defender){
+		public int proc(int damage, Character attacker, Character defender){
 			if (cooldown == 0){
 				charge += damage*(0.5+level()*0.05);
 				if (charge >= chargeCap){

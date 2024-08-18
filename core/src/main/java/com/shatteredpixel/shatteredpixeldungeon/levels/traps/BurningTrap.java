@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -43,7 +43,7 @@ public class BurningTrap extends Trap {
 		
 		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
-				GameScene.add( Blob.seed( pos+i, 2, Fire.class ) );
+				GameScene.add( Emitter.seed( pos+i, 2, Fire.class ) );
 				CellEmitter.get( pos+i ).burst( FlameParticle.FACTORY, 5 );
 			}
 		}

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -188,7 +188,7 @@ public enum Talent {
 		float barrierInc = 0.5f;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			//barrier every 2/1 turns, to a max of 3/5
 			if (((Hero)target).hasTalent(Talent.PROTECTIVE_SHADOWS) && target.invisible > 0){
 				Barrier barrier = Buff.affect(target, Barrier.class);
@@ -240,7 +240,7 @@ public enum Talent {
 		public int icon() { return BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0.5f, 0f, 1f); }
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (pos != target.pos) {
 				detach();
 			} else {
@@ -571,8 +571,8 @@ public enum Talent {
 			}
 			Random.shuffle(grassCells);
 			for (int grassCell : grassCells){
-				Char ch = Actor.findChar(grassCell);
-				if (ch != null && ch.alignment == Char.Alignment.ENEMY){
+				Character ch = Actor.findChar(grassCell);
+				if (ch != null && ch.alignment == Character.Alignment.ENEMY){
 					//1/2 turns of roots
 					Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));
 				}
@@ -676,7 +676,7 @@ public enum Talent {
 		}
 	}
 
-	public static int onAttackProc( Hero hero, Char enemy, int dmg ){
+	public static int onAttackProc(Hero hero, Character enemy, int dmg ){
 		if (hero.hasTalent(Talent.SUCKER_PUNCH)
 				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
 				&& enemy.buff(SuckerPunchTracker.class) == null){
@@ -684,7 +684,7 @@ public enum Talent {
 			Buff.affect(enemy, SuckerPunchTracker.class);
 		}
 
-		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Char.Alignment.ENEMY) {
+		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Character.Alignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
 				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.id();
 			} else if (hero.buff(FollowupStrikeTracker.class) != null
@@ -709,7 +709,7 @@ public enum Talent {
 			}
 		}
 
-		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Char.Alignment.ENEMY) {
+		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Character.Alignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
 				if (!(hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow)) {
 					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();

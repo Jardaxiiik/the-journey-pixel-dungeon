@@ -26,8 +26,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -74,7 +74,7 @@ public class Pylon extends Mob {
 	private int targetNeighbor = Random.Int(8);
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
@@ -137,7 +137,7 @@ public class Pylon extends Mob {
 		return true;
 	}
 
-	private void shockChar( Char ch ){
+	private void shockChar( Character ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.sprite.flash();
 			ch.damage(Random.NormalIntRange(10, 20), new Electricity());
@@ -181,7 +181,7 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		return true;
 	}
 

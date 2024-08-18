@@ -95,7 +95,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (state == State.BERSERK){
 			ShieldBuff buff = target.buff(WarriorShield.class);
 			if (target.shielding() > 0) {

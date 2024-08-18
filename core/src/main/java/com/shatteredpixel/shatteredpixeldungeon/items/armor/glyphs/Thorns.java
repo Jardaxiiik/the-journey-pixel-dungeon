@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -33,7 +33,7 @@ public class Thorns extends Armor.Glyph {
 	private static ItemSprite.Glowing RED = new ItemSprite.Glowing( 0x660022 );
 
 	@Override
-	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 
 		int level = Math.max(0, armor.buffedLvl());
 

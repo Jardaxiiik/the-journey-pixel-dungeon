@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -64,7 +64,7 @@ public class Golem extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 28;
 	}
 	
@@ -121,7 +121,7 @@ public class Golem extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		selfTeleCooldown--;
 		enemyTeleCooldown--;
 		if (teleporting){
@@ -136,7 +136,7 @@ public class Golem extends Mob {
 			spend(TICK);
 			return true;
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	public void onZapComplete(){
@@ -218,7 +218,7 @@ public class Golem extends Mob {
 				int oldPos = pos;
 
 				if (distance(enemy) >= 1 && Random.Int(100/distance(enemy)) == 0
-						&& !Char.hasProp(enemy, Property.IMMOVABLE) && canTele(target)){
+						&& !Character.hasProp(enemy, Property.IMMOVABLE) && canTele(target)){
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 						sprite.zap( enemy.pos );
 						return false;
@@ -231,7 +231,7 @@ public class Golem extends Mob {
 					spend( 1 / speed() );
 					return moveSprite( oldPos,  pos );
 
-				} else if (!Char.hasProp(enemy, Property.IMMOVABLE) && canTele(target)) {
+				} else if (!Character.hasProp(enemy, Property.IMMOVABLE) && canTele(target)) {
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 						sprite.zap( enemy.pos );
 						return false;

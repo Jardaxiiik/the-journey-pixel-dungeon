@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -34,12 +34,12 @@ public class MagicalSleep extends Buff {
 	private static final float STEP = 1f;
 
 	@Override
-	public boolean attachTo( Char target ) {
+	public boolean attachTo( Character target ) {
 		if (!target.isImmune(Sleep.class) && super.attachTo( target )) {
 			
 			target.paralysed++;
 			
-			if (target.alignment == Char.Alignment.ALLY) {
+			if (target.alignment == Character.Alignment.ALLY) {
 				if (target.healthPoints == target.healthMax) {
 					if (target instanceof  Hero) GLog.i(Messages.get(this, "toohealthy"));
 					detach();
@@ -59,12 +59,12 @@ public class MagicalSleep extends Buff {
 	}
 
 	@Override
-	public boolean act(){
+	public boolean playGameTurn(){
 		if (target instanceof Mob && ((Mob) target).state != ((Mob) target).SLEEPING){
 			detach();
 			return true;
 		}
-		if (target.alignment == Char.Alignment.ALLY) {
+		if (target.alignment == Character.Alignment.ALLY) {
 			target.healthPoints = Math.min(target.healthPoints +1, target.healthMax);
 			if (target instanceof  Hero) ((Hero) target).resting = true;
 			if (target.healthPoints == target.healthMax) {

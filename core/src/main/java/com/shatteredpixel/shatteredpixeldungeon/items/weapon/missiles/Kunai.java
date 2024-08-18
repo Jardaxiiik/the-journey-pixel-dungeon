@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -40,7 +40,7 @@ public class Kunai extends MissileWeapon {
 		baseUses = 5;
 	}
 	
-	private Char enemy;
+	private Character enemy;
 	
 	@Override
 	protected void onThrow(int cell) {
@@ -49,7 +49,7 @@ public class Kunai extends MissileWeapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {

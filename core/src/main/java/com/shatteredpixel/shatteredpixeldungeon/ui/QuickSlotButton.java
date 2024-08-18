@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
@@ -53,7 +53,7 @@ public class QuickSlotButton extends Button {
 	private Image crossM;
 	
 	public static int targetingSlot = -1;
-	public static Char lastTarget = null;
+	public static Character lastTarget = null;
 	
 	public QuickSlotButton( int slotNum ) {
 		super();
@@ -320,7 +320,7 @@ public class QuickSlotButton extends Button {
 		if (lastTarget != null &&
 				Actor.chars().contains( lastTarget ) &&
 				lastTarget.isAlive() &&
-				lastTarget.alignment != Char.Alignment.ALLY &&
+				lastTarget.alignment != Character.Alignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.pos]) {
 
 			targetingSlot = slotNum;
@@ -343,13 +343,13 @@ public class QuickSlotButton extends Button {
 
 	}
 
-	public static int autoAim(Char target){
+	public static int autoAim(Character target){
 		//will use generic projectile logic if no item is specified
 		return autoAim(target, new Item());
 	}
 
 	//FIXME: this is currently very expensive, should either optimize ballistica or this, or both
-	public static int autoAim(Char target, Item item){
+	public static int autoAim(Character target, Item item){
 
 		//first try to directly target
 		if (item.targetingPos(Dungeon.hero, target.pos) == target.pos) {
@@ -388,8 +388,8 @@ public class QuickSlotButton extends Button {
 		}
 	}
 	
-	public static void target( Char target ) {
-		if (target != null && target.alignment != Char.Alignment.ALLY) {
+	public static void target( Character target ) {
+		if (target != null && target.alignment != Character.Alignment.ALLY) {
 			lastTarget = target;
 			
 			TargetHealthIndicator.instance.target( target );

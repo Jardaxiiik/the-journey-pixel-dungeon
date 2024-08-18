@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -57,7 +57,7 @@ public class Flail extends MeleeWeapon {
 	private static float spinBonus = 1f;
 
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		int dmg = Math.round(super.damageRoll(owner) * spinBonus);
 		if (spinBonus > 1f) Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 		spinBonus = 1f;
@@ -65,13 +65,13 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	public float accuracyFactor(Char owner, Char target) {
+	public float accuracyFactor(Character owner, Character target) {
 		SpinAbilityTracker spin = owner.buff(SpinAbilityTracker.class);
 		if (spin != null) {
 			Actor.add(new Actor() {
 				{ actPriority = VFX_PRIO; }
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					if (owner instanceof Hero && !target.isAlive()){
 						onAbilityKill((Hero)owner, target);
 					}
@@ -90,7 +90,7 @@ public class Flail extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Character target){
 		if (Dungeon.hero.buff(SpinAbilityTracker.class) != null){
 			return 0;
 		} else {

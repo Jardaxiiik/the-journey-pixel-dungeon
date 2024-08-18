@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -137,7 +137,7 @@ public class TimekeepersHourglass extends Artifact {
 	}
 
 	@Override
-	public void activate(Char ch) {
+	public void activate(Character ch) {
 		super.activate(ch);
 		if (activeBuff != null)
 			activeBuff.attachTo(ch);
@@ -231,7 +231,7 @@ public class TimekeepersHourglass extends Artifact {
 
 	public class hourglassRecharge extends ArtifactBuff {
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			if (charge < chargeCap
 					&& !cursed
@@ -269,7 +269,7 @@ public class TimekeepersHourglass extends Artifact {
 		}
 
 		@Override
-		public boolean attachTo(Char target) {
+		public boolean attachTo(Character target) {
 
 			if (super.attachTo(target)) {
 
@@ -304,7 +304,7 @@ public class TimekeepersHourglass extends Artifact {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}

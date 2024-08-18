@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -76,14 +76,14 @@ public class WandOfPrismaticLight extends DamageWand {
 			}
 		}
 		
-		Char ch = Actor.findChar(beam.collisionPos);
+		Character ch = Actor.findChar(beam.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
 			affectTarget(ch);
 		}
 	}
 
-	private void affectTarget(Char ch){
+	private void affectTarget(Character ch){
 		int dmg = damageRoll();
 
 		//three in (5+lvl) chance of failing
@@ -92,7 +92,7 @@ public class WandOfPrismaticLight extends DamageWand {
 			ch.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 6 );
 		}
 
-		if (ch.properties().contains(Char.Property.DEMONIC) || ch.properties().contains(Char.Property.UNDEAD)){
+		if (ch.properties().contains(Character.Property.DEMONIC) || ch.properties().contains(Character.Property.UNDEAD)){
 			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10+buffedLvl() );
 			Sample.INSTANCE.play(Assets.Sounds.BURNING);
 
@@ -145,7 +145,7 @@ public class WandOfPrismaticLight extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//cripples enemy
 		Buff.prolong( defender, Cripple.class, Math.round((1+staff.buffedLvl())*procChanceMultiplier(attacker)));
 	}

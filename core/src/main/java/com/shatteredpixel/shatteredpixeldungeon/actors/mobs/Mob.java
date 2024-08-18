@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -87,7 +87,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 
-public abstract class Mob extends Char {
+public abstract class Mob extends Character {
 
 	{
 		actPriority = MOB_PRIO;
@@ -111,7 +111,7 @@ public abstract class Mob extends Char {
 	public int EXP = 1;
 	public int maxLvl = Hero.MAX_LEVEL-1;
 	
-	protected Char enemy;
+	protected Character enemy;
 	protected int enemyID = -1; //used for save/restore
 	protected boolean enemySeen;
 	protected boolean alerted = false;
@@ -195,7 +195,7 @@ public abstract class Mob extends Char {
 
 	//mobs need to remember their targets after every actor is added
 	public void restoreEnemy(){
-		if (enemyID != -1 && enemy == null) enemy = (Char)Actor.findById(enemyID);
+		if (enemyID != -1 && enemy == null) enemy = (Character)Actor.findById(enemyID);
 	}
 	
 	public CharSprite sprite() {
@@ -203,9 +203,9 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		
-		super.act();
+		super.playGameTurn();
 		
 		boolean justAlerted = alerted;
 		alerted = false;
@@ -244,11 +244,11 @@ public abstract class Mob extends Char {
 	//FIXME this is sort of a band-aid correction for allies needing more intelligent behaviour
 	protected boolean intelligentAlly = false;
 	
-	protected Char chooseEnemy() {
+	protected Character chooseEnemy() {
 
 		Dread dread = buff( Dread.class );
 		if (dread != null) {
-			Char source = (Char)Actor.findById( dread.object );
+			Character source = (Character)Actor.findById( dread.object );
 			if (source != null) {
 				return source;
 			}
@@ -256,7 +256,7 @@ public abstract class Mob extends Char {
 
 		Terror terror = buff( Terror.class );
 		if (terror != null) {
-			Char source = (Char)Actor.findById( terror.object );
+			Character source = (Character)Actor.findById( terror.object );
 			if (source != null) {
 				return source;
 			}
@@ -268,7 +268,7 @@ public abstract class Mob extends Char {
 				state = HUNTING;
 				return enemy;
 			}
-			for (Char ch : Actor.chars()) {
+			for (Character ch : Actor.chars()) {
 				if (ch != this && fieldOfView[ch.pos] &&
 						ch.buff(StoneOfAggression.Aggression.class) != null) {
 					state = HUNTING;
@@ -303,7 +303,7 @@ public abstract class Mob extends Char {
 
 		if ( newEnemy ) {
 
-			HashSet<Char> enemies = new HashSet<>();
+			HashSet<Character> enemies = new HashSet<>();
 
 			//if we are amoked...
 			if ( buff(Amok.class) != null) {
@@ -360,7 +360,7 @@ public abstract class Mob extends Char {
 			//do not target anything that's charming us
 			Charm charm = buff( Charm.class );
 			if (charm != null){
-				Char source = (Char)Actor.findById( charm.object );
+				Character source = (Character)Actor.findById( charm.object );
 				if (source != null && enemies.contains(source) && enemies.size() > 1){
 					enemies.remove(source);
 				}
@@ -372,9 +372,9 @@ public abstract class Mob extends Char {
 			} else {
 				//go after the closest potential enemy, preferring enemies that can be reached/attacked, and the hero if two are equidistant
 				PathFinder.buildDistanceMap(pos, Dungeon.findPassable(this, Dungeon.level.passable, fieldOfView, true));
-				Char closest = null;
+				Character closest = null;
 
-				for (Char curr : enemies){
+				for (Character curr : enemies){
 					if (closest == null){
 						closest = curr;
 					} else if (canAttack(closest) && !canAttack(curr)){
@@ -389,7 +389,7 @@ public abstract class Mob extends Char {
 				}
 				//if we were going to target the hero, but an afterimage exists, target that instead
 				if (closest == Dungeon.hero){
-					for (Char ch : enemies){
+					for (Character ch : enemies){
 						if (ch instanceof Feint.AfterImage){
 							closest = ch;
 							break;
@@ -437,7 +437,7 @@ public abstract class Mob extends Char {
 		return false;
 	}
 	
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		if (Dungeon.level.adjacent( pos, enemy.pos )){
 			return true;
 		}
@@ -459,7 +459,7 @@ public abstract class Mob extends Char {
 				return false;
 			}
 		}
-		if (Char.hasProp(this, Char.Property.LARGE) && !Dungeon.level.openSpace[cell]){
+		if (Character.hasProp(this, Character.Property.LARGE) && !Dungeon.level.openSpace[cell]){
 			return false;
 		}
 		if (Actor.findChar(cell) != null){
@@ -619,7 +619,7 @@ public abstract class Mob extends Char {
 		return delay;
 	}
 	
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 		
 		if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 			sprite.attack( enemy.pos );
@@ -642,7 +642,7 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		if ( !surprisedBy(enemy)
 				&& paralysed == 0
 				&& !(alignment == Alignment.ALLY && enemy == Dungeon.hero)) {
@@ -653,7 +653,7 @@ public abstract class Mob extends Char {
 	}
 	
 	@Override
-	public int defenseProc( Char enemy, int damage ) {
+	public int defenseProc(Character enemy, int damage ) {
 		
 		if (enemy instanceof Hero
 				&& ((Hero) enemy).belongings.attackingWeapon() instanceof MissileWeapon){
@@ -712,11 +712,11 @@ public abstract class Mob extends Char {
 		return super.speed() * AscensionChallenge.enemySpeedModifier(this);
 	}
 
-	public final boolean surprisedBy( Char enemy ){
+	public final boolean surprisedBy( Character enemy ){
 		return surprisedBy( enemy, true);
 	}
 
-	public boolean surprisedBy( Char enemy, boolean attacking ){
+	public boolean surprisedBy(Character enemy, boolean attacking ){
 		return enemy == Dungeon.hero
 				&& (enemy.invisible > 0 || !enemySeen || (fieldOfView != null && fieldOfView.length == Dungeon.level.length() && !fieldOfView[enemy.pos]))
 				&& (!attacking || enemy.canSurpriseAttack());
@@ -727,7 +727,7 @@ public abstract class Mob extends Char {
 		return alignment != Alignment.ENEMY && buff(Amok.class) == null;
 	}
 
-	public void aggro( Char ch ) {
+	public void aggro( Character ch ) {
 		enemy = ch;
 		if (state != PASSIVE){
 			state = HUNTING;
@@ -740,7 +740,7 @@ public abstract class Mob extends Char {
 		if (state == HUNTING) state = WANDERING;
 	}
 	
-	public boolean isTargeting( Char ch){
+	public boolean isTargeting( Character ch){
 		return enemy == ch;
 	}
 
@@ -1144,7 +1144,7 @@ public abstract class Mob extends Char {
 					//if moving towards an enemy isn't possible, try to switch targets to another enemy that is closer
 					//unless we have already done that and still can't move toward them, then move on.
 					if (!recursing) {
-						Char oldEnemy = enemy;
+						Character oldEnemy = enemy;
 						enemy = null;
 						enemy = chooseEnemy();
 						if (enemy != null && enemy != oldEnemy) {

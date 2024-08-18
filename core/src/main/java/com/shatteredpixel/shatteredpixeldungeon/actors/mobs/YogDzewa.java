@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -158,12 +158,12 @@ public class YogDzewa extends Mob {
 	private ArrayList<Integer> targetedCells = new ArrayList<>();
 
 	@Override
-	public int attackSkill(Char target) {
+	public int attackSkill(Character target) {
 		return INFINITE_ACCURACY;
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
@@ -214,7 +214,7 @@ public class YogDzewa extends Mob {
 		} else {
 
 			boolean terrainAffected = false;
-			HashSet<Char> affected = new HashSet<>();
+			HashSet<Character> affected = new HashSet<>();
 			//delay fire on a rooted hero
 			if (!Dungeon.hero.rooted) {
 				for (int i : targetedCells) {
@@ -222,7 +222,7 @@ public class YogDzewa extends Mob {
 					//shoot beams
 					sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
 					for (int p : b.path) {
-						Char ch = Actor.findChar(p);
+						Character ch = Actor.findChar(p);
 						if (ch != null && (ch.alignment != alignment || ch instanceof Bee)) {
 							affected.add(ch);
 						}
@@ -237,7 +237,7 @@ public class YogDzewa extends Mob {
 					Dungeon.observe();
 				}
 				Invisibility.dispel(this);
-				for (Char ch : affected) {
+				for (Character ch : affected) {
 
 					if (ch == Dungeon.hero) {
 						Statistics.bossScores[4] -= 500;
@@ -256,7 +256,7 @@ public class YogDzewa extends Mob {
 						if (!ch.isAlive() && ch == Dungeon.hero) {
 							Badges.validateDeathFromEnemyMagic();
 							Dungeon.fail(this);
-							GLog.n(Messages.get(Char.class, "kill", name()));
+							GLog.n(Messages.get(Character.class, "kill", name()));
 						}
 					} else {
 						ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
@@ -483,7 +483,7 @@ public class YogDzewa extends Mob {
 	}
 
 	private YogFist findFist(){
-		for ( Char c : Actor.chars() ){
+		for ( Character c : Actor.chars() ){
 			if (c instanceof YogFist){
 				return (YogFist) c;
 			}
@@ -501,7 +501,7 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public void aggro(Char ch) {
+	public void aggro(Character ch) {
 		for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
 			if (Dungeon.level.distance(pos, mob.pos) <= 4 &&
 					(mob instanceof Larva || mob instanceof YogRipper || mob instanceof YogEye || mob instanceof YogScorpio)) {
@@ -542,7 +542,7 @@ public class YogDzewa extends Mob {
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
 			yell(Messages.get(this, "notice"));
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -654,7 +654,7 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public int attackSkill( Char target ) {
+		public int attackSkill( Character target ) {
 			return 30;
 		}
 

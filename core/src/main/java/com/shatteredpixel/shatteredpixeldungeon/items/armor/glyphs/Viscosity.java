@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
@@ -42,7 +42,7 @@ public class Viscosity extends Glyph {
 	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 	
 	@Override
-	public int proc( Armor armor, Char attacker, Char defender, int damage ) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage ) {
 
 		//we use a tracker so that this glyph can apply after armor
 		Buff.affect(defender, ViscosityTracker.class).level = armor.buffedLvl();
@@ -94,7 +94,7 @@ public class Viscosity extends Glyph {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}
@@ -124,7 +124,7 @@ public class Viscosity extends Glyph {
 		}
 		
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				postpone( TICK );
 				return true;
@@ -148,7 +148,7 @@ public class Viscosity extends Glyph {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.isAlive()) {
 
 				int damageThisTick = Math.max(1, (int)(damage*0.1f));

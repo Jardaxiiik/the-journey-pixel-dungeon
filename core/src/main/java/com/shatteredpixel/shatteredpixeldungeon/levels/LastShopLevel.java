@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -133,13 +133,13 @@ public class LastShopLevel extends RegularLevel {
 	}
 	
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		for (Point p : roomEntrance.getPoints()){
 			int cell = pointToCell(p);
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}

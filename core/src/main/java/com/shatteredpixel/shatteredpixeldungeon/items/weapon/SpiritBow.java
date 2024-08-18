@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -98,7 +98,7 @@ public class SpiritBow extends Weapon {
 	};
 
 	@Override
-	public int proc(Char attacker, Char defender, int damage) {
+	public int proc(Character attacker, Character defender, int damage) {
 
 		if (attacker.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
 
@@ -108,7 +108,7 @@ public class SpiritBow extends Weapon {
 				}
 
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 
 					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
 						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
@@ -208,7 +208,7 @@ public class SpiritBow extends Weapon {
 	private int targetPos;
 	
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		int damage = augment.damageFactor(super.damageRoll(owner));
 		
 		if (owner instanceof Hero) {
@@ -242,7 +242,7 @@ public class SpiritBow extends Weapon {
 	}
 	
 	@Override
-	protected float baseDelay(Char owner) {
+	protected float baseDelay(Character owner) {
 		if (sniperSpecial){
 			switch (augment){
 				case NONE: default:
@@ -258,7 +258,7 @@ public class SpiritBow extends Weapon {
 	}
 
 	@Override
-	protected float speedMultiplier(Char owner) {
+	protected float speedMultiplier(Character owner) {
 		float speed = super.speedMultiplier(owner);
 		if (owner.buff(NaturesPower.naturesPowerTracker.class) != null){
 			// +33% speed to +50% speed, depending on talent points
@@ -311,27 +311,27 @@ public class SpiritBow extends Weapon {
 		}
 
 		@Override
-		public int damageRoll(Char owner) {
+		public int damageRoll(Character owner) {
 			return SpiritBow.this.damageRoll(owner);
 		}
 		
 		@Override
-		public boolean hasEnchant(Class<? extends Enchantment> type, Char owner) {
+		public boolean hasEnchant(Class<? extends Enchantment> type, Character owner) {
 			return SpiritBow.this.hasEnchant(type, owner);
 		}
 		
 		@Override
-		public int proc(Char attacker, Char defender, int damage) {
+		public int proc(Character attacker, Character defender, int damage) {
 			return SpiritBow.this.proc(attacker, defender, damage);
 		}
 		
 		@Override
-		public float delayFactor(Char user) {
+		public float delayFactor(Character user) {
 			return SpiritBow.this.delayFactor(user);
 		}
 		
 		@Override
-		public float accuracyFactor(Char owner, Char target) {
+		public float accuracyFactor(Character owner, Character target) {
 			if (sniperSpecial && SpiritBow.this.augment == Augment.DAMAGE){
 				return Float.POSITIVE_INFINITY;
 			} else {
@@ -346,7 +346,7 @@ public class SpiritBow extends Weapon {
 
 		@Override
 		protected void onThrow( int cell ) {
-			Char enemy = Actor.findChar( cell );
+			Character enemy = Actor.findChar( cell );
 			if (enemy == null || enemy == curUser) {
 				parent = null;
 				Splash.at( cell, 0xCC99FFFF, 1 );
@@ -373,7 +373,7 @@ public class SpiritBow extends Weapon {
 			if (sniperSpecial && SpiritBow.this.augment == Augment.SPEED){
 				if (flurryCount == -1) flurryCount = 3;
 				
-				final Char enemy = Actor.findChar( cell );
+				final Character enemy = Actor.findChar( cell );
 				
 				if (enemy == null){
 					if (user.buff(Talent.LethalMomentumTracker.class) != null){
@@ -420,7 +420,7 @@ public class SpiritBow extends Weapon {
 												}
 
 												@Override
-												protected boolean act() {
+												protected boolean playGameTurn() {
 													flurryActor = this;
 													int target = QuickSlotButton.autoAim(enemy, SpiritArrow.this);
 													if (target == -1) target = cell;

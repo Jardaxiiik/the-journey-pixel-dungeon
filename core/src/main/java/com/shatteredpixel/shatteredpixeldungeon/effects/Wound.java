@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -71,11 +71,11 @@ public class Wound extends Image {
 		}
 	}
 	
-	public static void hit( Char ch ) {
+	public static void hit( Character ch ) {
 		hit( ch, 0 );
 	}
 	
-	public static void hit( Char ch, float angle ) {
+	public static void hit(Character ch, float angle ) {
 		if (ch.sprite.parent != null) {
 			Wound w = (Wound) ch.sprite.parent.recycle(Wound.class);
 			ch.sprite.parent.bringToFront(w);

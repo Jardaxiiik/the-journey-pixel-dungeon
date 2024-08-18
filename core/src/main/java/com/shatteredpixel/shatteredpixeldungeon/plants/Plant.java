@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -57,7 +57,7 @@ public abstract class Plant implements Bundlable {
 
 	public void trigger(){
 
-		Char ch = Actor.findChar(pos);
+		Character ch = Actor.findChar(pos);
 
 		if (ch instanceof Hero){
 			((Hero) ch).interrupt();
@@ -72,7 +72,7 @@ public abstract class Plant implements Bundlable {
 		activate( ch );
 	}
 	
-	public abstract void activate( Char ch );
+	public abstract void activate( Character ch );
 	
 	public void wither() {
 		Dungeon.level.uproot( pos );
@@ -82,7 +82,7 @@ public abstract class Plant implements Bundlable {
 		}
 
 		float seedChance = 0f;
-		for (Char c : Actor.chars()){
+		for (Character c : Actor.chars()){
 			if (c instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) c;
 				if (l.inRange(pos)){

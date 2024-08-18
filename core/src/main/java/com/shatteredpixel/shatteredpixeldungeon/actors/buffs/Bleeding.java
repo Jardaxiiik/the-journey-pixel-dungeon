@@ -91,7 +91,7 @@ public class Bleeding extends Buff {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
 			level = NormalFloat(level / 2f, level);

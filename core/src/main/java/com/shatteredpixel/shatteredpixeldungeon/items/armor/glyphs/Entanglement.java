@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EarthParticle;
@@ -38,7 +38,7 @@ public class Entanglement extends Glyph {
 	private static ItemSprite.Glowing BROWN = new ItemSprite.Glowing( 0x663300 );
 	
 	@Override
-	public int proc(Armor armor, Char attacker, final Char defender, final int damage ) {
+	public int proc(Armor armor, Character attacker, final Character defender, final int damage ) {
 
 		final int level = Math.max( 0, armor.buffedLvl() );
 		float procChance = 1/4f * procChanceMultiplier(defender);

@@ -19,35 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.PathFinder;
+import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 
-public class ShockingTrap extends Trap {
+public class Alchemy extends Emitter {
 
-	{
-		color = YELLOW;
-		shape = DOTS;
-	}
-
+	protected int pos;
+	
 	@Override
-	public void activate() {
-		
-		if (Dungeon.level.heroFOV[pos]){
-			Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
-		}
-		
-		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
-			if (!Dungeon.level.solid[pos + i]) {
-				GameScene.add(Emitter.seed(pos + i, 10, Electricity.class));
+	protected void evolve() {
+		int cell;
+		for (int i=area.top-1; i <= area.bottom; i++) {
+			for (int j = area.left-1; j <= area.right; j++) {
+				cell = j + i* Dungeon.level.width();
+				if (Dungeon.level.insideMap(cell)) {
+					off[cell] = cur[cell];
+
+					volume += off[cell];
+					if (off[cell] > 0 && Dungeon.level.visited[cell]){
+						Notes.add( Notes.Landmark.ALCHEMY );
+					}
+				}
 			}
 		}
 	}
 	
+	@Override
+	public void use( BlobEmitter emitter ) {
+		super.use( emitter );
+		emitter.start( Speck.factory( Speck.BUBBLE ), 0.33f, 0 );
+	}
+
 }

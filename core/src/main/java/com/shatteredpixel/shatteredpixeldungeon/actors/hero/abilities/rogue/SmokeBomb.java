@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -109,7 +109,7 @@ public class SmokeBomb extends ArmorAbility {
 
 			if (!shadowStepping) {
 				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-					if (Dungeon.level.adjacent(mob.pos, hero.pos) && mob.alignment != Char.Alignment.ALLY) {
+					if (Dungeon.level.adjacent(mob.pos, hero.pos) && mob.alignment != Character.Alignment.ALLY) {
 						Buff.prolong(mob, Blindness.class, Blindness.DURATION / 2f);
 						if (mob.state == mob.HUNTING) mob.state = mob.WANDERING;
 						mob.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 4);
@@ -117,7 +117,7 @@ public class SmokeBomb extends ArmorAbility {
 				}
 
 				if (hero.hasTalent(Talent.BODY_REPLACEMENT)) {
-					for (Char ch : Actor.chars()){
+					for (Character ch : Actor.chars()){
 						if (ch instanceof NinjaLog){
 							ch.die(null);
 						}

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -70,7 +70,7 @@ public class WarpBeacon extends ArmorAbility {
 	}
 
 	@Override
-	public int targetedPos(Char user, int dst) {
+	public int targetedPos(Character user, int dst) {
 		return dst;
 	}
 
@@ -115,7 +115,7 @@ public class WarpBeacon extends ArmorAbility {
 						armor.updateQuickslot();
 
 						if (tracker.depth == Dungeon.depth && tracker.branch == Dungeon.branch){
-							Char existing = Actor.findChar(tracker.pos);
+							Character existing = Actor.findChar(tracker.pos);
 
 							if (existing != null && existing != hero){
 								if (hero.hasTalent(Talent.TELEFRAG)){
@@ -133,13 +133,13 @@ public class WarpBeacon extends ArmorAbility {
 								}
 
 								if (existing.isAlive()){
-									Char toPush = Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
+									Character toPush = Character.hasProp(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 									ArrayList<Integer> candidates = new ArrayList<>();
 									for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 										int cell = tracker.pos + n;
 										if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
-												&& (!Char.hasProp(toPush, Char.Property.LARGE) || Dungeon.level.openSpace[cell])) {
+												&& (!Character.hasProp(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 											candidates.add( cell );
 										}
 									}

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -69,7 +69,7 @@ public class Spear extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -89,7 +89,7 @@ public class Spear extends MeleeWeapon {
 				wep.beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
 				int oldPos = enemy.pos;
-				if (hero.attack(enemy, dmgMulti, 0, Char.INFINITE_ACCURACY)) {
+				if (hero.attack(enemy, dmgMulti, 0, Character.INFINITE_ACCURACY)) {
 					if (enemy.isAlive() && enemy.pos == oldPos){
 						//trace a ballistica to our target (which will also extend past them
 						Ballistica trajectory = new Ballistica(hero.pos, enemy.pos, Ballistica.STOP_TARGET);

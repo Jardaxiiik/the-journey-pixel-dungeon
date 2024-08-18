@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -39,7 +39,7 @@ public class Paralysis extends FlavourBuff {
 	}
 	
 	@Override
-	public boolean attachTo( Char target ) {
+	public boolean attachTo( Character target ) {
 		if (super.attachTo( target )) {
 			target.paralysed++;
 			return true;
@@ -95,7 +95,7 @@ public class Paralysis extends FlavourBuff {
 		private int damage;
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.buff(Paralysis.class) == null) {
 				damage -= Math.ceil(damage / 10f);
 				if (damage >= 0) detach();

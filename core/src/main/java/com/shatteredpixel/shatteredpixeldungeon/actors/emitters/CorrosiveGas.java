@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
 
-public class CorrosiveGas extends Blob {
+public class CorrosiveGas extends Emitter {
 
 	//FIXME should have strength per-cell
 	private int strength = 0;
@@ -47,7 +47,7 @@ public class CorrosiveGas extends Blob {
 			strength = 0;
 			source = null;
 		} else {
-			Char ch;
+			Character ch;
 			int cell;
 
 			for (int i = area.left; i < area.right; i++){

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -59,7 +59,7 @@ public class Shockwave extends ArmorAbility {
 	}
 
 	@Override
-	public int targetedPos(Char user, int dst) {
+	public int targetedPos(Character user, int dst) {
 		return new Ballistica( user.pos, dst, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
 	}
 
@@ -111,7 +111,7 @@ public class Shockwave extends ArmorAbility {
 
 						for (int cell : cone.cells){
 
-							Char ch = Actor.findChar(cell);
+							Character ch = Actor.findChar(cell);
 							if (ch != null && ch.alignment != hero.alignment){
 								int scalingStr = hero.getAttributeStrength()-10;
 								int damage = Random.NormalIntRange(5 + scalingStr, 10 + 2*scalingStr);
@@ -123,8 +123,8 @@ public class Shockwave extends ArmorAbility {
 								}
 
 								if (Random.Int(10) < 3*hero.pointsInTalent(Talent.STRIKING_WAVE)){
-									boolean wasEnemy = ch.alignment == Char.Alignment.ENEMY
-											|| (ch instanceof Mimic && ch.alignment == Char.Alignment.NEUTRAL);
+									boolean wasEnemy = ch.alignment == Character.Alignment.ENEMY
+											|| (ch instanceof Mimic && ch.alignment == Character.Alignment.NEUTRAL);
 									damage = hero.attackProc(ch, damage);
 									ch.damage(damage, hero);
 									if (hero.subClass == HeroSubClass.GLADIATOR && wasEnemy){

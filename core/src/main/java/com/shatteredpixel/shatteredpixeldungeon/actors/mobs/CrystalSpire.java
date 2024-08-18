@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -86,7 +86,7 @@ public class CrystalSpire extends Mob {
 	private ArrayList<ArrayList<Integer>> targetedCells = new ArrayList<>();
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
@@ -111,7 +111,7 @@ public class CrystalSpire extends Mob {
 
 			for (int i : cellsToAttack){
 
-				Char ch = Actor.findChar(i);
+				Character ch = Actor.findChar(i);
 				if (ch instanceof CrystalSpire){
 					continue; //don't spawn crystals on itself
 				}
@@ -123,7 +123,7 @@ public class CrystalSpire extends Mob {
 			}
 
 			for (int i : cellsToAttack){
-				Char ch = Actor.findChar(i);
+				Character ch = Actor.findChar(i);
 
 				if (ch != null && !(ch instanceof CrystalWisp || ch instanceof CrystalSpire)){
 					int dmg = Random.NormalIntRange(6, 15);
@@ -144,7 +144,7 @@ public class CrystalSpire extends Mob {
 								movePos = i+j;
 							}
 						}
-					} else if (!Char.hasProp(ch, Property.IMMOVABLE)) {
+					} else if (!Character.hasProp(ch, Property.IMMOVABLE)) {
 						for (int j : PathFinder.OFFSETS_NEIGHBOURS8){
 							if (!Dungeon.level.solid[i+j] && Actor.findChar(i+j) == null &&
 									Dungeon.level.trueDistance(i+j, pos) > Dungeon.level.trueDistance(movePos, pos)){
@@ -160,7 +160,7 @@ public class CrystalSpire extends Mob {
 							Dungeon.level.occupyCell(ch);
 						}
 					} else if (ch == Dungeon.hero){
-						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 						Dungeon.fail(this);
 					}
 				}
@@ -309,7 +309,7 @@ public class CrystalSpire extends Mob {
 	int hits = 0;
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		if (c == Dungeon.hero){
 			final Pickaxe p = Dungeon.hero.belongings.getItem(Pickaxe.class);
 
@@ -353,7 +353,7 @@ public class CrystalSpire extends Mob {
 							}
 						}
 
-						for (Char ch : Actor.chars()){
+						for (Character ch : Actor.chars()){
 							if (fieldOfView[ch.pos]) {
 								if (ch instanceof CrystalGuardian) {
 									ch.damage(ch.healthMax, new SpireSpike());
@@ -384,7 +384,7 @@ public class CrystalSpire extends Mob {
 						}
 
 						boolean affectingGuardians = false;
-						for (Char ch : Actor.chars()) {
+						for (Character ch : Actor.chars()) {
 							if (ch instanceof CrystalWisp) {
 								if (((CrystalWisp) ch).state != ((CrystalWisp)ch).HUNTING && ((CrystalWisp) ch).target != pos) {
 									((CrystalWisp) ch).beckon(pos);
@@ -408,7 +408,7 @@ public class CrystalSpire extends Mob {
 							}
 							PathFinder.buildDistanceMap(pos, passable);
 
-							for (Char ch : Actor.chars()) {
+							for (Character ch : Actor.chars()) {
 								if (ch instanceof CrystalGuardian){
 									if (((CrystalGuardian) ch).state == ((CrystalGuardian) ch).SLEEPING) {
 

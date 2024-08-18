@@ -19,58 +19,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Blizzard extends Blob {
+public class Inferno extends Emitter {
 	
 	@Override
 	protected void evolve() {
 		super.evolve();
 		
 		int cell;
+		boolean observe = false;
 		
 		Fire fire = (Fire)Dungeon.level.blobs.get( Fire.class );
 		Freezing freeze = (Freezing)Dungeon.level.blobs.get( Freezing.class );
 		
-		Inferno inf = (Inferno)Dungeon.level.blobs.get( Inferno.class );
+		Blizzard bliz = (Blizzard)Dungeon.level.blobs.get( Blizzard.class );
 		
-		for (int i = area.left; i < area.right; i++) {
-			for (int j = area.top; j < area.bottom; j++) {
+		for (int i = area.left-1; i <= area.right; i++) {
+			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j * Dungeon.level.width();
 				if (cur[cell] > 0) {
 					
 					if (fire != null)   fire.clear(cell);
 					if (freeze != null) freeze.clear(cell);
 					
-					if (inf != null && inf.volume > 0 && inf.cur[cell] > 0){
-						inf.clear(cell);
+					if (bliz != null && bliz.volume > 0 && bliz.cur[cell] > 0){
+						bliz.clear(cell);
 						off[cell] = cur[cell] = 0;
 						continue;
 					}
 					
-					Freezing.freeze(cell);
-					Freezing.freeze(cell);
+					Fire.burn(cell);
+
+					if (Dungeon.level.flamable[cell]){
+						Dungeon.level.destroy( cell );
+
+						observe = true;
+						GameScene.updateMap( cell );
+					}
 					
+				} else if (Dungeon.level.flamable[cell]
+						&& (cur[cell-1] > 0
+						|| cur[cell+1] > 0
+						|| cur[cell-Dungeon.level.width()] > 0
+						|| cur[cell+Dungeon.level.width()] > 0)) {
+
+					if (fire == null || fire.cur == null || fire.cur[cell] == 0) {
+						GameScene.add(Fire.seed(cell, 4, Fire.class));
+					}
+
 				}
 			}
+		}
+		
+		if (observe) {
+			Dungeon.observe();
 		}
 	}
 	
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.pour( Speck.factory( Speck.BLIZZARD, true ), 0.4f );
+		
+		emitter.pour( Speck.factory( Speck.INFERNO, true ), 0.4f );
 	}
 	
 	@Override
 	public String tileDesc() {
 		return Messages.get(this, "desc");
 	}
-	
 	
 }

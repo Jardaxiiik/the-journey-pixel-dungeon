@@ -39,7 +39,7 @@ public class HoldFast extends Buff {
 	public int pos = -1;
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (pos != target.pos) {
 			detach();
 		} else {

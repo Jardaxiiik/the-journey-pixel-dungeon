@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -46,12 +46,12 @@ public class Quarterstaff extends MeleeWeapon {
 	}
 
 	@Override
-	public int defenseFactor( Char owner ) {
+	public int defenseFactor( Character owner ) {
 		return 2;	//2 extra defence
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Character target){
 		return 2;
 	}
 

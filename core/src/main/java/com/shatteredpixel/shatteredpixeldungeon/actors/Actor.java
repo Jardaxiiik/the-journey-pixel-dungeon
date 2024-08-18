@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.watabou.utils.Bundlable;
@@ -53,7 +53,7 @@ public abstract class Actor implements Bundlable {
 	//used to determine what order actors act in if their time is equal. Higher values act earlier.
 	protected int actPriority = DEFAULT;
 
-	protected abstract boolean act();
+	protected abstract boolean playGameTurn();
 
 	//Always spends exactly the specified amount of time, regardless of time-influencing factors
 	protected void spendConstant( float time ){
@@ -138,7 +138,7 @@ public abstract class Actor implements Bundlable {
 	// **********************
 	
 	private static HashSet<Actor> all = new HashSet<>();
-	private static HashSet<Char> chars = new HashSet<>();
+	private static HashSet<Character> characters = new HashSet<>();
 	private static volatile Actor current;
 
 	private static SparseArray<Actor> ids = new SparseArray<>();
@@ -155,7 +155,7 @@ public abstract class Actor implements Bundlable {
 		now = 0;
 
 		all.clear();
-		chars.clear();
+		characters.clear();
 
 		ids.clear();
 	}
@@ -197,8 +197,8 @@ public abstract class Actor implements Bundlable {
 			mob.restoreEnemy();
 		}
 		
-		for (Blob blob : Dungeon.level.blobs.values()) {
-			add( blob );
+		for (Emitter emitter : Dungeon.level.blobs.values()) {
+			add(emitter);
 		}
 		
 		current = null;
@@ -262,13 +262,13 @@ public abstract class Actor implements Bundlable {
 				now = current.time;
 				Actor acting = current;
 
-				if (acting instanceof Char && ((Char) acting).sprite != null) {
+				if (acting instanceof Character && ((Character) acting).sprite != null) {
 					// If it's character's turn to act, but its sprite
 					// is moving, wait till the movement is over
 					try {
-						synchronized (((Char)acting).sprite) {
-							if (((Char)acting).sprite.isMoving) {
-								((Char) acting).sprite.wait();
+						synchronized (((Character)acting).sprite) {
+							if (((Character)acting).sprite.isMoving) {
+								((Character) acting).sprite.wait();
 							}
 						}
 					} catch (InterruptedException e) {
@@ -282,7 +282,7 @@ public abstract class Actor implements Bundlable {
 					doNext = false;
 					current = null;
 				} else {
-					doNext = acting.act();
+					doNext = acting.playGameTurn();
 					if (doNext && (Dungeon.hero == null || !Dungeon.hero.isAlive())) {
 						doNext = false;
 						current = null;
@@ -336,9 +336,9 @@ public abstract class Actor implements Bundlable {
 		actor.time += time;
 		actor.onAdd();
 		
-		if (actor instanceof Char) {
-			Char ch = (Char)actor;
-			chars.add( ch );
+		if (actor instanceof Character) {
+			Character ch = (Character)actor;
+			characters.add( ch );
 			for (Buff buff : ch.buffs()) {
 				add(buff);
 			}
@@ -349,7 +349,7 @@ public abstract class Actor implements Bundlable {
 		
 		if (actor != null) {
 			all.remove( actor );
-			chars.remove( actor );
+			characters.remove( actor );
 			actor.onRemove();
 
 			if (actor.id > 0) {
@@ -360,15 +360,15 @@ public abstract class Actor implements Bundlable {
 
 	//'freezes' a character in time for a specified amount of time
 	//USE CAREFULLY! Manipulating time like this is useful for some gameplay effects but is tricky
-	public static void delayChar( Char ch, float time ){
+	public static void delayChar(Character ch, float time ){
 		ch.spendConstant(time);
 		for (Buff b : ch.buffs()){
 			b.spendConstant(time);
 		}
 	}
 	
-	public static synchronized Char findChar( int pos ) {
-		for (Char ch : chars){
+	public static synchronized Character findChar(int pos ) {
+		for (Character ch : characters){
 			if (ch.pos == pos)
 				return ch;
 		}
@@ -383,5 +383,5 @@ public abstract class Actor implements Bundlable {
 		return new HashSet<>(all);
 	}
 
-	public static synchronized HashSet<Char> chars() { return new HashSet<>(chars); }
+	public static synchronized HashSet<Character> chars() { return new HashSet<>(characters); }
 }

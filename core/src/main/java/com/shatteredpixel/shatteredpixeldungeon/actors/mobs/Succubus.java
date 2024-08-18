@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -74,7 +74,7 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		
 		if (enemy.buff(Charm.class) != null ){
@@ -160,7 +160,7 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 40;
 	}
 	

@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -65,7 +65,7 @@ public class RegrowthBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Char ch = Actor.findChar(i);
+				Character ch = Actor.findChar(i);
 				int t = Dungeon.level.map[i];
 				if (ch != null){
 					if (ch.alignment == Dungeon.hero.alignment) {
@@ -78,7 +78,7 @@ public class RegrowthBomb extends Bomb {
 						&& Dungeon.level.plants.get(i) == null){
 					plantCandidates.add(i);
 				}
-				GameScene.add( Blob.seed( i, 10, Regrowth.class ) );
+				GameScene.add( Emitter.seed( i, 10, Regrowth.class ) );
 			}
 		}
 

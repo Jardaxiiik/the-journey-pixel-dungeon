@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -145,9 +145,9 @@ public class EtherealChains extends Artifact {
 	};
 	
 	//pulls an enemy to a position along the chain's path, as close to the hero as possible
-	private void chainEnemy( Ballistica chain, final Hero hero, final Char enemy ){
+	private void chainEnemy( Ballistica chain, final Hero hero, final Character enemy ){
 		
-		if (enemy.properties().contains(Char.Property.IMMOVABLE)) {
+		if (enemy.properties().contains(Character.Property.IMMOVABLE)) {
 			GLog.w( Messages.get(this, "cant_pull") );
 			return;
 		}
@@ -157,7 +157,7 @@ public class EtherealChains extends Artifact {
 			//prefer to the earliest point on the path
 			if (!Dungeon.level.solid[i]
 					&& Actor.findChar(i) == null
-					&& (!Char.hasProp(enemy, Char.Property.LARGE) || Dungeon.level.openSpace[i])){
+					&& (!Character.hasProp(enemy, Character.Property.LARGE) || Dungeon.level.openSpace[i])){
 				bestPos = i;
 				break;
 			}
@@ -304,7 +304,7 @@ public class EtherealChains extends Artifact {
 	public class chainsRecharge extends ArtifactBuff{
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			int chargeTarget = 5+(level()*2);
 			if (charge < chargeTarget
 					&& !cursed

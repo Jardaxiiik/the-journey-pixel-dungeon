@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -43,7 +43,7 @@ public class Dread extends Buff {
 
 	//dread overrides terror
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			Buff.detach( target, Terror.class );
 			return true;
@@ -57,7 +57,7 @@ public class Dread extends Buff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 
 		if (!Dungeon.level.heroFOV[target.pos]
 				&& Dungeon.level.distance(target.pos, Dungeon.hero.pos) >= 6) {

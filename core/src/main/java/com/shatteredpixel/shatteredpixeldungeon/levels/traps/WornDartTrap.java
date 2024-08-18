@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
@@ -54,14 +54,14 @@ public class WornDartTrap extends Trap {
 			}
 
 			@Override
-			protected boolean act() {
+			protected boolean playGameTurn() {
 				Actor.remove(this);
-				Char target = Actor.findChar(pos);
+				Character target = Actor.findChar(pos);
 
 				//find the closest char that can be aimed at
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
-					for (Char ch : Actor.chars()){
+					for (Character ch : Actor.chars()){
 						if (!ch.isAlive()) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.pos);
 						if (ch.invisible > 0) curDist += 1000;
@@ -74,7 +74,7 @@ public class WornDartTrap extends Trap {
 				}
 
 				if (target != null) {
-					final Char finalTarget = target;
+					final Character finalTarget = target;
 					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
 						((MissileSprite) JourneyPixelDungeon.scene().recycle(MissileSprite.class)).
 								reset(pos, finalTarget.sprite, new Dart(), new Callback() {

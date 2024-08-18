@@ -33,7 +33,7 @@ public class LockedFloor extends Buff {
 	private float left = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 20 : 50;
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		spend(TICK);
 
 		if (!Dungeon.level.locked)

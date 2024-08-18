@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -89,7 +89,7 @@ public class GreatCrab extends Crab {
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		//crab blocks all melee attacks from its current target
 		if (enemySeen
 				&& state != SLEEPING

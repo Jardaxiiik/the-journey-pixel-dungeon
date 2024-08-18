@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -42,7 +42,7 @@ public class Blindweed extends Plant {
 	}
 	
 	@Override
-	public void activate( Char ch ) {
+	public void activate( Character ch ) {
 		
 		if (ch != null) {
 			if (ch instanceof Hero && ((Hero) ch).subClass == HeroSubClass.WARDEN){

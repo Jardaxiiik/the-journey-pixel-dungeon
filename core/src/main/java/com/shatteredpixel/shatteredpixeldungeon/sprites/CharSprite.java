@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.DarkBlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
@@ -121,7 +121,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	protected boolean sleeping = false;
 
-	public Char ch;
+	public Character ch;
 
 	//used to prevent the actor associated with this sprite from acting until movement completes
 	public volatile boolean isMoving = false;
@@ -140,7 +140,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 	
 	//intended to be used for placing a character in the game world
-	public void link( Char ch ) {
+	public void link( Character ch ) {
 		linkVisuals( ch );
 		
 		this.ch = ch;
@@ -170,7 +170,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	//used for just updating a sprite based on a given character, not linking them or placing in the game
-	public void linkVisuals( Char ch ){
+	public void linkVisuals( Character ch ){
 		//do nothin by default
 	}
 	

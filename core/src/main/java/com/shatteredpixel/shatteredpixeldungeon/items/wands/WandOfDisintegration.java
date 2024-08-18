@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -72,14 +72,14 @@ public class WandOfDisintegration extends DamageWand {
 		
 		int maxDistance = Math.min(distance(), beam.dist);
 		
-		ArrayList<Char> chars = new ArrayList<>();
+		ArrayList<Character> characters = new ArrayList<>();
 
-		Blob web = Dungeon.level.blobs.get(Web.class);
+		Emitter web = Dungeon.level.blobs.get(Web.class);
 
 		int terrainPassed = 2, terrainBonus = 0;
 		for (int c : beam.subPath(1, maxDistance)) {
 			
-			Char ch;
+			Character ch;
 			if ((ch = Actor.findChar( c )) != null) {
 
 				//we don't want to count passed terrain after the last enemy hit. That would be a lot of bonus levels.
@@ -89,9 +89,9 @@ public class WandOfDisintegration extends DamageWand {
 
 				if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).PASSIVE
 						&& !(Dungeon.level.mapped[c] || Dungeon.level.visited[c])){
-					//avoid harming undiscovered passive chars
+					//avoid harming undiscovered passive characters
 				} else {
-					chars.add(ch);
+					characters.add(ch);
 				}
 			}
 
@@ -114,8 +114,8 @@ public class WandOfDisintegration extends DamageWand {
 			Dungeon.observe();
 		}
 		
-		int lvl = level + (chars.size()-1) + terrainBonus;
-		for (Char ch : chars) {
+		int lvl = level + (characters.size()-1) + terrainBonus;
+		for (Character ch : characters) {
 			wandProc(ch, chargesPerCast());
 			ch.damage( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
@@ -124,7 +124,7 @@ public class WandOfDisintegration extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//no direct effect, see magesStaff.reachfactor
 	}
 

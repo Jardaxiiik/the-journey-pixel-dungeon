@@ -43,7 +43,7 @@ public class PrismaticGuard extends Buff {
 	private float HP;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		
 		Hero hero = (Hero)target;
 		

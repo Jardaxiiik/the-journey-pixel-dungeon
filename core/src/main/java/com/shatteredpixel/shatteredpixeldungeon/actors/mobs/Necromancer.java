@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -74,12 +74,12 @@ public class Necromancer extends Mob {
 	private int storedSkeletonID = -1;
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (summoning && state != HUNTING){
 			summoning = false;
 			if (sprite instanceof NecromancerSprite) ((NecromancerSprite) sprite).cancelSummoning();
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
@@ -116,7 +116,7 @@ public class Necromancer extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack(Char enemy) {
+	protected boolean canAttack(Character enemy) {
 		return false;
 	}
 
@@ -187,7 +187,7 @@ public class Necromancer extends Mob {
 		if (Actor.findChar(summoningPos) != null) {
 
 			//cancel if character cannot be moved
-			if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
+			if (Character.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
 				summoning = false;
 				((NecromancerSprite)sprite).finishSummoning();
 				spend(TICK);
@@ -206,7 +206,7 @@ public class Necromancer extends Mob {
 
 			//push enemy, or wait a turn if there is no valid pushing position
 			if (pushPos != pos) {
-				Char ch = Actor.findChar(summoningPos);
+				Character ch = Actor.findChar(summoningPos);
 				Actor.add( new Pushing( ch, ch.pos, pushPos ) );
 
 				ch.pos = pushPos;
@@ -214,13 +214,13 @@ public class Necromancer extends Mob {
 
 			} else {
 
-				Char blocker = Actor.findChar(summoningPos);
+				Character blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.damage( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
-						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 					}
 				}
 
@@ -323,7 +323,7 @@ public class Necromancer extends Mob {
 							if (Actor.findChar(enemy.pos+c) == null
 									&& Dungeon.level.passable[enemy.pos+c]
 									&& fieldOfView[enemy.pos+c]
-									&& (Dungeon.level.openSpace[enemy.pos+c] || !Char.hasProp(mySkeleton, Property.LARGE))
+									&& (Dungeon.level.openSpace[enemy.pos+c] || !Character.hasProp(mySkeleton, Property.LARGE))
 									&& Dungeon.level.trueDistance(pos, enemy.pos+c) < Dungeon.level.trueDistance(pos, telePos)){
 								telePos = enemy.pos+c;
 							}

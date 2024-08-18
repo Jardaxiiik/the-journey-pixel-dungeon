@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -45,7 +45,7 @@ public class Transmuting extends Component {
 	Image oldSprite;
 	Image newSprite;
 
-	private Char target;
+	private Character target;
 
 	private Phase phase;
 	private float duration;
@@ -129,7 +129,7 @@ public class Transmuting extends Component {
 		}
 	}
 
-	public static void show( Char ch, Item oldItem, Item newItem ) {
+	public static void show(Character ch, Item oldItem, Item newItem ) {
 
 		if (!ch.sprite.visible) {
 			return;
@@ -140,7 +140,7 @@ public class Transmuting extends Component {
 		ch.sprite.parent.add( sprite );
 	}
 
-	public static void show( Char ch, Talent oldTalent, Talent newTalent ) {
+	public static void show(Character ch, Talent oldTalent, Talent newTalent ) {
 
 		if (!ch.sprite.visible) {
 			return;

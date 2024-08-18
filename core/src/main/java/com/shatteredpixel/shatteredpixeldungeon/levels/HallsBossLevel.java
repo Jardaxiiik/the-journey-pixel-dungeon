@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -213,13 +213,13 @@ public class HallsBossLevel extends Level {
 	}
 
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -232,7 +232,7 @@ public class HallsBossLevel extends Level {
 	}
 
 	@Override
-	public void occupyCell( Char ch ) {
+	public void occupyCell( Character ch ) {
 		if (map[entrance()] == Terrain.ENTRANCE && map[exit()] != Terrain.EXIT
 				&& ch == Dungeon.hero && Dungeon.level.distance(ch.pos, entrance()) >= 2) {
 			seal();
@@ -263,7 +263,7 @@ public class HallsBossLevel extends Level {
 					candidates.add(boss.pos + i);
 				}
 			}
-			Char ch = Actor.findChar(boss.pos);
+			Character ch = Actor.findChar(boss.pos);
 			if (!candidates.isEmpty()){
 				ch.pos = Random.element(candidates);
 			} else {

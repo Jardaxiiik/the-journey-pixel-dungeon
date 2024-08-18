@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -36,7 +36,7 @@ public class Kinetic extends Weapon.Enchantment {
 	private static ItemSprite.Glowing YELLOW = new ItemSprite.Glowing( 0xFFFF00 );
 	
 	@Override
-	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage) {
 		
 		int conservedDamage = 0;
 		if (attacker.buff(ConservedDamage.class) != null) {
@@ -64,7 +64,7 @@ public class Kinetic extends Weapon.Enchantment {
 		public int conservedDamage;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}
@@ -108,7 +108,7 @@ public class Kinetic extends Weapon.Enchantment {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			preservedDamage -= Math.max(preservedDamage*.025f, 0.1f);
 			if (preservedDamage <= 0) detach();
 			

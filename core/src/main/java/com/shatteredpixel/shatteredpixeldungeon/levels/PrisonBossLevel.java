@@ -27,10 +27,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
@@ -356,8 +356,8 @@ public class PrisonBossLevel extends Level {
 		BArray.setFalse(visited);
 		BArray.setFalse(mapped);
 		
-		for (Blob blob: blobs.values()){
-			blob.fullyClear();
+		for (Emitter emitter : blobs.values()){
+			emitter.fullyClear();
 		}
 		addVisuals(); //this also resets existing visuals
 		traps.clear();
@@ -484,7 +484,7 @@ public class PrisonBossLevel extends Level {
 				//remove all mobs, but preserve allies
 				ArrayList<Mob> allies = new ArrayList<>();
 				for(Mob m : mobs.toArray(new Mob[0])){
-					if (m.alignment == Char.Alignment.ALLY && !m.properties().contains(Char.Property.IMMOVABLE)){
+					if (m.alignment == Character.Alignment.ALLY && !m.properties().contains(Character.Property.IMMOVABLE)){
 						allies.add(m);
 						mobs.remove(m);
 					}
@@ -534,7 +534,7 @@ public class PrisonBossLevel extends Level {
 	private boolean[] triggered = new boolean[]{false, false, false, false};
 	
 	@Override
-	public void occupyCell(Char ch) {
+	public void occupyCell(Character ch) {
 		if (ch == Dungeon.hero){
 			switch (state){
 				case START:
@@ -664,8 +664,8 @@ public class PrisonBossLevel extends Level {
 				int x = i % 7;
 				int y = i / 7;
 				int cell = x+tenguCell.left+1 + (y+tenguCell.top+1)*width();
-				if (Blob.volumeAt(cell, StormCloud.class) == 0
-						&& Blob.volumeAt(cell, Regrowth.class) <= 9
+				if (Emitter.volumeAt(cell, StormCloud.class) == 0
+						&& Emitter.volumeAt(cell, Regrowth.class) <= 9
 						&& Dungeon.level.plants.get(cell) == null
 						&& Actor.findChar(cell) == null) {
 					Level.set(cell, Terrain.SECRET_TRAP);
@@ -685,13 +685,13 @@ public class PrisonBossLevel extends Level {
 	}
 	
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = ENTRANCE_POS + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -804,7 +804,7 @@ public class PrisonBossLevel extends Level {
 				}
 				
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					Actor.remove(this);
 					
 					if (vis != null && vis.parent != null) {

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -36,7 +36,7 @@ public class Corruption extends AllyBuff {
 	private float buildToDamage = 0f;
 
 	//corrupted enemies are usually fully healed and cleansed of most debuffs
-	public static void corruptionHeal(Char target){
+	public static void corruptionHeal(Character target){
 		target.healthPoints = target.healthMax;
 		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(target.healthMax), FloatingText.HEALING);
 		for (Buff buff : target.buffs()) {
@@ -48,7 +48,7 @@ public class Corruption extends AllyBuff {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		buildToDamage += target.healthMax /100f;
 
 		int damage = (int)buildToDamage;

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
@@ -275,13 +275,13 @@ public class CityBossLevel extends Level {
 	}
 
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -294,7 +294,7 @@ public class CityBossLevel extends Level {
 	}
 
 	@Override
-	public void occupyCell( Char ch ) {
+	public void occupyCell( Character ch ) {
 		if (map[bottomDoor] != Terrain.LOCKED_DOOR && map[topDoor] == Terrain.LOCKED_DOOR
 				&& ch.pos < bottomDoor && ch == Dungeon.hero) {
 			seal();

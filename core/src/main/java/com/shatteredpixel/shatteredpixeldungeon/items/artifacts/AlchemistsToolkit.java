@@ -217,7 +217,7 @@ public class AlchemistsToolkit extends Artifact {
 	public class kitEnergy extends ArtifactBuff {
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			if (warmUpDelay > 0){
 				if (level() == 10){

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -68,7 +68,7 @@ public class Ratmogrify extends ArmorAbility {
 	}
 
 	@Override
-	public int targetedPos(Char user, int dst) {
+	public int targetedPos(Character user, int dst) {
 		return dst;
 	}
 
@@ -79,7 +79,7 @@ public class Ratmogrify extends ArmorAbility {
 			return;
 		}
 
-		Char ch = Actor.findChar(target);
+		Character ch = Actor.findChar(target);
 
 		if (ch == null || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
@@ -104,7 +104,7 @@ public class Ratmogrify extends ArmorAbility {
 					int index = Random.index( spawnPoints );
 
 					Rat rat = new Rat();
-					rat.alignment = Char.Alignment.ALLY;
+					rat.alignment = Character.Alignment.ALLY;
 					rat.state = rat.HUNTING;
 					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
 					GameScene.add( rat );
@@ -115,7 +115,7 @@ public class Ratmogrify extends ArmorAbility {
 				}
 
 			}
-		} else if (ch.alignment != Char.Alignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat){
+		} else if (ch.alignment != Character.Alignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat){
 			GLog.w(Messages.get(this, "cant_transform"));
 			return;
 		} else if (ch instanceof TransmogRat){
@@ -130,7 +130,7 @@ public class Ratmogrify extends ArmorAbility {
 					Buff.affect(ch, Adrenaline.class, 2*(hero.pointsInTalent(Talent.RATLOMACY)-1));
 				}
 			}
-		} else if (Char.hasProp(ch, Char.Property.MINIBOSS) || Char.hasProp(ch, Char.Property.BOSS)){
+		} else if (Character.hasProp(ch, Character.Property.MINIBOSS) || Character.hasProp(ch, Character.Property.BOSS)){
 			GLog.w(Messages.get(this, "too_strong"));
 			return;
 		} else {
@@ -229,7 +229,7 @@ public class Ratmogrify extends ArmorAbility {
 		private float timeLeft = 6f;
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			if (timeLeft <= 0){
 				Mob original = getOriginal();
 				this.original = null;
@@ -243,7 +243,7 @@ public class Ratmogrify extends ArmorAbility {
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 				return true;
 			} else {
-				return super.act();
+				return super.playGameTurn();
 			}
 		}
 
@@ -259,7 +259,7 @@ public class Ratmogrify extends ArmorAbility {
 			timeLeft = Float.POSITIVE_INFINITY;
 		}
 
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			return original.attackSkill(target);
 		}
 

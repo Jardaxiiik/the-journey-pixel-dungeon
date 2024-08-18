@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -56,12 +56,12 @@ public class ElixirOfHoneyedHealing extends Elixir {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 		}
 		
-		Char ch = Actor.findChar(cell);
+		Character ch = Actor.findChar(cell);
 		if (ch != null){
 			PotionOfHealing.cure(ch);
 			PotionOfHealing.heal(ch);
 			if (ch instanceof Bee && ch.alignment != curUser.alignment){
-				ch.alignment = Char.Alignment.ALLY;
+				ch.alignment = Character.Alignment.ALLY;
 				((Bee)ch).setPotInfo(-1, null);
 			}
 		}

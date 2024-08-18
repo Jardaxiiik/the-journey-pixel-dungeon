@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
@@ -396,8 +396,8 @@ public class Potion extends Item {
 			fire.clear(cell);
 		}
 
-		Char ch = Actor.findChar(cell);
-		if (ch != null && ch.alignment == Char.Alignment.ALLY) {
+		Character ch = Actor.findChar(cell);
+		if (ch != null && ch.alignment == Character.Alignment.ALLY) {
 			Buff.detach(ch, Burning.class);
 			Buff.detach(ch, Ooze.class);
 		}

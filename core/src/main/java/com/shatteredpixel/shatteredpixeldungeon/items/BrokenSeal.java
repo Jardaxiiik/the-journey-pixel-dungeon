@@ -201,7 +201,7 @@ public class BrokenSeal extends Item {
 		private float partialShield;
 
 		@Override
-		public synchronized boolean act() {
+		public synchronized boolean playGameTurn() {
 			if (Regeneration.regenOn() && shielding() < maxShield()) {
 				partialShield += 1/30f;
 			}

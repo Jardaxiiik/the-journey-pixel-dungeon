@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -67,7 +67,7 @@ public class Skeleton extends Mob {
 		
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-			Char ch = findChar( pos + PathFinder.OFFSETS_NEIGHBOURS8[i] );
+			Character ch = findChar( pos + PathFinder.OFFSETS_NEIGHBOURS8[i] );
 			if (ch != null && ch.isAlive()) {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
@@ -104,7 +104,7 @@ public class Skeleton extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 12;
 	}
 	

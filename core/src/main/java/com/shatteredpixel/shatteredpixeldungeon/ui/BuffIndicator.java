@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -128,11 +128,11 @@ public class BuffIndicator extends Component {
 	
 	private LinkedHashMap<Buff, BuffButton> buffButtons = new LinkedHashMap<>();
 	private boolean needsRefresh;
-	private Char ch;
+	private Character ch;
 
 	private boolean large = false;
 	
-	public BuffIndicator( Char ch, boolean large ) {
+	public BuffIndicator(Character ch, boolean large ) {
 		super();
 		
 		this.ch = ch;

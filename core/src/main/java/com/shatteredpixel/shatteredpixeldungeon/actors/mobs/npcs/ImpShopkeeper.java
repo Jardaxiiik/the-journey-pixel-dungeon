@@ -35,7 +35,7 @@ public class ImpShopkeeper extends Shopkeeper {
 	private boolean seenBefore = false;
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 
 		if (!seenBefore && Dungeon.level.heroFOV[pos]) {
 			if (Dungeon.hero.buff(AscensionChallenge.class) == null) {
@@ -46,6 +46,6 @@ public class ImpShopkeeper extends Shopkeeper {
 			seenBefore = true;
 		}
 
-		return super.act();
+		return super.playGameTurn();
 	}
 }

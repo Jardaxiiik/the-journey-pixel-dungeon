@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.watabou.noosa.MovieClip;
 import com.watabou.noosa.TextureFilm;
 
@@ -54,7 +54,7 @@ public class NewbornElementalSprite extends MobSprite{
 	}
 
 	@Override
-	public void link( Char ch ) {
+	public void link( Character ch ) {
 		super.link( ch );
 		add( CharSprite.State.BURNING );
 	}

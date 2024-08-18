@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
@@ -482,7 +482,7 @@ public class Dungeon {
 		level.addRespawner();
 		
 		for(Mob m : level.mobs){
-			if (m.pos == hero.pos && !Char.hasProp(m, Char.Property.IMMOVABLE)){
+			if (m.pos == hero.pos && !Character.hasProp(m, Character.Property.IMMOVABLE)){
 				//displace mob
 				for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					if (Actor.findChar(m.pos+i) == null && level.passable[m.pos + i]){
@@ -919,7 +919,7 @@ public class Dungeon {
 		}
 
 		for (TalismanOfForesight.CharAwareness c : hero.buffs(TalismanOfForesight.CharAwareness.class)){
-			Char ch = (Char) Actor.findById(c.charID);
+			Character ch = (Character) Actor.findById(c.charID);
 			if (ch == null || !ch.isAlive()) continue;
 			BArray.or( level.visited, level.heroFOV, ch.pos - 1 - level.width(), 3, level.visited );
 			BArray.or( level.visited, level.heroFOV, ch.pos - 1, 3, level.visited );
@@ -943,7 +943,7 @@ public class Dungeon {
 			GameScene.updateFog(a.pos, 2);
 		}
 
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof WandOfWarding.Ward
 					|| ch instanceof WandOfRegrowth.Lotus
 					|| ch instanceof SpiritHawk.HawkAlly){
@@ -983,11 +983,11 @@ public class Dungeon {
 			BArray.setFalse(passable);
 	}
 
-	public static boolean[] findPassable(Char ch, boolean[] pass, boolean[] vis, boolean chars){
+	public static boolean[] findPassable(Character ch, boolean[] pass, boolean[] vis, boolean chars){
 		return findPassable(ch, pass, vis, chars, chars);
 	}
 
-	public static boolean[] findPassable(Char ch, boolean[] pass, boolean[] vis, boolean chars, boolean considerLarge){
+	public static boolean[] findPassable(Character ch, boolean[] pass, boolean[] vis, boolean chars, boolean considerLarge){
 		setupPassable();
 		if (ch.flying || ch.buff( Amok.class ) != null) {
 			BArray.or( pass, Dungeon.level.avoid, passable );
@@ -995,14 +995,14 @@ public class Dungeon {
 			System.arraycopy( pass, 0, passable, 0, Dungeon.level.length() );
 		}
 
-		if (considerLarge && Char.hasProp(ch, Char.Property.LARGE)){
+		if (considerLarge && Character.hasProp(ch, Character.Property.LARGE)){
 			BArray.and( passable, Dungeon.level.openSpace, passable );
 		}
 
 		ch.modifyPassable(passable);
 
 		if (chars) {
-			for (Char c : Actor.chars()) {
+			for (Character c : Actor.chars()) {
 				if (vis[c.pos]) {
 					passable[c.pos] = false;
 				}
@@ -1012,13 +1012,13 @@ public class Dungeon {
 		return passable;
 	}
 
-	public static PathFinder.Path findPath(Char ch, int to, boolean[] pass, boolean[] vis, boolean chars) {
+	public static PathFinder.Path findPath(Character ch, int to, boolean[] pass, boolean[] vis, boolean chars) {
 
 		return PathFinder.find( ch.pos, to, findPassable(ch, pass, vis, chars) );
 
 	}
 	
-	public static int findStep(Char ch, int to, boolean[] pass, boolean[] visible, boolean chars ) {
+	public static int findStep(Character ch, int to, boolean[] pass, boolean[] visible, boolean chars ) {
 
 		if (Dungeon.level.adjacent( ch.pos, to )) {
 			return Actor.findChar( to ) == null && pass[to] ? to : -1;
@@ -1028,13 +1028,13 @@ public class Dungeon {
 
 	}
 	
-	public static int flee( Char ch, int from, boolean[] pass, boolean[] visible, boolean chars ) {
+	public static int flee(Character ch, int from, boolean[] pass, boolean[] visible, boolean chars ) {
 		boolean[] passable = findPassable(ch, pass, visible, false, true);
 		passable[ch.pos] = true;
 
 		//only consider other chars impassable if our retreat step may collide with them
 		if (chars) {
-			for (Char c : Actor.chars()) {
+			for (Character c : Actor.chars()) {
 				if (c.pos == from || Dungeon.level.adjacent(c.pos, ch.pos)) {
 					passable[c.pos] = false;
 				}

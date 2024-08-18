@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.EnhancedRings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -113,7 +113,7 @@ public class Ring extends KindofMisc {
 		}
 	}
 	
-	public void activate( Char ch ) {
+	public void activate( Character ch ) {
 		if (buff != null){
 			buff.detach();
 			buff = null;
@@ -303,7 +303,7 @@ public class Ring extends KindofMisc {
 		return lvl;
 	}
 
-	public static int getBonus(Char target, Class<?extends RingBuff> type){
+	public static int getBonus(Character target, Class<?extends RingBuff> type){
 		if (target.buff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
@@ -312,7 +312,7 @@ public class Ring extends KindofMisc {
 		return bonus;
 	}
 
-	public static int getBuffedBonus(Char target, Class<?extends RingBuff> type){
+	public static int getBuffedBonus(Character target, Class<?extends RingBuff> type){
 		if (target.buff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
 		for (RingBuff buff : target.buffs(type)) {
@@ -366,7 +366,7 @@ public class Ring extends KindofMisc {
 	public class RingBuff extends Buff {
 
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
@@ -378,7 +378,7 @@ public class Ring extends KindofMisc {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			spend( TICK );
 			return true;
 		}

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -94,7 +94,7 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		damage = armor.proc(enemy, this, damage);
 		return super.defenseProc(enemy, damage);
 	}
@@ -132,7 +132,7 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		return Math.round(armor.evasionFactor(this, super.defenseSkill(enemy)));
 	}
 

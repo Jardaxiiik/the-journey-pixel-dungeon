@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -69,7 +69,7 @@ public class Sai extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -96,7 +96,7 @@ public class Sai extends MeleeWeapon {
 					buff.detach();
 				}
 
-				boolean hit = hero.attack(enemy, 1f + boostPerHit*recentHits, 0, Char.INFINITE_ACCURACY);
+				boolean hit = hero.attack(enemy, 1f + boostPerHit*recentHits, 0, Character.INFINITE_ACCURACY);
 				if (hit && !enemy.isAlive()){
 					wep.onAbilityKill(hero, enemy);
 				}
@@ -139,7 +139,7 @@ public class Sai extends MeleeWeapon {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			//shuffle all hits down one turn
 			for (int i = 0; i < DURATION; i++){

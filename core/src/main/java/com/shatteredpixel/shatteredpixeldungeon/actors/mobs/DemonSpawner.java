@@ -85,7 +85,7 @@ public class DemonSpawner extends Mob {
 	public boolean spawnRecorded = false;
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (!spawnRecorded){
 			Statistics.spawnersAlive++;
 			spawnRecorded = true;
@@ -135,7 +135,7 @@ public class DemonSpawner extends Mob {
 			}
 		}
 		alerted = false;
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override

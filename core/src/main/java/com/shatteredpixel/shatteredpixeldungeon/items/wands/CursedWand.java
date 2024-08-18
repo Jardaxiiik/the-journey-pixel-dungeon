@@ -27,13 +27,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
@@ -87,7 +87,7 @@ public class CursedWand {
 	private static float RARE_CHANCE = 0.09f;
 	private static float VERY_RARE_CHANCE = 0.01f;
 
-	public static void cursedZap(final Item origin, final Char user, final Ballistica bolt, final Callback afterZap){
+	public static void cursedZap(final Item origin, final Character user, final Ballistica bolt, final Callback afterZap){
 
 		cursedFX(user, bolt, new Callback() {
 			@Override
@@ -99,17 +99,17 @@ public class CursedWand {
 		});
 	}
 
-	public static void tryForWandProc( Char target, Item origin ){
+	public static void tryForWandProc(Character target, Item origin ){
 		if (target != null && origin instanceof Wand){
 			Wand.wandProc(target, origin.buffedLvl(), 1);
 		}
 	}
 
-	public static boolean cursedEffect(final Item origin, final Char user, final Char target){
+	public static boolean cursedEffect(final Item origin, final Character user, final Character target){
 		return cursedEffect(origin, user, target.pos);
 	}
 
-	public static boolean cursedEffect(final Item origin, final Char user, final int targetPos){
+	public static boolean cursedEffect(final Item origin, final Character user, final int targetPos){
 		switch (Random.chances(new float[]{COMMON_CHANCE, UNCOMMON_CHANCE, RARE_CHANCE, VERY_RARE_CHANCE})){
 			case 0: default:
 				return commonEffect(origin, user, targetPos);
@@ -122,12 +122,12 @@ public class CursedWand {
 		}
 	}
 
-	private static boolean commonEffect(final Item origin, final Char user, final int targetPos){
+	private static boolean commonEffect(final Item origin, final Character user, final int targetPos){
 		switch(Random.Int(4)){
 
 			//anti-entropy
 			case 0: default:
-				Char target = Actor.findChar(targetPos);
+				Character target = Actor.findChar(targetPos);
 				if (Random.Int(2) == 0) {
 					if (target != null) Buff.affect(target, Burning.class).reignite(target);
 					Buff.affect(user, Frost.class, Frost.DURATION);
@@ -140,21 +140,21 @@ public class CursedWand {
 
 			//spawns some regrowth
 			case 1:
-				GameScene.add( Blob.seed(targetPos, 30, Regrowth.class));
+				GameScene.add( Emitter.seed(targetPos, 30, Regrowth.class));
 				tryForWandProc(Actor.findChar(targetPos), origin);
 				return true;
 
 			//random teleportation
 			case 2:
 				if(Random.Int(2) == 0) {
-					if (user != null && !user.properties().contains(Char.Property.IMMOVABLE)) {
+					if (user != null && !user.properties().contains(Character.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(user);
 					} else {
 						return cursedEffect(origin, user, targetPos);
 					}
 				} else {
-					Char ch = Actor.findChar( targetPos );
-					if (ch != null && !ch.properties().contains(Char.Property.IMMOVABLE)) {
+					Character ch = Actor.findChar( targetPos );
+					if (ch != null && !ch.properties().contains(Character.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(ch);
 						tryForWandProc(ch, origin);
 					} else {
@@ -169,20 +169,20 @@ public class CursedWand {
 				tryForWandProc(Actor.findChar(targetPos), origin);
 				switch (Random.Int(3)) {
 					case 0: default:
-						GameScene.add( Blob.seed( targetPos, 800, ConfusionGas.class ) );
+						GameScene.add( Emitter.seed( targetPos, 800, ConfusionGas.class ) );
 						return true;
 					case 1:
-						GameScene.add( Blob.seed( targetPos, 500, ToxicGas.class ) );
+						GameScene.add( Emitter.seed( targetPos, 500, ToxicGas.class ) );
 						return true;
 					case 2:
-						GameScene.add( Blob.seed( targetPos, 200, ParalyticGas.class ) );
+						GameScene.add( Emitter.seed( targetPos, 200, ParalyticGas.class ) );
 						return true;
 				}
 		}
 
 	}
 
-	private static boolean uncommonEffect(final Item origin, final Char user, final int targetPos){
+	private static boolean uncommonEffect(final Item origin, final Character user, final int targetPos){
 		switch(Random.Int(4)){
 
 			//Random plant
@@ -203,10 +203,10 @@ public class CursedWand {
 
 			//Health transfer
 			case 1:
-				final Char target = Actor.findChar( targetPos );
+				final Character target = Actor.findChar( targetPos );
 				if (target != null) {
 					int damage = Dungeon.scalingDepth() * 2;
-					Char toHeal, toDamage;
+					Character toHeal, toDamage;
 
 					if (Random.Int(2) == 0){
 						toHeal = user;
@@ -260,16 +260,16 @@ public class CursedWand {
 
 	}
 
-	private static boolean rareEffect(final Item origin, final Char user, final int targetPos){
+	private static boolean rareEffect(final Item origin, final Character user, final int targetPos){
 		switch(Random.Int(4)){
 
 			//sheep transformation
 			case 0: default:
 
-				Char ch = Actor.findChar( targetPos );
+				Character ch = Actor.findChar( targetPos );
 				if (ch != null && !(ch instanceof Hero)
-						&& !ch.properties().contains(Char.Property.BOSS)
-						&& !ch.properties().contains(Char.Property.MINIBOSS)){
+						&& !ch.properties().contains(Character.Property.BOSS)
+						&& !ch.properties().contains(Character.Property.MINIBOSS)){
 					Sheep sheep = new Sheep();
 					sheep.lifespan = 10;
 					sheep.pos = ch.pos;
@@ -324,16 +324,16 @@ public class CursedWand {
 		}
 	}
 
-	private static boolean veryRareEffect(final Item origin, final Char user, final int targetPos){
+	private static boolean veryRareEffect(final Item origin, final Character user, final int targetPos){
 		switch(Random.Int(4)){
 
 			//great forest fire!
 			case 0: default:
 				for (int i = 0; i < Dungeon.level.length(); i++){
-					GameScene.add( Blob.seed(i, 15, Regrowth.class));
+					GameScene.add( Emitter.seed(i, 15, Regrowth.class));
 				}
 				do {
-					GameScene.add(Blob.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
+					GameScene.add(Emitter.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
 				} while (Random.Int(5) != 0);
 				new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
@@ -344,7 +344,7 @@ public class CursedWand {
 			//golden mimic
 			case 1:
 
-				Char ch = Actor.findChar(targetPos);
+				Character ch = Actor.findChar(targetPos);
 				int spawnCell = targetPos;
 				if (ch != null){
 					ArrayList<Integer> candidates = new ArrayList<Integer>();
@@ -363,7 +363,7 @@ public class CursedWand {
 
 				Mimic mimic = Mimic.spawnAt(spawnCell, GoldenMimic.class, false);
 				mimic.stopHiding();
-				mimic.alignment = Char.Alignment.ENEMY;
+				mimic.alignment = Character.Alignment.ENEMY;
 				Item reward;
 				do {
 					reward = ItemGenerator.randomUsingDefaults(Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR,
@@ -444,7 +444,7 @@ public class CursedWand {
 		}
 	}
 
-	private static void cursedFX(final Char user, final Ballistica bolt, final Callback callback){
+	private static void cursedFX(final Character user, final Ballistica bolt, final Callback callback){
 		MagicMissile.boltFromChar( user.sprite.parent,
 				MagicMissile.RAINBOW,
 				user.sprite,

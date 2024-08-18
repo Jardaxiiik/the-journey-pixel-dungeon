@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -55,7 +55,7 @@ public class PotionOfHealing extends Potion {
 		heal( hero );
 	}
 
-	public static void heal( Char ch ){
+	public static void heal( Character ch ){
 		if (ch == Dungeon.hero && Dungeon.isChallenged(Challenges.NO_HEALING)){
 			pharmacophobiaProc(Dungeon.hero);
 		} else {
@@ -72,7 +72,7 @@ public class PotionOfHealing extends Potion {
 		Buff.affect( hero, Poison.class).set(4 + hero.lvl/2);
 	}
 	
-	public static void cure( Char ch ) {
+	public static void cure( Character ch ) {
 		Buff.detach( ch, Poison.class );
 		Buff.detach( ch, Cripple.class );
 		Buff.detach( ch, Weakness.class );

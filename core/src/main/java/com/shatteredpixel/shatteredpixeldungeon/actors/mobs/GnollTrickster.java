@@ -22,9 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
@@ -61,18 +61,18 @@ public class GnollTrickster extends Gnoll {
 	private int combo = 0;
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 16;
 	}
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return !Dungeon.level.adjacent( pos, enemy.pos )
 				&& (super.canAttack(enemy) || new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos);
 	}
 
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		//The gnoll's attacks get more severe the more the player lets it hit them
 		combo++;
@@ -83,7 +83,7 @@ public class GnollTrickster extends Gnoll {
 			if (effect >=6 && enemy.buff(Burning.class) == null){
 
 				if (Dungeon.level.flamable[enemy.pos])
-					GameScene.add(Blob.seed(enemy.pos, 4, Fire.class));
+					GameScene.add(Emitter.seed(enemy.pos, 4, Fire.class));
 				Buff.affect(enemy, Burning.class).reignite( enemy );
 
 			} else
@@ -104,7 +104,7 @@ public class GnollTrickster extends Gnoll {
 	}
 
 	@Override
-	public void aggro(Char ch) {
+	public void aggro(Character ch) {
 		//cannot be aggroed to something it can't see
 		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
 			super.aggro(ch);

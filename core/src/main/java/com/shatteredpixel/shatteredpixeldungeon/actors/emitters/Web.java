@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Web extends Blob {
+public class Web extends Emitter {
 
 	{
 		//acts before the hero, to ensure terrain is adjusted correctly
@@ -65,7 +65,7 @@ public class Web extends Blob {
 	}
 
 	//affects characters as they step on it. See Level.OccupyCell and Level.PressCell
-	public static void affectChar( Char ch ){
+	public static void affectChar( Character ch ){
 		Buff.prolong( ch, Roots.class, Roots.DURATION );
 	}
 	

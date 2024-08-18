@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
@@ -63,7 +63,7 @@ public class Brute extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 	
@@ -124,7 +124,7 @@ public class Brute extends Mob {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			
 			if (target.healthPoints > 0){
 				detach();

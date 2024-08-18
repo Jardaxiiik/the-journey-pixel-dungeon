@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.ui.Component;
 
@@ -79,7 +79,7 @@ public class HealthBar extends Component {
 		layout();
 	}
 
-	public void level(Char c){
+	public void level(Character c){
 		float health = c.healthPoints;
 		float shield = c.shielding();
 		float max = Math.max(health+shield, c.healthMax);

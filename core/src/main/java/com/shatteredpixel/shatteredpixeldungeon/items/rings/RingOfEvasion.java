@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -51,7 +51,7 @@ public class RingOfEvasion extends Ring {
 		return new Evasion();
 	}
 	
-	public static float evasionMultiplier( Char target ){
+	public static float evasionMultiplier( Character target ){
 		return (float) Math.pow( 1.125, getBuffedBonus(target, Evasion.class));
 	}
 

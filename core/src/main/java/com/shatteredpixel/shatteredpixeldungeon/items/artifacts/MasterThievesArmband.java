@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.CounterBuff;
@@ -118,10 +118,10 @@ public class MasterThievesArmband extends Artifact {
 			} else if (!Dungeon.level.adjacent(curUser.pos, target) || Actor.findChar(target) == null){
 				GLog.w( Messages.get(MasterThievesArmband.class, "no_target") );
 			} else {
-				Char ch = Actor.findChar(target);
+				Character ch = Actor.findChar(target);
 				if (ch instanceof Shopkeeper){
 					GLog.w( Messages.get(MasterThievesArmband.class, "steal_shopkeeper") );
-				} else if (ch.alignment != Char.Alignment.ENEMY){
+				} else if (ch.alignment != Character.Alignment.ENEMY){
 					GLog.w( Messages.get(MasterThievesArmband.class, "no_target") );
 				} else if (ch instanceof Mob) {
 					curUser.busy();
@@ -251,7 +251,7 @@ public class MasterThievesArmband extends Artifact {
 	public class Thievery extends ArtifactBuff {
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (cursed && Dungeon.gold > 0 && Random.Int(5) == 0){
 				Dungeon.gold--;
 			}

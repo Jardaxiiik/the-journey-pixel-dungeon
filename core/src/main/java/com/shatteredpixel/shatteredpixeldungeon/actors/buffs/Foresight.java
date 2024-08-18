@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
 public class Foresight extends FlavourBuff {
@@ -41,7 +41,7 @@ public class Foresight extends FlavourBuff {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			//this way we get a nice VFX sweep on initial activation
 			if (target == Dungeon.hero){

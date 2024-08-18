@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
@@ -65,7 +65,7 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (recovering){
 			throwItems();
 			healthPoints = Math.min(healthMax, healthPoints +5);
@@ -79,7 +79,7 @@ public class CrystalGuardian extends Mob{
 			spend(TICK);
 			return true;
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
@@ -88,18 +88,18 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		if (recovering) return 0;
 		else            return super.defenseSkill(enemy);
 	}
 
 	@Override
-	public boolean surprisedBy(Char enemy, boolean attacking) {
+	public boolean surprisedBy(Character enemy, boolean attacking) {
 		if (recovering) return false;
 		else            return super.surprisedBy(enemy, attacking);
 	}
@@ -115,7 +115,7 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		if (recovering){
 			sprite.showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
 			healthPoints = Math.max(1, healthPoints -damage);
@@ -149,7 +149,7 @@ public class CrystalGuardian extends Mob{
 		if (recovering){
 			//while recovering, immune to chars that aren't the hero or spire
 			// this is sort of a hack to prevent allies from attacking downed guardians
-			return super.isInvulnerable(effect) || (Char.class.isAssignableFrom(effect) && !Hero.class.isAssignableFrom(effect) && !CrystalSpire.class.isAssignableFrom(effect));
+			return super.isInvulnerable(effect) || (Character.class.isAssignableFrom(effect) && !Hero.class.isAssignableFrom(effect) && !CrystalSpire.class.isAssignableFrom(effect));
 		}
 		return super.isInvulnerable(effect);
 	}

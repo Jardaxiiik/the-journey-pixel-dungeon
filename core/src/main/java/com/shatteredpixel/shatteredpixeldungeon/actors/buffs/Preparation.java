@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.NPC;
@@ -99,16 +99,16 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 			return blinkRanges[ordinal()][Dungeon.hero.pointsInTalent(Talent.ASSASSINS_REACH)];
 		}
 		
-		public boolean canKO(Char defender){
-			if (defender.properties().contains(Char.Property.MINIBOSS)
-					|| defender.properties().contains(Char.Property.BOSS)){
+		public boolean canKO(Character defender){
+			if (defender.properties().contains(Character.Property.MINIBOSS)
+					|| defender.properties().contains(Character.Property.BOSS)){
 				return (defender.healthPoints /(float)defender.healthMax) < (KOThreshold()/5f);
 			} else {
 				return (defender.healthPoints /(float)defender.healthMax) < KOThreshold();
 			}
 		}
 		
-		public int damageRoll( Char attacker ){
+		public int damageRoll( Character attacker ){
 			int dmg = attacker.damageRoll();
 			for( int i = 1; i < damageRolls; i++){
 				int newDmg = attacker.damageRoll();
@@ -132,7 +132,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	private int turnsInvis = 0;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.invisible > 0){
 			turnsInvis++;
 			if (AttackLevel.getLvl(turnsInvis).blinkDistance() > 0 && target == Dungeon.hero){
@@ -155,11 +155,11 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		return AttackLevel.getLvl(turnsInvis).ordinal()+1;
 	}
 	
-	public int damageRoll( Char attacker ){
+	public int damageRoll( Character attacker ){
 		return AttackLevel.getLvl(turnsInvis).damageRoll(attacker);
 	}
 
-	public boolean canKO( Char defender ){
+	public boolean canKO( Character defender ){
 		return !defender.isInvulnerable(target.getClass()) && AttackLevel.getLvl(turnsInvis).canKO(defender);
 	}
 	
@@ -271,7 +271,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Char enemy = Actor.findChar( cell );
+			final Character enemy = Actor.findChar( cell );
 			if (enemy == null || Dungeon.hero.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell] || enemy == Dungeon.hero){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {

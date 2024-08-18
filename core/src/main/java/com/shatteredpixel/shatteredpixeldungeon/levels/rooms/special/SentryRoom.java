@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Eye;
@@ -228,7 +228,7 @@ public class SentryRoom extends SpecialRoom {
 		private EmptyRoom room;
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 				fieldOfView = new boolean[Dungeon.level.length()];
 			}
@@ -282,7 +282,7 @@ public class SentryRoom extends SpecialRoom {
 				if (!Dungeon.hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
-					GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
+					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", name())));
 				}
 			} else {
 				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.defenseVerb() );
@@ -290,12 +290,12 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			return 20 + Dungeon.depth * 2;
 		}
 
 		@Override
-		public int defenseSkill( Char enemy ) {
+		public int defenseSkill( Character enemy ) {
 			return INFINITE_EVASION;
 		}
 
@@ -315,7 +315,7 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public boolean interact(Char c) {
+		public boolean interact(Character c) {
 			return true;
 		}
 
@@ -374,7 +374,7 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public void link(Char ch) {
+		public void link(Character ch) {
 			super.link(ch);
 
 			chargeParticles = centerEmitter();

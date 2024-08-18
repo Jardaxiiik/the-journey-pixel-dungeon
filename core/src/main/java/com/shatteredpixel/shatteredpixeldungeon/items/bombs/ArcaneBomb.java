@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.GooWarn;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.GooWarn;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -50,7 +50,7 @@ public class ArcaneBomb extends Bomb {
 			PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE)
-					GameScene.add(Blob.seed(i, 3, GooWarn.class));
+					GameScene.add(Emitter.seed(i, 3, GooWarn.class));
 			}
 		}
 	}
@@ -64,7 +64,7 @@ public class ArcaneBomb extends Bomb {
 	public void explode(int cell) {
 		super.explode(cell);
 		
-		ArrayList<Char> affected = new ArrayList<>();
+		ArrayList<Character> affected = new ArrayList<>();
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
@@ -72,14 +72,14 @@ public class ArcaneBomb extends Bomb {
 				if (Dungeon.level.heroFOV[i]) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
-				Char ch = Actor.findChar(i);
+				Character ch = Actor.findChar(i);
 				if (ch != null){
 					affected.add(ch);
 				}
 			}
 		}
 		
-		for (Char ch : affected){
+		for (Character ch : affected){
 			// 100%/83%/67% bomb damage based on distance, but pierces armor.
 			int damage = Math.round(Random.NormalIntRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
 			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.pos));

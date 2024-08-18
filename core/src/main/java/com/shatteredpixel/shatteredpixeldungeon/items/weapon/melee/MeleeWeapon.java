@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -62,7 +62,7 @@ public class MeleeWeapon extends Weapon {
 	public static String AC_ABILITY = "ABILITY";
 
 	@Override
-	public void activate(Char ch) {
+	public void activate(Character ch) {
 		super.activate(ch);
 		if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.DUELIST){
 			Buff.affect(ch, Charger.class);
@@ -195,7 +195,7 @@ public class MeleeWeapon extends Weapon {
 		//do nothing by default
 	}
 
-	protected void beforeAbilityUsed(Hero hero, Char target){
+	protected void beforeAbilityUsed(Hero hero, Character target){
 		hero.belongings.abilityWeapon = this;
 		Charger charger = Buff.affect(hero, Charger.class);
 
@@ -257,18 +257,18 @@ public class MeleeWeapon extends Weapon {
 		}
 	}
 
-	public static void onAbilityKill( Hero hero, Char killed ){
-		if (killed.alignment == Char.Alignment.ENEMY && hero.hasTalent(Talent.LETHAL_HASTE)){
+	public static void onAbilityKill( Hero hero, Character killed ){
+		if (killed.alignment == Character.Alignment.ENEMY && hero.hasTalent(Talent.LETHAL_HASTE)){
 			//effectively 2/3 turns of haste
 			Buff.prolong(hero, Haste.class, 1.67f+hero.pointsInTalent(Talent.LETHAL_HASTE));
 		}
 	}
 
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Character target){
 		return 1; //abilities use 1 charge by default
 	}
 
-	public final float abilityChargeUse(Hero hero, Char target){
+	public final float abilityChargeUse(Hero hero, Character target){
 		float chargeUse = baseChargeUse(hero, target);
 		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
 			chargeUse = Math.max(0, chargeUse-0.5f*hero.pointsInTalent(Talent.COUNTER_ABILITY));
@@ -319,7 +319,7 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	@Override
-	public float accuracyFactor(Char owner, Char target) {
+	public float accuracyFactor(Character owner, Character target) {
 		float ACC = super.accuracyFactor(owner, target);
 
 		if (owner instanceof Hero
@@ -342,7 +342,7 @@ public class MeleeWeapon extends Weapon {
 	}
 
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		int damage = augment.damageFactor(super.damageRoll( owner ));
 
 		if (owner instanceof Hero) {
@@ -463,7 +463,7 @@ public class MeleeWeapon extends Weapon {
 		public float secondPartialCharge;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (charges < chargeCap()){
 				if (Regeneration.regenOn()){
 					partialCharge += 1/(40f-(chargeCap()-charges)); // 40 to 30 turns per charge

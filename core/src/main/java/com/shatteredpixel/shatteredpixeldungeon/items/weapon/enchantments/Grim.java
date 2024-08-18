@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -34,7 +34,7 @@ public class Grim extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage ) {
 
 		if (defender.isImmune(Grim.class)) {
 			return damage;
@@ -47,7 +47,7 @@ public class Grim extends Weapon.Enchantment {
 		maxChance *= procChanceMultiplier(attacker);
 
 		//we defer logic using an actor here so we can know the true final damage
-		//see Char.damage
+		//see Character.damage
 		Buff.affect(defender, GrimTracker.class).maxChance = maxChance;
 
 		if (defender.buff(GrimTracker.class) != null
@@ -74,7 +74,7 @@ public class Grim extends Weapon.Enchantment {
 		public boolean qualifiesForBadge;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}

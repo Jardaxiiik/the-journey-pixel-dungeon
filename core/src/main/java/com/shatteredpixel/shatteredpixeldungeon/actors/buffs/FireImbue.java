@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -63,7 +63,7 @@ public class FireImbue extends Buff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (Dungeon.level.map[target.pos] == Terrain.GRASS) {
 			Dungeon.level.set(target.pos, Terrain.EMBERS);
 			GameScene.updateMap(target.pos);
@@ -78,7 +78,7 @@ public class FireImbue extends Buff {
 		return true;
 	}
 
-	public void proc(Char enemy){
+	public void proc(Character enemy){
 		if (Random.Int(2) == 0)
 			Buff.affect( enemy, Burning.class ).reignite( enemy );
 
@@ -115,7 +115,7 @@ public class FireImbue extends Buff {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			Buff.detach(target, Burning.class);
 			return true;

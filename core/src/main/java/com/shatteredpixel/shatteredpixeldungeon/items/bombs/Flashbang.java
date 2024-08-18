@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -42,7 +42,7 @@ public class Flashbang extends Bomb {
 		super.explode(cell);
 
 		Level l = Dungeon.level;
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch.fieldOfView != null && ch.fieldOfView[cell]){
 				int power = 16 - 4*l.distance(ch.pos, cell);
 				if (power > 0){

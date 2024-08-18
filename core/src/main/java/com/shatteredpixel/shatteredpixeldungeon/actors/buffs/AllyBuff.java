@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
@@ -36,9 +36,9 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 public abstract class AllyBuff extends Buff{
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
-			target.alignment = Char.Alignment.ALLY;
+			target.alignment = Character.Alignment.ALLY;
 			if (target.buff(PinCushion.class) != null){
 				target.buff(PinCushion.class).detach();
 			}
@@ -51,7 +51,7 @@ public abstract class AllyBuff extends Buff{
 	//for when applying an ally buff should also cause that enemy to give exp/loot as if they had died
 	//consider that chars with the ally alignment do not drop items or award exp on death
 	public static void affectAndLoot(Mob enemy, Hero hero, Class<?extends AllyBuff> buffCls){
-		boolean wasEnemy = enemy.alignment == Char.Alignment.ENEMY || enemy instanceof Mimic;
+		boolean wasEnemy = enemy.alignment == Character.Alignment.ENEMY || enemy instanceof Mimic;
 		Buff.affect(enemy, buffCls);
 
 		if (enemy.buff(buffCls) != null && wasEnemy){

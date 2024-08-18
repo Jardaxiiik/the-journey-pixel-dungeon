@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 
@@ -29,9 +29,9 @@ public class CharHealthIndicator extends HealthBar {
 	
 	private static final int HEIGHT = 1;
 	
-	private Char target;
+	private Character target;
 	
-	public CharHealthIndicator( Char c ){
+	public CharHealthIndicator( Character c ){
 		target = c;
 		GameScene.add(this);
 	}
@@ -58,7 +58,7 @@ public class CharHealthIndicator extends HealthBar {
 		}
 	}
 	
-	public void target( Char ch ) {
+	public void target( Character ch ) {
 		if (ch != null && ch.isAlive() && ch.isActive()) {
 			target = ch;
 		} else {
@@ -66,7 +66,7 @@ public class CharHealthIndicator extends HealthBar {
 		}
 	}
 	
-	public Char target() {
+	public Character target() {
 		return target;
 	}
 }

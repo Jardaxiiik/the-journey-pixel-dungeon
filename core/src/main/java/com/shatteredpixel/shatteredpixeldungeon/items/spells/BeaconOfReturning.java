@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -114,15 +114,15 @@ public class BeaconOfReturning extends Spell {
 		
 		if (returnDepth == Dungeon.depth && returnBranch == Dungeon.branch) {
 
-			Char existing = Actor.findChar(returnPos);
+			Character existing = Actor.findChar(returnPos);
 			if (existing != null && existing != hero){
-				Char toPush = !Char.hasProp(existing, Char.Property.IMMOVABLE) ? hero : existing;
+				Character toPush = !Character.hasProp(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = returnPos + n;
 					if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
-							&& (!Char.hasProp(toPush, Char.Property.LARGE) || Dungeon.level.openSpace[cell])) {
+							&& (!Character.hasProp(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 						candidates.add( cell );
 					}
 				}

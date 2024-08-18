@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -51,7 +51,7 @@ public class RingOfHaste extends Ring {
 		return new Haste();
 	}
 	
-	public static float speedMultiplier( Char target ){
+	public static float speedMultiplier( Character target ){
 		return (float)Math.pow(1.2, getBuffedBonus(target, Haste.class));
 	}
 	

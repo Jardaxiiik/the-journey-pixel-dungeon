@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
@@ -241,7 +241,7 @@ public class Item implements Bundlable {
 							Actor.add(new Actor() {
 								{ actPriority = VFX_PRIO; }
 								@Override
-								protected boolean act() {
+								protected boolean playGameTurn() {
 									Dungeon.level.drop(d, Dungeon.hero.pos).sprite.drop();
 									Actor.remove(this);
 									return true;
@@ -604,7 +604,7 @@ public class Item implements Bundlable {
 
 		throwSound();
 
-		Char enemy = Actor.findChar( cell );
+		Character enemy = Actor.findChar( cell );
 		QuickSlotButton.target(enemy);
 		
 		final float delay = castDelay(user, dst);
@@ -655,7 +655,7 @@ public class Item implements Bundlable {
 		}
 	}
 	
-	public float castDelay( Char user, int dst ){
+	public float castDelay(Character user, int dst ){
 		return TIME_TO_THROW;
 	}
 	

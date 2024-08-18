@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
@@ -48,14 +48,14 @@ public class SpectralNecromancer extends Necromancer {
 	private ArrayList<Integer> wraithIDs = new ArrayList<>();
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (summoning && state != HUNTING){
 			summoning = false;
 			if (sprite instanceof SpectralNecromancerSprite) {
 				((SpectralNecromancerSprite) sprite).cancelSummoning();
 			}
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class SpectralNecromancer extends Necromancer {
 		if (Actor.findChar(summoningPos) != null) {
 
 			//cancel if character cannot be moved
-			if (Char.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
+			if (Character.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
 				summoning = false;
 				((SpectralNecromancerSprite)sprite).finishSummoning();
 				spend(TICK);
@@ -126,7 +126,7 @@ public class SpectralNecromancer extends Necromancer {
 
 			//push enemy, or wait a turn if there is no valid pushing position
 			if (pushPos != pos) {
-				Char ch = Actor.findChar(summoningPos);
+				Character ch = Actor.findChar(summoningPos);
 				Actor.add( new Pushing( ch, ch.pos, pushPos ) );
 
 				ch.pos = pushPos;
@@ -134,13 +134,13 @@ public class SpectralNecromancer extends Necromancer {
 
 			} else {
 
-				Char blocker = Actor.findChar(summoningPos);
+				Character blocker = Actor.findChar(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.damage( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
-						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 					}
 				}
 

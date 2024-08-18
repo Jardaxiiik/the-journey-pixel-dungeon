@@ -19,67 +19,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GooSprite;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
-public class GooWarn extends Blob {
-
-	//cosmetic blob, previously used for Goo's pump up attack (that's now handled by Goo's sprite)
-	// but is still used as a visual indicator for Arcane bombs
-
-	{
-		//this one needs to act just before the Goo
-		actPriority = MOB_PRIO + 1;
-	}
-
-	protected int pos;
+public class ToxicGas extends Emitter implements Hero.Doom {
 
 	@Override
 	protected void evolve() {
+		super.evolve();
 
+		int damage = 1 + Dungeon.scalingDepth()/5;
+
+		Character ch;
 		int cell;
 
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
+				if (cur[cell] > 0 && (ch = Actor.findChar( cell )) != null) {
+					if (!ch.isImmune(this.getClass())) {
 
-				if (off[cell] > 0) {
-					volume += off[cell];
+						ch.damage(damage, this);
+					}
 				}
 			}
 		}
-
 	}
-
-	//to prevent multiple arcane bombs from visually stacking their effects
-	public void seed(Level level, int cell, int amount ) {
-		if (cur == null) cur = new int[level.length()];
-		if (off == null) off = new int[cur.length];
-
-		int toAdd = amount - cur[cell];
-		if (toAdd > 0){
-			cur[cell] += toAdd;
-			volume += toAdd;
-		}
-
-		area.union(cell%level.width(), cell/level.width());
-	}
-
+	
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.pour(GooSprite.GooParticle.FACTORY, 0.03f );
-	}
 
+		emitter.pour( Speck.factory( Speck.TOXIC ), 0.4f );
+	}
+	
 	@Override
 	public String tileDesc() {
 		return Messages.get(this, "desc");
 	}
+	
+	@Override
+	public void onDeath() {
+		
+		Badges.validateDeathFromGas();
+		
+		Dungeon.fail( this );
+		GLog.n( Messages.get(this, "ondeath") );
+	}
 }
-

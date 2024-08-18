@@ -144,7 +144,7 @@ public class ScrollOfChallenge extends ExoticScroll {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			if (!arenaPositions.contains(target.pos)){
 				detach();

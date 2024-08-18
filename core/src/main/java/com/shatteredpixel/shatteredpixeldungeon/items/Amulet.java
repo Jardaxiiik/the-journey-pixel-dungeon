@@ -84,7 +84,7 @@ public class Amulet extends Item {
 					}
 
 					@Override
-					protected boolean act() {
+					protected boolean playGameTurn() {
 						Actor.remove(this);
 						showAmuletScene( true );
 						return false;

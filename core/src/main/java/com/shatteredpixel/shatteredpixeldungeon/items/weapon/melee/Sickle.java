@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -54,7 +54,7 @@ public class Sickle extends MeleeWeapon {
 	}
 
 	@Override
-	protected int baseChargeUse(Hero hero, Char target){
+	protected int baseChargeUse(Hero hero, Character target){
 		return 2;
 	}
 
@@ -74,7 +74,7 @@ public class Sickle extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -95,7 +95,7 @@ public class Sickle extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 
 				Buff.affect(enemy, HarvestBleedTracker.class, 0).bleedFactor = bleedFactor;
-				if (hero.attack(enemy, 1.1f, 0, Char.INFINITE_ACCURACY)){
+				if (hero.attack(enemy, 1.1f, 0, Character.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
 

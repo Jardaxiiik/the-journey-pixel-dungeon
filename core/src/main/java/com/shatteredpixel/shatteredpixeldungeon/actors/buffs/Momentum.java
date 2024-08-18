@@ -61,7 +61,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (freerunCooldown > 0){
 			freerunCooldown--;
 		}

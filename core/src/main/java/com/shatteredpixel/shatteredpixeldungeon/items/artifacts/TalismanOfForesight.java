@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -181,8 +181,8 @@ public class TalismanOfForesight extends Artifact {
 						}
 					}
 
-					Char ch = Actor.findChar(cell);
-					if (ch != null && ch.alignment != Char.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
+					Character ch = Actor.findChar(cell);
+					if (ch != null && ch.alignment != Character.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
 						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.id();
 
 						if (!curUser.fieldOfView[ch.pos]){
@@ -261,7 +261,7 @@ public class TalismanOfForesight extends Artifact {
 	public class Foresight extends ArtifactBuff{
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			spend( TICK );
 
 			checkAwareness();

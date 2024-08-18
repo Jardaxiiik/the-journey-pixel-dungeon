@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -41,7 +41,7 @@ public class Albino extends Rat {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (damage > 0 && Random.Int( 2 ) == 0) {
 			Buff.affect( enemy, Bleeding.class ).set( damage );

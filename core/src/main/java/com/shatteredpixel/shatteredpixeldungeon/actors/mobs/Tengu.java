@@ -27,10 +27,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -69,7 +69,6 @@ import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BossHealthBar;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
@@ -105,7 +104,7 @@ public class Tengu extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		if (Dungeon.level.adjacent(pos, target.pos)){
 			return 10;
 		} else {
@@ -168,7 +167,7 @@ public class Tengu extends Mob {
 				}
 
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					Actor.remove(this);
 					((PrisonBossLevel)Dungeon.level).progress();
 					return true;
@@ -194,7 +193,7 @@ public class Tengu extends Mob {
 				}
 
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					Actor.remove(this);
 					jump();
 					return true;
@@ -234,7 +233,7 @@ public class Tengu extends Mob {
 	}
 	
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos;
 	}
 	
@@ -336,7 +335,7 @@ public class Tengu extends Mob {
 			if (healthPoints <= healthMax /2) BossHealthBar.bleed(true);
 			if (healthPoints == healthMax) {
 				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.name()));
-				for (Char ch : Actor.chars()){
+				for (Character ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayBoss();
 					}
@@ -429,7 +428,7 @@ public class Tengu extends Mob {
 	//*****************************************************************************************
 	
 	//so that mobs can also use this
-	private static Char throwingChar;
+	private static Character throwingCharacter;
 	
 	private int lastAbility = -1;
 	private int abilitiesUsed = 0;
@@ -557,7 +556,7 @@ public class Tengu extends Mob {
 	//******************
 	
 	//returns true if bomb was thrown
-	public static boolean throwBomb(final Char thrower, final Char target){
+	public static boolean throwBomb(final Character thrower, final Character target){
 		
 		int targetCell = -1;
 		
@@ -581,7 +580,7 @@ public class Tengu extends Mob {
 		}
 		
 		final int finalTargetCell = targetCell;
-		throwingChar = thrower;
+		throwingCharacter = thrower;
 		final BombAbility.BombItem item = new BombAbility.BombItem();
 		thrower.sprite.zap(finalTargetCell);
 		((MissileSprite) thrower.sprite.parent.recycle(MissileSprite.class)).
@@ -603,10 +602,10 @@ public class Tengu extends Mob {
 		public int bombPos = -1;
 		private int timer = 3;
 
-		private ArrayList<Emitter> smokeEmitters = new ArrayList<>();
+		private ArrayList<com.watabou.noosa.particles.Emitter> smokeEmitters = new ArrayList<>();
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			if (smokeEmitters.isEmpty()){
 				fx(true);
@@ -624,7 +623,7 @@ public class Tengu extends Mob {
 				for (int cell = 0; cell < PathFinder.distance.length; cell++) {
 
 					if (PathFinder.distance[cell] < Integer.MAX_VALUE) {
-						Char ch = Actor.findChar(cell);
+						Character ch = Actor.findChar(cell);
 						if (ch != null && !(ch instanceof Tengu)) {
 							int dmg = Random.NormalIntRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth() * 2);
 							dmg -= ch.drRoll();
@@ -670,13 +669,13 @@ public class Tengu extends Mob {
 				PathFinder.buildDistanceMap( bombPos, BArray.not( Dungeon.level.solid, null ), 2 );
 				for (int i = 0; i < PathFinder.distance.length; i++) {
 					if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-						Emitter e = CellEmitter.get(i);
+						com.watabou.noosa.particles.Emitter e = CellEmitter.get(i);
 						e.pour( SmokeParticle.FACTORY, 0.25f );
 						smokeEmitters.add(e);
 					}
 				}
 			} else if (!on) {
-				for (Emitter e : smokeEmitters){
+				for (com.watabou.noosa.particles.Emitter e : smokeEmitters){
 					e.burst(BlastParticle.FACTORY, 2);
 				}
 			}
@@ -717,17 +716,17 @@ public class Tengu extends Mob {
 			@Override
 			protected void onThrow(int cell) {
 				super.onThrow(cell);
-				if (throwingChar != null){
-					Buff.append(throwingChar, BombAbility.class).bombPos = cell;
-					throwingChar = null;
+				if (throwingCharacter != null){
+					Buff.append(throwingCharacter, BombAbility.class).bombPos = cell;
+					throwingCharacter = null;
 				} else {
 					Buff.append(curUser, BombAbility.class).bombPos = cell;
 				}
 			}
 			
 			@Override
-			public Emitter emitter() {
-				Emitter emitter = new Emitter();
+			public com.watabou.noosa.particles.Emitter emitter() {
+				com.watabou.noosa.particles.Emitter emitter = new com.watabou.noosa.particles.Emitter();
 				emitter.pos(7.5f, 3.5f);
 				emitter.fillTarget = false;
 				emitter.pour(SmokeParticle.SPEW, 0.05f);
@@ -740,7 +739,7 @@ public class Tengu extends Mob {
 	//***Fire Ability***
 	//******************
 	
-	public static boolean throwFire(final Char thrower, final Char target){
+	public static boolean throwFire(final Character thrower, final Character target){
 		
 		Ballistica aim = new Ballistica(thrower.pos, target.pos, Ballistica.WONT_STOP);
 		
@@ -765,7 +764,7 @@ public class Tengu extends Mob {
 		HashSet<Integer> toCells = new HashSet<>();
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			toCells.clear();
 
@@ -776,7 +775,7 @@ public class Tengu extends Mob {
 
 			} else {
 				for (Integer c : curCells) {
-					if (FireBlob.volumeAt(c, FireBlob.class) > 0) spreadFromCell(c);
+					if (FireEmitter.volumeAt(c, FireEmitter.class) > 0) spreadFromCell(c);
 				}
 			}
 			
@@ -790,7 +789,7 @@ public class Tengu extends Mob {
 				curCells = new int[toCells.size()];
 				int i = 0;
 				for (Integer c : toCells){
-					GameScene.add(Blob.seed(c, 2, FireBlob.class));
+					GameScene.add(Emitter.seed(c, 2, FireEmitter.class));
 					curCells[i] = c;
 					i++;
 				}
@@ -837,7 +836,7 @@ public class Tengu extends Mob {
 			if (bundle.contains( CUR_CELLS )) curCells = bundle.getIntArray( CUR_CELLS );
 		}
 		
-		public static class FireBlob extends Blob {
+		public static class FireEmitter extends Emitter {
 			
 			{
 				actPriority = BUFF_PRIO - 1;
@@ -863,7 +862,7 @@ public class Tengu extends Mob {
 						if (cur[cell] > 0 && off[cell] == 0){
 
 							//similar to fire.burn(), but Tengu is immune, and hero loses score
-							Char ch = Actor.findChar( cell );
+							Character ch = Actor.findChar( cell );
 							if (ch != null && !ch.isImmune(Fire.class) && !(ch instanceof Tengu)) {
 								Buff.affect( ch, Burning.class ).reignite( ch );
 							}
@@ -923,7 +922,7 @@ public class Tengu extends Mob {
 	//*********************
 	
 	//returns true if shocker was thrown
-	public static boolean throwShocker(final Char thrower, final Char target){
+	public static boolean throwShocker(final Character thrower, final Character target){
 		
 		int targetCell = -1;
 		
@@ -949,7 +948,7 @@ public class Tengu extends Mob {
 		}
 		
 		final int finalTargetCell = targetCell;
-		throwingChar = thrower;
+		throwingCharacter = thrower;
 		final ShockerAbility.ShockerItem item = new ShockerAbility.ShockerItem();
 		thrower.sprite.zap(finalTargetCell);
 		((MissileSprite) thrower.sprite.parent.recycle(MissileSprite.class)).
@@ -972,7 +971,7 @@ public class Tengu extends Mob {
 		private Boolean shockingOrdinals = null;
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			
 			if (shockingOrdinals == null){
 				shockingOrdinals = Random.Int(2) == 1;
@@ -1007,10 +1006,10 @@ public class Tengu extends Mob {
 		}
 		
 		private void spreadblob(){
-			GameScene.add(Blob.seed(shockerPos, 1, ShockerBlob.class));
+			GameScene.add(Emitter.seed(shockerPos, 1, ShockerEmitter.class));
 			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i += 2){
 				if (!Dungeon.level.solid[shockerPos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]]) {
-					GameScene.add(Blob.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerBlob.class));
+					GameScene.add(Emitter.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerEmitter.class));
 				}
 			}
 		}
@@ -1032,7 +1031,7 @@ public class Tengu extends Mob {
 			if (bundle.contains(SHOCKING_ORDINALS)) shockingOrdinals = bundle.getBoolean( SHOCKING_ORDINALS );
 		}
 		
-		public static class ShockerBlob extends Blob {
+		public static class ShockerEmitter extends Emitter {
 			
 			{
 				actPriority = BUFF_PRIO - 1;
@@ -1058,7 +1057,7 @@ public class Tengu extends Mob {
 
 							shocked = true;
 							
-							Char ch = Actor.findChar(cell);
+							Character ch = Actor.findChar(cell);
 							if (ch != null && !(ch instanceof Tengu)){
 								ch.damage(2 + Dungeon.scalingDepth(), new Electricity());
 								
@@ -1111,17 +1110,17 @@ public class Tengu extends Mob {
 			@Override
 			protected void onThrow(int cell) {
 				super.onThrow(cell);
-				if (throwingChar != null){
-					Buff.append(throwingChar, ShockerAbility.class).shockerPos = cell;
-					throwingChar = null;
+				if (throwingCharacter != null){
+					Buff.append(throwingCharacter, ShockerAbility.class).shockerPos = cell;
+					throwingCharacter = null;
 				} else {
 					Buff.append(curUser, ShockerAbility.class).shockerPos = cell;
 				}
 			}
 			
 			@Override
-			public Emitter emitter() {
-				Emitter emitter = new Emitter();
+			public com.watabou.noosa.particles.Emitter emitter() {
+				com.watabou.noosa.particles.Emitter emitter = new com.watabou.noosa.particles.Emitter();
 				emitter.pos(5, 5);
 				emitter.fillTarget = false;
 				emitter.pour(SparkParticle.FACTORY, 0.1f);

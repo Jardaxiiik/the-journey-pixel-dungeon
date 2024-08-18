@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -96,8 +96,8 @@ public class HeroicLeap extends ArmorAbility {
 					GameScene.updateFog();
 
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
-						Char mob = Actor.findChar(hero.pos + i);
-						if (mob != null && mob != hero && mob.alignment != Char.Alignment.ALLY) {
+						Character mob = Actor.findChar(hero.pos + i);
+						if (mob != null && mob != hero && mob.alignment != Character.Alignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
 								int damage = Random.NormalIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
 								damage += Math.round(hero.drRoll()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));

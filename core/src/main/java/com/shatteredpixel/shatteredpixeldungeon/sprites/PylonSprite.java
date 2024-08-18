@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Pylon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.watabou.noosa.TextureFilm;
@@ -59,9 +59,9 @@ public class PylonSprite extends MobSprite {
 	}
 
 	@Override
-	public void link(Char ch) {
+	public void link(Character ch) {
 		super.link(ch);
-		if (ch instanceof Pylon && ch.alignment == Char.Alignment.ENEMY){
+		if (ch instanceof Pylon && ch.alignment == Character.Alignment.ENEMY){
 			activate();
 		}
 		renderShadow = false;

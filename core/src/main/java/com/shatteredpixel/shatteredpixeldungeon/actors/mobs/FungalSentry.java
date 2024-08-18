@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -73,7 +73,7 @@ public class FungalSentry extends Mob {
 
 	@Override
 	//TODO attack is a little permissive atm?
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return super.canAttack(enemy)
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
@@ -81,13 +81,13 @@ public class FungalSentry extends Mob {
 	//TODO if we want to allow them to be literally killed, probably should give them a heal if hero is out of FOV, or similar
 
 	@Override
-	public int attackProc(Char enemy, int damage) {
+	public int attackProc(Character enemy, int damage) {
 		Buff.affect(enemy, Poison.class).extend(6);
 		return super.attackProc(enemy, damage);
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 50;
 	}
 

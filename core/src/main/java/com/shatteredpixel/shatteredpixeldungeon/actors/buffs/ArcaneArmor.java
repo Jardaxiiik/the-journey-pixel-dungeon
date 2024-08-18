@@ -38,7 +38,7 @@ public class ArcaneArmor extends Buff {
 	private int interval = 1;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
 			spend( interval );

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 
@@ -30,7 +30,7 @@ public class Bulk extends Armor.Glyph {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	
 	@Override
-	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 		
 		//no proc effect, see armor.speedfactor
 		return damage;

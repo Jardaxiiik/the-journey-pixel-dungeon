@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -33,7 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Fire extends Blob {
+public class Fire extends Emitter {
 
 	@Override
 	protected void evolve() {
@@ -97,7 +97,7 @@ public class Fire extends Blob {
 	}
 	
 	public static void burn( int pos ) {
-		Char ch = Actor.findChar( pos );
+		Character ch = Actor.findChar( pos );
 		if (ch != null && !ch.isImmune(Fire.class)) {
 			Buff.affect( ch, Burning.class ).reignite( ch );
 		}

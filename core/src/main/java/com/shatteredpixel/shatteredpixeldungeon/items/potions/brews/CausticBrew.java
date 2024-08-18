@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -53,7 +53,7 @@ public class CausticBrew extends Brew {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				Splash.at( i, 0x000000, 5);
-				Char ch = Actor.findChar(i);
+				Character ch = Actor.findChar(i);
 				
 				if (ch != null){
 					Buff.affect(ch, Ooze.class).set( Ooze.DURATION );

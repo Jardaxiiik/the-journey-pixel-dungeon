@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Camera;
@@ -46,7 +46,7 @@ public class Pushing extends Actor {
 		actPriority = VFX_PRIO+10;
 	}
 	
-	public Pushing( Char ch, int from, int to ) {
+	public Pushing(Character ch, int from, int to ) {
 		sprite = ch.sprite;
 		this.from = from;
 		this.to = to;
@@ -57,13 +57,13 @@ public class Pushing extends Actor {
 		}
 	}
 
-	public Pushing( Char ch, int from, int to, Callback callback ) {
+	public Pushing(Character ch, int from, int to, Callback callback ) {
 		this(ch, from, to);
 		this.callback = callback;
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		Actor.remove( Pushing.this );
 
 		if (sprite != null && sprite.parent != null) {

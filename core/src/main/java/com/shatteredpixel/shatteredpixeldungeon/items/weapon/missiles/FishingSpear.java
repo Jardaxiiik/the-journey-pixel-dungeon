@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -37,7 +37,7 @@ public class FishingSpear extends MissileWeapon {
 	}
 	
 	@Override
-	public int proc(Char attacker, Char defender, int damage) {
+	public int proc(Character attacker, Character defender, int damage) {
 		if (defender instanceof Piranha){
 			damage = Math.max(damage, defender.healthPoints /2);
 		}

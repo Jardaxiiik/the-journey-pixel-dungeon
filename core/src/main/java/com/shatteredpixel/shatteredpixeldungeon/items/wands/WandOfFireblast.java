@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -80,7 +80,7 @@ public class WandOfFireblast extends DamageWand {
 	@Override
 	public void onZap(Ballistica bolt) {
 
-		ArrayList<Char> affectedChars = new ArrayList<>();
+		ArrayList<Character> affectedCharacters = new ArrayList<>();
 		ArrayList<Integer> adjacentCells = new ArrayList<>();
 		for( int cell : cone.cells ){
 
@@ -104,12 +104,12 @@ public class WandOfFireblast extends DamageWand {
 					Dungeon.level.heaps.get(cell).burn();
 				}
 			} else {
-				GameScene.add( Blob.seed( cell, 1+chargesPerCast(), Fire.class ) );
+				GameScene.add( Emitter.seed( cell, 1+chargesPerCast(), Fire.class ) );
 			}
 
-			Char ch = Actor.findChar( cell );
+			Character ch = Actor.findChar( cell );
 			if (ch != null) {
-				affectedChars.add(ch);
+				affectedCharacters.add(ch);
 			}
 		}
 
@@ -125,12 +125,12 @@ public class WandOfFireblast extends DamageWand {
 				if (Dungeon.level.trueDistance(cell+i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
 						&& Dungeon.level.flamable[cell+i]
 						&& Fire.volumeAt(cell+i, Fire.class) == 0){
-					GameScene.add( Blob.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
+					GameScene.add( Emitter.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
 				}
 			}
 		}
 
-		for ( Char ch : affectedChars ){
+		for ( Character ch : affectedCharacters){
 			wandProc(ch, chargesPerCast());
 			ch.damage(damageRoll(), this);
 			if (ch.isAlive()) {
@@ -150,14 +150,14 @@ public class WandOfFireblast extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//acts like blazing enchantment
 		new FireBlastOnHit().proc( staff, attacker, defender, damage);
 	}
 
 	private static class FireBlastOnHit extends Blazing {
 		@Override
-		protected float procChanceMultiplier(Char attacker) {
+		protected float procChanceMultiplier(Character attacker) {
 			return Wand.procChanceMultiplier(attacker);
 		}
 	}

@@ -189,7 +189,7 @@ public class UnstableSpellbook extends Artifact {
 		public Scroll scroll;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			curUser = Dungeon.hero;
 			curItem = scroll;
 			scroll.anonymize();
@@ -288,7 +288,7 @@ public class UnstableSpellbook extends Artifact {
 
 	public class bookRecharge extends ArtifactBuff{
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (charge < chargeCap
 					&& !cursed
 					&& target.buff(MagicImmune.class) == null

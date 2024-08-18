@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -42,7 +42,7 @@ public class Invisibility extends FlavourBuff {
 	}
 	
 	@Override
-	public boolean attachTo( Char target ) {
+	public boolean attachTo( Character target ) {
 		if (super.attachTo( target )) {
 			target.invisible++;
 			if (target instanceof Hero && ((Hero) target).subClass == HeroSubClass.ASSASSIN){
@@ -86,7 +86,7 @@ public class Invisibility extends FlavourBuff {
 		dispel(Dungeon.hero);
 	}
 
-	public static void dispel(Char ch){
+	public static void dispel(Character ch){
 
 		for ( Buff invis : ch.buffs( Invisibility.class )){
 			invis.detach();

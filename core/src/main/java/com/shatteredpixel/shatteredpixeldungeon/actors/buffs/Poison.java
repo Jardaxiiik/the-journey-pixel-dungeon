@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PoisonParticle;
@@ -85,7 +85,7 @@ public class Poison extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target) && target.sprite != null){
 			CellEmitter.center(target.pos).burst( PoisonParticle.SPLASH, 5 );
 			return true;
@@ -94,7 +94,7 @@ public class Poison extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
 			target.damage( (int)(left / 3) + 1, this );

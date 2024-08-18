@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -57,7 +57,7 @@ public class Rapier extends MeleeWeapon {
 	}
 
 	@Override
-	public int defenseFactor( Char owner ) {
+	public int defenseFactor( Character owner ) {
 		return 1;	//1 extra defence
 	}
 
@@ -78,7 +78,7 @@ public class Rapier extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		//duelist can lunge out of her FOV, but this wastes the ability instead of cancelling if there is no target
 		if (Dungeon.level.heroFOV[target]) {
 			if (enemy == null || enemy == hero || hero.isCharmedBy(enemy)) {
@@ -132,7 +132,7 @@ public class Rapier extends MeleeWeapon {
 
 							wep.beforeAbilityUsed(hero, enemy);
 							AttackIndicator.target(enemy);
-							if (hero.attack(enemy, dmgMulti, dmgBoost, Char.INFINITE_ACCURACY)) {
+							if (hero.attack(enemy, dmgMulti, dmgBoost, Character.INFINITE_ACCURACY)) {
 								Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								if (!enemy.isAlive()) {
 									wep.onAbilityKill(hero, enemy);

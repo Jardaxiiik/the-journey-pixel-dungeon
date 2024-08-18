@@ -162,7 +162,7 @@ public class Chasm implements Hero.Doom {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			heroLand();
 			detach();
 			return true;

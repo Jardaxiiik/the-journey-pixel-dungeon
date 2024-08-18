@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
@@ -64,7 +64,7 @@ public abstract class ArmorAbility implements Bundlable {
 		return targetingPrompt() != null;
 	}
 
-	public int targetedPos( Char user, int dst ){
+	public int targetedPos(Character user, int dst ){
 		return new Ballistica( user.pos, dst, Ballistica.PROJECTILE ).collisionPos;
 	}
 

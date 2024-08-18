@@ -77,7 +77,7 @@ public class Ooze extends Buff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			if (Dungeon.scalingDepth() > 5) {
 				target.damage(1 + Dungeon.scalingDepth() / 5, this);

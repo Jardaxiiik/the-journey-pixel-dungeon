@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -95,7 +95,7 @@ public class GnollGeomancer extends Mob {
 	private int[] sapperSpawns = null;
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (sapperSpawns == null){
 			sapperSpawns = new int[3];
 			int i = 0;
@@ -123,7 +123,7 @@ public class GnollGeomancer extends Mob {
 			spend(TICK);
 			return !attacked;
 		} else {
-			return super.act();
+			return super.playGameTurn();
 		}
 
 	}
@@ -141,7 +141,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 
@@ -178,7 +178,7 @@ public class GnollGeomancer extends Mob {
 	int hits = 0;
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		if (c != Dungeon.hero || buff(RockArmor.class) == null) {
 			return super.interact(c);
 		} else {
@@ -619,7 +619,7 @@ public class GnollGeomancer extends Mob {
 
 	//*** These methods are public static as their logic is also accessed by gnoll sappers ***
 
-	public static Ballistica prepRockThrowAttack( Char target, Char source ){
+	public static Ballistica prepRockThrowAttack(Character target, Character source ){
 		ArrayList<Integer> candidateRocks = new ArrayList<>();
 
 		for (int i = 0; i < Dungeon.level.length(); i++){
@@ -631,7 +631,7 @@ public class GnollGeomancer extends Mob {
 		}
 
 		//ignore rocks already being thrown
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof GnollGeomancer && ((GnollGeomancer) ch).throwingRocksFromPos != null){
 				for (int i : ((GnollGeomancer) ch).throwingRocksFromPos){
 					candidateRocks.remove((Integer)i);
@@ -660,9 +660,9 @@ public class GnollGeomancer extends Mob {
 	}
 
 	private static int rocksInFlight = 0;
-	private static ArrayList<Char> knockedChars = new ArrayList<>();
+	private static ArrayList<Character> knockedCharacters = new ArrayList<>();
 
-	public static void doRockThrowAttack( Char source, int from, int to ){
+	public static void doRockThrowAttack(Character source, int from, int to ){
 
 		Level.set(from, Terrain.EMPTY);
 		GameScene.updateMap(from);
@@ -684,7 +684,7 @@ public class GnollGeomancer extends Mob {
 						Splash.at(rockPath.collisionPos, 0x555555, 15);
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
-						Char ch = Actor.findChar(rockPath.collisionPos);
+						Character ch = Actor.findChar(rockPath.collisionPos);
 						if (ch == Dungeon.hero){
 							PixelScene.shake( 3, 0.7f );
 						} else {
@@ -702,10 +702,10 @@ public class GnollGeomancer extends Mob {
 								GLog.n( Messages.get( GnollGeomancer.class, "rock_kill") );
 							}
 
-							if (!knockedChars.contains(ch) && rockPath.path.size() > rockPath.dist+1) {
+							if (!knockedCharacters.contains(ch) && rockPath.path.size() > rockPath.dist+1) {
 								Ballistica trajectory = new Ballistica(ch.pos, rockPath.path.get(rockPath.dist + 1), Ballistica.MAGIC_BOLT);
 								WandOfBlastWave.throwChar(ch, trajectory, 1, false, false, source);
-								knockedChars.add(ch);
+								knockedCharacters.add(ch);
 							}
 						} else if (ch == null) {
 							Dungeon.level.pressCell(rockPath.collisionPos);
@@ -715,7 +715,7 @@ public class GnollGeomancer extends Mob {
 						if (rocksInFlight <= 0) {
 							rocksInFlight = 0;
 							source.next();
-							knockedChars.clear();
+							knockedCharacters.clear();
 						}
 					}
 				} );
@@ -729,7 +729,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	//similar overall logic as DM-300's rock fall attack, but with more parameters
-	public static boolean prepRockFallAttack( Char target, Char source, int range, boolean avoidBarricades ){
+	public static boolean prepRockFallAttack(Character target, Character source, int range, boolean avoidBarricades ){
 		final int rockCenter = target.pos;
 
 		int safeCell;
@@ -794,7 +794,7 @@ public class GnollGeomancer extends Mob {
 	public static class GnollRockFall extends DelayedRockFall{
 
 		@Override
-		public void affectChar(Char ch) {
+		public void affectChar(Character ch) {
 			ch.damage(Random.NormalIntRange(6, 12), this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);

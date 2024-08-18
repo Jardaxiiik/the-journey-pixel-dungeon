@@ -37,7 +37,7 @@ public class Regeneration extends Buff {
 	private static final float REGENERATION_DELAY = 10;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 
 			if (target.healthPoints < regencap() && !((Hero)target).isStarving()) {

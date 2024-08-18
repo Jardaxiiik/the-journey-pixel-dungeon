@@ -33,8 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -130,7 +130,6 @@ import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
@@ -328,9 +327,9 @@ public class GameScene extends PixelScene {
 		gases = new Group();
 		add( gases );
 
-		for (Blob blob : Dungeon.level.blobs.values()) {
-			blob.emitter = null;
-			addBlobSprite( blob );
+		for (Emitter emitter : Dungeon.level.blobs.values()) {
+			emitter.emitter = null;
+			addBlobSprite(emitter);
 		}
 
 
@@ -479,7 +478,7 @@ public class GameScene extends PixelScene {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 				
-				for (Char ch : Actor.chars()){
+				for (Character ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayAppeared();
 					}
@@ -619,7 +618,7 @@ public class GameScene extends PixelScene {
 			throw new RuntimeException("timeout waiting for actor thread! ", t);
 		}
 
-		Emitter.freezeEmitters = false;
+		com.watabou.noosa.particles.Emitter.freezeEmitters = false;
 		
 		scene = null;
 		Badges.saveGlobal();
@@ -694,7 +693,7 @@ public class GameScene extends PixelScene {
 
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
-		if (!Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
+		if (!com.watabou.noosa.particles.Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
 		if (!Actor.processing() && Dungeon.hero.isAlive()) {
 			if (actorThread == null || !actorThread.isAlive()) {
@@ -885,7 +884,7 @@ public class GameScene extends PixelScene {
 
 	}
 	
-	private void addBlobSprite( final Blob gas ) {
+	private void addBlobSprite( final Emitter gas ) {
 		if (gas.emitter == null) {
 			gases.add( new BlobEmitter( gas ) );
 		}
@@ -973,7 +972,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 	
-	public static void add( Blob gas ) {
+	public static void add( Emitter gas ) {
 		Actor.add( gas );
 		if (scene != null) {
 			scene.addBlobSprite( gas );
@@ -1051,9 +1050,9 @@ public class GameScene extends PixelScene {
 		return (SpellSprite)scene.spells.recycle( SpellSprite.class );
 	}
 	
-	public static synchronized Emitter emitter() {
+	public static synchronized com.watabou.noosa.particles.Emitter emitter() {
 		if (scene != null) {
-			Emitter emitter = (Emitter)scene.emitters.recycle( Emitter.class );
+			com.watabou.noosa.particles.Emitter emitter = (com.watabou.noosa.particles.Emitter)scene.emitters.recycle( com.watabou.noosa.particles.Emitter.class );
 			emitter.revive();
 			return emitter;
 		} else {
@@ -1061,9 +1060,9 @@ public class GameScene extends PixelScene {
 		}
 	}
 
-	public static synchronized Emitter floorEmitter() {
+	public static synchronized com.watabou.noosa.particles.Emitter floorEmitter() {
 		if (scene != null) {
-			Emitter emitter = (Emitter)scene.floorEmitters.recycle( Emitter.class );
+			com.watabou.noosa.particles.Emitter emitter = (com.watabou.noosa.particles.Emitter)scene.floorEmitters.recycle( com.watabou.noosa.particles.Emitter.class );
 			emitter.revive();
 			return emitter;
 		} else {
@@ -1532,7 +1531,7 @@ public class GameScene extends PixelScene {
 	private static final CellSelector.Listener defaultCellListener = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer cell ) {
-			if (Dungeon.hero.handle( cell )) {
+			if (Dungeon.hero.chooseHeroActionBasedOnTile( cell )) {
 				Dungeon.hero.next();
 			}
 		}
@@ -1581,7 +1580,7 @@ public class GameScene extends PixelScene {
 			} else if (objects.get(0) instanceof Hero) {
 				textLines.add(0, Messages.get(GameScene.class, "go_here"));
 			} else if (objects.get(0) instanceof Mob) {
-				if (((Mob) objects.get(0)).alignment != Char.Alignment.ENEMY) {
+				if (((Mob) objects.get(0)).alignment != Character.Alignment.ENEMY) {
 					textLines.add(0, Messages.get(GameScene.class, "interact"));
 				} else {
 					textLines.add(0, Messages.get(GameScene.class, "attack"));

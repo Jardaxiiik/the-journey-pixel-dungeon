@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -53,7 +53,7 @@ public class HeavyBoomerang extends MissileWeapon {
 	boolean circleBackhit = false;
 
 	@Override
-	protected float adjacentAccFactor(Char owner, Char target) {
+	protected float adjacentAccFactor(Character owner, Character target) {
 		if (circleBackhit){
 			circleBackhit = false;
 			return 1.5f;
@@ -62,7 +62,7 @@ public class HeavyBoomerang extends MissileWeapon {
 	}
 
 	@Override
-	protected void rangedHit(Char enemy, int cell) {
+	protected void rangedHit(Character enemy, int cell) {
 		decrementDurability();
 		if (durability > 0){
 			Buff.append(Dungeon.hero, CircleBack.class).setup(this, cell, Dungeon.hero.pos, Dungeon.depth);
@@ -110,12 +110,12 @@ public class HeavyBoomerang extends MissileWeapon {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (returnDepth == Dungeon.depth){
 				left--;
 				if (left <= 0){
-					final Char returnTarget = Actor.findChar(returnPos);
-					final Char target = this.target;
+					final Character returnTarget = Actor.findChar(returnPos);
+					final Character target = this.target;
 					MissileSprite visual = ((MissileSprite) Dungeon.hero.sprite.parent.recycle(MissileSprite.class));
 					visual.reset( thrownPos,
 									returnPos,

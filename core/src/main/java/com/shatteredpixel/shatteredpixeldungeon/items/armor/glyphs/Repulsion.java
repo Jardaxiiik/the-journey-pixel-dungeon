@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -34,7 +34,7 @@ public class Repulsion extends Armor.Glyph {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF );
 	
 	@Override
-	public int proc( Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 
 		int level = Math.max( 0, armor.buffedLvl() );
 

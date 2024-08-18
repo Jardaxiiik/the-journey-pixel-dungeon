@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
 
@@ -37,7 +37,7 @@ public class ConfusionTrap extends Trap {
 	@Override
 	public void activate() {
 
-		GameScene.add(Blob.seed(pos, 300 + 20 * scalingDepth(), ConfusionGas.class));
+		GameScene.add(Emitter.seed(pos, 300 + 20 * scalingDepth(), ConfusionGas.class));
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 	}

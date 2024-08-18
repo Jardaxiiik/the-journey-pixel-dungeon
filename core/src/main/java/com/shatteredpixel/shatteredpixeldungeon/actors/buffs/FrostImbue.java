@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
@@ -35,7 +35,7 @@ public class FrostImbue extends FlavourBuff {
 	
 	public static final float DURATION	= 50f;
 	
-	public void proc(Char enemy){
+	public void proc(Character enemy){
 		Buff.affect(enemy, Chill.class, 2f);
 		enemy.sprite.emitter().burst( SnowParticle.FACTORY, 2 );
 	}
@@ -61,7 +61,7 @@ public class FrostImbue extends FlavourBuff {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			Buff.detach(target, Frost.class);
 			Buff.detach(target, Chill.class);

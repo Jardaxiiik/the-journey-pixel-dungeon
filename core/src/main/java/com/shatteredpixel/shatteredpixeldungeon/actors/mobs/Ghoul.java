@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.SacrificialFire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
@@ -69,7 +69,7 @@ public class Ghoul extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 24;
 	}
 
@@ -104,7 +104,7 @@ public class Ghoul extends Mob {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		//create a child
 		if (partnerID == -1){
 			
@@ -114,7 +114,7 @@ public class Ghoul extends Mob {
 			for (int n : neighbours) {
 				if (Dungeon.level.passable[n]
 						&& Actor.findChar( n ) == null
-						&& (!Char.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[n])) {
+						&& (!Character.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[n])) {
 					candidates.add( n );
 				}
 			}
@@ -143,7 +143,7 @@ public class Ghoul extends Mob {
 			}
 			
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	private boolean beingLifeLinked = false;
@@ -239,7 +239,7 @@ public class Ghoul extends Mob {
 		private int turnsToRevive;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.alignment != ghoul.alignment){
 				detach();
 				return true;
@@ -273,7 +273,7 @@ public class Ghoul extends Mob {
 						int cell = ghoul.pos + n;
 						if (Dungeon.level.passable[cell]
 								&& Actor.findChar( cell ) == null
-								&& (!Char.hasProp(ghoul, Property.LARGE) || Dungeon.level.openSpace[cell])) {
+								&& (!Character.hasProp(ghoul, Property.LARGE) || Dungeon.level.openSpace[cell])) {
 							candidates.add( cell );
 						}
 					}
@@ -355,7 +355,7 @@ public class Ghoul extends Mob {
 
 		public static Ghoul searchForHost(Ghoul dieing){
 
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				//don't count hero ally ghouls or duel frozen ghouls
 				if (ch != dieing && ch instanceof Ghoul
 						&& ch.alignment == dieing.alignment

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.utils.GameMath;
@@ -31,7 +31,7 @@ public class Stone extends Armor.Glyph {
 	private static ItemSprite.Glowing GREY = new ItemSprite.Glowing( 0x222222 );
 
 	@Override
-	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 		
 		testing = true;
 		float evasion = defender.defenseSkill(attacker);

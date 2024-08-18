@@ -21,20 +21,20 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blizzard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Inferno;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StenchGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Blizzard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Inferno;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.SmokeScreen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StenchGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -75,7 +75,7 @@ public class BlobImmunity extends FlavourBuff {
 		immunities.add( ToxicGas.class );
 		immunities.add( Web.class );
 
-		immunities.add(Tengu.FireAbility.FireBlob.class);
+		immunities.add(Tengu.FireAbility.FireEmitter.class);
 	}
 
 }

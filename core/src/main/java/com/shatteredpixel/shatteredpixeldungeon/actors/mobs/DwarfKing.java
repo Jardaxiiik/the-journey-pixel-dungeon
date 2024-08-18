@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
@@ -93,7 +93,7 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 26;
 	}
 
@@ -148,7 +148,7 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (pos == CityBossLevel.throne){
 			throwItems();
 		}
@@ -294,7 +294,7 @@ public class DwarfKing extends Mob {
 			if (summonSubject(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 3)) summonsMade++;
 		}
 
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	private boolean summonSubject( int delay ){
@@ -431,7 +431,7 @@ public class DwarfKing extends Mob {
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
 			yell(Messages.get(this, "notice"));
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -589,9 +589,9 @@ public class DwarfKing extends Mob {
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			partnerID = -2; //no partners
-			return super.act();
+			return super.playGameTurn();
 		}
 	}
 
@@ -637,7 +637,7 @@ public class DwarfKing extends Mob {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			delay--;
 
 			if (delay <= 0){
@@ -685,7 +685,7 @@ public class DwarfKing extends Mob {
 						Buff.affect(m, KingDamager.class);
 					}
 				} else {
-					Char ch = Actor.findChar(pos);
+					Character ch = Actor.findChar(pos);
 					ch.damage(Random.NormalIntRange(20, 40), this);
 					if (((DwarfKing)target).phase == 2){
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
@@ -696,7 +696,7 @@ public class DwarfKing extends Mob {
 					}
 					if (!ch.isAlive() && ch == Dungeon.hero) {
 						Dungeon.fail(DwarfKing.class);
-						GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", Messages.get(DwarfKing.class, "name"))));
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", Messages.get(DwarfKing.class, "name"))));
 					}
 				}
 
@@ -751,7 +751,7 @@ public class DwarfKing extends Mob {
 	public static class KingDamager extends Buff {
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.alignment != Alignment.ENEMY){
 				detach();
 			}
@@ -774,9 +774,9 @@ public class DwarfKing extends Mob {
 	public static class DKBarrior extends Barrier{
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			incShield();
-			return super.act();
+			return super.playGameTurn();
 		}
 
 		@Override

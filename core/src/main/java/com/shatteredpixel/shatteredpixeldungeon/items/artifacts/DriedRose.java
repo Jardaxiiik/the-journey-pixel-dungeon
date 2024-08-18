@@ -25,8 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -379,7 +379,7 @@ public class DriedRose extends Artifact {
 	public class roseRecharge extends ArtifactBuff {
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			
 			spend( TICK );
 			
@@ -558,7 +558,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		public void targetChar(Char ch) {
+		public void targetChar(Character ch) {
 			yell(Messages.get(this, "directed_attack_" + Random.IntRange(1, 5)));
 			super.targetChar(ch);
 		}
@@ -575,7 +575,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			updateRose();
 			if (rose == null
 					|| !rose.isEquipped(Dungeon.hero)
@@ -586,13 +586,13 @@ public class DriedRose extends Artifact {
 			if (!isAlive()) {
 				return true;
 			}
-			return super.act();
+			return super.playGameTurn();
 		}
 
 		public static class NoRoseDamage{}
 
 		@Override
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			
 			//same accuracy as the hero.
 			int acc = Dungeon.hero.lvl + 9;
@@ -614,7 +614,7 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		protected boolean canAttack(Char enemy) {
+		protected boolean canAttack(Character enemy) {
 			return super.canAttack(enemy) || (rose != null && rose.weapon != null && rose.weapon.canReach(this, enemy.pos));
 		}
 		
@@ -631,20 +631,20 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int attackProc(Char enemy, int damage) {
+		public int attackProc(Character enemy, int damage) {
 			damage = super.attackProc(enemy, damage);
 			if (rose != null && rose.weapon != null) {
 				damage = rose.weapon.proc( this, enemy, damage );
 				if (!enemy.isAlive() && enemy == Dungeon.hero){
 					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 				}
 			}
 			return damage;
 		}
 		
 		@Override
-		public int defenseProc(Char enemy, int damage) {
+		public int defenseProc(Character enemy, int damage) {
 			if (rose != null && rose.armor != null) {
 				damage = rose.armor.proc( enemy, this, damage );
 			}
@@ -685,7 +685,7 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int defenseSkill(Char enemy) {
+		public int defenseSkill(Character enemy) {
 			int defense = super.defenseSkill(enemy);
 
 			if (defense != 0 && rose != null && rose.armor != null ){
@@ -739,7 +739,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		public boolean interact(Char c) {
+		public boolean interact(Character c) {
 			updateRose();
 			if (c == Dungeon.hero && rose != null && !rose.talkedTo){
 				rose.talkedTo = true;

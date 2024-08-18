@@ -72,7 +72,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			
 			if (!target.flying && Dungeon.level.water[target.pos] && target.healthPoints < target.healthMax){
 				float healAmt = GameMath.gate( 1, target.healthMax /50f, left );

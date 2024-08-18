@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.mage;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -191,7 +191,7 @@ public class WildMagic extends ArmorAbility {
 			wildMagicActor = null;
 		}
 
-		Char ch = Actor.findChar(target);
+		Character ch = Actor.findChar(target);
 		if (!wands.isEmpty() && hero.isAlive()) {
 			Actor.add(new Actor() {
 				{
@@ -199,7 +199,7 @@ public class WildMagic extends ArmorAbility {
 				}
 
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					wildMagicActor = this;
 					zapWand(wands, hero, ch == null ? target : ch.pos);
 					Actor.remove(this);

@@ -25,11 +25,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -88,7 +88,7 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (paralysed <= 0 && rangedCooldown > 0) rangedCooldown--;
 
 		if (Dungeon.hero.invisible <= 0 && state == WANDERING){
@@ -97,11 +97,11 @@ public abstract class YogFist extends Mob {
 			enemy = Dungeon.hero;
 		}
 
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
-	protected boolean canAttack(Char enemy) {
+	protected boolean canAttack(Character enemy) {
 		if (rangedCooldown <= 0){
 			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 		} else {
@@ -126,7 +126,7 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 
 		if (Dungeon.level.adjacent( pos, enemy.pos ) && (!canRangedInMelee || rangedCooldown > 0)) {
 
@@ -166,7 +166,7 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 36;
 	}
 
@@ -212,9 +212,9 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
-			boolean result = super.act();
+			boolean result = super.playGameTurn();
 
 			if (Dungeon.level.map[pos] == Terrain.WATER){
 				Level.set( pos, Terrain.EMPTY);
@@ -237,7 +237,7 @@ public abstract class YogFist extends Mob {
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 				int vol = Fire.volumeAt(pos+i, Fire.class);
 				if (vol < 4 && !Dungeon.level.water[pos + i] && !Dungeon.level.solid[pos + i]){
-					GameScene.add( Blob.seed( pos + i, 4 - vol, Fire.class ) );
+					GameScene.add( Emitter.seed( pos + i, 4 - vol, Fire.class ) );
 				}
 			}
 
@@ -260,7 +260,7 @@ public abstract class YogFist extends Mob {
 				if (!Dungeon.level.water[enemy.pos+i] && !Dungeon.level.solid[enemy.pos+i]){
 					int vol = Fire.volumeAt(enemy.pos+i, Fire.class);
 					if (vol < 4){
-						GameScene.add( Blob.seed( enemy.pos + i, 4 - vol, Fire.class ) );
+						GameScene.add( Emitter.seed( enemy.pos + i, 4 - vol, Fire.class ) );
 					}
 				}
 			}
@@ -283,9 +283,9 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
-			boolean result = super.act();
+			boolean result = super.playGameTurn();
 
 			//1.33 grass tiles on average
 			int furrowedTiles = Random.chances(new float[]{0, 2, 1});
@@ -336,7 +336,7 @@ public abstract class YogFist extends Mob {
 			spend( 1f );
 
 			Invisibility.dispel(this);
-			Char enemy = this.enemy;
+			Character enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
 				Buff.affect( enemy, Roots.class, 3f );
@@ -380,16 +380,16 @@ public abstract class YogFist extends Mob {
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			//ensures toxic gas acts at the appropriate time when added
-			GameScene.add(Blob.seed(pos, 0, ToxicGas.class));
+			GameScene.add(Emitter.seed(pos, 0, ToxicGas.class));
 
 			if (Dungeon.level.water[pos] && healthPoints < healthMax) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthMax /50), FloatingText.HEALING);
 				healthPoints = Math.min(healthMax, healthPoints + healthMax /50);
 			}
 
-			return super.act();
+			return super.playGameTurn();
 		}
 
 		@Override
@@ -417,11 +417,11 @@ public abstract class YogFist extends Mob {
 		@Override
 		protected void zap() {
 			spend( 1f );
-			GameScene.add(Blob.seed(enemy.pos, 100, ToxicGas.class));
+			GameScene.add(Emitter.seed(enemy.pos, 100, ToxicGas.class));
 		}
 
 		@Override
-		public int attackProc( Char enemy, int damage ) {
+		public int attackProc(Character enemy, int damage ) {
 			damage = super.attackProc( enemy, damage );
 
 			if (Random.Int( 2 ) == 0) {
@@ -496,7 +496,7 @@ public abstract class YogFist extends Mob {
 			spend( 1f );
 
 			Invisibility.dispel(this);
-			Char enemy = this.enemy;
+			Character enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
 				enemy.damage( Random.NormalIntRange(10, 20), new LightBeam() );
@@ -505,7 +505,7 @@ public abstract class YogFist extends Mob {
 				if (!enemy.isAlive() && enemy == Dungeon.hero) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
-					GLog.n( Messages.get(Char.class, "kill", name()) );
+					GLog.n( Messages.get(Character.class, "kill", name()) );
 				}
 
 			} else {
@@ -562,7 +562,7 @@ public abstract class YogFist extends Mob {
 			spend( 1f );
 
 			Invisibility.dispel(this);
-			Char enemy = this.enemy;
+			Character enemy = this.enemy;
 			if (hit( this, enemy, true )) {
 
 				enemy.damage( Random.NormalIntRange(10, 20), new DarkBolt() );
@@ -575,7 +575,7 @@ public abstract class YogFist extends Mob {
 				if (!enemy.isAlive() && enemy == Dungeon.hero) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
-					GLog.n( Messages.get(Char.class, "kill", name()) );
+					GLog.n( Messages.get(Character.class, "kill", name()) );
 				}
 
 			} else {

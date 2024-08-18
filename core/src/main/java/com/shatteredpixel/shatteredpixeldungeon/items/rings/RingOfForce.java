@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -49,7 +49,7 @@ public class RingOfForce extends Ring {
 		return new Force();
 	}
 	
-	public static int armedDamageBonus( Char ch ){
+	public static int armedDamageBonus( Character ch ){
 		return getBuffedBonus( ch, Force.class);
 	}
 
@@ -133,7 +133,7 @@ public class RingOfForce extends Ring {
 	public static String AC_ABILITY = "ABILITY";
 
 	@Override
-	public void activate(Char ch) {
+	public void activate(Character ch) {
 		super.activate(ch);
 		if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.DUELIST){
 			Buff.affect(ch, MeleeWeapon.Charger.class);

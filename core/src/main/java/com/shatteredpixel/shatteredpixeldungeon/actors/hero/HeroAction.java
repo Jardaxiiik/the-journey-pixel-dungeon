@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 
 public class HeroAction {
 	
@@ -52,8 +52,8 @@ public class HeroAction {
 	}
 	
 	public static class Interact extends HeroAction {
-		public Char ch;
-		public Interact( Char ch ) {
+		public Character ch;
+		public Interact( Character ch ) {
 			this.ch = ch;
 		}
 	}
@@ -83,8 +83,8 @@ public class HeroAction {
 	}
 	
 	public static class Attack extends HeroAction {
-		public Char target;
-		public Attack( Char target ) {
+		public Character target;
+		public Attack( Character target ) {
 			this.target = target;
 		}
 	}

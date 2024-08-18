@@ -21,9 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfAwareness;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WaterOfHealth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.WaterOfAwareness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.WaterOfHealth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.WellWater;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;

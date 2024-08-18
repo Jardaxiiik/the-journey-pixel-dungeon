@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
@@ -45,7 +45,7 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	
@@ -55,7 +55,7 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-	protected Char chooseEnemy() {
+	protected Character chooseEnemy() {
 		return null;
 	}
 
@@ -85,7 +85,7 @@ public class RatKing extends NPC {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (Dungeon.depth < 5){
 			if (pos == Dungeon.level.exit()){
 				destroy();
@@ -101,13 +101,13 @@ public class RatKing extends NPC {
 				target = Dungeon.level.entrance();
 			}
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	//***
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		sprite.turnTo( pos, c.pos );
 
 		if (c != Dungeon.hero){

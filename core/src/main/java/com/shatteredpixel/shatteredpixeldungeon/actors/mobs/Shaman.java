@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
@@ -60,7 +60,7 @@ public abstract class Shaman extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 18;
 	}
 	
@@ -70,7 +70,7 @@ public abstract class Shaman extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return super.canAttack(enemy)
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
@@ -88,7 +88,7 @@ public abstract class Shaman extends Mob {
 		return super.createLoot();
 	}
 
-	protected boolean doAttack(Char enemy ) {
+	protected boolean doAttack(Character enemy ) {
 
 		if (Dungeon.level.adjacent( pos, enemy.pos )
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
@@ -114,7 +114,7 @@ public abstract class Shaman extends Mob {
 		spend( 1f );
 
 		Invisibility.dispel(this);
-		Char enemy = this.enemy;
+		Character enemy = this.enemy;
 		if (hit( this, enemy, true )) {
 			
 			if (Random.Int( 2 ) == 0) {
@@ -136,7 +136,7 @@ public abstract class Shaman extends Mob {
 		}
 	}
 	
-	protected abstract void debuff( Char enemy );
+	protected abstract void debuff( Character enemy );
 	
 	public void onZapComplete() {
 		zap();
@@ -154,7 +154,7 @@ public abstract class Shaman extends Mob {
 		}
 		
 		@Override
-		protected void debuff( Char enemy ) {
+		protected void debuff( Character enemy ) {
 			Buff.prolong( enemy, Weakness.class, Weakness.DURATION );
 		}
 	}
@@ -165,7 +165,7 @@ public abstract class Shaman extends Mob {
 		}
 		
 		@Override
-		protected void debuff( Char enemy ) {
+		protected void debuff( Character enemy ) {
 			Buff.prolong( enemy, Vulnerable.class, Vulnerable.DURATION );
 		}
 	}
@@ -176,7 +176,7 @@ public abstract class Shaman extends Mob {
 		}
 		
 		@Override
-		protected void debuff( Char enemy ) {
+		protected void debuff( Character enemy ) {
 			Buff.prolong( enemy, Hex.class, Hex.DURATION );
 		}
 	}

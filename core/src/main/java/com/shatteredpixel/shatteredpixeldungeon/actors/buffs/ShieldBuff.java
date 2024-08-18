@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.watabou.utils.Bundle;
 
 public abstract class ShieldBuff extends Buff {
@@ -29,7 +29,7 @@ public abstract class ShieldBuff extends Buff {
 	private int shielding;
 	
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		if (super.attachTo(target)) {
 			target.needsShieldUpdate = true;
 			return true;

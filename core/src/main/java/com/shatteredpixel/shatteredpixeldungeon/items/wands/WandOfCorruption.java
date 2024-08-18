@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -125,7 +125,7 @@ public class WandOfCorruption extends Wand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Char ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.findChar(bolt.collisionPos);
 
 		if (ch != null){
 			
@@ -236,7 +236,7 @@ public class WandOfCorruption extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		int level = Math.max( 0, buffedLvl() );
 
 		// lvl 0 - 16%

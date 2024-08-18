@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -46,7 +46,7 @@ public class TeleportationTrap extends Trap {
 	public void activate() {
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-			Char ch = Actor.findChar(pos + i);
+			Character ch = Actor.findChar(pos + i);
 			if (ch != null){
 				if (ScrollOfTeleportation.teleportChar(ch)) {
 					if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {

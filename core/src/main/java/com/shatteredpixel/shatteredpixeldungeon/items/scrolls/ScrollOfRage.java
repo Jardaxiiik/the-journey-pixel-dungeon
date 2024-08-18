@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -45,7 +45,7 @@ public class ScrollOfRage extends Scroll {
 		detach(curUser.belongings.backpack);
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			mob.beckon( curUser.pos );
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
+			if (mob.alignment != Character.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
 				Buff.prolong(mob, Amok.class, 5f);
 			}
 		}

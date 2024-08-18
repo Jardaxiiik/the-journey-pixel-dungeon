@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -134,7 +134,7 @@ public class ShadowClone extends ArmorAbility {
 	}
 
 	private static ShadowAlly getShadowAlly(){
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof ShadowAlly){
 				return (ShadowAlly) ch;
 			}
@@ -170,9 +170,9 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			int oldPos = pos;
-			boolean result = super.act();
+			boolean result = super.playGameTurn();
 			//partially simulates how the hero switches to idle animation
 			if ((pos == target || oldPos == pos) && sprite.looping()){
 				sprite.idle();
@@ -193,13 +193,13 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public void targetChar(Char ch) {
+		public void targetChar(Character ch) {
 			GLog.i(Messages.get(this, "direct_attack"));
 			super.targetChar(ch);
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			return defenseSkill+5; //equal to base hero attack skill
 		}
 
@@ -216,7 +216,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public int attackProc( Char enemy, int damage ) {
+		public int attackProc(Character enemy, int damage ) {
 			damage = super.attackProc( enemy, damage );
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)
 					&& Dungeon.hero.belongings.weapon() != null){
@@ -249,7 +249,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public int defenseProc(Char enemy, int damage) {
+		public int defenseProc(Character enemy, int damage) {
 			damage = super.defenseProc(enemy, damage);
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR)
 					&& Dungeon.hero.belongings.armor() != null){
@@ -289,7 +289,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public boolean canInteract(Char c) {
+		public boolean canInteract(Character c) {
 			if (super.canInteract(c)){
 				return true;
 			} else if (Dungeon.level.distance(pos, c.pos) <= Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY)) {
@@ -300,7 +300,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public boolean interact(Char c) {
+		public boolean interact(Character c) {
 			if (!Dungeon.hero.hasTalent(Talent.PERFECT_COPY)){
 				return super.interact(c);
 			}
@@ -329,7 +329,7 @@ public class ShadowClone extends ArmorAbility {
 			return true;
 		}
 
-		private static void appear( Char ch, int pos ) {
+		private static void appear(Character ch, int pos ) {
 
 			ch.sprite.interruptMotion();
 
@@ -400,7 +400,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public void link( Char ch ) {
+		public void link( Character ch ) {
 			super.link( ch );
 			renderShadow = false;
 

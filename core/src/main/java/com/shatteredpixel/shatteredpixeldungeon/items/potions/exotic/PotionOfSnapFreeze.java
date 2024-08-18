@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -53,7 +53,7 @@ public class PotionOfSnapFreeze extends ExoticPotion {
 				
 				Freezing.affect( cell + offset );
 				
-				Char ch = Actor.findChar( cell + offset);
+				Character ch = Actor.findChar( cell + offset);
 				if (ch != null){
 					Buff.affect(ch, Roots.class, Roots.DURATION*2f);
 				}

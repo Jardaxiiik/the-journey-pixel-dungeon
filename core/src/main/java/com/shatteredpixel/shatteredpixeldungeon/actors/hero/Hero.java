@@ -30,8 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.SacrificialFire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AdrenalineSurge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AnkhInvulnerability;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
@@ -169,7 +169,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
-public class Hero extends Char {
+public class Hero extends Character {
 
 	{
 		actPriority = HERO_PRIO;
@@ -199,7 +199,7 @@ public class Hero extends Char {
 	public HeroAction curAction = null;
 	public HeroAction lastAction = null;
 
-	private Char enemy;
+	private Character enemy;
 	
 	public boolean resting = false;
 	
@@ -326,9 +326,9 @@ public class Hero extends Char {
 		info.level = bundle.getInt( LEVEL );
 		info.str = bundle.getInt( STRENGTH );
 		info.exp = bundle.getInt( EXPERIENCE );
-		info.healthPoint = bundle.getInt( Char.TAG_HP );
-		info.ht = bundle.getInt( Char.TAG_HT );
-		info.shield = bundle.getInt( Char.TAG_SHLD );
+		info.healthPoint = bundle.getInt( Character.TAG_HP );
+		info.ht = bundle.getInt( Character.TAG_HT );
+		info.shield = bundle.getInt( Character.TAG_SHLD );
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		Belongings.preview( info, bundle );
@@ -438,7 +438,7 @@ public class Hero extends Char {
 		}
 	}
 	
-	public boolean shoot( Char enemy, MissileWeapon wep ) {
+	public boolean shoot(Character enemy, MissileWeapon wep ) {
 
 		this.enemy = enemy;
 		boolean wasEnemy = enemy.alignment == Alignment.ENEMY
@@ -463,7 +463,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		KindOfWeapon wep = belongings.attackingWeapon();
 		
 		float accuracy = 1;
@@ -489,7 +489,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 
 		if (buff(Combo.ParryTracker.class) != null){
 			if (canAttack(enemy) && !isCharmedBy(enemy)){
@@ -660,7 +660,7 @@ public class Hero extends Char {
 		return super.canSurpriseAttack();
 	}
 
-	public boolean canAttack(Char enemy){
+	public boolean canAttack(Character enemy){
 		if (enemy == null || pos == enemy.pos || !Actor.chars().contains(enemy)) {
 			return false;
 		}
@@ -735,7 +735,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
@@ -901,7 +901,7 @@ public class Hero extends Char {
 	
 	private boolean actInteract( HeroAction.Interact action ) {
 		
-		Char ch = action.ch;
+		Character ch = action.ch;
 
 		if (ch.isAlive() && ch.canInteract(this)) {
 			
@@ -1334,7 +1334,7 @@ public class Hero extends Char {
 		}
 	}
 
-	public Char enemy(){
+	public Character enemy(){
 		return enemy;
 	}
 	
@@ -1355,7 +1355,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int attackProc( final Char enemy, int damage ) {
+	public int attackProc(final Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 
 		KindOfWeapon wep;
@@ -1379,7 +1379,7 @@ public class Hero extends Char {
 					}
 					
 					@Override
-					protected boolean act() {
+					protected boolean playGameTurn() {
 						if (enemy.isAlive()) {
 							int bonusTurns = hasTalent(Talent.SHARED_UPGRADES) ? wep.buffedLvl() : 0;
 							Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns).set(enemy.id(), bonusTurns);
@@ -1397,7 +1397,7 @@ public class Hero extends Char {
 	}
 	
 	@Override
-	public int defenseProc( Char enemy, int damage ) {
+	public int defenseProc(Character enemy, int damage ) {
 		
 		if (damage > 0 && subClass == HeroSubClass.BERSERKER){
 			Berserk berserk = Buff.affect(this, Berserk.class);
@@ -1433,7 +1433,7 @@ public class Hero extends Char {
 		}
 
 		Endure.EndureTracker endure = buff(Endure.EndureTracker.class);
-		if (!(src instanceof Char)){
+		if (!(src instanceof Character)){
 			//reduce damage here if it isn't coming from a character (if it is we already reduced it)
 			if (endure != null){
 				dmg = Math.round(endure.adjustDamageTaken(dmg));
@@ -1450,7 +1450,7 @@ public class Hero extends Char {
 
 		CapeOfThorns.Thorns thorns = buff( CapeOfThorns.Thorns.class );
 		if (thorns != null) {
-			dmg = thorns.proc(dmg, (src instanceof Char ? (Char)src : null),  this);
+			dmg = thorns.proc(dmg, (src instanceof Character ? (Character)src : null),  this);
 		}
 
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
@@ -1532,7 +1532,7 @@ public class Hero extends Char {
 			}
 		}
 
-		Char lastTarget = QuickSlotButton.lastTarget;
+		Character lastTarget = QuickSlotButton.lastTarget;
 		if (target != null && (lastTarget == null ||
 							!lastTarget.isAlive() || !lastTarget.isActive() ||
 							lastTarget.alignment == Alignment.ALLY ||
@@ -1672,7 +1672,7 @@ public class Hero extends Char {
 
 	}
 	
-	public boolean handle( int cell ) {
+	public boolean chooseHeroActionBasedOnTile(int cell ) {
 		
 		if (cell == -1) {
 			return false;
@@ -1683,7 +1683,7 @@ public class Hero extends Char {
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
 		}
 		
-		Char ch = Actor.findChar( cell );
+		Character ch = Actor.findChar( cell );
 		Heap heap = Dungeon.level.heaps.get( cell );
 
 		if (Dungeon.level.map[cell] == Terrain.ALCHEMY && cell != pos) {
@@ -1934,7 +1934,7 @@ public class Hero extends Char {
 
 				ankh.detach(belongings.backpack);
 
-				for (Char ch : Actor.chars()) {
+				for (Character ch : Actor.chars()) {
 					if (ch instanceof DriedRose.GhostHero) {
 						((DriedRose.GhostHero) ch).sayAnhk();
 						return;
@@ -2019,7 +2019,7 @@ public class Hero extends Char {
 			items.remove( item );
 		}
 
-		for (Char c : Actor.chars()){
+		for (Character c : Actor.chars()){
 			if (c instanceof DriedRose.GhostHero){
 				((DriedRose.GhostHero) c).sayHeroKilled();
 			}

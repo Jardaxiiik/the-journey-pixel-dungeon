@@ -25,10 +25,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -88,7 +88,7 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		if (!summonedALly) {
 			return 25;
 		} else {
@@ -113,16 +113,16 @@ public abstract class Elemental extends Mob {
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (state == HUNTING){
 			rangedCooldown--;
 		}
 		
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		if (super.canAttack(enemy)){
 			return true;
 		} else {
@@ -130,7 +130,7 @@ public abstract class Elemental extends Mob {
 		}
 	}
 	
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 		
 		if (Dungeon.level.adjacent( pos, enemy.pos )
 				|| rangedCooldown > 0
@@ -151,7 +151,7 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		meleeProc( enemy, damage );
 		
@@ -162,7 +162,7 @@ public abstract class Elemental extends Mob {
 		spend( 1f );
 
 		Invisibility.dispel(this);
-		Char enemy = this.enemy;
+		Character enemy = this.enemy;
 		if (hit( this, enemy, true )) {
 			
 			rangedProc( enemy );
@@ -189,8 +189,8 @@ public abstract class Elemental extends Mob {
 		}
 	}
 	
-	protected abstract void meleeProc( Char enemy, int damage );
-	protected abstract void rangedProc( Char enemy );
+	protected abstract void meleeProc(Character enemy, int damage );
+	protected abstract void rangedProc( Character enemy );
 	
 	protected ArrayList<Class<? extends Buff>> harmfulBuffs = new ArrayList<>();
 	
@@ -231,7 +231,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, int damage ) {
+		protected void meleeProc(Character enemy, int damage ) {
 			if (Random.Int( 2 ) == 0 && !Dungeon.level.water[enemy.pos]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy );
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
@@ -239,7 +239,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void rangedProc( Char enemy ) {
+		protected void rangedProc( Character enemy ) {
 			if (!Dungeon.level.water[enemy.pos]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy, 4f );
 			}
@@ -262,7 +262,7 @@ public abstract class Elemental extends Mob {
 		private int targetingPos = -1;
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			if (targetingPos != -1){
 				if (sprite != null && (sprite.visible || Dungeon.level.heroFOV[targetingPos])) {
 					sprite.zap( targetingPos );
@@ -272,12 +272,12 @@ public abstract class Elemental extends Mob {
 					return true;
 				}
 			} else {
-				return super.act();
+				return super.playGameTurn();
 			}
 		}
 
 		@Override
-		protected boolean canAttack( Char enemy ) {
+		protected boolean canAttack( Character enemy ) {
 			if (super.canAttack(enemy)){
 				return true;
 			} else {
@@ -285,7 +285,7 @@ public abstract class Elemental extends Mob {
 			}
 		}
 
-		protected boolean doAttack( Char enemy ) {
+		protected boolean doAttack( Character enemy ) {
 
 			if (rangedCooldown > 0) {
 
@@ -338,12 +338,12 @@ public abstract class Elemental extends Mob {
 					if (!Dungeon.level.solid[targetingPos + i]) {
 						CellEmitter.get(targetingPos + i).burst(ElmoParticle.FACTORY, 5);
 						if (Dungeon.level.water[targetingPos + i]) {
-							GameScene.add(Blob.seed(targetingPos + i, 2, Fire.class));
+							GameScene.add(Emitter.seed(targetingPos + i, 2, Fire.class));
 						} else {
-							GameScene.add(Blob.seed(targetingPos + i, 8, Fire.class));
+							GameScene.add(Emitter.seed(targetingPos + i, 8, Fire.class));
 						}
 
-						Char target = Actor.findChar(targetingPos + i);
+						Character target = Actor.findChar(targetingPos + i);
 						if (target != null && target != this) {
 							Buff.affect(target, Burning.class).reignite(target);
 						}
@@ -357,7 +357,7 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			if (!summonedALly) {
 				return 15;
 			} else {
@@ -375,7 +375,7 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		protected void meleeProc(Char enemy, int damage) {
+		protected void meleeProc(Character enemy, int damage) {
 			//no fiery on-hit unless it is an ally summon
 			if (summonedALly) {
 				super.meleeProc(enemy, damage);
@@ -462,7 +462,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, int damage ) {
+		protected void meleeProc(Character enemy, int damage ) {
 			if (Random.Int( 3 ) == 0 || Dungeon.level.water[enemy.pos]) {
 				Freezing.freeze( enemy.pos );
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
@@ -470,7 +470,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void rangedProc( Char enemy ) {
+		protected void rangedProc( Character enemy ) {
 			Freezing.freeze( enemy.pos );
 			if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
 		}
@@ -488,8 +488,8 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, int damage ) {
-			ArrayList<Char> affected = new ArrayList<>();
+		protected void meleeProc(Character enemy, int damage ) {
+			ArrayList<Character> affected = new ArrayList<>();
 			ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 			Shocking.arc( this, enemy, 2, affected, arcs );
 			
@@ -497,16 +497,16 @@ public abstract class Elemental extends Mob {
 				affected.remove( enemy );
 			}
 			
-			for (Char ch : affected) {
+			for (Character ch : affected) {
 				ch.damage( Math.round( damage * 0.4f ), Shocking.class );
 				if (ch == Dungeon.hero && !ch.isAlive()){
 					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 				}
 			}
 
 			boolean visible = sprite.visible || enemy.sprite.visible;
-			for (Char ch : affected){
+			for (Character ch : affected){
 				if (ch.sprite.visible) visible = true;
 			}
 
@@ -517,7 +517,7 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void rangedProc( Char enemy ) {
+		protected void rangedProc( Character enemy ) {
 			Buff.affect( enemy, Blindness.class, Blindness.DURATION/2f );
 			if (enemy == Dungeon.hero) {
 				GameScene.flash(0x80FFFFFF);
@@ -535,12 +535,12 @@ public abstract class Elemental extends Mob {
 		}
 		
 		@Override
-		protected void meleeProc( Char enemy, int damage ) {
+		protected void meleeProc(Character enemy, int damage ) {
 			CursedWand.cursedEffect(null, this, enemy);
 		}
 		
 		@Override
-		protected void rangedProc( Char enemy ) {
+		protected void rangedProc( Character enemy ) {
 			CursedWand.cursedEffect(null, this, enemy);
 		}
 	}

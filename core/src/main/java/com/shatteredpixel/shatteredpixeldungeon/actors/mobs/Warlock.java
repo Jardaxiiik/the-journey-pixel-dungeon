@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
@@ -66,7 +66,7 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 25;
 	}
 	
@@ -76,12 +76,12 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return super.canAttack(enemy)
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 	}
 	
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 
 		if (Dungeon.level.adjacent( pos, enemy.pos )
 				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
@@ -107,7 +107,7 @@ public class Warlock extends Mob implements Callback {
 		spend( TIME_TO_ZAP );
 
 		Invisibility.dispel(this);
-		Char enemy = this.enemy;
+		Character enemy = this.enemy;
 		if (hit( this, enemy, true )) {
 			//TODO would be nice for this to work on ghost/statues too
 			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {

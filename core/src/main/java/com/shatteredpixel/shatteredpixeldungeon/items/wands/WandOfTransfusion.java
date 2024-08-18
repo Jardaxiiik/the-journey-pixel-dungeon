@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -68,7 +68,7 @@ public class WandOfTransfusion extends Wand {
 
 		int cell = beam.collisionPos;
 
-		Char ch = Actor.findChar(cell);
+		Character ch = Actor.findChar(cell);
 
 		if (ch instanceof Mob){
 			
@@ -77,7 +77,7 @@ public class WandOfTransfusion extends Wand {
 			//this wand does different things depending on the target.
 			
 			//heals/shields an ally or a charmed enemy while damaging self
-			if (ch.alignment == Char.Alignment.ALLY || ch.buff(Charm.class) != null){
+			if (ch.alignment == Character.Alignment.ALLY || ch.buff(Charm.class) != null){
 				
 				// 5% of max hp
 				int selfDmg = Math.round(curUser.healthMax *0.05f);
@@ -109,14 +109,14 @@ public class WandOfTransfusion extends Wand {
 
 			//for enemies...
 			//(or for mimics which are hiding, special case)
-			} else if (ch.alignment == Char.Alignment.ENEMY || ch instanceof Mimic) {
+			} else if (ch.alignment == Character.Alignment.ENEMY || ch instanceof Mimic) {
 
 				//grant a self-shield, and...
 				Buff.affect(curUser, Barrier.class).setShield((5 + buffedLvl()));
 				curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(5+buffedLvl()), FloatingText.SHIELDING);
 				
 				//charms living enemies
-				if (!ch.properties().contains(Char.Property.UNDEAD)) {
+				if (!ch.properties().contains(Character.Property.UNDEAD)) {
 					Charm charm = Buff.affect(ch, Charm.class, Charm.DURATION/2f);
 					charm.object = curUser.id();
 					charm.ignoreHeroAllies = true;
@@ -148,7 +148,7 @@ public class WandOfTransfusion extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		if (defender.buff(Charm.class) != null && defender.buff(Charm.class).object == attacker.id()){
 			//grants a free use of the staff and shields self
 			freeCharge = true;

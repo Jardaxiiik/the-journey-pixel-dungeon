@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -45,7 +45,7 @@ public class Sheep extends NPC {
 	private boolean initialized = false;
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (initialized) {
 			healthPoints = 0;
 
@@ -60,7 +60,7 @@ public class Sheep extends NPC {
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		return INFINITE_EVASION;
 	}
 
@@ -75,7 +75,7 @@ public class Sheep extends NPC {
 	}
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, Random.element( LINE_KEYS )) );
 		if (c == Dungeon.hero) {
 			Dungeon.hero.spendAndNext(1f);

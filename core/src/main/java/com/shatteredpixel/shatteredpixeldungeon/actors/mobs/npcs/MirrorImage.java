@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -62,7 +62,7 @@ public class MirrorImage extends NPC {
 	public int armTier;
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		
 		if ( hero == null ){
 			hero = (Hero)Actor.findById(heroID);
@@ -78,7 +78,7 @@ public class MirrorImage extends NPC {
 			((MirrorSprite)sprite).updateArmor( armTier );
 		}
 		
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	private static final String HEROID	= "hero_id";
@@ -113,7 +113,7 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		//same base attack skill as hero, benefits from accuracy ring and weapon
 		int attackSkill = 9 + hero.lvl;
 		attackSkill *= RingOfAccuracy.accuracyMultiplier(hero);
@@ -124,7 +124,7 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		if (hero != null) {
 			int baseEvasion = 4 + hero.lvl;
 			int heroEvasion = (int)((4 + hero.lvl) * RingOfEvasion.evasionMultiplier( hero ));
@@ -143,7 +143,7 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	protected boolean canAttack(Char enemy) {
+	protected boolean canAttack(Character enemy) {
 		return super.canAttack(enemy) || (hero.belongings.weapon() != null && hero.belongings.weapon().canReach(this, enemy.pos));
 	}
 	
@@ -158,7 +158,7 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		
 		MirrorInvis buff = buff(MirrorInvis.class);
@@ -173,7 +173,7 @@ public class MirrorImage extends NPC {
 			damage = hero.belongings.weapon().proc( this, enemy, damage );
 			if (!enemy.isAlive() && enemy == Dungeon.hero){
 				Dungeon.fail(this);
-				GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+				GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 			}
 			return damage;
 		} else {

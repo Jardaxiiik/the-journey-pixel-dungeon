@@ -45,7 +45,7 @@ public class Healing extends Buff {
 	}
 	
 	@Override
-	public boolean act(){
+	public boolean playGameTurn(){
 
 		if (target.healthPoints < target.healthMax) {
 			target.healthPoints = Math.min(target.healthMax, target.healthPoints + healingThisTick());

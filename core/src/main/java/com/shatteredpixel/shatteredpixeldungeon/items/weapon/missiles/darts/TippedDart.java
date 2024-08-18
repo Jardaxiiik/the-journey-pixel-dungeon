@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -112,7 +112,7 @@ public abstract class TippedDart extends Dart {
 	//exact same damage as regular darts, despite being higher tier.
 
 	@Override
-	protected void rangedHit(Char enemy, int cell) {
+	protected void rangedHit(Character enemy, int cell) {
 		targetPos = cell;
 		super.rangedHit( enemy, cell);
 		
@@ -120,7 +120,7 @@ public abstract class TippedDart extends Dart {
 		if (durability <= 0){
 			//attempt to stick the dart to the enemy, just drop it if we can't.
 			Dart d = new Dart();
-			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Char.Alignment.ALLY){
+			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Character.Alignment.ALLY){
 				PinCushion p = Buff.affect(enemy, PinCushion.class);
 				if (p.target == enemy){
 					p.stick(d);
@@ -158,7 +158,7 @@ public abstract class TippedDart extends Dart {
 		//checks both destination and source position
 		float lotusPreserve = 0f;
 		if (targetPos != -1){
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof WandOfRegrowth.Lotus){
 					WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 					if (l.inRange(targetPos)){
@@ -169,7 +169,7 @@ public abstract class TippedDart extends Dart {
 			targetPos = -1;
 		}
 		int p = curUser == null ? Dungeon.hero.pos : curUser.pos;
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 				if (l.inRange(p)){

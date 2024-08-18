@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bat;
@@ -100,7 +100,7 @@ public class AscensionChallenge extends Buff {
 		modifiers.put(Scorpio.class,        1.1f);
 	}
 
-	public static float statModifier(Char ch){
+	public static float statModifier(Character ch){
 		if (Dungeon.hero == null || Dungeon.hero.buff(AscensionChallenge.class) == null){
 			return 1;
 		}
@@ -127,7 +127,7 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.hero.buff(AscensionChallenge.class) != null
 				&& Dungeon.hero.buff(AscensionChallenge.class).stacks >= 2f){
 			for (Mob m : Dungeon.level.mobs){
-				if (m.alignment == Char.Alignment.ENEMY && m.distance(Dungeon.hero) > 8) {
+				if (m.alignment == Character.Alignment.ENEMY && m.distance(Dungeon.hero) > 8) {
 					m.beckon(Dungeon.hero.pos);
 				}
 			}
@@ -137,7 +137,7 @@ public class AscensionChallenge extends Buff {
 	//mobs move at 2x speed when not hunting/fleeing at 4 stacks or higher
 	public static float enemySpeedModifier(Mob m){
 		if (Dungeon.hero.buff(AscensionChallenge.class) != null
-				&& m.alignment == Char.Alignment.ENEMY
+				&& m.alignment == Character.Alignment.ENEMY
 				&& Dungeon.hero.buff(AscensionChallenge.class).stacks >= 4f
 				&& m.state != m.HUNTING && m.state != m.FLEEING){
 			return 2;
@@ -156,7 +156,7 @@ public class AscensionChallenge extends Buff {
 		return speed;
 	}
 
-	public static void processEnemyKill(Char enemy){
+	public static void processEnemyKill(Character enemy){
 		AscensionChallenge chal = Dungeon.hero.buff(AscensionChallenge.class);
 		if (chal == null) return;
 
@@ -272,7 +272,7 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.bossLevel()){
 			if (justAscended) {
 				GLog.p(Messages.get(this, "break"));
-				for (Char ch : Actor.chars()){
+				for (Character ch : Actor.chars()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayAppeared();
 					}
@@ -298,7 +298,7 @@ public class AscensionChallenge extends Buff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 
 		beckonEnemies();
 

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -44,10 +44,10 @@ public class StoneOfAggression extends Runestone {
 	@Override
 	protected void activate(int cell) {
 		
-		Char ch = Actor.findChar( cell );
+		Character ch = Actor.findChar( cell );
 		
 		if (ch != null) {
-			if (ch.alignment == Char.Alignment.ENEMY) {
+			if (ch.alignment == Character.Alignment.ENEMY) {
 				Buff.prolong(ch, Aggression.class, Aggression.DURATION / 4f);
 			} else {
 				Buff.prolong(ch, Aggression.class, Aggression.DURATION);
@@ -80,7 +80,7 @@ public class StoneOfAggression extends Runestone {
 
 		@Override
 		public float iconFadePercent() {
-			if (target.alignment == Char.Alignment.ENEMY){
+			if (target.alignment == Character.Alignment.ENEMY){
 				return Math.max(0, (DURATION/4f - visualcooldown()) / (DURATION/4f));
 			} else {
 				return Math.max(0, (DURATION - visualcooldown()) / DURATION);
@@ -91,9 +91,9 @@ public class StoneOfAggression extends Runestone {
 		public void detach() {
 			//if our target is an enemy, reset any enemy-to-enemy aggro involving it
 			if (target.isAlive()) {
-				if (target.alignment == Char.Alignment.ENEMY) {
+				if (target.alignment == Character.Alignment.ENEMY) {
 					for (Mob m : Dungeon.level.mobs) {
-						if (m.alignment == Char.Alignment.ENEMY && m.isTargeting(target)) {
+						if (m.alignment == Character.Alignment.ENEMY && m.isTargeting(target)) {
 							m.aggro(null);
 						}
 						if (target instanceof Mob && ((Mob) target).isTargeting(m)){

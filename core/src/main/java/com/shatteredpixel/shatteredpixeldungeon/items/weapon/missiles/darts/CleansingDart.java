@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -38,7 +38,7 @@ public class CleansingDart extends TippedDart {
 	}
 	
 	@Override
-	public int proc(Char attacker, final Char defender, int damage) {
+	public int proc(Character attacker, final Character defender, int damage) {
 
 		if (processingChargedShot && defender == attacker) {
 			//do nothing to the hero when processing charged shot
@@ -62,13 +62,13 @@ public class CleansingDart extends TippedDart {
 				//need to delay this so damage from the dart doesn't break wandering
 				new FlavourBuff(){
 					{actPriority = VFX_PRIO;}
-					public boolean act() {
+					public boolean playGameTurn() {
 						if (((Mob) defender).state == ((Mob) defender).HUNTING || ((Mob) defender).state == ((Mob) defender).FLEEING){
 							((Mob) defender).state = ((Mob) defender).WANDERING;
 						}
 						((Mob) defender).beckon(Dungeon.level.randomDestination(defender));
 						defender.sprite.showLost();
-						return super.act();
+						return super.playGameTurn();
 					}
 				}.attachTo(defender);
 			}

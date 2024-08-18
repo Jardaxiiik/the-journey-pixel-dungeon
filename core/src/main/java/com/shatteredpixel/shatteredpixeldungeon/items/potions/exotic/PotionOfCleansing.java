@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -68,11 +68,11 @@ public class PotionOfCleansing extends ExoticPotion {
 		}
 	}
 
-	public static void cleanse(Char ch){
+	public static void cleanse(Character ch){
 		cleanse(ch, Cleanse.DURATION);
 	}
 
-	public static void cleanse(Char ch, float duration){
+	public static void cleanse(Character ch, float duration){
 		for (Buff b : ch.buffs()){
 			if (b.type == Buff.buffType.NEGATIVE
 					&& !(b instanceof AllyBuff)

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -81,7 +81,7 @@ public class Swarm extends Mob {
 	}
 	
 	@Override
-	public int defenseProc( Char enemy, int damage ) {
+	public int defenseProc(Character enemy, int damage ) {
 
 		if (healthPoints >= damage + 2) {
 			ArrayList<Integer> candidates = new ArrayList<>();
@@ -116,7 +116,7 @@ public class Swarm extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 10;
 	}
 	

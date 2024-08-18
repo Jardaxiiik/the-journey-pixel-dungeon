@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
@@ -54,13 +54,13 @@ public class SpellSprite extends Image {
 	
 	private static TextureFilm film;
 	
-	private Char target;
+	private Character target;
 	
 	private Phase phase;
 	private float duration;
 	private float passed;
 	
-	private static HashMap<Char,SpellSprite> all = new HashMap<>();
+	private static HashMap<Character,SpellSprite> all = new HashMap<>();
 	
 	public SpellSprite() {
 		super( Assets.Effects.SPELL_ICONS );
@@ -130,11 +130,11 @@ public class SpellSprite extends Image {
 		all.remove( target );
 	}
 	
-	public static void show( Char ch, int index ) {
+	public static void show(Character ch, int index ) {
 		show(ch, index, 1, 1, 1);
 	}
 	
-	public static void show( Char ch, int index, float r, float g, float b ) {
+	public static void show(Character ch, int index, float r, float g, float b ) {
 		
 		if (!ch.sprite.visible) {
 			return;

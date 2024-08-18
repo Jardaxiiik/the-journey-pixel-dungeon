@@ -22,22 +22,21 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
 
-public class BlobEmitter extends Emitter {
+public class BlobEmitter extends com.watabou.noosa.particles.Emitter {
 	
-	private Blob blob;
+	private Emitter emitter;
 	
-	public BlobEmitter( Blob blob ) {
+	public BlobEmitter( Emitter emitter) {
 		
 		super();
 		
-		this.blob = blob;
-		blob.use( this );
+		this.emitter = emitter;
+		emitter.use( this );
 	}
 
 	public RectF bound = new RectF(0, 0, 1, 1);
@@ -45,22 +44,22 @@ public class BlobEmitter extends Emitter {
 	@Override
 	protected void emit( int index ) {
 		
-		if (blob.volume <= 0) {
+		if (emitter.volume <= 0) {
 			return;
 		}
 
-		if (blob.area.isEmpty())
-			blob.setupArea();
+		if (emitter.area.isEmpty())
+			emitter.setupArea();
 		
-		int[] map = blob.cur;
+		int[] map = emitter.cur;
 		float size = DungeonTilemap.SIZE;
 
 		int cell;
-		for (int i = blob.area.left; i < blob.area.right; i++) {
-			for (int j = blob.area.top; j < blob.area.bottom; j++) {
+		for (int i = emitter.area.left; i < emitter.area.right; i++) {
+			for (int j = emitter.area.top; j < emitter.area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
 				if (cell < Dungeon.level.heroFOV.length
-						&& (Dungeon.level.heroFOV[cell] || blob.alwaysVisible)
+						&& (Dungeon.level.heroFOV[cell] || emitter.alwaysVisible)
 						&& map[cell] > 0) {
 					float x = (i + Random.Float(bound.left, bound.right)) * size;
 					float y = (j + Random.Float(bound.top, bound.bottom)) * size;

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -118,7 +118,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public void activate( Char ch ) {
+	public void activate( Character ch ) {
 		super.activate(ch);
 		applyWandChargeBuff(ch);
 	}
@@ -165,7 +165,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public int proc(Char attacker, Char defender, int damage) {
+	public int proc(Character attacker, Character defender, int damage) {
 		if (attacker instanceof Hero && ((Hero) attacker).hasTalent(Talent.MYSTICAL_CHARGE)){
 			Hero hero = (Hero) attacker;
 			ArtifactRecharge.chargeArtifacts(hero, hero.pointsInTalent(Talent.MYSTICAL_CHARGE)/2f);
@@ -193,7 +193,7 @@ public class MagesStaff extends MeleeWeapon {
 	}
 
 	@Override
-	public int reachFactor(Char owner) {
+	public int reachFactor(Character owner) {
 		int reach = super.reachFactor(owner);
 		if (owner instanceof Hero
 				&& wand instanceof WandOfDisintegration
@@ -220,7 +220,7 @@ public class MagesStaff extends MeleeWeapon {
 		if (wand != null) wand.stopCharging();
 	}
 
-	public Item imbueWand(Wand wand, Char owner){
+	public Item imbueWand(Wand wand, Character owner){
 
 		int oldStaffcharges = this.wand != null ? this.wand.curCharges : 0;
 
@@ -290,7 +290,7 @@ public class MagesStaff extends MeleeWeapon {
 		}
 	}
 
-	public void applyWandChargeBuff(Char owner){
+	public void applyWandChargeBuff(Character owner){
 		if (wand != null){
 			wand.charge(owner, STAFF_SCALE_FACTOR);
 		}

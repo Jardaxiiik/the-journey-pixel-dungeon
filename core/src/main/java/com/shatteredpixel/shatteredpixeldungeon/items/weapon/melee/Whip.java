@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -54,12 +54,12 @@ public class Whip extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 
-		ArrayList<Char> targets = new ArrayList<>();
-		Char closest = null;
+		ArrayList<Character> targets = new ArrayList<>();
+		Character closest = null;
 
 		hero.belongings.abilityWeapon = this;
-		for (Char ch : Actor.chars()){
-			if (ch.alignment == Char.Alignment.ENEMY
+		for (Character ch : Actor.chars()){
+			if (ch.alignment == Character.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
 					&& Dungeon.level.heroFOV[ch.pos]
 					&& hero.canAttack(ch)){
@@ -77,13 +77,13 @@ public class Whip extends MeleeWeapon {
 		}
 
 		throwSound();
-		Char finalClosest = closest;
+		Character finalClosest = closest;
 		hero.sprite.attack(hero.pos, new Callback() {
 			@Override
 			public void call() {
 				beforeAbilityUsed(hero, finalClosest);
-				for (Char ch : targets) {
-					hero.attack(ch, 1, 0, ch == finalClosest ? Char.INFINITE_ACCURACY : 1);
+				for (Character ch : targets) {
+					hero.attack(ch, 1, 0, ch == finalClosest ? Character.INFINITE_ACCURACY : 1);
 					if (!ch.isAlive()){
 						onAbilityKill(hero, ch);
 					}

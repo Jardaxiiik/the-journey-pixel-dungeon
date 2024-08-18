@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Spear;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -89,7 +89,7 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public int attackProc(Char enemy, int damage) {
+	public int attackProc(Character enemy, int damage) {
 		int dmg = super.attackProc(enemy, damage);
 		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(pos, enemy.pos) && dmg > 12){
 			GLog.n(Messages.get(this, "spear_warn"));
@@ -98,7 +98,7 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 
@@ -108,7 +108,7 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		//cannot 'curve' spear hits like the hero, requires fairly open space to hit at a distance
 		return Dungeon.level.distance(enemy.pos, pos) <= 2
 				&& new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos

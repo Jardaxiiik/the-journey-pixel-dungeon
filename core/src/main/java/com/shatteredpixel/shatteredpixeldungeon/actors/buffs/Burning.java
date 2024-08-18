@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -80,14 +80,14 @@ public class Burning extends Buff implements Hero.Doom {
 	}
 
 	@Override
-	public boolean attachTo(Char target) {
+	public boolean attachTo(Character target) {
 		Buff.detach( target, Chill.class);
 
 		return super.attachTo(target);
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		
 		if (target.isAlive() && !target.isImmune(getClass())) {
 			
@@ -151,8 +151,8 @@ public class Burning extends Buff implements Hero.Doom {
 			detach();
 		}
 		
-		if (Dungeon.level.flamable[target.pos] && Blob.volumeAt(target.pos, Fire.class) == 0) {
-			GameScene.add( Blob.seed( target.pos, 4, Fire.class ) );
+		if (Dungeon.level.flamable[target.pos] && Emitter.volumeAt(target.pos, Fire.class) == 0) {
+			GameScene.add( Emitter.seed( target.pos, 4, Fire.class ) );
 		}
 		
 		spend( TICK );
@@ -167,11 +167,11 @@ public class Burning extends Buff implements Hero.Doom {
 		return true;
 	}
 	
-	public void reignite( Char ch ) {
+	public void reignite( Character ch ) {
 		reignite( ch, DURATION );
 	}
 	
-	public void reignite( Char ch, float duration ) {
+	public void reignite(Character ch, float duration ) {
 		if (ch.isImmune(Burning.class)){
 			//TODO this only works for the hero, not others who can have brimstone+arcana effect
 			// e.g. prismatic image, shadow clone

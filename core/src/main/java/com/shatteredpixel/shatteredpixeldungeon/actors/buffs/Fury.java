@@ -33,7 +33,7 @@ public class Fury extends Buff {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.healthPoints > target.healthMax * LEVEL) {
 			detach();
 		}

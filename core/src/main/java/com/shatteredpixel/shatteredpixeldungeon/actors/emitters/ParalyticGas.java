@@ -19,30 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Alchemy extends Blob {
-
-	protected int pos;
+public class ParalyticGas extends Emitter {
+	
+	{
+		//acts after mobs, to give them a chance to resist paralysis
+		actPriority = MOB_PRIO - 1;
+	}
 	
 	@Override
 	protected void evolve() {
+		super.evolve();
+		
+		Character ch;
 		int cell;
-		for (int i=area.top-1; i <= area.bottom; i++) {
-			for (int j = area.left-1; j <= area.right; j++) {
-				cell = j + i* Dungeon.level.width();
-				if (Dungeon.level.insideMap(cell)) {
-					off[cell] = cur[cell];
 
-					volume += off[cell];
-					if (off[cell] > 0 && Dungeon.level.visited[cell]){
-						Notes.add( Notes.Landmark.ALCHEMY );
-					}
+		for (int i = area.left; i < area.right; i++) {
+			for (int j = area.top; j < area.bottom; j++) {
+				cell = i + j * Dungeon.level.width();
+				if (cur[cell] > 0 && (ch = Actor.findChar(cell)) != null) {
+					if (!ch.isImmune(this.getClass()))
+						Buff.prolong(ch, Paralysis.class, Paralysis.DURATION);
 				}
 			}
 		}
@@ -51,7 +58,12 @@ public class Alchemy extends Blob {
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.start( Speck.factory( Speck.BUBBLE ), 0.33f, 0 );
+		
+		emitter.pour( Speck.factory( Speck.PARALYSIS ), 0.4f );
 	}
-
+	
+	@Override
+	public String tileDesc() {
+		return Messages.get(this, "desc");
+	}
 }

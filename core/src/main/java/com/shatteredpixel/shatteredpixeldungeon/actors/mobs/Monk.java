@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Imp;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
@@ -57,7 +57,7 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 30;
 	}
 	
@@ -81,8 +81,8 @@ public class Monk extends Mob {
 	protected float focusCooldown = 0;
 	
 	@Override
-	protected boolean act() {
-		boolean result = super.act();
+	protected boolean playGameTurn() {
+		boolean result = super.playGameTurn();
 		if (buff(Focus.class) == null && state == HUNTING && focusCooldown <= 0) {
 			Buff.affect( this, Focus.class );
 		}
@@ -104,7 +104,7 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		if (buff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
 			return INFINITE_EVASION;
 		}

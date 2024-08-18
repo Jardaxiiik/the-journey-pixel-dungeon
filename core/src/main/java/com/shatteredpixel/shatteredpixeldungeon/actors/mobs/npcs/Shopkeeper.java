@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -69,7 +69,7 @@ public class Shopkeeper extends NPC {
 	private int turnsSinceHarmed = -1;
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 
 		if (Dungeon.level.visited[pos]){
 			Notes.add(Notes.Landmark.SHOP);
@@ -81,7 +81,7 @@ public class Shopkeeper extends NPC {
 
 		sprite.turnTo( pos, Dungeon.hero.pos );
 		spend( TICK );
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
@@ -108,12 +108,12 @@ public class Shopkeeper extends NPC {
 			turnsSinceHarmed = 0;
 			yell(Messages.get(this, "warn"));
 
-			//cleanses all harmful blobs in the shop
-			ArrayList<Blob> blobs = new ArrayList<>();
+			//cleanses all harmful emitters in the shop
+			ArrayList<Emitter> emitters = new ArrayList<>();
 			for (Class c : new BlobImmunity().immunities()){
-				Blob b = Dungeon.level.blobs.get(c);
+				Emitter b = Dungeon.level.blobs.get(c);
 				if (b != null && b.volume > 0){
-					blobs.add(b);
+					emitters.add(b);
 				}
 			}
 
@@ -123,9 +123,9 @@ public class Shopkeeper extends NPC {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 
 					boolean affected = false;
-					for (Blob blob : blobs) {
-						if (blob.cur[i] > 0) {
-							blob.clear(i);
+					for (Emitter emitter : emitters) {
+						if (emitter.cur[i] > 0) {
+							emitter.clear(i);
 							affected = true;
 						}
 					}
@@ -216,7 +216,7 @@ public class Shopkeeper extends NPC {
 	};
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		if (c != Dungeon.hero) {
 			return true;
 		}

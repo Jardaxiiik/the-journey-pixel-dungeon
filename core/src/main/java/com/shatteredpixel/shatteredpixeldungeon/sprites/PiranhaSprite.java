@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.TextureFilm;
 
@@ -54,7 +54,7 @@ public class PiranhaSprite extends MobSprite {
 	}
 
 	@Override
-	public void link(Char ch) {
+	public void link(Character ch) {
 		super.link(ch);
 		renderShadow = false;
 	}

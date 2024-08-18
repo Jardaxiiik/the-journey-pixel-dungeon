@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -88,7 +88,7 @@ public class Bee extends Mob {
 		defenseSkill = 9 + level;
 	}
 
-	public void setPotInfo(int potPos, Char potHolder){
+	public void setPotInfo(int potPos, Character potHolder){
 		this.potPos = potPos;
 		if (potHolder == null)
 			this.potHolder = -1;
@@ -105,7 +105,7 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return defenseSkill;
 	}
 	
@@ -115,7 +115,7 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (enemy instanceof Mob) {
 			((Mob)enemy).aggro( this );
@@ -137,14 +137,14 @@ public class Bee extends Mob {
 	}
 
 	@Override
-	protected Char chooseEnemy() {
+	protected Character chooseEnemy() {
 		//if the pot is no longer present, default to regular AI behaviour
 		if (alignment == Alignment.ALLY || (potHolder == -1 && potPos == -1)){
 			return super.chooseEnemy();
 		
 		//if something is holding the pot, target that
 		}else if (Actor.findById(potHolder) != null){
-			return (Char) Actor.findById(potHolder);
+			return (Character) Actor.findById(potHolder);
 			
 		//if the pot is on the ground
 		}else {
@@ -156,7 +156,7 @@ public class Bee extends Mob {
 					|| (buff( Amok.class ) == null && enemy.isInvulnerable(getClass()))){
 				
 				//find all mobs near the pot
-				HashSet<Char> enemies = new HashSet<>();
+				HashSet<Character> enemies = new HashSet<>();
 				for (Mob mob : Dungeon.level.mobs) {
 					if (!(mob == this)
 							&& Dungeon.level.distance(mob.pos, potPos) <= 3

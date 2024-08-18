@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class Electricity extends Blob {
+public class Electricity extends Emitter {
 	
 	{
 		//acts after mobs, to give them a chance to resist paralysis
@@ -68,7 +68,7 @@ public class Electricity extends Blob {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
 				if (cur[cell] > 0) {
-					Char ch = Actor.findChar( cell );
+					Character ch = Actor.findChar( cell );
 					if (ch != null && !ch.isImmune(this.getClass())) {
 						if (ch.buff(Paralysis.class) == null){
 							Buff.prolong( ch, Paralysis.class, cur[cell]);

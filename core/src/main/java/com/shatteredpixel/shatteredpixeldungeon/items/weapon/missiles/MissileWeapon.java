@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
@@ -182,7 +182,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public float accuracyFactor(Char owner, Char target) {
+	public float accuracyFactor(Character owner, Character target) {
 		float accFactor = super.accuracyFactor(owner, target);
 		if (owner instanceof Hero && owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()){
 			accFactor *= 1f + 0.2f*((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM);
@@ -193,7 +193,7 @@ abstract public class MissileWeapon extends Weapon {
 		return accFactor;
 	}
 
-	protected float adjacentAccFactor(Char owner, Char target){
+	protected float adjacentAccFactor(Character owner, Character target){
 		if (Dungeon.level.adjacent( owner.pos, target.pos )) {
 			if (owner instanceof Hero){
 				return (0.5f + 0.2f*((Hero) owner).pointsInTalent(Talent.POINT_BLANK));
@@ -213,7 +213,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	protected void onThrow( int cell ) {
-		Char enemy = Actor.findChar( cell );
+		Character enemy = Actor.findChar( cell );
 		if (enemy == null || enemy == curUser) {
 			parent = null;
 
@@ -242,7 +242,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	@Override
-	public int proc(Char attacker, Char defender, int damage) {
+	public int proc(Character attacker, Character defender, int damage) {
 		if (attacker == Dungeon.hero && Random.Int(3) < Dungeon.hero.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
 			if (this instanceof Dart && ((Dart) this).crossbowHasEnchant(Dungeon.hero)){
 				//do nothing
@@ -280,15 +280,15 @@ abstract public class MissileWeapon extends Weapon {
 	}
 	
 	@Override
-	public float castDelay(Char user, int dst) {
+	public float castDelay(Character user, int dst) {
 		return delayFactor( user );
 	}
 	
-	protected void rangedHit( Char enemy, int cell ){
+	protected void rangedHit(Character enemy, int cell ){
 		decrementDurability();
 		if (durability > 0){
 			//attempt to stick the missile weapon to the enemy, just drop it if we can't.
-			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Char.Alignment.ALLY){
+			if (sticky && enemy != null && enemy.isAlive() && enemy.alignment != Character.Alignment.ALLY){
 				PinCushion p = Buff.affect(enemy, PinCushion.class);
 				if (p.target == enemy){
 					p.stick(this);
@@ -369,7 +369,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 	
 	@Override
-	public int damageRoll(Char owner) {
+	public int damageRoll(Character owner) {
 		int damage = augment.damageFactor(super.damageRoll( owner ));
 		
 		if (owner instanceof Hero) {

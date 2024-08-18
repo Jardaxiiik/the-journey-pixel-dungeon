@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -65,9 +65,9 @@ public class SpectralBlades extends ArmorAbility {
 		}
 
 		Ballistica b = new Ballistica(hero.pos, target, Ballistica.WONT_STOP);
-		final HashSet<Char> targets = new HashSet<>();
+		final HashSet<Character> targets = new HashSet<>();
 
-		Char enemy = findChar(b, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
+		Character enemy = findChar(b, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
 
 		if (enemy == null || !hero.fieldOfView[enemy.pos]){
 			GLog.w(Messages.get(this, "no_target"));
@@ -79,14 +79,14 @@ public class SpectralBlades extends ArmorAbility {
 		if (hero.hasTalent(Talent.FAN_OF_BLADES)){
 			ConeAOE cone = new ConeAOE(b, 30*hero.pointsInTalent(Talent.FAN_OF_BLADES));
 			for (Ballistica ray : cone.rays){
-				Char toAdd = findChar(ray, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
+				Character toAdd = findChar(ray, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
 				if (toAdd != null && hero.fieldOfView[toAdd.pos]){
 					targets.add(toAdd);
 				}
 			}
 			while (targets.size() > 1 + hero.pointsInTalent(Talent.FAN_OF_BLADES)){
-				Char furthest = null;
-				for (Char ch : targets){
+				Character furthest = null;
+				for (Character ch : targets){
 					if (furthest == null){
 						furthest = ch;
 					} else if (Dungeon.level.trueDistance(enemy.pos, ch.pos) >
@@ -105,7 +105,7 @@ public class SpectralBlades extends ArmorAbility {
 
 		final HashSet<Callback> callbacks = new HashSet<>();
 
-		for (Char ch : targets) {
+		for (Character ch : targets) {
 			Callback callback = new Callback() {
 				@Override
 				public void call() {
@@ -135,11 +135,11 @@ public class SpectralBlades extends ArmorAbility {
 		hero.busy();
 	}
 
-	private Char findChar(Ballistica path, Hero hero, int wallPenetration, HashSet<Char> existingTargets){
+	private Character findChar(Ballistica path, Hero hero, int wallPenetration, HashSet<Character> existingTargets){
 		for (int cell : path.path){
-			Char ch = Actor.findChar(cell);
+			Character ch = Actor.findChar(cell);
 			if (ch != null){
-				if (ch == hero || existingTargets.contains(ch) || ch.alignment == Char.Alignment.ALLY){
+				if (ch == hero || existingTargets.contains(ch) || ch.alignment == Character.Alignment.ALLY){
 					continue;
 				} else {
 					return ch;

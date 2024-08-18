@@ -40,7 +40,7 @@ public class WellFed extends Buff {
 	int left;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		left --;
 		if (left < 0){
 			detach();

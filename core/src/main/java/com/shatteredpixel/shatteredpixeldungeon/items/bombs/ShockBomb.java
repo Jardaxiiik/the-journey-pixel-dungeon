@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -50,7 +50,7 @@ public class ShockBomb extends Bomb {
 	public void explode(int cell) {
 		super.explode(cell);
 
-		ArrayList<Char> affected = new ArrayList<>();
+		ArrayList<Character> affected = new ArrayList<>();
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 3 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
@@ -59,7 +59,7 @@ public class ShockBomb extends Bomb {
 			}
 		}
 
-		for (Char ch : affected.toArray(new Char[0])){
+		for (Character ch : affected.toArray(new Character[0])){
 			Ballistica LOS = new Ballistica(cell, ch.pos, Ballistica.PROJECTILE);
 			if (LOS.collisionPos != ch.pos){
 				affected.remove(ch);
@@ -67,7 +67,7 @@ public class ShockBomb extends Bomb {
 		}
 
 		ArrayList<Lightning.Arc> arcs = new ArrayList<>();
-		for (Char ch : affected){
+		for (Character ch : affected){
 			int power = 16 - 4*Dungeon.level.distance(ch.pos, cell);
 			if (power > 0){
 				//32% to 8% regular bomb damage

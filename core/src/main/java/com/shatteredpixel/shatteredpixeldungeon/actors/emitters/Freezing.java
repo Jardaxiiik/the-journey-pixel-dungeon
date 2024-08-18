@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Freezing extends Blob {
+public class Freezing extends Emitter {
 	
 	@Override
 	protected void evolve() {
@@ -66,7 +66,7 @@ public class Freezing extends Blob {
 	}
 	
 	public static void freeze( int cell ){
-		Char ch = Actor.findChar( cell );
+		Character ch = Actor.findChar( cell );
 		if (ch != null && !ch.isImmune(Freezing.class)) {
 			if (ch.buff(Frost.class) != null){
 				Buff.affect(ch, Frost.class, 2f);
@@ -107,7 +107,7 @@ public class Freezing extends Blob {
 	//legacy functionality from before this was a proper blob. Returns true if this cell is visible
 	public static boolean affect( int cell ) {
 		
-		Char ch = Actor.findChar( cell );
+		Character ch = Actor.findChar( cell );
 		if (ch != null) {
 			if (Dungeon.level.water[ch.pos]){
 				Buff.prolong(ch, Frost.class, Frost.DURATION * 3);

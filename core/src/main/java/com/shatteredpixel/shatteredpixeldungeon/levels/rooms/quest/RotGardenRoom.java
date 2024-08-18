@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.quest;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotHeart;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.RotLasher;
@@ -160,7 +160,7 @@ public class RotGardenRoom extends SpecialRoom {
 		}
 
 		if (safeHeartcells < 2 && !adjacentLashers.isEmpty()){
-			Char toRemove = Random.element(adjacentLashers);
+			Character toRemove = Random.element(adjacentLashers);
 			level.mobs.remove(toRemove);
 			Painter.set(level, toRemove.pos, Terrain.HIGH_GRASS);
 		}

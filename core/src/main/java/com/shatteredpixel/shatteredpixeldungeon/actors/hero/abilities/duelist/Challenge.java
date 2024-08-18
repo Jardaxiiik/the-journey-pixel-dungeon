@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
@@ -68,7 +68,7 @@ public class Challenge extends ArmorAbility {
 	}
 
 	@Override
-	public int targetedPos(Char user, int dst) {
+	public int targetedPos(Character user, int dst) {
 		return dst;
 	}
 
@@ -88,7 +88,7 @@ public class Challenge extends ArmorAbility {
 			return;
 		}
 
-		Char targetCh = Actor.findChar(target);
+		Character targetCh = Actor.findChar(target);
 		if (targetCh == null || !Dungeon.level.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
@@ -105,7 +105,7 @@ public class Challenge extends ArmorAbility {
 		}
 
 		boolean[] passable = BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null);
-		for (Char c : Actor.chars()) {
+		for (Character c : Actor.chars()) {
 			if (c != hero) passable[c.pos] = false;
 		}
 		PathFinder.buildDistanceMap(targetCh.pos, passable);
@@ -160,10 +160,10 @@ public class Challenge extends ArmorAbility {
 			Sample.INSTANCE.play( Assets.Sounds.PUFF );
 		}
 
-		boolean bossTarget = Char.hasProp(targetCh, Char.Property.BOSS);
-		for (Char toFreeze : Actor.chars()){
-			if (toFreeze != targetCh && toFreeze.alignment != Char.Alignment.ALLY && !(toFreeze instanceof NPC)
-				&& (!bossTarget || !(Char.hasProp(targetCh, Char.Property.BOSS) || Char.hasProp(targetCh, Char.Property.BOSS_MINION)))) {
+		boolean bossTarget = Character.hasProp(targetCh, Character.Property.BOSS);
+		for (Character toFreeze : Actor.chars()){
+			if (toFreeze != targetCh && toFreeze.alignment != Character.Alignment.ALLY && !(toFreeze instanceof NPC)
+				&& (!bossTarget || !(Character.hasProp(targetCh, Character.Property.BOSS) || Character.hasProp(targetCh, Character.Property.BOSS_MINION)))) {
 				Actor.delayChar(toFreeze, DuelParticipant.DURATION);
 				Buff.affect(toFreeze, SpectatorFreeze.class, DuelParticipant.DURATION);
 			}
@@ -224,14 +224,14 @@ public class Challenge extends ArmorAbility {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			left--;
 			if (left == 0) {
 				detach();
 			} else {
-				Char other = null;
-				for (Char ch : Actor.chars()){
+				Character other = null;
+				for (Character ch : Actor.chars()){
 					if (ch != target && ch.buff(DuelParticipant.class) != null){
 						other = ch;
 					}
@@ -275,7 +275,7 @@ public class Challenge extends ArmorAbility {
 					}
 				}
 
-				for (Char ch : Actor.chars()) {
+				for (Character ch : Actor.chars()) {
 					if (ch.buff(SpectatorFreeze.class) != null) {
 						ch.buff(SpectatorFreeze.class).detach();
 					}

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -117,8 +117,8 @@ public class LloydsBeacon extends Artifact {
 			}
 			
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				Char ch = Actor.findChar(hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i]);
-				if (ch != null && ch.alignment == Char.Alignment.ENEMY) {
+				Character ch = Actor.findChar(hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i]);
+				if (ch != null && ch.alignment == Character.Alignment.ENEMY) {
 					GLog.w( Messages.get(this, "creatures") );
 					return;
 				}
@@ -203,7 +203,7 @@ public class LloydsBeacon extends Artifact {
 				curUser.spendAndNext(1f);
 			} else {
 				final Ballistica bolt = new Ballistica( curUser.pos, target, Ballistica.MAGIC_BOLT );
-				final Char ch = Actor.findChar(bolt.collisionPos);
+				final Character ch = Actor.findChar(bolt.collisionPos);
 
 				if (ch == curUser){
 					ScrollOfTeleportation.teleportChar(curUser);
@@ -235,7 +235,7 @@ public class LloydsBeacon extends Artifact {
 
 											GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 
-										} else if (ch.properties().contains(Char.Property.IMMOVABLE)) {
+										} else if (ch.properties().contains(Character.Property.IMMOVABLE)) {
 
 											GLog.w( Messages.get(LloydsBeacon.class, "tele_fail") );
 
@@ -310,7 +310,7 @@ public class LloydsBeacon extends Artifact {
 
 	public class beaconRecharge extends ArtifactBuff{
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (charge < chargeCap && !cursed && Regeneration.regenOn()) {
 				partialCharge += 1 / (100f - (chargeCap - charge)*10f);
 

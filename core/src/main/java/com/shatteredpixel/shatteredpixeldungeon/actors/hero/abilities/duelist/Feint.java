@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -69,7 +69,7 @@ public class Feint extends ArmorAbility {
 	}
 
 	@Override
-	public int targetedPos(Char user, int dst) {
+	public int targetedPos(Character user, int dst) {
 		return dst;
 	}
 
@@ -115,8 +115,8 @@ public class Feint extends ArmorAbility {
 		GameScene.add(image, 1);
 
 		int imageAttackPos;
-		Char enemyTarget = TargetHealthIndicator.instance.target();
-		if (enemyTarget != null && enemyTarget.alignment == Char.Alignment.ENEMY){
+		Character enemyTarget = TargetHealthIndicator.instance.target();
+		if (enemyTarget != null && enemyTarget.alignment == Character.Alignment.ENEMY){
 			imageAttackPos = enemyTarget.pos;
 		} else {
 			imageAttackPos = image.pos + (image.pos - target);
@@ -136,7 +136,7 @@ public class Feint extends ArmorAbility {
 
 		for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )){
 			if ((m.isTargeting(hero) && m.state == m.HUNTING) ||
-					(m.alignment == Char.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.pos, image.pos) <= 2)){
+					(m.alignment == Character.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.pos, image.pos) <= 2)){
 				m.aggro(image);
 			}
 		}
@@ -168,12 +168,12 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public boolean canInteract(Char c) {
+		public boolean canInteract(Character c) {
 			return false;
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			destroy();
 			sprite.die();
 			return true;
@@ -185,7 +185,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public int defenseSkill(Char enemy) {
+		public int defenseSkill(Character enemy) {
 			if (enemy.alignment == Alignment.ENEMY) {
 				if (enemy instanceof Mob) {
 					((Mob) enemy).clearEnemy();

@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -224,29 +224,29 @@ abstract public class KindOfWeapon extends EquipableItem {
 	abstract public int min(int lvl);
 	abstract public int max(int lvl);
 
-	public int damageRoll( Char owner ) {
+	public int damageRoll( Character owner ) {
 		return Random.NormalIntRange( min(), max() );
 	}
 	
-	public float accuracyFactor( Char owner, Char target ) {
+	public float accuracyFactor(Character owner, Character target ) {
 		return 1f;
 	}
 	
-	public float delayFactor( Char owner ) {
+	public float delayFactor( Character owner ) {
 		return 1f;
 	}
 
-	public int reachFactor( Char owner ){
+	public int reachFactor( Character owner ){
 		return 1;
 	}
 	
-	public boolean canReach( Char owner, int target){
+	public boolean canReach(Character owner, int target){
 		int reach = reachFactor(owner);
 		if (Dungeon.level.distance( owner.pos, target ) > reach){
 			return false;
 		} else {
 			boolean[] passable = BArray.not(Dungeon.level.solid, null);
-			for (Char ch : Actor.chars()) {
+			for (Character ch : Actor.chars()) {
 				if (ch != owner) passable[ch.pos] = false;
 			}
 			
@@ -256,11 +256,11 @@ abstract public class KindOfWeapon extends EquipableItem {
 		}
 	}
 
-	public int defenseFactor( Char owner ) {
+	public int defenseFactor( Character owner ) {
 		return 0;
 	}
 	
-	public int proc( Char attacker, Char defender, int damage ) {
+	public int proc(Character attacker, Character defender, int damage ) {
 		return damage;
 	}
 

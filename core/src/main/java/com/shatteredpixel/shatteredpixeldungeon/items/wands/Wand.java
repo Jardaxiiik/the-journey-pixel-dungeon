@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
@@ -126,10 +126,10 @@ public abstract class Wand extends Item {
 
 	public abstract void onZap(Ballistica attack);
 
-	public abstract void onHit( MagesStaff staff, Char attacker, Char defender, int damage);
+	public abstract void onHit(MagesStaff staff, Character attacker, Character defender, int damage);
 
 	//not affected by enchantment proc chance changers
-	public static float procChanceMultiplier( Char attacker ){
+	public static float procChanceMultiplier( Character attacker ){
 		if (attacker.buff(Talent.EmpoweredStrikeTracker.class) != null){
 			return 1f + ((Hero)attacker).pointsInTalent(Talent.EMPOWERED_STRIKE)/2f;
 		}
@@ -181,22 +181,22 @@ public abstract class Wand extends Item {
 		}
 	}
 	
-	public void charge( Char owner ) {
+	public void charge( Character owner ) {
 		if (charger == null) charger = new Charger();
 		charger.attachTo( owner );
 	}
 
-	public void charge( Char owner, float chargeScaleFactor ){
+	public void charge(Character owner, float chargeScaleFactor ){
 		charge( owner );
 		charger.setScaleFactor( chargeScaleFactor );
 	}
 
-	protected void wandProc(Char target, int chargesUsed){
+	protected void wandProc(Character target, int chargesUsed){
 		wandProc(target, buffedLvl(), chargesUsed);
 	}
 
 	//TODO Consider externalizing char awareness buff
-	protected static void wandProc(Char target, int wandLevel, int chargesUsed){
+	protected static void wandProc(Character target, int wandLevel, int chargesUsed){
 		if (Dungeon.hero.hasTalent(Talent.ARCANE_VISION)) {
 			int dur = 5 + 5*Dungeon.hero.pointsInTalent(Talent.ARCANE_VISION);
 			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
@@ -562,7 +562,7 @@ public abstract class Wand extends Item {
 
 		@Override
 		public void onZap(Ballistica attack) {}
-		public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {}
+		public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {}
 
 		@Override
 		public String info() {
@@ -705,7 +705,7 @@ public abstract class Wand extends Item {
 		float scalingFactor = NORMAL_SCALE_FACTOR;
 
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
@@ -717,7 +717,7 @@ public abstract class Wand extends Item {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (curCharges < maxCharges && target.buff(MagicImmune.class) == null)
 				recharge();
 			

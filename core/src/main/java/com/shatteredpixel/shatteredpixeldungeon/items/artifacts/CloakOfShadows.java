@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
@@ -113,7 +113,7 @@ public class CloakOfShadows extends Artifact {
 	}
 
 	@Override
-	public void activate(Char ch){
+	public void activate(Character ch){
 		super.activate(ch);
 		if (activeBuff != null && activeBuff.target == null){
 			activeBuff.attachTo(ch);
@@ -224,7 +224,7 @@ public class CloakOfShadows extends Artifact {
 
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
 				if (activeBuff == null && Regeneration.regenOn()) {
 					float missing = (chargeCap - charge);
@@ -296,7 +296,7 @@ public class CloakOfShadows extends Artifact {
 		}
 
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				target.invisible++;
 				if (target instanceof Hero && ((Hero) target).subClass == HeroSubClass.ASSASSIN){
@@ -312,7 +312,7 @@ public class CloakOfShadows extends Artifact {
 		}
 
 		@Override
-		public boolean act(){
+		public boolean playGameTurn(){
 			turnsToCost--;
 			
 			if (turnsToCost <= 0){

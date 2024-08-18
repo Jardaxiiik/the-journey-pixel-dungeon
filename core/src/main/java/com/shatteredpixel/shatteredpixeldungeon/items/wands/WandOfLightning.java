@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
@@ -53,7 +53,7 @@ public class WandOfLightning extends DamageWand {
 		image = ItemSpriteSheet.WAND_LIGHTNING;
 	}
 	
-	private ArrayList<Char> affected = new ArrayList<>();
+	private ArrayList<Character> affected = new ArrayList<>();
 
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class WandOfLightning extends DamageWand {
 		//if the main target is in water, all affected take full damage
 		if (Dungeon.level.water[bolt.collisionPos]) multiplier = 1f;
 
-		for (Char ch : affected){
+		for (Character ch : affected){
 			if (ch == Dungeon.hero) PixelScene.shake( 2, 0.3f );
 			ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );
 			ch.sprite.flash();
@@ -96,27 +96,27 @@ public class WandOfLightning extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//acts like shocking enchantment
 		new LightningOnHit().proc(staff, attacker, defender, damage);
 	}
 
 	private static class LightningOnHit extends Shocking {
 		@Override
-		protected float procChanceMultiplier(Char attacker) {
+		protected float procChanceMultiplier(Character attacker) {
 			return Wand.procChanceMultiplier(attacker);
 		}
 	}
 
-	private void arc( Char ch ) {
+	private void arc( Character ch ) {
 
 		int dist = Dungeon.level.water[ch.pos] ? 2 : 1;
 
-		ArrayList<Char> hitThisArc = new ArrayList<>();
+		ArrayList<Character> hitThisArc = new ArrayList<>();
 		PathFinder.buildDistanceMap( ch.pos, BArray.not( Dungeon.level.solid, null ), dist );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE){
-				Char n = Actor.findChar( i );
+				Character n = Actor.findChar( i );
 				if (n == Dungeon.hero && PathFinder.distance[i] > 1)
 					//the hero is only zapped if they are adjacent
 					continue;
@@ -127,7 +127,7 @@ public class WandOfLightning extends DamageWand {
 		}
 		
 		affected.addAll(hitThisArc);
-		for (Char hit : hitThisArc){
+		for (Character hit : hitThisArc){
 			arcs.add(new Lightning.Arc(ch.sprite.center(), hit.sprite.center()));
 			arc(hit);
 		}
@@ -141,7 +141,7 @@ public class WandOfLightning extends DamageWand {
 
 		int cell = bolt.collisionPos;
 
-		Char ch = Actor.findChar( cell );
+		Character ch = Actor.findChar( cell );
 		if (ch != null) {
 			if (ch instanceof DwarfKing){
 				Statistics.qualifiedForBossChallengeBadge = false;

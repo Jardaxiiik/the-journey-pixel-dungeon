@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CrystalWisp;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
@@ -92,7 +92,7 @@ public abstract class CrystalWispSprite extends MobSprite {
 	}
 
 	@Override
-	public void link(Char ch) {
+	public void link(Character ch) {
 		super.link(ch);
 		light = new TorchHalo( this );
 		light.hardlight(blood() & 0x00FFFFFF);

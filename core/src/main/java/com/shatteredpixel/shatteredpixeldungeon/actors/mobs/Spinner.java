@@ -22,9 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -62,7 +62,7 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public int attackSkill(Char target) {
+	public int attackSkill(Character target) {
 		return 22;
 	}
 
@@ -92,13 +92,13 @@ public class Spinner extends Mob {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (state == HUNTING || state == FLEEING){
 			webCoolDown--;
 		}
 
 		AiState lastState = state;
-		boolean result = super.act();
+		boolean result = super.playGameTurn();
 
 		//We only want to update target position once per turn, so if switched from wandering, wait for a moment
 		//Also want to avoid updating when we visually shot a web this turn (don't want to change the position)
@@ -117,7 +117,7 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public int attackProc(Char enemy, int damage) {
+	public int attackProc(Character enemy, int damage) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int(2) == 0) {
 			int duration = Random.IntRange(7, 8);
@@ -135,7 +135,7 @@ public class Spinner extends Mob {
 
 	public int webPos(){
 
-		Char enemy = this.enemy;
+		Character enemy = this.enemy;
 		if (enemy == null) return -1;
 
 		//don't web a non-moving enemy that we're going to attack
@@ -205,7 +205,7 @@ public class Spinner extends Mob {
 	}
 
 	protected void applyWebToCell(int cell){
-		GameScene.add(Blob.seed(cell, 20, Web.class));
+		GameScene.add(Emitter.seed(cell, 20, Web.class));
 	}
 	
 	private int left(int direction){

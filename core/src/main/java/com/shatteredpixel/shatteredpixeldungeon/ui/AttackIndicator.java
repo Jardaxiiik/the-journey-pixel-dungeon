@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -181,7 +181,7 @@ public class AttackIndicator extends Tag {
 	protected void onClick() {
 		super.onClick();
 		if (enabled && Dungeon.hero.ready) {
-			if (Dungeon.hero.handle( lastTarget.pos )) {
+			if (Dungeon.hero.chooseHeroActionBasedOnTile( lastTarget.pos )) {
 				Dungeon.hero.next();
 			}
 		}
@@ -192,7 +192,7 @@ public class AttackIndicator extends Tag {
 		return Messages.titleCase(Messages.get(WndKeyBindings.class, "tag_attack"));
 	}
 
-	public static void target(Char target ) {
+	public static void target(Character target ) {
 		if (target == null) return;
 		synchronized (instance) {
 			instance.lastTarget = (Mob) target;

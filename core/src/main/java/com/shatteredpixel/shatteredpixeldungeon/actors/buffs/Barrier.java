@@ -49,7 +49,7 @@ public class Barrier extends ShieldBuff {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 
 		partialLostShield += Math.min(1f, shielding()/20f);
 

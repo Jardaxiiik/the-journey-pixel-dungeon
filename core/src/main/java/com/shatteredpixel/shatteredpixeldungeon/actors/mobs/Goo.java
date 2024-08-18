@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
@@ -81,7 +81,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		int attack = 10;
 		if (healthPoints *2 <= healthMax) attack = 15;
 		if (pumpedUp > 0) attack *= 2;
@@ -89,7 +89,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		return (int)(super.defenseSkill(enemy) * ((healthPoints *2 <= healthMax)? 1.5 : 1));
 	}
 
@@ -99,7 +99,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 
 		if (state != HUNTING && pumpedUp > 0){
 			pumpedUp = 0;
@@ -135,11 +135,11 @@ public class Goo extends Mob {
 			Dungeon.level.seal();
 		}
 
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		if (pumpedUp > 0){
 			//we check both from and to in this case as projectile logic isn't always symmetrical.
 			//this helps trim out BS edge-cases
@@ -152,7 +152,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int( 3 ) == 0) {
 			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
@@ -176,7 +176,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 		if (pumpedUp == 1) {
 			pumpedUp++;
 			((GooSprite)sprite).pumpUp( pumpedUp );
@@ -228,7 +228,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
+	public boolean attack(Character enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 		boolean result = super.attack( enemy, dmgMulti, dmgBonus, accMulti );
 		if (pumpedUp > 0) {
 			pumpedUp = 0;
@@ -315,7 +315,7 @@ public class Goo extends Mob {
 			BossHealthBar.assignBoss(this);
 			Dungeon.level.seal();
 			yell(Messages.get(this, "notice"));
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}

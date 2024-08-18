@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
@@ -230,7 +230,7 @@ public class Armor extends EquipableItem {
 	}
 
 	@Override
-	public void activate(Char ch) {
+	public void activate(Character ch) {
 		if (seal != null) Buff.affect(ch, BrokenSeal.WarriorShield.class).setArmor(this);
 	}
 
@@ -317,7 +317,7 @@ public class Armor extends EquipableItem {
 		}
 	}
 	
-	public float evasionFactor( Char owner, float evasion ){
+	public float evasionFactor(Character owner, float evasion ){
 		
 		if (hasGlyph(Stone.class, owner) && !((Stone)glyph).testingEvasion()){
 			return 0;
@@ -336,7 +336,7 @@ public class Armor extends EquipableItem {
 		return evasion + augment.evasionFactor(buffedLvl());
 	}
 	
-	public float speedFactor( Char owner, float speed ){
+	public float speedFactor(Character owner, float speed ){
 		
 		if (owner instanceof Hero) {
 			int aEnc = STRReq() - ((Hero) owner).getAttributeStrength();
@@ -346,7 +346,7 @@ public class Armor extends EquipableItem {
 		if (hasGlyph(Swiftness.class, owner)) {
 			boolean enemyNear = false;
 			PathFinder.buildDistanceMap(owner.pos, Dungeon.level.passable, 2);
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if ( PathFinder.distance[ch.pos] != Integer.MAX_VALUE && owner.alignment != ch.alignment){
 					enemyNear = true;
 					break;
@@ -367,7 +367,7 @@ public class Armor extends EquipableItem {
 		
 	}
 	
-	public float stealthFactor( Char owner, float stealth ){
+	public float stealthFactor(Character owner, float stealth ){
 		
 		if (hasGlyph(Obfuscation.class, owner)){
 			stealth += (1 + buffedLvl()/3f) * glyph.procChanceMultiplier(owner);
@@ -430,7 +430,7 @@ public class Armor extends EquipableItem {
 		return super.upgrade();
 	}
 	
-	public int proc( Char attacker, Char defender, int damage ) {
+	public int proc(Character attacker, Character defender, int damage ) {
 		
 		if (glyph != null && defender.buff(MagicImmune.class) == null) {
 			damage = glyph.proc( this, attacker, defender, damage );
@@ -614,7 +614,7 @@ public class Armor extends EquipableItem {
 		return inscribe( gl );
 	}
 
-	public boolean hasGlyph(Class<?extends Glyph> type, Char owner) {
+	public boolean hasGlyph(Class<?extends Glyph> type, Character owner) {
 		return glyph != null && glyph.getClass() == type && owner.buff(MagicImmune.class) == null;
 	}
 
@@ -655,13 +655,13 @@ public class Armor extends EquipableItem {
 				Multiplicity.class, Stench.class, Overgrowth.class, Bulk.class
 		};
 		
-		public abstract int proc( Armor armor, Char attacker, Char defender, int damage );
+		public abstract int proc(Armor armor, Character attacker, Character defender, int damage );
 
-		protected float procChanceMultiplier( Char defender ){
+		protected float procChanceMultiplier( Character defender ){
 			return genericProcChanceMultiplier( defender );
 		}
 
-		public static float genericProcChanceMultiplier( Char defender ){
+		public static float genericProcChanceMultiplier( Character defender ){
 			return RingOfArcana.enchantPowerMultiplier(defender);
 		}
 		

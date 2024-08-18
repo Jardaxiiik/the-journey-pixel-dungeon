@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -73,7 +73,7 @@ public class RipperDemon extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 30;
 	}
 
@@ -110,13 +110,13 @@ public class RipperDemon extends Mob {
 	private int lastEnemyPos = -1;
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (state == WANDERING){
 			leapPos = -1;
 		}
 
 		AiState lastState = state;
-		boolean result = super.act();
+		boolean result = super.playGameTurn();
 		if (paralysed <= 0) leapCooldown --;
 
 		//if state changed from wandering to hunting, we haven't acted yet, don't update.
@@ -151,7 +151,7 @@ public class RipperDemon extends Mob {
 				Ballistica b = new Ballistica(pos, leapPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
 				leapPos = b.collisionPos;
 
-				final Char leapVictim = Actor.findChar(leapPos);
+				final Character leapVictim = Actor.findChar(leapPos);
 				final int endPos;
 
 				//ensure there is somewhere to land after leaping
@@ -180,7 +180,7 @@ public class RipperDemon extends Mob {
 					public void call() {
 
 						if (leapVictim != null && alignment != leapVictim.alignment){
-							if (hit(RipperDemon.this, leapVictim, Char.INFINITE_ACCURACY, false)) {
+							if (hit(RipperDemon.this, leapVictim, Character.INFINITE_ACCURACY, false)) {
 								Buff.affect(leapVictim, Bleeding.class).set(0.75f * damageRoll());
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);

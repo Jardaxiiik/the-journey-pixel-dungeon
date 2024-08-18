@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -56,7 +56,7 @@ public class GatewayTrap extends Trap {
 
 		if (telePos == -1){
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-				Char ch = Actor.findChar(pos + i);
+				Character ch = Actor.findChar(pos + i);
 				if (ch != null){
 					if (ScrollOfTeleportation.teleportChar(ch)) {
 						if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
@@ -106,10 +106,10 @@ public class GatewayTrap extends Trap {
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 
-				Char ch = Actor.findChar(pos + i);
-				if (ch != null && !Char.hasProp(ch, Char.Property.IMMOVABLE)){
+				Character ch = Actor.findChar(pos + i);
+				if (ch != null && !Character.hasProp(ch, Character.Property.IMMOVABLE)){
 					int newPos = -1;
-					if (Char.hasProp(ch, Char.Property.LARGE)){
+					if (Character.hasProp(ch, Character.Property.LARGE)){
 						if (!largeCharPositions.isEmpty()){
 							newPos = largeCharPositions.get(0);
 						}

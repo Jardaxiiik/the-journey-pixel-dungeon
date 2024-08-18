@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -60,7 +60,7 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 36;
 	}
 	
@@ -70,13 +70,13 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 		return !Dungeon.level.adjacent( pos, enemy.pos )
 				&& (super.canAttack(enemy) || new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos);
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (Random.Int( 2 ) == 0) {
 			Buff.prolong( enemy, Cripple.class, Cripple.DURATION );
@@ -95,7 +95,7 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	public void aggro(Char ch) {
+	public void aggro(Character ch) {
 		//cannot be aggroed to something it can't see
 		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
 			super.aggro(ch);

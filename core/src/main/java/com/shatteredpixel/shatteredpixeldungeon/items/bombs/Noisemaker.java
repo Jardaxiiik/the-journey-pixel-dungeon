@@ -61,10 +61,10 @@ public class Noisemaker extends Bomb {
 		private int left;
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 			if (!triggered){
 				//acts like a normal fuse until first trigger
-				return super.act();
+				return super.playGameTurn();
 			} else {
 
 				for (Heap heap : Dungeon.level.heaps.valueList()) {

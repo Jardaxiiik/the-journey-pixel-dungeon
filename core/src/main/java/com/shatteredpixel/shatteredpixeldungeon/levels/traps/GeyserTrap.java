@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -70,11 +70,11 @@ public class GeyserTrap extends Trap {
 		}
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			Char ch = Actor.findChar(pos + i);
+			Character ch = Actor.findChar(pos + i);
 			if (ch != null){
 
 				//does the equivalent of a bomb's damage against fiery enemies.
-				if (Char.hasProp(ch, Char.Property.FIERY)){
+				if (Character.hasProp(ch, Character.Property.FIERY)){
 					int dmg = Random.NormalIntRange(5 + scalingDepth(), 10 + scalingDepth()*2);
 					dmg *= 0.67f;
 					if (!ch.isImmune(GeyserTrap.class)){
@@ -93,7 +93,7 @@ public class GeyserTrap extends Trap {
 			}
 		}
 
-		Char ch = Actor.findChar(pos);
+		Character ch = Actor.findChar(pos);
 		if (ch != null){
 			int targetpos = -1;
 			if (centerKnockBackDirection != -1){
@@ -116,7 +116,7 @@ public class GeyserTrap extends Trap {
 			}
 
 			//does the equivalent of a bomb's damage against fiery enemies.
-			if (Char.hasProp(ch, Char.Property.FIERY)){
+			if (Character.hasProp(ch, Character.Property.FIERY)){
 				int dmg = Random.NormalIntRange(5 + scalingDepth(), 10 + scalingDepth()*2);
 				if (!ch.isImmune(GeyserTrap.class)){
 					ch.damage(dmg, this);

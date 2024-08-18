@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.PoisonDart;
@@ -50,7 +50,7 @@ public class PoisonDartTrap extends Trap {
 		return 8 + Math.round(2*scalingDepth() / 3f);
 	}
 	
-	protected boolean canTarget( Char ch ){
+	protected boolean canTarget( Character ch ){
 		return true;
 	}
 	
@@ -65,9 +65,9 @@ public class PoisonDartTrap extends Trap {
 			}
 
 			@Override
-			protected boolean act() {
+			protected boolean playGameTurn() {
 				Actor.remove(this);
-				Char target = Actor.findChar(pos);
+				Character target = Actor.findChar(pos);
 
 				if (target != null && !canTarget(target)){
 					target = null;
@@ -76,7 +76,7 @@ public class PoisonDartTrap extends Trap {
 				//find the closest char that can be aimed at
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
-					for (Char ch : Actor.chars()){
+					for (Character ch : Actor.chars()){
 						if (!ch.isAlive()) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.pos);
 						if (ch.invisible > 0) curDist += 1000;
@@ -89,7 +89,7 @@ public class PoisonDartTrap extends Trap {
 				}
 
 				if (target != null) {
-					final Char finalTarget = target;
+					final Character finalTarget = target;
 					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
 						((MissileSprite) JourneyPixelDungeon.scene().recycle(MissileSprite.class)).
 								reset(pos, finalTarget.sprite, new PoisonDart(), new Callback() {

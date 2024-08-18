@@ -23,9 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -70,7 +70,7 @@ public class PrismaticImage extends NPC {
 	private int deathTimer = -1;
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		
 		if (!isAlive()){
 			deathTimer--;
@@ -105,7 +105,7 @@ public class PrismaticImage extends NPC {
 			((PrismaticSprite)sprite).updateArmor( armTier );
 		}
 		
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
@@ -159,7 +159,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		if (hero != null) {
 			//same base attack skill as hero, benefits from accuracy ring
 			return (int)((9 + hero.lvl) * RingOfAccuracy.accuracyMultiplier(hero));
@@ -169,7 +169,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill(Char enemy) {
+	public int defenseSkill(Character enemy) {
 		if (hero != null) {
 			int baseEvasion = 4 + hero.lvl;
 			int heroEvasion = (int)((4 + hero.lvl) * RingOfEvasion.evasionMultiplier( hero ));
@@ -196,7 +196,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		if (hero != null && hero.belongings.armor() != null){
 			damage = hero.belongings.armor().proc( enemy, this, damage );
 		}
@@ -225,7 +225,7 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		
 		if (enemy instanceof Mob) {
 			((Mob)enemy).aggro( this );

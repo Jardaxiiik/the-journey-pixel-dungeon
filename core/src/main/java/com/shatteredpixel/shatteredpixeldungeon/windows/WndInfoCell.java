@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -142,12 +142,12 @@ public class WndInfoCell extends Window {
 		add(info);
 
 		if (Dungeon.level.heroFOV[cell]) {
-			for (Blob blob : Dungeon.level.blobs.values()) {
-				if (blob.volume > 0 && blob.cur[cell] > 0 && blob.tileDesc() != null) {
+			for (Emitter emitter : Dungeon.level.blobs.values()) {
+				if (emitter.volume > 0 && emitter.cur[cell] > 0 && emitter.tileDesc() != null) {
 					if (desc.length() > 0) {
 						desc += "\n\n";
 					}
-					desc += blob.tileDesc();
+					desc += emitter.tileDesc();
 				}
 			}
 		}

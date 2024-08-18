@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -110,7 +110,7 @@ public class WandOfRegrowth extends Wand {
 			if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
 					terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
 				i.remove();
-			} else if (Char.hasProp(Actor.findChar(cell), Char.Property.IMMOVABLE)) {
+			} else if (Character.hasProp(Actor.findChar(cell), Character.Property.IMMOVABLE)) {
 				i.remove();
 			} else if (Dungeon.level.plants.get(cell) != null){
 				i.remove();
@@ -119,7 +119,7 @@ public class WandOfRegrowth extends Wand {
 					Level.set(cell, Terrain.GRASS);
 					GameScene.updateMap( cell );
 				}
-				Char ch = Actor.findChar(cell);
+				Character ch = Actor.findChar(cell);
 				if (ch != null){
 					if (ch instanceof DwarfKing){
 						Statistics.qualifiedForBossChallengeBadge = false;
@@ -220,7 +220,7 @@ public class WandOfRegrowth extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//like pre-nerf vampiric enchantment, except with herbal healing buff, only in grass
 		boolean grass = false;
 		int terr = Dungeon.level.map[attacker.pos];
@@ -333,7 +333,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public void activate( Char ch ) {
+		public void activate( Character ch ) {
 
 			int nDrops = Random.NormalIntRange(3, 6);
 
@@ -373,7 +373,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public void activate( Char ch ) {
+		public void activate( Character ch ) {
 
 			int nSeeds = Random.NormalIntRange(2, 4);
 
@@ -430,13 +430,13 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public boolean canInteract(Char c) {
+		public boolean canInteract(Character c) {
 			return false;
 		}
 
 		@Override
-		protected boolean act() {
-			super.act();
+		protected boolean playGameTurn() {
+			super.playGameTurn();
 
 			if (--healthPoints <= 0){
 				destroy();

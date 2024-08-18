@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Game;
@@ -34,15 +34,15 @@ import com.watabou.utils.PointF;
 
 public class Swap extends Actor {
 
-	private Char ch1;
-	private Char ch2;
+	private Character ch1;
+	private Character ch2;
 
 	private Effect eff1;
 	private Effect eff2;
 
 	private float delay;
 
-	public Swap( Char ch1, Char ch2 ) {
+	public Swap(Character ch1, Character ch2 ) {
 
 		this.ch1 = ch1;
 		this.ch2 = ch2;
@@ -55,7 +55,7 @@ public class Swap extends Actor {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		return false;
 	}
 

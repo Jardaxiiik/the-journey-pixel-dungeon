@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -84,11 +84,11 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (levelGenStatue && Dungeon.level.visited[pos]) {
 			Notes.add( Notes.Landmark.STATUE );
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
@@ -97,7 +97,7 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return (int)((9 + Dungeon.depth) * weapon.accuracyFactor( this, target ));
 	}
 	
@@ -107,7 +107,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack(Char enemy) {
+	protected boolean canAttack(Character enemy) {
 		return super.canAttack(enemy) || weapon.canReach(this, enemy.pos);
 	}
 
@@ -138,12 +138,12 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public int attackProc( Char enemy, int damage ) {
+	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		damage = weapon.proc( this, enemy, damage );
 		if (!enemy.isAlive() && enemy == Dungeon.hero){
 			Dungeon.fail(this);
-			GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
+			GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
 		}
 		return damage;
 	}

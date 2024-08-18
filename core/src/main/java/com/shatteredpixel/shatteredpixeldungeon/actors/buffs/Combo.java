@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DwarfKing;
@@ -88,7 +88,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		return Integer.toString((int)comboTime);
 	}
 	
-	public void hit( Char enemy ) {
+	public void hit( Character enemy ) {
 
 		count++;
 		comboTime = 5f;
@@ -123,7 +123,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		comboTime-=TICK;
 		spend(TICK);
 		if (comboTime <= 0) {
@@ -291,10 +291,10 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	public static class RiposteTracker extends Buff{
 		{ actPriority = VFX_PRIO;}
 
-		public Char enemy;
+		public Character enemy;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.buff(Combo.class) != null) {
 				moveBeingUsed = ComboMove.PARRY;
 				target.sprite.attack(enemy.pos, new Callback() {
@@ -315,7 +315,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 	private static ComboMove moveBeingUsed;
 
-	private void doAttack(final Char enemy) {
+	private void doAttack(final Character enemy) {
 
 		AttackIndicator.target(enemy);
 
@@ -342,7 +342,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		int oldPos = enemy.pos;
-		if (hero.attack(enemy, dmgMulti, dmgBonus, Char.INFINITE_ACCURACY)){
+		if (hero.attack(enemy, dmgMulti, dmgBonus, Character.INFINITE_ACCURACY)){
 			//special on-hit effects
 			switch (moveBeingUsed) {
 				case CLOBBER:
@@ -372,8 +372,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				case CRUSH:
 					WandOfBlastWave.BlastWave.blast(enemy.pos);
 					PathFinder.buildDistanceMap(target.pos, BArray.not(Dungeon.level.solid, null), 3);
-					for (Char ch : Actor.chars()) {
-						if (ch != enemy && ch.alignment == Char.Alignment.ENEMY
+					for (Character ch : Actor.chars()) {
+						if (ch != enemy && ch.alignment == Character.Alignment.ENEMY
 								&& PathFinder.distance[ch.pos] < Integer.MAX_VALUE) {
 							int aoeHit = Math.round(target.damageRoll() * 0.25f * count);
 							aoeHit /= 2;
@@ -461,7 +461,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Char enemy = Actor.findChar( cell );
+			final Character enemy = Actor.findChar( cell );
 			if (enemy == null
 					|| enemy == target
 					|| !Dungeon.level.heroFOV[cell]

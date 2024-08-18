@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -55,11 +55,11 @@ public class RingOfEnergy extends Ring {
 		return new Energy();
 	}
 	
-	public static float wandChargeMultiplier( Char target ){
+	public static float wandChargeMultiplier( Character target ){
 		return (float)Math.pow(1.15, getBuffedBonus(target, Energy.class));
 	}
 
-	public static float artifactChargeMultiplier( Char target ){
+	public static float artifactChargeMultiplier( Character target ){
 		float bonus = (float)Math.pow(1.15, getBuffedBonus(target, Energy.class));
 
 		if (target instanceof Hero && ((Hero) target).heroClass != HeroClass.ROGUE && ((Hero) target).hasTalent(Talent.LIGHT_CLOAK)){
@@ -69,7 +69,7 @@ public class RingOfEnergy extends Ring {
 		return bonus;
 	}
 
-	public static float armorChargeMultiplier( Char target ){
+	public static float armorChargeMultiplier( Character target ){
 		return (float)Math.pow(1.15, getBuffedBonus(target, Energy.class));
 	}
 	

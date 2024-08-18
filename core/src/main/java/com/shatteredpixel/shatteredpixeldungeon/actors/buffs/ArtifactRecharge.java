@@ -41,7 +41,7 @@ public class ArtifactRecharge extends Buff {
 	public boolean ignoreHornOfPlenty;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 
 		if (target instanceof Hero) {
 			float chargeAmount = Math.min(1, left);

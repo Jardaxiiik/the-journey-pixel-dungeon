@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -78,7 +78,7 @@ public class WandOfFrost extends DamageWand {
 
 		}
 
-		Char ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 
 			int damage = damageRoll();
@@ -120,7 +120,7 @@ public class WandOfFrost extends DamageWand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		Chill chill = defender.buff(Chill.class);
 
 		if (chill != null) {
@@ -139,9 +139,9 @@ public class WandOfFrost extends DamageWand {
 						actPriority = VFX_PRIO;
 					}
 
-					public boolean act() {
+					public boolean playGameTurn() {
 						Buff.affect(target, Frost.class, Math.round(Frost.DURATION * powerMulti));
-						return super.act();
+						return super.playGameTurn();
 					}
 				}.attachTo(defender);
 			}

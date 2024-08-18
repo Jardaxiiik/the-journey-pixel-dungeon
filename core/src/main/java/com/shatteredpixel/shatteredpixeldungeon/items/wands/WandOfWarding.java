@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
@@ -71,7 +71,7 @@ public class WandOfWarding extends Wand {
 	public boolean tryToZap(Hero owner, int target) {
 		
 		int currentWardEnergy = 0;
-		for (Char ch : Actor.chars()){
+		for (Character ch : Actor.chars()){
 			if (ch instanceof Ward){
 				currentWardEnergy += ((Ward) ch).tier;
 			}
@@ -88,7 +88,7 @@ public class WandOfWarding extends Wand {
 		
 		wardAvailable = (currentWardEnergy < maxWardEnergy);
 		
-		Char ch = Actor.findChar(target);
+		Character ch = Actor.findChar(target);
 		if (ch instanceof Ward){
 			if (!wardAvailable && ((Ward) ch).tier <= 3){
 				GLog.w( Messages.get(this, "no_more_wards"));
@@ -108,7 +108,7 @@ public class WandOfWarding extends Wand {
 	public void onZap(Ballistica bolt) {
 
 		int target = bolt.collisionPos;
-		Char ch = Actor.findChar(target);
+		Character ch = Actor.findChar(target);
 		if (ch != null && !(ch instanceof Ward)){
 			if (bolt.dist > 1) target = bolt.path.get(bolt.dist-1);
 
@@ -164,7 +164,7 @@ public class WandOfWarding extends Wand {
 	}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		int level = Math.max( 0, staff.buffedLvl() );
 
 		// lvl 0 - 20%
@@ -175,7 +175,7 @@ public class WandOfWarding extends Wand {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof Ward){
 					((Ward) ch).wandHeal(staff.buffedLvl(), powerMulti);
 					ch.sprite.emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
@@ -293,7 +293,7 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public int defenseSkill(Char enemy) {
+		public int defenseSkill(Character enemy) {
 			if (tier > 3){
 				defenseSkill = 4 + Dungeon.scalingDepth();
 			}
@@ -311,12 +311,12 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		protected boolean canAttack( Char enemy ) {
+		protected boolean canAttack( Character enemy ) {
 			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
 		}
 
 		@Override
-		protected boolean doAttack(Char enemy) {
+		protected boolean doAttack(Character enemy) {
 			boolean visible = fieldOfView[pos] || fieldOfView[enemy.pos];
 			if (visible) {
 				sprite.zap( enemy.pos );
@@ -332,7 +332,7 @@ public class WandOfWarding extends Wand {
 
 			//always hits
 			int dmg = Random.NormalIntRange( 2 + wandLevel, 8 + 4*wandLevel );
-			Char enemy = this.enemy;
+			Character enemy = this.enemy;
 			enemy.damage( dmg, this );
 			if (enemy.isAlive()){
 				Wand.wandProc(enemy, wandLevel, 1);
@@ -400,12 +400,12 @@ public class WandOfWarding extends Wand {
 		}
 		
 		@Override
-		public boolean canInteract(Char c) {
+		public boolean canInteract(Character c) {
 			return true;
 		}
 
 		@Override
-		public boolean interact( Char c ) {
+		public boolean interact( Character c ) {
 			if (c != Dungeon.hero){
 				return true;
 			}

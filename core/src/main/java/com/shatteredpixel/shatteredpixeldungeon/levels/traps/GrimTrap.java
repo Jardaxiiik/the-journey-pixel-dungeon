@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -57,14 +57,14 @@ public class GrimTrap extends Trap {
 			}
 
 			@Override
-			protected boolean act() {
+			protected boolean playGameTurn() {
 				Actor.remove(this);
-				Char target = Actor.findChar(pos);
+				Character target = Actor.findChar(pos);
 
 				//find the closest char that can be aimed at
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
-					for (Char ch : Actor.chars()){
+					for (Character ch : Actor.chars()){
 						if (!ch.isAlive()) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.pos);
 						if (ch.invisible > 0) curDist += 1000;
@@ -77,7 +77,7 @@ public class GrimTrap extends Trap {
 				}
 
 				if (target != null) {
-					final Char finalTarget = target;
+					final Character finalTarget = target;
 					//instant kill, use a mix of current HP and max HP, just like psi blast (for resistances)
 					int damage = Math.round(finalTarget.healthMax /2f + finalTarget.healthPoints /2f);
 

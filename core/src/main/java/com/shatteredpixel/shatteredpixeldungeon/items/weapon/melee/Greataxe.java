@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -71,7 +71,7 @@ public class Greataxe extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
@@ -90,7 +90,7 @@ public class Greataxe extends MeleeWeapon {
 			public void call() {
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, 1.50f, 0, Char.INFINITE_ACCURACY)){
+				if (hero.attack(enemy, 1.50f, 0, Character.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					if (!enemy.isAlive()){
 						onAbilityKill(hero, enemy);

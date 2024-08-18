@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
@@ -50,12 +50,12 @@ public class PotionOfStormClouds extends ExoticPotion {
 		int centerVolume = 120;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( Blob.seed( cell+i, 120, StormCloud.class ) );
+				GameScene.add( Emitter.seed( cell+i, 120, StormCloud.class ) );
 			} else {
 				centerVolume += 120;
 			}
 		}
 		
-		GameScene.add( Blob.seed( cell, centerVolume, StormCloud.class ) );
+		GameScene.add( Emitter.seed( cell, centerVolume, StormCloud.class ) );
 	}
 }

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
@@ -144,7 +144,7 @@ public class Bomb extends Item {
 
 		if (explodesDestructively()) {
 			
-			ArrayList<Char> affected = new ArrayList<>();
+			ArrayList<Character> affected = new ArrayList<>();
 			
 			if (Dungeon.level.heroFOV[cell]) {
 				CellEmitter.center(cell).burst(BlastParticle.FACTORY, 30);
@@ -169,14 +169,14 @@ public class Bomb extends Item {
 					if (heap != null)
 						heap.explode();
 					
-					Char ch = Actor.findChar(c);
+					Character ch = Actor.findChar(c);
 					if (ch != null) {
 						affected.add(ch);
 					}
 				}
 			}
 			
-			for (Char ch : affected){
+			for (Character ch : affected){
 
 				//if they have already been killed by another bomb
 				if(!ch.isAlive()){
@@ -281,7 +281,7 @@ public class Bomb extends Item {
 		}
 
 		@Override
-		protected boolean act() {
+		protected boolean playGameTurn() {
 
 			//something caused our bomb to explode early, or be defused. Do nothing.
 			if (bomb.fuse != this){

@@ -27,9 +27,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -95,7 +95,7 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20;
 	}
 
@@ -156,10 +156,10 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 
 		if (paralysed > 0){
-			return super.act();
+			return super.playGameTurn();
 		}
 
 		//ability logic only triggers if DM is not supercharged
@@ -293,11 +293,11 @@ public class DM300 extends Mob {
 
 		}
 
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
-	public boolean attack(Char enemy, float dmgMulti, float dmgBonus, float accMulti) {
+	public boolean attack(Character enemy, float dmgMulti, float dmgBonus, float accMulti) {
 		if (enemy == Dungeon.hero && supercharged){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		}
@@ -305,8 +305,8 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	protected Char chooseEnemy() {
-		Char enemy = super.chooseEnemy();
+	protected Character chooseEnemy() {
+		Character enemy = super.chooseEnemy();
 		if (supercharged && enemy == null){
 			enemy = Dungeon.hero;
 		}
@@ -352,7 +352,7 @@ public class DM300 extends Mob {
 			BossHealthBar.assignBoss(this);
 			turnsSinceLastAbility = 0;
 			yell(Messages.get(this, "notice"));
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -365,7 +365,7 @@ public class DM300 extends Mob {
 		next();
 	}
 
-	public void ventGas( Char target ){
+	public void ventGas( Character target ){
 		Dungeon.hero.interrupt();
 
 		int gasVented = 0;
@@ -375,16 +375,16 @@ public class DM300 extends Mob {
 		int gasMulti = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 1;
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Blob.seed(i, 20*gasMulti, ToxicGas.class));
+			GameScene.add(Emitter.seed(i, 20*gasMulti, ToxicGas.class));
 			gasVented += 20*gasMulti;
 		}
 
-		GameScene.add(Blob.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
+		GameScene.add(Emitter.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
 
 		if (gasVented < 250*gasMulti){
 			int toVentAround = (int)Math.ceil(((250*gasMulti) - gasVented)/8f);
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				GameScene.add(Blob.seed(pos+i, toVentAround, ToxicGas.class));
+				GameScene.add(Emitter.seed(pos+i, toVentAround, ToxicGas.class));
 			}
 
 		}
@@ -396,7 +396,7 @@ public class DM300 extends Mob {
 		next();
 	}
 
-	public void dropRocks( Char target ) {
+	public void dropRocks( Character target ) {
 
 		Dungeon.hero.interrupt();
 		final int rockCenter;
@@ -431,7 +431,7 @@ public class DM300 extends Mob {
 			safeCell = rockCenter + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 		} while (safeCell == pos
 				|| (Dungeon.level.solid[safeCell] && Random.Int(2) == 0)
-				|| (Blob.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
+				|| (Emitter.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
 
 		ArrayList<Integer> rockCells = new ArrayList<>();
 
@@ -670,7 +670,7 @@ public class DM300 extends Mob {
 	public static class FallingRockBuff extends DelayedRockFall {
 
 		@Override
-		public void affectChar(Char ch) {
+		public void affectChar(Character ch) {
 			if (!(ch instanceof DM300)){
 				Buff.prolong(ch, Paralysis.class, Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 5 : 3);
 				if (ch == Dungeon.hero) {

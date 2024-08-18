@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.watabou.noosa.TextureFilm;
 
 public class MimicSprite extends MobSprite {
@@ -68,9 +68,9 @@ public class MimicSprite extends MobSprite {
 	}
 	
 	@Override
-	public void linkVisuals(Char ch) {
+	public void linkVisuals(Character ch) {
 		super.linkVisuals(ch);
-		if (ch.alignment == Char.Alignment.NEUTRAL) {
+		if (ch.alignment == Character.Alignment.NEUTRAL) {
 			hideMimic();
 		}
 	}

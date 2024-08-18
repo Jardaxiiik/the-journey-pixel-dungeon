@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
@@ -148,7 +148,7 @@ public class Pickaxe extends MeleeWeapon {
 	}
 	
 	@Override
-	public int proc( Char attacker, Char defender, int damage ) {
+	public int proc(Character attacker, Character defender, int damage ) {
 		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
 			Actor.add(new Actor() {
 
@@ -157,7 +157,7 @@ public class Pickaxe extends MeleeWeapon {
 				}
 
 				@Override
-				protected boolean act() {
+				protected boolean playGameTurn() {
 					if (!defender.isAlive()){
 						bloodStained = true;
 						updateQuickslot();
@@ -199,7 +199,7 @@ public class Pickaxe extends MeleeWeapon {
 			return;
 		}
 
-		Char enemy = Actor.findChar(target);
+		Character enemy = Actor.findChar(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
@@ -217,7 +217,7 @@ public class Pickaxe extends MeleeWeapon {
 			@Override
 			public void call() {
 				float damageMulti = 1f;
-				if (Char.hasProp(enemy, Char.Property.INORGANIC)
+				if (Character.hasProp(enemy, Character.Property.INORGANIC)
 						|| enemy instanceof Swarm
 						|| enemy instanceof Bee
 						|| enemy instanceof Crab
@@ -227,7 +227,7 @@ public class Pickaxe extends MeleeWeapon {
 				}
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				if (hero.attack(enemy, damageMulti, 0, Char.INFINITE_ACCURACY)) {
+				if (hero.attack(enemy, damageMulti, 0, Character.INFINITE_ACCURACY)) {
 					if (enemy.isAlive()) {
 						Buff.affect(enemy, Vulnerable.class, 3f);
 					} else {

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -83,7 +83,7 @@ public class PitfallTrap extends Trap {
 		int branch;
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 
 			boolean herofell = false;
 			if (depth == Dungeon.depth && branch == Dungeon.branch) {
@@ -111,11 +111,11 @@ public class PitfallTrap extends Trap {
 						Dungeon.level.heaps.remove(cell);
 					}
 
-					Char ch = Actor.findChar(cell);
+					Character ch = Actor.findChar(cell);
 
 					//don't trigger on flying chars, or immovable neutral chars
 					if (ch != null && !ch.flying
-						&& !(ch.alignment == Char.Alignment.NEUTRAL && Char.hasProp(ch, Char.Property.IMMOVABLE))) {
+						&& !(ch.alignment == Character.Alignment.NEUTRAL && Character.hasProp(ch, Character.Property.IMMOVABLE))) {
 						if (ch == Dungeon.hero) {
 							Chasm.heroFall(cell);
 							herofell = true;

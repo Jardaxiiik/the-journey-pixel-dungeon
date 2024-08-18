@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.Ratmogrify;
@@ -50,7 +50,7 @@ public class Multiplicity extends Armor.Glyph {
 	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
-	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 
 		float procChance = 1/20f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance ) {
@@ -71,7 +71,7 @@ public class Multiplicity extends Armor.Glyph {
 					((MirrorImage)m).duplicate( (Hero)defender );
 
 				} else {
-					Char toDuplicate = attacker;
+					Character toDuplicate = attacker;
 
 					if (toDuplicate instanceof Ratmogrify.TransmogRat){
 						toDuplicate = ((Ratmogrify.TransmogRat)attacker).getOriginal();
@@ -79,7 +79,7 @@ public class Multiplicity extends Armor.Glyph {
 
 					//FIXME should probably have a mob property for this
 					if (!(toDuplicate instanceof Mob)
-							|| toDuplicate.properties().contains(Char.Property.BOSS) || toDuplicate.properties().contains(Char.Property.MINIBOSS)
+							|| toDuplicate.properties().contains(Character.Property.BOSS) || toDuplicate.properties().contains(Character.Property.MINIBOSS)
 							|| toDuplicate instanceof Mimic || toDuplicate instanceof Statue || toDuplicate instanceof NPC) {
 						m = Dungeon.level.createMob();
 					} else {
@@ -110,7 +110,7 @@ public class Multiplicity extends Armor.Glyph {
 
 				if (m != null) {
 
-					if (Char.hasProp(m, Char.Property.LARGE)){
+					if (Character.hasProp(m, Character.Property.LARGE)){
 						for ( int i : spawnPoints.toArray(new Integer[0])){
 							if (!Dungeon.level.openSpace[i]){
 								//remove the value, not at the index

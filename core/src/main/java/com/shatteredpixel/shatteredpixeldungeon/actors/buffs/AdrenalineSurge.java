@@ -48,7 +48,7 @@ public class AdrenalineSurge extends Buff {
 	}
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		boost --;
 		if (boost > 0){
 			spend( interval );

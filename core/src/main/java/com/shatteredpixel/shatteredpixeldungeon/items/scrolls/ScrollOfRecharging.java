@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
@@ -56,7 +56,7 @@ public class ScrollOfRecharging extends Scroll {
 		readAnimation();
 	}
 	
-	public static void charge( Char user ) {
+	public static void charge( Character user ) {
 		if (user.sprite != null) {
 			Emitter e = user.sprite.centerEmitter();
 			if (e != null) e.burst(EnergyParticle.FACTORY, 15);

@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -98,7 +98,7 @@ public class InventoryPane extends Component {
 
 	private static boolean targeting = false;
 	private static InventorySlot targetingSlot = null;
-	public static Char lastTarget = null;
+	public static Character lastTarget = null;
 
 	public InventoryPane(){
 		super();
@@ -414,7 +414,7 @@ public class InventoryPane extends Component {
 				targetingSlot != null &&
 				Actor.chars().contains( lastTarget ) &&
 				lastTarget.isAlive() &&
-				lastTarget.alignment != Char.Alignment.ALLY &&
+				lastTarget.alignment != Character.Alignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.pos]) {
 
 			targeting = true;

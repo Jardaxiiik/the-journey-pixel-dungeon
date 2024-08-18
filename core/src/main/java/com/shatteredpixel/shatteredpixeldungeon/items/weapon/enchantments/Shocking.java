@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -41,7 +41,7 @@ public class Shocking extends Weapon.Enchantment {
 	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.5f );
 
 	@Override
-	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage ) {
 		int level = Math.max( 0, weapon.buffedLvl() );
 
 		// lvl 0 - 25%
@@ -58,7 +58,7 @@ public class Shocking extends Weapon.Enchantment {
 			arc(attacker, defender, 2, affected, arcs);
 			
 			affected.remove(defender); //defender isn't hurt by lightning
-			for (Char ch : affected) {
+			for (Character ch : affected) {
 				if (ch.alignment != attacker.alignment) {
 					ch.damage(Math.round(damage * 0.4f * powerMulti), this);
 				}
@@ -78,11 +78,11 @@ public class Shocking extends Weapon.Enchantment {
 		return WHITE;
 	}
 
-	private ArrayList<Char> affected = new ArrayList<>();
+	private ArrayList<Character> affected = new ArrayList<>();
 
 	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 	
-	public static void arc( Char attacker, Char defender, int dist, ArrayList<Char> affected, ArrayList<Lightning.Arc> arcs ) {
+	public static void arc(Character attacker, Character defender, int dist, ArrayList<Character> affected, ArrayList<Lightning.Arc> arcs ) {
 		
 		affected.add(defender);
 		
@@ -92,7 +92,7 @@ public class Shocking extends Weapon.Enchantment {
 		PathFinder.buildDistanceMap( defender.pos, BArray.not( Dungeon.level.solid, null ), dist );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Char n = Actor.findChar(i);
+				Character n = Actor.findChar(i);
 				if (n != null && n != attacker && !affected.contains(n)) {
 					arcs.add(new Lightning.Arc(defender.sprite.center(), n.sprite.center()));
 					arc(attacker, n, (Dungeon.level.water[n.pos] && !n.flying) ? 2 : 1, affected, arcs);

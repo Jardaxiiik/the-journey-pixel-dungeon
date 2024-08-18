@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -43,7 +43,7 @@ public class Earthroot extends Plant {
 	}
 	
 	@Override
-	public void activate( Char ch ) {
+	public void activate( Character ch ) {
 
 		if (ch != null){
 			if (ch instanceof Hero && ((Hero) ch).subClass == HeroSubClass.WARDEN) {
@@ -82,7 +82,7 @@ public class Earthroot extends Plant {
 		}
 		
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			if (target.pos != pos) {
 				detach();
 			}

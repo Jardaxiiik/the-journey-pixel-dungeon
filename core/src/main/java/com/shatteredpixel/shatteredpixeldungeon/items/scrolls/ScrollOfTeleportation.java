@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -67,7 +67,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 	}
 	
-	public static boolean teleportToLocation(Char ch, int pos){
+	public static boolean teleportToLocation(Character ch, int pos){
 		PathFinder.buildDistanceMap(pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
 		if (PathFinder.distance[ch.pos] == Integer.MAX_VALUE
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
@@ -89,17 +89,17 @@ public class ScrollOfTeleportation extends Scroll {
 		
 	}
 
-	public static boolean teleportChar( Char ch ) {
+	public static boolean teleportChar( Character ch ) {
 		return teleportChar( ch, ScrollOfTeleportation.class );
 	}
 
-	public static boolean teleportChar( Char ch, Class source ) {
+	public static boolean teleportChar(Character ch, Class source ) {
 
 		if (!(Dungeon.level instanceof RegularLevel)){
 			return teleportInNonRegularLevel( ch, false );
 		}
 
-		if (Char.hasProp(ch, Char.Property.IMMOVABLE) || ch.isImmune(source)){
+		if (Character.hasProp(ch, Character.Property.IMMOVABLE) || ch.isImmune(source)){
 			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
@@ -211,9 +211,9 @@ public class ScrollOfTeleportation extends Scroll {
 
 	//teleports to a random pathable location on the floor
 	//prefers not seen(optional) > not visible > visible
-	private static boolean teleportInNonRegularLevel(Char ch, boolean preferNotSeen ){
+	private static boolean teleportInNonRegularLevel(Character ch, boolean preferNotSeen ){
 
-		if (Char.hasProp(ch, Char.Property.IMMOVABLE)){
+		if (Character.hasProp(ch, Character.Property.IMMOVABLE)){
 			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
@@ -224,7 +224,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 		boolean[] passable = Dungeon.level.passable;
 
-		if (Char.hasProp(ch, Char.Property.LARGE)){
+		if (Character.hasProp(ch, Character.Property.LARGE)){
 			passable = BArray.or(passable, Dungeon.level.openSpace, null);
 		}
 
@@ -274,7 +274,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 	}
 
-	public static void appear( Char ch, int pos ) {
+	public static void appear(Character ch, int pos ) {
 
 		ch.sprite.interruptMotion();
 
@@ -303,7 +303,7 @@ public class ScrollOfTeleportation extends Scroll {
 	}
 
 	//just plays the VFX for teleporting, without any position changes
-	public static void appearVFX( Char ch ){
+	public static void appearVFX( Character ch ){
 		if (Dungeon.level.heroFOV[ch.pos]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}

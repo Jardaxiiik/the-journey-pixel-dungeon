@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -69,8 +69,8 @@ public class ScrollOfSirensSong extends ExoticScroll {
 
 			Mob target = null;
 			if (cell != null){
-				Char ch = Actor.findChar(cell);
-				if (ch != null && ch.alignment != Char.Alignment.ALLY && ch instanceof Mob){
+				Character ch = Actor.findChar(cell);
+				if (ch != null && ch.alignment != Character.Alignment.ALLY && ch instanceof Mob){
 					target = (Mob)ch;
 				}
 			}
@@ -86,7 +86,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 				Sample.INSTANCE.playDelayed( Assets.Sounds.LULLABY, 0.1f );
 
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-					if (Dungeon.level.heroFOV[mob.pos] && mob != target && mob.alignment != Char.Alignment.ALLY) {
+					if (Dungeon.level.heroFOV[mob.pos] && mob != target && mob.alignment != Character.Alignment.ALLY) {
 						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.id();
 						mob.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 					}

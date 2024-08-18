@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Necromancer;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -65,7 +65,7 @@ public class SpectralNecromancerSprite extends MobSprite {
 	}
 
 	@Override
-	public void link(Char ch) {
+	public void link(Character ch) {
 		super.link(ch);
 		if (ch instanceof Necromancer && ((Necromancer) ch).summoning){
 			zap(((Necromancer) ch).summoningPos);

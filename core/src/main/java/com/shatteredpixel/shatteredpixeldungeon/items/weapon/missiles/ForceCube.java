@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -62,7 +62,7 @@ public class ForceCube extends MissileWeapon {
 		rangedHit( null, cell );
 		Dungeon.level.pressCell(cell);
 		
-		ArrayList<Char> targets = new ArrayList<>();
+		ArrayList<Character> targets = new ArrayList<>();
 		if (Actor.findChar(cell) != null) targets.add(Actor.findChar(cell));
 		
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
@@ -70,7 +70,7 @@ public class ForceCube extends MissileWeapon {
 			if (Actor.findChar(cell + i) != null) targets.add(Actor.findChar(cell + i));
 		}
 		
-		for (Char target : targets){
+		for (Character target : targets){
 			curUser.shoot(target, this);
 			if (target == Dungeon.hero && !target.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
@@ -118,7 +118,7 @@ public class AntiMagic extends Armor.Glyph {
 	}
 	
 	@Override
-	public int proc(Armor armor, Char attacker, Char defender, int damage) {
+	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 		//no proc effect, see:
 		// Hero.damage
 		// GhostHero.damage
@@ -128,7 +128,7 @@ public class AntiMagic extends Armor.Glyph {
 		return damage;
 	}
 	
-	public static int drRoll( Char ch, int level ){
+	public static int drRoll(Character ch, int level ){
 		return Random.NormalIntRange(
 				Math.round(level * genericProcChanceMultiplier(ch)),
 				Math.round((3 + (level*1.5f)) * genericProcChanceMultiplier(ch)));

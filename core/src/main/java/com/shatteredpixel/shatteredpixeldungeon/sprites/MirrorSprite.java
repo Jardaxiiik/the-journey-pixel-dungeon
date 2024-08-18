@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.MirrorImage;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.PointF;
@@ -41,7 +41,7 @@ public class MirrorSprite extends MobSprite {
 	}
 	
 	@Override
-	public void link( Char ch ) {
+	public void link( Character ch ) {
 		super.link( ch );
 		updateArmor();
 	}

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bee;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -91,7 +91,7 @@ public class Honeypot extends Item {
 		}
 	}
 	
-	public Item shatter( Char owner, int pos ) {
+	public Item shatter(Character owner, int pos ) {
 		
 		if (Dungeon.level.heroFOV[pos]) {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
@@ -177,13 +177,13 @@ public class Honeypot extends Item {
 			dropPot(curUser, cell);
 		}
 
-		public void pickupPot(Char holder){
+		public void pickupPot(Character holder){
 			for (Bee bee : findBees(holder.pos)){
 				updateBee(bee, -1, holder);
 			}
 		}
 		
-		public void dropPot( Char holder, int dropPos ){
+		public void dropPot(Character holder, int dropPos ){
 			for (Bee bee : findBees(holder)){
 				updateBee(bee, dropPos, null);
 			}
@@ -201,15 +201,15 @@ public class Honeypot extends Item {
 			}
 		}
 
-		private void updateBee( Bee bee, int cell, Char holder ){
-			if (bee != null && bee.alignment == Char.Alignment.ENEMY)
+		private void updateBee( Bee bee, int cell, Character holder ){
+			if (bee != null && bee.alignment == Character.Alignment.ENEMY)
 				bee.setPotInfo( cell, holder );
 		}
 		
 		//returns up to quantity bees which match the current pot Pos
 		private ArrayList<Bee> findBees( int potPos ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Char c : Actor.chars()){
+			for (Character c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {
@@ -222,9 +222,9 @@ public class Honeypot extends Item {
 		}
 		
 		//returns up to quantity bees which match the current pot holder
-		private ArrayList<Bee> findBees( Char potHolder ){
+		private ArrayList<Bee> findBees( Character potHolder ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Char c : Actor.chars()){
+			for (Character c : Actor.chars()){
 				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.id()){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
@@ -77,7 +77,7 @@ public class GnollRockfallTrap extends RockfallTrap {
 				seen = true;
 			}
 
-			Char ch = Actor.findChar( cell );
+			Character ch = Actor.findChar( cell );
 
 			if (ch != null && ch.isAlive() && !(ch instanceof GnollGeomancer)){
 				//deals notably less damage than a regular rockfall trap, but ignores armor

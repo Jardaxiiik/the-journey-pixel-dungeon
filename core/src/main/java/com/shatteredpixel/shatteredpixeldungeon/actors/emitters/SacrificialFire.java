@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.blobs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -49,7 +49,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class SacrificialFire extends Blob {
+public class SacrificialFire extends Emitter {
 
 	BlobEmitter curEmitter;
 
@@ -76,7 +76,7 @@ public class SacrificialFire extends Blob {
 
 					if (off[cell] > 0){
 						for (int k : PathFinder.OFFSETS_NEIGHBOURS9){
-							Char ch = Actor.findChar( cell+k );
+							Character ch = Actor.findChar( cell+k );
 							if (ch != null){
 								if (Dungeon.level.heroFOV[cell+k] && ch.buff( Marked.class ) == null) {
 									CellEmitter.get(cell+k).burst( SacrificialParticle.FACTORY, 5 );
@@ -142,7 +142,7 @@ public class SacrificialFire extends Blob {
 		this.prize = prize;
 	}
 
-	public void sacrifice( Char ch ) {
+	public void sacrifice( Character ch ) {
 
 		int firePos = -1;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){

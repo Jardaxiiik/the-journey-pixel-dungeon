@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.rings;
 
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -93,11 +93,11 @@ public class RingOfMight extends Ring {
 		return new Might();
 	}
 	
-	public static int strengthBonus( Char target ){
+	public static int strengthBonus( Character target ){
 		return getBonus( target, Might.class );
 	}
 	
-	public static float HTMultiplier( Char target ){
+	public static float HTMultiplier( Character target ){
 		return (float)Math.pow(1.035, getBuffedBonus(target, Might.class));
 	}
 

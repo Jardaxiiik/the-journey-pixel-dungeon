@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -47,9 +47,9 @@ public class Firebomb extends Bomb {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				if (Dungeon.level.pit[i])
-					GameScene.add(Blob.seed(i, 2, Fire.class));
+					GameScene.add(Emitter.seed(i, 2, Fire.class));
 				else
-					GameScene.add(Blob.seed(i, 10, Fire.class));
+					GameScene.add(Emitter.seed(i, 10, Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 			}
 		}

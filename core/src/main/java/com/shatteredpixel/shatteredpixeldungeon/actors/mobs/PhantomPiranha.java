@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.PhantomMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
@@ -47,8 +47,8 @@ public class PhantomPiranha extends Piranha {
 
 	@Override
 	public void damage(int dmg, Object src) {
-		Char dmgSource = null;
-		if (src instanceof Char) dmgSource = (Char)src;
+		Character dmgSource = null;
+		if (src instanceof Character) dmgSource = (Character)src;
 		if (src instanceof Wand) dmgSource = Dungeon.hero;
 
 		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
@@ -79,7 +79,7 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		return super.defenseProc(enemy, damage);
 	}
 

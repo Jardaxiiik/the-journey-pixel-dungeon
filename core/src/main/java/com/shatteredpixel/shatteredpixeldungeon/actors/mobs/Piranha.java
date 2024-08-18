@@ -24,9 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -63,13 +63,13 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		
 		if (!Dungeon.level.water[pos]) {
 			dieOnLand();
 			return true;
 		} else {
-			return super.act();
+			return super.playGameTurn();
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 20 + Dungeon.depth * 2;
 	}
 	
@@ -89,7 +89,7 @@ public class Piranha extends Mob {
 	}
 
 	@Override
-	public boolean surprisedBy(Char enemy, boolean attacking) {
+	public boolean surprisedBy(Character enemy, boolean attacking) {
 		if (enemy == Dungeon.hero && (!attacking || ((Hero)enemy).canSurpriseAttack())){
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 				fieldOfView = new boolean[Dungeon.level.length()];

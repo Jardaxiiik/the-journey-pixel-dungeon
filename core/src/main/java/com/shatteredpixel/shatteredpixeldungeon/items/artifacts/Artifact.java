@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -82,7 +82,7 @@ public class Artifact extends KindofMisc {
 
 	}
 
-	public void activate( Char ch ) {
+	public void activate( Character ch ) {
 		if (passiveBuff != null){
 			passiveBuff.detach();
 			passiveBuff = null;
@@ -217,7 +217,7 @@ public class Artifact extends KindofMisc {
 	public class ArtifactBuff extends Buff {
 
 		@Override
-		public boolean attachTo( Char target ) {
+		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {

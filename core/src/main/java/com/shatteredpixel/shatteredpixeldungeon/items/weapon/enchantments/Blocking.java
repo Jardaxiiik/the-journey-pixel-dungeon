@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
@@ -40,7 +40,7 @@ public class Blocking extends Weapon.Enchantment {
 	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
 	
 	@Override
-	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
+	public int proc(Weapon weapon, Character attacker, Character defender, int damage) {
 		
 		int level = Math.max( 0, weapon.buffedLvl() );
 
@@ -73,7 +73,7 @@ public class Blocking extends Weapon.Enchantment {
 		}
 
 		@Override
-		public boolean act() {
+		public boolean playGameTurn() {
 			detach();
 			return true;
 		}

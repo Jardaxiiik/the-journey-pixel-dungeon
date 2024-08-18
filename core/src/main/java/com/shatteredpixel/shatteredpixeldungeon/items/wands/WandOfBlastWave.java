@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -79,11 +79,11 @@ public class WandOfBlastWave extends DamageWand {
 
 		//throws other chars around the center.
 		for (int i  : PathFinder.OFFSETS_NEIGHBOURS8){
-			Char ch = Actor.findChar(bolt.collisionPos + i);
+			Character ch = Actor.findChar(bolt.collisionPos + i);
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Char.Alignment.ALLY) ch.damage(damageRoll(), this);
+				if (ch.alignment != Character.Alignment.ALLY) ch.damage(damageRoll(), this);
 
 				if (ch.pos == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
@@ -95,7 +95,7 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		//throws the char at the center of the blast
-		Char ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.findChar(bolt.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
 			ch.damage(damageRoll(), this);
@@ -109,9 +109,9 @@ public class WandOfBlastWave extends DamageWand {
 		
 	}
 
-	public static void throwChar(final Char ch, final Ballistica trajectory, int power,
-	                             boolean closeDoors, boolean collideDmg, Object cause){
-		if (ch.properties().contains(Char.Property.BOSS)) {
+	public static void throwChar(final Character ch, final Ballistica trajectory, int power,
+								 boolean closeDoors, boolean collideDmg, Object cause){
+		if (ch.properties().contains(Character.Property.BOSS)) {
 			power = (power+1)/2;
 		}
 
@@ -121,10 +121,10 @@ public class WandOfBlastWave extends DamageWand {
 
 		if (dist <= 0
 				|| ch.rooted
-				|| ch.properties().contains(Char.Property.IMMOVABLE)) return;
+				|| ch.properties().contains(Character.Property.IMMOVABLE)) return;
 
 		//large characters cannot be moved into non-open space
-		if (Char.hasProp(ch, Char.Property.LARGE)) {
+		if (Character.hasProp(ch, Character.Property.LARGE)) {
 			for (int i = 1; i <= dist; i++) {
 				if (!Dungeon.level.openSpace[trajectory.path.get(i)]){
 					dist = i-1;
@@ -184,7 +184,7 @@ public class WandOfBlastWave extends DamageWand {
 	public static class Knockback{}
 
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//acts like elastic enchantment
 		//we delay this with an actor to prevent conflicts with regular elastic
 		//so elastic always fully resolves first, then this effect activates
@@ -194,7 +194,7 @@ public class WandOfBlastWave extends DamageWand {
 			}
 
 			@Override
-			protected boolean act() {
+			protected boolean playGameTurn() {
 				Actor.remove(this);
 				if (defender.isAlive()) {
 					new BlastWaveOnHit().proc(staff, attacker, defender, damage);
@@ -206,7 +206,7 @@ public class WandOfBlastWave extends DamageWand {
 
 	private static class BlastWaveOnHit extends Elastic{
 		@Override
-		protected float procChanceMultiplier(Char attacker) {
+		protected float procChanceMultiplier(Character attacker) {
 			return Wand.procChanceMultiplier(attacker);
 		}
 	}

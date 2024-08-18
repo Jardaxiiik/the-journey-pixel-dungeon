@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 
@@ -49,7 +49,7 @@ public class Drowsy extends Buff {
 		return Integer.toString((int)visualcooldown());
 	}
 
-	public boolean attachTo(Char target ) {
+	public boolean attachTo(Character target ) {
 		if (!target.isImmune(Sleep.class) && super.attachTo(target)) {
 			if (cooldown() == 0) {
 				spend(DURATION);
@@ -60,7 +60,7 @@ public class Drowsy extends Buff {
 	}
 
 	@Override
-	public boolean act(){
+	public boolean playGameTurn(){
 		Buff.affect(target, MagicalSleep.class);
 
 		detach();

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Acidic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Albino;
@@ -125,7 +125,7 @@ public class DistortionTrap extends Trap{
 						case 2:
 							mob = Mimic.spawnAt(point, false);
 							((Mimic)mob).stopHiding();
-							mob.alignment = Char.Alignment.ENEMY;
+							mob.alignment = Character.Alignment.ENEMY;
 							break;
 						case 3:
 							mob = Statue.random(false);
@@ -137,7 +137,7 @@ public class DistortionTrap extends Trap{
 					break;
 			}
 
-			if (Char.hasProp(mob, Char.Property.LARGE) && !Dungeon.level.openSpace[point]){
+			if (Character.hasProp(mob, Character.Property.LARGE) && !Dungeon.level.openSpace[point]){
 				continue;
 			}
 

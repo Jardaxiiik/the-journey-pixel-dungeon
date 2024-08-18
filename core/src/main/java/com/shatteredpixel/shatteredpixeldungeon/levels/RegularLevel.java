@@ -26,9 +26,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SacrificialFire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.SacrificialFire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GoldenMimic;
@@ -240,7 +240,7 @@ public abstract class RegularLevel extends Level {
 					|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.pos), this)
 					|| mob.pos == exit()
 					|| traps.get(mob.pos) != null || plants.get(mob.pos) != null
-					|| (!openSpace[mob.pos] && mob.properties().contains(Char.Property.LARGE))));
+					|| (!openSpace[mob.pos] && mob.properties().contains(Character.Property.LARGE))));
 
 			if (tries >= 0) {
 				mobsToSpawn--;
@@ -260,7 +260,7 @@ public abstract class RegularLevel extends Level {
 							|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.pos), this)
 							|| mob.pos == exit()
 							|| traps.get(mob.pos) != null || plants.get(mob.pos) != null
-							|| (!openSpace[mob.pos] && mob.properties().contains(Char.Property.LARGE))));
+							|| (!openSpace[mob.pos] && mob.properties().contains(Character.Property.LARGE))));
 
 					if (tries >= 0) {
 						mobsToSpawn--;
@@ -281,7 +281,7 @@ public abstract class RegularLevel extends Level {
 	}
 
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		int count = 0;
 		int cell = -1;
 
@@ -301,7 +301,7 @@ public abstract class RegularLevel extends Level {
 					&& Actor.findChar( cell ) == null
 					&& passable[cell]
 					&& !solid[cell]
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])
 					&& room.canPlaceCharacter(cellToPoint(cell), this)
 					&& cell != exit()) {
 				return cell;
@@ -311,7 +311,7 @@ public abstract class RegularLevel extends Level {
 	}
 	
 	@Override
-	public int randomDestination( Char ch ) {
+	public int randomDestination( Character ch ) {
 		
 		int count = 0;
 		int cell = -1;
@@ -330,7 +330,7 @@ public abstract class RegularLevel extends Level {
 			ArrayList<Point> points = room.charPlaceablePoints(this);
 			if (!points.isEmpty()){
 				cell = pointToCell(Random.element(points));
-				if (passable[cell] && (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])) {
+				if (passable[cell] && (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])) {
 					return cell;
 				}
 			}
@@ -703,7 +703,7 @@ public abstract class RegularLevel extends Level {
 		}
 
 		//There is no magical fire or sacrificial fire
-		for (Blob b : blobs.values()){
+		for (Emitter b : blobs.values()){
 			if (b.volume > 0 && (b instanceof MagicalFireRoom.EternalFire || b instanceof SacrificialFire)){
 				return false;
 			}
@@ -711,7 +711,7 @@ public abstract class RegularLevel extends Level {
 
 		//There are no statues or mimics (unless they were made allies)
 		for (Mob m : mobs.toArray(new Mob[0])){
-			if (m.alignment != Char.Alignment.ALLY){
+			if (m.alignment != Character.Alignment.ALLY){
 				if (m instanceof Statue && ((Statue) m).levelGenStatue){
 					return false;
 				} else if (m instanceof Mimic){

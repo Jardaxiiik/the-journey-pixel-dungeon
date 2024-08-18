@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -121,7 +121,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (alignment == Alignment.NEUTRAL && state != PASSIVE){
 			alignment = Alignment.ENEMY;
 			if (sprite != null) sprite.idle();
@@ -131,7 +131,7 @@ public class Mimic extends Mob {
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 			}
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		if (alignment != Alignment.NEUTRAL || c != Dungeon.hero){
 			return super.interact(c);
 		}
@@ -172,7 +172,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int defenseProc(Char enemy, int damage) {
+	public int defenseProc(Character enemy, int damage) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
@@ -230,7 +230,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		if (target != null && alignment == Alignment.NEUTRAL && target.invisible <= 0){
 			return INFINITE_ACCURACY;
 		} else {

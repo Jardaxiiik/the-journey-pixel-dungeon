@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -38,7 +38,7 @@ public class Barkskin extends Buff {
 	private int interval = 1;
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		if (target.isAlive()) {
 
 			spend( interval );
@@ -112,7 +112,7 @@ public class Barkskin extends Buff {
 	//These two methods allow for multiple instances of barkskin to stack in terms of duration
 	// but only the stronger bonus is applied
 
-	public static int currentLevel(Char ch ){
+	public static int currentLevel(Character ch ){
 		int level = 0;
 		for (Barkskin b : ch.buffs(Barkskin.class)){
 			level = Math.max(level, b.level);
@@ -121,7 +121,7 @@ public class Barkskin extends Buff {
 	}
 
 	//reset if a matching buff exists, otherwise append
-	public static void conditionallyAppend(Char ch, int level, int interval){
+	public static void conditionallyAppend(Character ch, int level, int interval){
 		for (Barkskin b : ch.buffs(Barkskin.class)){
 			if (b.interval == interval){
 				b.set(level, interval);

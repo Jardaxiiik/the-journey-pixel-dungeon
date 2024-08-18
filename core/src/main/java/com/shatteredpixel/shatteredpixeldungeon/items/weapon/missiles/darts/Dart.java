@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -110,12 +110,12 @@ public class Dart extends MissileWeapon {
 		}
 	}
 
-	public boolean crossbowHasEnchant( Char owner ){
+	public boolean crossbowHasEnchant( Character owner ){
 		return bow != null && bow.enchantment != null && owner.buff(MagicImmune.class) == null;
 	}
 	
 	@Override
-	public boolean hasEnchant(Class<? extends Enchantment> type, Char owner) {
+	public boolean hasEnchant(Class<? extends Enchantment> type, Character owner) {
 		if (bow != null && bow.hasEnchant(type, owner)){
 			return true;
 		} else {
@@ -124,17 +124,17 @@ public class Dart extends MissileWeapon {
 	}
 
 	@Override
-	public float accuracyFactor(Char owner, Char target) {
+	public float accuracyFactor(Character owner, Character target) {
 		//don't update xbow here, as dart is the active weapon atm
 		if (bow != null && owner.buff(Crossbow.ChargedShot.class) != null){
-			return Char.INFINITE_ACCURACY;
+			return Character.INFINITE_ACCURACY;
 		} else {
 			return super.accuracyFactor(owner, target);
 		}
 	}
 
 	@Override
-	public int proc(Char attacker, Char defender, int damage) {
+	public int proc(Character attacker, Character defender, int damage) {
 		if (bow != null
 				//only apply enchant effects to enemies when processing charged shot
 				&& (!processingChargedShot || attacker.alignment != defender.alignment)){
@@ -164,19 +164,19 @@ public class Dart extends MissileWeapon {
 
 	protected boolean processingChargedShot = false;
 	private int chargedShotPos;
-	protected void processChargedShot( Char target, int dmg ){
+	protected void processChargedShot(Character target, int dmg ){
 		//don't update xbow here, as dart may be the active weapon atm
 		processingChargedShot = true;
 		if (chargedShotPos != -1 && bow != null && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null) {
 			PathFinder.buildDistanceMap(chargedShotPos, Dungeon.level.passable, 2);
 			//necessary to clone as some on-hit effects use Pathfinder
 			int[] distance = PathFinder.distance.clone();
-			for (Char ch : Actor.chars()){
+			for (Character ch : Actor.chars()){
 				if (ch == target){
 					Actor.add(new Actor() {
 						{ actPriority = VFX_PRIO; }
 						@Override
-						protected boolean act() {
+						protected boolean playGameTurn() {
 							if (!ch.isAlive()){
 								bow.onAbilityKill(Dungeon.hero, ch);
 							}

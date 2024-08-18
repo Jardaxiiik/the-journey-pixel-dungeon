@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
@@ -98,7 +98,7 @@ public class CellSelector extends ScrollArea {
 			}
 
 			//then mobs
-			for (Char mob : Dungeon.level.mobs.toArray(new Mob[0])){
+			for (Character mob : Dungeon.level.mobs.toArray(new Mob[0])){
 				if (mob.sprite != null && mob.sprite.overlapsPoint( p.x, p.y )){
 					PointF c = DungeonTilemap.tileCenterToWorld(mob.pos);
 					if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
@@ -135,7 +135,7 @@ public class CellSelector extends ScrollArea {
 		//Resets char and item sprite positions with the new camera zoom
 		//This is important as sprites are centered on a 16x16 tile, but may have any sprite size
 		//This can lead to none-whole coordinate, which need to be aligned with the zoom
-		for (Char c : Actor.chars()){
+		for (Character c : Actor.chars()){
 			if (c.sprite != null && !c.sprite.isMoving){
 				c.sprite.point(c.sprite.worldToCamera(c.pos));
 			}
@@ -408,7 +408,7 @@ public class CellSelector extends ScrollArea {
 
 		if (cell != Dungeon.hero.pos && cell != lastCellMoved){
 			lastCellMoved = cell;
-			if (Dungeon.hero.handle( cell )) {
+			if (Dungeon.hero.chooseHeroActionBasedOnTile( cell )) {
 				Dungeon.hero.next();
 			}
 			return true;

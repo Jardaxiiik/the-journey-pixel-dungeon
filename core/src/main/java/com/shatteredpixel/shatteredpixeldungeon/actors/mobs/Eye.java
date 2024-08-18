@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
@@ -73,7 +73,7 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Char target ) {
+	public int attackSkill( Character target ) {
 		return 30;
 	}
 	
@@ -88,7 +88,7 @@ public class Eye extends Mob {
 	public boolean beamCharged;
 
 	@Override
-	protected boolean canAttack( Char enemy ) {
+	protected boolean canAttack( Character enemy ) {
 
 		if (beamCooldown == 0) {
 			Ballistica aim = new Ballistica(pos, enemy.pos, Ballistica.STOP_SOLID);
@@ -108,7 +108,7 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (beamCharged && state != HUNTING){
 			beamCharged = false;
 			sprite.idle();
@@ -119,11 +119,11 @@ public class Eye extends Mob {
 		}
 		if (beamCooldown > 0)
 			beamCooldown--;
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
-	protected boolean doAttack( Char enemy ) {
+	protected boolean doAttack( Character enemy ) {
 
 		beam = new Ballistica(pos, beamTarget, Ballistica.STOP_SOLID);
 		if (beamCooldown > 0 || (!beamCharged && !beam.subPath(1, beam.dist).contains(enemy.pos))) {
@@ -178,7 +178,7 @@ public class Eye extends Mob {
 
 			}
 
-			Char ch = Actor.findChar( pos );
+			Character ch = Actor.findChar( pos );
 			if (ch == null) {
 				continue;
 			}

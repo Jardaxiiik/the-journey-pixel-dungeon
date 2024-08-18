@@ -27,9 +27,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM300;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Pylon;
@@ -57,7 +57,6 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.Tilemap;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.GameMath;
@@ -227,13 +226,13 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public int randomRespawnCell( Char ch ) {
+	public int randomRespawnCell( Character ch ) {
 		ArrayList<Integer> candidates = new ArrayList<>();
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
 					&& Actor.findChar(cell) == null
-					&& (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])){
+					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -257,7 +256,7 @@ public class CavesBossLevel extends Level {
 	}
 
 	@Override
-	public void occupyCell(Char ch) {
+	public void occupyCell(Character ch) {
 		//seal the level when the hero moves near to a pylon, the level isn't already sealed, and the gate hasn't been destroyed
 		int gatePos = pointToCell(new Point(gate.left, gate.top));
 		if (ch == Dungeon.hero && !locked && solid[gatePos]){
@@ -290,7 +289,7 @@ public class CavesBossLevel extends Level {
 			dropped.seen = heap.seen;
 		}
 
-		Char ch = Actor.findChar( entrance );
+		Character ch = Actor.findChar( entrance );
 		if (ch != null) {
 			int n;
 			do {
@@ -360,7 +359,7 @@ public class CavesBossLevel extends Level {
 	public void activatePylon(){
 		ArrayList<Pylon> pylons = new ArrayList<>();
 		for (Mob m : mobs){
-			if (m instanceof Pylon && m.alignment == Char.Alignment.NEUTRAL){
+			if (m instanceof Pylon && m.alignment == Character.Alignment.NEUTRAL){
 				pylons.add((Pylon) m);
 			}
 		}
@@ -380,7 +379,7 @@ public class CavesBossLevel extends Level {
 
 		for( int i = (mainArena.top-1)*width; i <length; i++){
 			if (map[i] == Terrain.INACTIVE_TRAP || map[i] == Terrain.WATER || map[i] == Terrain.CUSTOM_DECO){
-				GameScene.add(Blob.seed(i, 1, PylonEnergy.class));
+				GameScene.add(Emitter.seed(i, 1, PylonEnergy.class));
 			}
 		}
 
@@ -807,7 +806,7 @@ public class CavesBossLevel extends Level {
 		}
 	}
 
-	public static class PylonEnergy extends Blob {
+	public static class PylonEnergy extends Emitter {
 
 		@Override
 		protected void evolve() {
@@ -824,7 +823,7 @@ public class CavesBossLevel extends Level {
 
 					if (off[cell] > 0){
 
-						Char ch = Actor.findChar(cell);
+						Character ch = Actor.findChar(cell);
 						if (ch != null && !(ch instanceof DM300) && !ch.flying) {
 							Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 							ch.damage( Random.NormalIntRange(6, 12), new Electricity());
@@ -855,12 +854,12 @@ public class CavesBossLevel extends Level {
 
 		private static CharSprite energySourceSprite = null;
 
-		private static Emitter.Factory DIRECTED_SPARKS = new Emitter.Factory() {
+		private static com.watabou.noosa.particles.Emitter.Factory DIRECTED_SPARKS = new com.watabou.noosa.particles.Emitter.Factory() {
 			@Override
-			public void emit(Emitter emitter, int index, float x, float y) {
+			public void emit(com.watabou.noosa.particles.Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){
-					for (Char c : Actor.chars()){
-						if (c instanceof Pylon && c.alignment != Char.Alignment.NEUTRAL){
+					for (Character c : Actor.chars()){
+						if (c instanceof Pylon && c.alignment != Character.Alignment.NEUTRAL){
 							energySourceSprite = c.sprite;
 							break;
 						} else if (c instanceof DM300){

@@ -27,11 +27,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.WellWater;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.SmokeScreen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.WellWater;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Awareness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -157,7 +157,7 @@ public abstract class Level implements Bundlable {
 
     public HashSet<Mob> mobs;
     public SparseArray<Heap> heaps;
-    public HashMap<Class<? extends Blob>, Blob> blobs;
+    public HashMap<Class<? extends Emitter>, Emitter> blobs;
     public SparseArray<Plant> plants;
     public SparseArray<Trap> traps;
     public HashSet<CustomTilemap> customTiles;
@@ -465,8 +465,8 @@ public abstract class Level implements Bundlable {
 
         collection = bundle.getCollection(BLOBS);
         for (Bundlable b : collection) {
-            Blob blob = (Blob) b;
-            blobs.put(blob.getClass(), blob);
+            Emitter emitter = (Emitter) b;
+            blobs.put(emitter.getClass(), emitter);
         }
 
         feeling = bundle.getEnum(FEELING, Feeling.class);
@@ -703,7 +703,7 @@ public abstract class Level implements Bundlable {
     public int mobCount() {
         float count = 0;
         for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-            if (mob.alignment == Char.Alignment.ENEMY && !mob.properties().contains(Char.Property.MINIBOSS)) {
+            if (mob.alignment == Character.Alignment.ENEMY && !mob.properties().contains(Character.Property.MINIBOSS)) {
                 count += mob.spawningWeight();
             }
         }
@@ -740,7 +740,7 @@ public abstract class Level implements Bundlable {
         }
 
         @Override
-        protected boolean act() {
+        protected boolean playGameTurn() {
 
             if (Dungeon.level.mobCount() < Dungeon.level.mobLimit()) {
 
@@ -802,7 +802,7 @@ public abstract class Level implements Bundlable {
         }
     }
 
-    public int randomRespawnCell(Char ch) {
+    public int randomRespawnCell(Character ch) {
         int cell;
         int count = 0;
         do {
@@ -815,17 +815,17 @@ public abstract class Level implements Bundlable {
 
         } while ((Dungeon.level == this && heroFOV[cell])
                 || !passable[cell]
-                || (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell])
+                || (Character.hasProp(ch, Character.Property.LARGE) && !openSpace[cell])
                 || Actor.findChar(cell) != null);
         return cell;
     }
 
-    public int randomDestination(Char ch) {
+    public int randomDestination(Character ch) {
         int cell;
         do {
             cell = Random.Int(length());
         } while (!passable[cell]
-                || (Char.hasProp(ch, Char.Property.LARGE) && !openSpace[cell]));
+                || (Character.hasProp(ch, Character.Property.LARGE) && !openSpace[cell]));
         return cell;
     }
 
@@ -873,7 +873,7 @@ public abstract class Level implements Bundlable {
             pit[i] = (flags & Terrain.PIT) != 0;
         }
 
-        for (Blob b : blobs.values()) {
+        for (Emitter b : blobs.values()) {
             b.onBuildFlagMaps(this);
         }
 
@@ -918,7 +918,7 @@ public abstract class Level implements Bundlable {
                 || (Terrain.flags[map[pos]] & Terrain.FLAMABLE) != 0) {
             set(pos, Terrain.EMBERS);
         }
-        Blob web = blobs.get(Web.class);
+        Emitter web = blobs.get(Web.class);
         if (web != null) {
             web.clear(pos);
         }
@@ -1057,7 +1057,7 @@ public abstract class Level implements Bundlable {
 
         GameScene.plantSeed(pos);
 
-        for (Char ch : Actor.chars()) {
+        for (Character ch : Actor.chars()) {
             if (ch instanceof WandOfRegrowth.Lotus
                     && ((WandOfRegrowth.Lotus) ch).inRange(pos)
                     && Actor.findChar(pos) != null) {
@@ -1143,8 +1143,8 @@ public abstract class Level implements Bundlable {
         return result;
     }
 
-    public void occupyCell(Char ch) {
-        if (!ch.isImmune(Web.class) && Blob.volumeAt(ch.pos, Web.class) > 0) {
+    public void occupyCell(Character ch) {
+        if (!ch.isImmune(Web.class) && Emitter.volumeAt(ch.pos, Web.class) > 0) {
             blobs.get(Web.class).clear(ch.pos);
             Web.affectChar(ch);
         }
@@ -1269,7 +1269,7 @@ public abstract class Level implements Bundlable {
             }
         }
 
-        if (hard && Blob.volumeAt(cell, Web.class) > 0) {
+        if (hard && Emitter.volumeAt(cell, Web.class) > 0) {
             blobs.get(Web.class).clear(cell);
         }
     }
@@ -1278,7 +1278,7 @@ public abstract class Level implements Bundlable {
 
     private static boolean[] modifiableBlocking;
 
-    public void updateFieldOfView(Char c, boolean[] fieldOfView) {
+    public void updateFieldOfView(Character c, boolean[] fieldOfView) {
 
         int cx = c.pos % width();
         int cy = c.pos / width();
@@ -1309,14 +1309,14 @@ public abstract class Level implements Bundlable {
             }
 
             //allies and specific enemies can see through shrouding fog
-            if ((c.alignment != Char.Alignment.ALLY && !(c instanceof GnollGeomancer))
+            if ((c.alignment != Character.Alignment.ALLY && !(c instanceof GnollGeomancer))
                     && Dungeon.level.blobs.containsKey(SmokeScreen.class)
                     && Dungeon.level.blobs.get(SmokeScreen.class).volume > 0) {
                 if (blocking == null) {
                     System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
                     blocking = modifiableBlocking;
                 }
-                Blob s = Dungeon.level.blobs.get(SmokeScreen.class);
+                Emitter s = Dungeon.level.blobs.get(SmokeScreen.class);
                 for (int i = 0; i < blocking.length; i++) {
                     if (!blocking[i] && s.cur[i] > 0) {
                         blocking[i] = true;
@@ -1422,7 +1422,7 @@ public abstract class Level implements Bundlable {
             }
 
             for (TalismanOfForesight.CharAwareness a : c.buffs(TalismanOfForesight.CharAwareness.class)) {
-                Char ch = (Char) Actor.findById(a.charID);
+                Character ch = (Character) Actor.findById(a.charID);
                 if (ch == null || !ch.isAlive()) {
                     continue;
                 }

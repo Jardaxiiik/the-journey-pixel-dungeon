@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.FetidRat;
@@ -81,7 +81,7 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
@@ -89,11 +89,11 @@ public class Ghost extends NPC {
 		if (Dungeon.level.heroFOV[pos] && !Quest.completed()){
 			Notes.add( Notes.Landmark.GHOST );
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	
@@ -103,7 +103,7 @@ public class Ghost extends NPC {
 	}
 	
 	@Override
-	protected Char chooseEnemy() {
+	protected Character chooseEnemy() {
 		return null;
 	}
 
@@ -123,7 +123,7 @@ public class Ghost extends NPC {
 	}
 	
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		sprite.turnTo( pos, c.pos );
 		
 		Sample.INSTANCE.play( Assets.Sounds.GHOST );

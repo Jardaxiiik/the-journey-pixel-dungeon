@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -69,7 +69,7 @@ public class WandOfLivingEarth extends DamageWand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Char ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.findChar(bolt.collisionPos);
 		int damage = damageRoll();
 		int armorToAdd = damage;
 
@@ -84,8 +84,8 @@ public class WandOfLivingEarth extends DamageWand {
 		RockArmor buff = curUser.buff(RockArmor.class);
 		//only grant armor if we are shooting at an enemy, a hiding mimic, or the guardian
 		if ((guardian == null || ch != guardian) && (ch == null
-				|| ch.alignment == Char.Alignment.ALLY
-				|| ch.alignment == Char.Alignment.NEUTRAL && !(ch instanceof Mimic))){
+				|| ch.alignment == Character.Alignment.ALLY
+				|| ch.alignment == Character.Alignment.NEUTRAL && !(ch instanceof Mimic))){
 			armorToAdd = 0;
 		} else {
 			if (buff == null && guardian == null) {
@@ -141,7 +141,7 @@ public class WandOfLivingEarth extends DamageWand {
 					Dungeon.level.occupyCell(guardian);
 				}
 
-				if (ch.alignment == Char.Alignment.ENEMY || ch.buff(Amok.class) != null) {
+				if (ch.alignment == Character.Alignment.ENEMY || ch.buff(Amok.class) != null) {
 					guardian.aggro(ch);
 				}
 
@@ -173,7 +173,7 @@ public class WandOfLivingEarth extends DamageWand {
 				} else {
 					guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
-					if (ch.alignment == Char.Alignment.ENEMY || ch.buff(Amok.class) != null) {
+					if (ch.alignment == Character.Alignment.ENEMY || ch.buff(Amok.class) != null) {
 						guardian.aggro(ch);
 					}
 				}
@@ -196,7 +196,7 @@ public class WandOfLivingEarth extends DamageWand {
 	}
 	
 	@Override
-	public void onHit(MagesStaff staff, Char attacker, Char defender, int damage) {
+	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		EarthGuardian guardian = null;
 		for (Mob m : Dungeon.level.mobs){
 			if (m instanceof EarthGuardian){
@@ -340,13 +340,13 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public int attackSkill(Char target) {
+		public int attackSkill(Character target) {
 			//same as the hero
 			return 2*defenseSkill + 5;
 		}
 
 		@Override
-		public int attackProc(Char enemy, int damage) {
+		public int attackProc(Character enemy, int damage) {
 			if (enemy instanceof Mob) ((Mob)enemy).aggro(this);
 			return super.attackProc(enemy, damage);
 		}

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
@@ -58,7 +58,7 @@ public class Blacksmith extends NPC {
 	}
 	
 	@Override
-	protected boolean act() {
+	protected boolean playGameTurn() {
 		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
 			die(null);
 			Notes.remove( Notes.Landmark.TROLL );
@@ -67,11 +67,11 @@ public class Blacksmith extends NPC {
 		if (Dungeon.level.visited[pos] && !Quest.started()){
 			Notes.add( Notes.Landmark.TROLL );
 		}
-		return super.act();
+		return super.playGameTurn();
 	}
 	
 	@Override
-	public boolean interact(Char c) {
+	public boolean interact(Character c) {
 		
 		sprite.turnTo( pos, c.pos );
 
@@ -241,7 +241,7 @@ public class Blacksmith extends NPC {
 	}
 
 	@Override
-	public int defenseSkill( Char enemy ) {
+	public int defenseSkill( Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	

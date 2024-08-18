@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 public class FlavourBuff extends Buff {
 	
 	@Override
-	public boolean act() {
+	public boolean playGameTurn() {
 		detach();
 		return true;
 	}

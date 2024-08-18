@@ -23,14 +23,14 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.watabou.utils.Bundle;
 
 public class DirectableAlly extends NPC {
 
 	{
-		alignment = Char.Alignment.ALLY;
+		alignment = Character.Alignment.ALLY;
 		intelligentAlly = true;
 		WANDERING = new Wandering();
 		HUNTING = new Hunting();
@@ -65,7 +65,7 @@ public class DirectableAlly extends NPC {
 		state = WANDERING;
 	}
 
-	public void targetChar( Char ch ){
+	public void targetChar( Character ch ){
 		defendingPos = -1;
 		movingToDefendPos = false;
 		aggro(ch);
@@ -73,7 +73,7 @@ public class DirectableAlly extends NPC {
 	}
 
 	@Override
-	public void aggro(Char ch) {
+	public void aggro(Character ch) {
 		enemy = ch;
 		if (!movingToDefendPos && state != PASSIVE){
 			state = HUNTING;
@@ -83,7 +83,7 @@ public class DirectableAlly extends NPC {
 	public void directTocell( int cell ){
 		if (!Dungeon.level.heroFOV[cell]
 				|| Actor.findChar(cell) == null
-				|| (Actor.findChar(cell) != Dungeon.hero && Actor.findChar(cell).alignment != Char.Alignment.ENEMY)){
+				|| (Actor.findChar(cell) != Dungeon.hero && Actor.findChar(cell).alignment != Character.Alignment.ENEMY)){
 			defendPos( cell );
 			return;
 		}
@@ -91,7 +91,7 @@ public class DirectableAlly extends NPC {
 		if (Actor.findChar(cell) == Dungeon.hero){
 			followHero();
 
-		} else if (Actor.findChar(cell).alignment == Char.Alignment.ENEMY){
+		} else if (Actor.findChar(cell).alignment == Character.Alignment.ENEMY){
 			targetChar(Actor.findChar(cell));
 
 		}

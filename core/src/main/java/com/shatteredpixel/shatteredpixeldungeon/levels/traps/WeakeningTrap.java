@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -42,10 +42,10 @@ public class WeakeningTrap extends Trap{
 			CellEmitter.get(pos).burst(ShadowParticle.UP, 5);
 		}
 
-		Char ch = Actor.findChar( pos );
+		Character ch = Actor.findChar( pos );
 		if (ch != null){
-			if (ch.properties().contains(Char.Property.BOSS)
-				|| ch.properties().contains(Char.Property.MINIBOSS)){
+			if (ch.properties().contains(Character.Property.BOSS)
+				|| ch.properties().contains(Character.Property.MINIBOSS)){
 				Buff.prolong( ch, Weakness.class, Weakness.DURATION/2f );
 			}
 			Buff.prolong( ch, Weakness.class, Weakness.DURATION*3f );
