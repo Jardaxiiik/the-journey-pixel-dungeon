@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.BArray;
 import com.watabou.noosa.audio.Sample;
@@ -47,7 +47,7 @@ public class StormTrap extends Trap {
 		PathFinder.buildDistanceMap( pos, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(Emitter.seed(i, 20, Electricity.class));
+				GameScene.add(actorLoop.seed(i, 20, Electricity.class));
 			}
 		}
 	}

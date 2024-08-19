@@ -19,54 +19,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class StormCloud extends Emitter {
-	
+public class StenchGas extends actorLoop {
+
 	@Override
 	protected void evolve() {
 		super.evolve();
-		
+
+		Character ch;
 		int cell;
 
-		Fire fire = (Fire) Dungeon.level.blobs.get(Fire.class);
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0) {
-					Dungeon.level.setCellToWater(true, cell);
-					if (fire != null){
-						fire.clear(cell);
-					}
-
-					//fiery enemies take damage as if they are in toxic gas
-					Character ch = Actor.getCharacterOnPosition(cell);
-					if (ch != null
-							&& !ch.isImmuneToEffectType(getClass())
-							&& Character.hasProperty(ch, Character.Property.FIERY)){
-						ch.receiveDamageFromSource(1 + Dungeon.scalingDepth()/5, this);
-					}
+				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
+					if (!ch.isImmuneToEffectType(this.getClass()))
+						Buff.prolong( ch, Paralysis.class, Paralysis.DURATION/5 );
 				}
 			}
 		}
 	}
-	
+
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.pour( Speck.factory( Speck.STORM ), 0.4f );
+
+		emitter.pour( Speck.factory(Speck.STENCH), 0.4f );
 	}
-	
+
 	@Override
 	public String tileDesc() {
 		return Messages.get(this, "desc");
 	}
-	
 }

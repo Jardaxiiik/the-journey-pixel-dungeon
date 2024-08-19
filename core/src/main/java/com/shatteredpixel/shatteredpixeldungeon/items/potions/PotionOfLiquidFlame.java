@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
@@ -50,7 +50,7 @@ public class PotionOfLiquidFlame extends Potion {
 		for (int offset : PathFinder.OFFSETS_NEIGHBOURS9){
 			if (!Dungeon.level.solid[cell+offset]) {
 
-				GameScene.add(Emitter.seed(cell + offset, 2, Fire.class));
+				GameScene.add(actorLoop.seed(cell + offset, 2, Fire.class));
 
 			}
 		}

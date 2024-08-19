@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -327,9 +327,9 @@ public class GameScene extends PixelScene {
 		gases = new Group();
 		add( gases );
 
-		for (Emitter emitter : Dungeon.level.blobs.values()) {
-			emitter.emitter = null;
-			addBlobSprite(emitter);
+		for (actorLoop actorLoop : Dungeon.level.blobs.values()) {
+			actorLoop.emitter = null;
+			addBlobSprite(actorLoop);
 		}
 
 
@@ -884,7 +884,7 @@ public class GameScene extends PixelScene {
 
 	}
 	
-	private void addBlobSprite( final Emitter gas ) {
+	private void addBlobSprite( final actorLoop gas ) {
 		if (gas.emitter == null) {
 			gases.add( new BlobEmitter( gas ) );
 		}
@@ -972,7 +972,7 @@ public class GameScene extends PixelScene {
 		}
 	}
 	
-	public static void add( Emitter gas ) {
+	public static void add( actorLoop gas ) {
 		Actor.addActor( gas );
 		if (scene != null) {
 			scene.addBlobSprite( gas );

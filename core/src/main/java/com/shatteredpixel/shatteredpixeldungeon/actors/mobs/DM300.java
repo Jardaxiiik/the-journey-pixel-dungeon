@@ -28,8 +28,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
@@ -375,16 +375,16 @@ public class DM300 extends Mob {
 		int gasMulti = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 1;
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Emitter.seed(i, 20*gasMulti, ToxicGas.class));
+			GameScene.add(actorLoop.seed(i, 20*gasMulti, ToxicGas.class));
 			gasVented += 20*gasMulti;
 		}
 
-		GameScene.add(Emitter.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
+		GameScene.add(actorLoop.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
 
 		if (gasVented < 250*gasMulti){
 			int toVentAround = (int)Math.ceil(((250*gasMulti) - gasVented)/8f);
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				GameScene.add(Emitter.seed(position +i, toVentAround, ToxicGas.class));
+				GameScene.add(actorLoop.seed(position +i, toVentAround, ToxicGas.class));
 			}
 
 		}
@@ -431,7 +431,7 @@ public class DM300 extends Mob {
 			safeCell = rockCenter + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 		} while (safeCell == position
 				|| (Dungeon.level.solid[safeCell] && Random.Int(2) == 0)
-				|| (Emitter.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
+				|| (actorLoop.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
 
 		ArrayList<Integer> rockCells = new ArrayList<>();
 

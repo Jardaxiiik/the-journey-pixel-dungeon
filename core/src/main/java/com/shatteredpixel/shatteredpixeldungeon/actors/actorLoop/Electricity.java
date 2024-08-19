@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class Electricity extends Emitter {
+public class Electricity extends actorLoop {
 	
 	{
 		//acts after mobs, to give them a chance to resist paralysis

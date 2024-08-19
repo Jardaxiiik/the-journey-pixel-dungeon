@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Blizzard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Blizzard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -49,13 +49,13 @@ public class BlizzardBrew extends Brew {
 		int centerVolume = 120;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( Emitter.seed( cell+i, 120, Blizzard.class ) );
+				GameScene.add( actorLoop.seed( cell+i, 120, Blizzard.class ) );
 			} else {
 				centerVolume += 120;
 			}
 		}
 
-		GameScene.add( Emitter.seed( cell, centerVolume, Blizzard.class ) );
+		GameScene.add( actorLoop.seed( cell, centerVolume, Blizzard.class ) );
 	}
 	
 	@Override

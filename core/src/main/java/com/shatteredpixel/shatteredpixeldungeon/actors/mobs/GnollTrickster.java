@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
@@ -83,7 +83,7 @@ public class GnollTrickster extends Gnoll {
 			if (effect >=6 && enemy.getBuff(Burning.class) == null){
 
 				if (Dungeon.level.flamable[enemy.position])
-					GameScene.add(Emitter.seed(enemy.position, 4, Fire.class));
+					GameScene.add(actorLoop.seed(enemy.position, 4, Fire.class));
 				Buff.affect(enemy, Burning.class).reignite( enemy );
 
 			} else

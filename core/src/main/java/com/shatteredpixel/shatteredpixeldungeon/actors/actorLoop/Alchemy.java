@@ -19,23 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 
-public class SmokeScreen extends Emitter {
+public class Alchemy extends actorLoop {
+
+	protected int pos;
+	
+	@Override
+	protected void evolve() {
+		int cell;
+		for (int i=area.top-1; i <= area.bottom; i++) {
+			for (int j = area.left-1; j <= area.right; j++) {
+				cell = j + i* Dungeon.level.width();
+				if (Dungeon.level.insideMap(cell)) {
+					off[cell] = cur[cell];
+
+					volume += off[cell];
+					if (off[cell] > 0 && Dungeon.level.visited[cell]){
+						Notes.add( Notes.Landmark.ALCHEMY );
+					}
+				}
+			}
+		}
+	}
 	
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.pour( Speck.factory( Speck.SMOKE ), 0.1f );
+		emitter.start( Speck.factory( Speck.BUBBLE ), 0.33f, 0 );
 	}
 
-	@Override
-	public String tileDesc() {
-		return Messages.get(this, "desc");
-	}
-	
 }

@@ -19,67 +19,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.GooSprite;
 
-public class GooWarn extends Emitter {
-
-	//cosmetic blob, previously used for Goo's pump up attack (that's now handled by Goo's sprite)
-	// but is still used as a visual indicator for Arcane bombs
-
+public class ParalyticGas extends actorLoop {
+	
 	{
-		//this one needs to act just before the Goo
-		actPriority = MOB_PRIO + 1;
+		//acts after mobs, to give them a chance to resist paralysis
+		actPriority = MOB_PRIO - 1;
 	}
-
-	protected int pos;
-
+	
 	@Override
 	protected void evolve() {
-
+		super.evolve();
+		
+		Character ch;
 		int cell;
 
-		for (int i = area.left; i < area.right; i++){
-			for (int j = area.top; j < area.bottom; j++){
-				cell = i + j*Dungeon.level.width();
-				off[cell] = cur[cell] > 0 ? cur[cell] - 1 : 0;
-
-				if (off[cell] > 0) {
-					volume += off[cell];
+		for (int i = area.left; i < area.right; i++) {
+			for (int j = area.top; j < area.bottom; j++) {
+				cell = i + j * Dungeon.level.width();
+				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition(cell)) != null) {
+					if (!ch.isImmuneToEffectType(this.getClass()))
+						Buff.prolong(ch, Paralysis.class, Paralysis.DURATION);
 				}
 			}
 		}
-
 	}
-
-	//to prevent multiple arcane bombs from visually stacking their effects
-	public void seed(Level level, int cell, int amount ) {
-		if (cur == null) cur = new int[level.length()];
-		if (off == null) off = new int[cur.length];
-
-		int toAdd = amount - cur[cell];
-		if (toAdd > 0){
-			cur[cell] += toAdd;
-			volume += toAdd;
-		}
-
-		area.union(cell%level.width(), cell/level.width());
-	}
-
+	
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.pour(GooSprite.GooParticle.FACTORY, 0.03f );
+		
+		emitter.pour( Speck.factory( Speck.PARALYSIS ), 0.4f );
 	}
-
+	
 	@Override
 	public String tileDesc() {
 		return Messages.get(this, "desc");
 	}
 }
-

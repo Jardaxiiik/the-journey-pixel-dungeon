@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.FungalSpinnerSprite;
@@ -44,7 +44,7 @@ public class FungalSpinner extends Spinner {
 
 	@Override
 	protected void applyWebToCell(int cell) {
-		GameScene.add(Emitter.seed(cell, 40, Regrowth.class));
+		GameScene.add(actorLoop.seed(cell, 40, Regrowth.class));
 	}
 
 	@Override

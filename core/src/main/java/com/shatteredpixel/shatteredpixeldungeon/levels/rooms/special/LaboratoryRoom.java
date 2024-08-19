@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Alchemy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Alchemy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -62,7 +62,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		Painter.set( level, pot, Terrain.ALCHEMY );
 		
 		int chapter = 1 + Dungeon.depth/5;
-		Emitter.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
+		actorLoop.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
 
 		int pos;
 		do {

@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -41,7 +41,7 @@ public class IncendiaryDart extends TippedDart {
 	protected void onThrow( int cell ) {
 		Character enemy = Actor.getCharacterOnPosition( cell );
 		if ((enemy == null || enemy == curUser) && Dungeon.level.flamable[cell]) {
-			GameScene.add(Emitter.seed(cell, 4, Fire.class));
+			GameScene.add(actorLoop.seed(cell, 4, Fire.class));
 			decrementDurability();
 			if (durability > 0){
 				super.onThrow(cell);

@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Levitation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -51,7 +51,7 @@ public class PotionOfLevitation extends Potion {
 			Sample.INSTANCE.play( Assets.Sounds.GAS );
 		}
 
-		GameScene.add( Emitter.seed( cell, 1000, ConfusionGas.class ) );
+		GameScene.add( actorLoop.seed( cell, 1000, ConfusionGas.class ) );
 	}
 	
 	@Override

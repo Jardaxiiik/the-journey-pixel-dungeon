@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -121,9 +121,9 @@ public class DM200 extends Mob {
 		Ballistica trajectory = new Ballistica(position, enemy.position, Ballistica.STOP_TARGET);
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(Emitter.seed(i, 20, ToxicGas.class));
+			GameScene.add(actorLoop.seed(i, 20, ToxicGas.class));
 		}
-		GameScene.add(Emitter.seed(trajectory.collisionPos, 100, ToxicGas.class));
+		GameScene.add(actorLoop.seed(trajectory.collisionPos, 100, ToxicGas.class));
 
 	}
 

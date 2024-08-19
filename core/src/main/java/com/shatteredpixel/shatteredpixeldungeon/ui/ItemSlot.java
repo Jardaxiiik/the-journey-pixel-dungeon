@@ -179,14 +179,14 @@ public class ItemSlot extends Button {
 		item(null);
 		enable(true);
 		sprite.visible(true);
-		sprite.view(ItemSpriteSheet.SOMETHING, null);
+		sprite.setView(ItemSpriteSheet.SOMETHING, null);
 		layout();
 	}
 	
 	public void item( Item item ) {
 		if (this.item == item) {
 			if (item != null) {
-				sprite.view( item );
+				sprite.setView( item );
 			}
 			updateText();
 			return;
@@ -206,7 +206,7 @@ public class ItemSlot extends Button {
 			enable(true);
 			sprite.visible(true);
 
-			sprite.view( item );
+			sprite.setView( item );
 			updateText();
 		}
 	}

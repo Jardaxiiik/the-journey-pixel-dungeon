@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Foliage;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Foliage;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;

@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -108,12 +108,12 @@ public class Shopkeeper extends NPC {
 			turnsSinceHarmed = 0;
 			yell(Messages.get(this, "warn"));
 
-			//cleanses all harmful emitters in the shop
-			ArrayList<Emitter> emitters = new ArrayList<>();
+			//cleanses all harmful actorLoops in the shop
+			ArrayList<actorLoop> actorLoops = new ArrayList<>();
 			for (Class c : new BlobImmunity().immunities()){
-				Emitter b = Dungeon.level.blobs.get(c);
+				actorLoop b = Dungeon.level.blobs.get(c);
 				if (b != null && b.volume > 0){
-					emitters.add(b);
+					actorLoops.add(b);
 				}
 			}
 
@@ -123,9 +123,9 @@ public class Shopkeeper extends NPC {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 
 					boolean affected = false;
-					for (Emitter emitter : emitters) {
-						if (emitter.cur[i] > 0) {
-							emitter.clear(i);
+					for (actorLoop actorLoop : actorLoops) {
+						if (actorLoop.cur[i] > 0) {
+							actorLoop.clear(i);
 							affected = true;
 						}
 					}

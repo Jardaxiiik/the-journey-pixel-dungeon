@@ -144,7 +144,7 @@ public class CeremonialCandle extends Item {
 					if (i instanceof CeremonialCandle){
 						if (!((CeremonialCandle) i).aflame) {
 							((CeremonialCandle) i).aflame = true;
-							h.sprite.view(h).place(h.pos);
+							h.sprite.setView(h).place(h.pos);
 						}
 						foundCandle = true;
 					}

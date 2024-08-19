@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -45,7 +45,7 @@ public class FrostBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(Emitter.seed(i, 10, Freezing.class));
+				GameScene.add(actorLoop.seed(i, 10, Freezing.class));
 				Character ch = Actor.getCharacterOnPosition(i);
 				if (ch != null){
 					Buff.affect(ch, Frost.class, 2f);

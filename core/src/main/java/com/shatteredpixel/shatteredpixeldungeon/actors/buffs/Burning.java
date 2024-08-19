@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
@@ -151,8 +151,8 @@ public class Burning extends Buff implements Hero.Doom {
 			detach();
 		}
 		
-		if (Dungeon.level.flamable[target.position] && Emitter.volumeAt(target.position, Fire.class) == 0) {
-			GameScene.add( Emitter.seed( target.position, 4, Fire.class ) );
+		if (Dungeon.level.flamable[target.position] && actorLoop.volumeAt(target.position, Fire.class) == 0) {
+			GameScene.add( actorLoop.seed( target.position, 4, Fire.class ) );
 		}
 		
 		spendTimeAdjusted( TICK );

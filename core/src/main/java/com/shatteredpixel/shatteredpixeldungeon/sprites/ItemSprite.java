@@ -80,12 +80,12 @@ public class ItemSprite extends MovieClip {
 	
 	public ItemSprite( Heap heap ){
 		super(Assets.Sprites.ITEMS);
-		view( heap );
+		setView( heap );
 	}
 	
 	public ItemSprite( Item item ) {
 		super(Assets.Sprites.ITEMS);
-		view( item );
+		setView( item );
 	}
 	
 	public ItemSprite( int image ){
@@ -95,7 +95,7 @@ public class ItemSprite extends MovieClip {
 	public ItemSprite( int image, Glowing glowing ) {
 		super( Assets.Sprites.ITEMS );
 		
-		view(image, glowing);
+		setView(image, glowing);
 	}
 	
 	public void link() {
@@ -104,7 +104,7 @@ public class ItemSprite extends MovieClip {
 	
 	public void link( Heap heap ) {
 		this.heap = heap;
-		view(heap);
+		setView(heap);
 		renderShadow = true;
 		visible = heap.seen;
 		place(heap.pos);
@@ -187,8 +187,8 @@ public class ItemSprite extends MovieClip {
 		}
 	}
 
-	public ItemSprite view( Item item ){
-		view(item.image(), item.glowing());
+	public ItemSprite setView(Item item ){
+		setView(item.image(), item.glowing());
 		Emitter emitter = item.emitter();
 		if (emitter != null && parent != null) {
 			emitter.pos( this );
@@ -198,40 +198,40 @@ public class ItemSprite extends MovieClip {
 		return this;
 	}
 	
-	public ItemSprite view( Heap heap ){
+	public ItemSprite setView(Heap heap ){
 		if (heap.size() <= 0 || heap.items == null){
-			return view( 0, null );
+			return setView( 0, null );
 		}
 		
 		switch (heap.type) {
 			case HEAP: case FOR_SALE:
-				return view( heap.peek() );
+				return setView( heap.peek() );
 			case CHEST:
-				return view( ItemSpriteSheet.CHEST, null );
+				return setView( ItemSpriteSheet.CHEST, null );
 			case LOCKED_CHEST:
-				return view( ItemSpriteSheet.LOCKED_CHEST, null );
+				return setView( ItemSpriteSheet.LOCKED_CHEST, null );
 			case CRYSTAL_CHEST:
-				return view( ItemSpriteSheet.CRYSTAL_CHEST, null );
+				return setView( ItemSpriteSheet.CRYSTAL_CHEST, null );
 			case TOMB:
-				return view( ItemSpriteSheet.TOMB, null );
+				return setView( ItemSpriteSheet.TOMB, null );
 			case SKELETON:
-				return view( ItemSpriteSheet.BONES, null );
+				return setView( ItemSpriteSheet.BONES, null );
 			case REMAINS:
-				return view( ItemSpriteSheet.REMAINS, null );
+				return setView( ItemSpriteSheet.REMAINS, null );
 			default:
-				return view( 0, null );
+				return setView( 0, null );
 		}
 	}
 	
-	public ItemSprite view( int image, Glowing glowing ) {
+	public ItemSprite setView(int image, Glowing glowing ) {
 		if (this.emitter != null) this.emitter.killAndErase();
 		emitter = null;
-		frame( image );
+		setImageFrameById( image );
 		glow( glowing );
 		return this;
 	}
 
-	public void frame( int image ){
+	public void setImageFrameById(int image ){
 		frame( ItemSpriteSheet.film.get( image ));
 
 		float height = ItemSpriteSheet.film.height( image );

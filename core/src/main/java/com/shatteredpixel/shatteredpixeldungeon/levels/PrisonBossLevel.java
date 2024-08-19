@@ -28,9 +28,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
@@ -356,8 +356,8 @@ public class PrisonBossLevel extends Level {
 		BArray.setFalse(visited);
 		BArray.setFalse(mapped);
 		
-		for (Emitter emitter : blobs.values()){
-			emitter.fullyClear();
+		for (actorLoop actorLoop : blobs.values()){
+			actorLoop.fullyClear();
 		}
 		addVisuals(); //this also resets existing visuals
 		traps.clear();
@@ -664,8 +664,8 @@ public class PrisonBossLevel extends Level {
 				int x = i % 7;
 				int y = i / 7;
 				int cell = x+tenguCell.left+1 + (y+tenguCell.top+1)*width();
-				if (Emitter.volumeAt(cell, StormCloud.class) == 0
-						&& Emitter.volumeAt(cell, Regrowth.class) <= 9
+				if (actorLoop.volumeAt(cell, StormCloud.class) == 0
+						&& actorLoop.volumeAt(cell, Regrowth.class) <= 9
 						&& Dungeon.level.plants.get(cell) == null
 						&& Actor.getCharacterOnPosition(cell) == null) {
 					Level.set(cell, Terrain.SECRET_TRAP);

@@ -19,71 +19,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShaftParticle;
-import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Foliage extends Emitter {
+public class StormCloud extends actorLoop {
 	
 	@Override
 	protected void evolve() {
-
-		int[] map = Dungeon.level.map;
+		super.evolve();
 		
-		boolean seen = false;
-
 		int cell;
-		for (int i = area.left; i < area.right; i++) {
-			for (int j = area.top; j < area.bottom; j++) {
+
+		Fire fire = (Fire) Dungeon.level.blobs.get(Fire.class);
+		for (int i = area.left; i < area.right; i++){
+			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
 				if (cur[cell] > 0) {
-
-					off[cell] = cur[cell];
-					volume += off[cell];
-
-					if (map[cell] == Terrain.EMBERS) {
-						map[cell] = Terrain.GRASS;
-						GameScene.updateMap(cell);
+					Dungeon.level.setCellToWater(true, cell);
+					if (fire != null){
+						fire.clear(cell);
 					}
 
-					seen = seen || Dungeon.level.visited[cell];
-
-				} else {
-					off[cell] = 0;
+					//fiery enemies take damage as if they are in toxic gas
+					Character ch = Actor.getCharacterOnPosition(cell);
+					if (ch != null
+							&& !ch.isImmuneToEffectType(getClass())
+							&& Character.hasProperty(ch, Character.Property.FIERY)){
+						ch.receiveDamageFromSource(1 + Dungeon.scalingDepth()/5, this);
+					}
 				}
 			}
-		}
-		
-		Hero hero = Dungeon.hero;
-		if (hero.isAlive() && cur[hero.position] > 0) {
-			Shadows s = Buff.affect( hero, Shadows.class );
-			if (s != null){
-				s.prolong();
-			}
-		}
-
-		if (seen) {
-			Notes.add( Notes.Landmark.GARDEN );
 		}
 	}
 	
 	@Override
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
-		emitter.start( ShaftParticle.FACTORY, 0.9f, 0 );
+		emitter.pour( Speck.factory( Speck.STORM ), 0.4f );
 	}
 	
 	@Override
 	public String tileDesc() {
 		return Messages.get(this, "desc");
 	}
+	
 }

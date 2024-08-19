@@ -19,18 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.actors.emitters;
+package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class StenchGas extends Emitter {
+public class ConfusionGas extends actorLoop {
 
 	@Override
 	protected void evolve() {
@@ -43,8 +43,9 @@ public class StenchGas extends Emitter {
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
 				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
-					if (!ch.isImmuneToEffectType(this.getClass()))
-						Buff.prolong( ch, Paralysis.class, Paralysis.DURATION/5 );
+					if (!ch.isImmuneToEffectType(this.getClass())) {
+						Buff.prolong(ch, Vertigo.class, 2);
+					}
 				}
 			}
 		}
@@ -54,7 +55,7 @@ public class StenchGas extends Emitter {
 	public void use( BlobEmitter emitter ) {
 		super.use( emitter );
 
-		emitter.pour( Speck.factory(Speck.STENCH), 0.4f );
+		emitter.pour( Speck.factory( Speck.CONFUSION, true ), 0.4f );
 	}
 
 	@Override

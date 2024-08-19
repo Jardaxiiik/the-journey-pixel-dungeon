@@ -25,10 +25,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Electricity;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -298,19 +298,19 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blazing ***
 		if (ench instanceof Blazing){
 			for (int cell : cone.cells) {
-				GameScene.add(Emitter.seed(cell, Math.round(8 * powerMulti), Fire.class));
+				GameScene.add(actorLoop.seed(cell, Math.round(8 * powerMulti), Fire.class));
 			}
 
 		//*** Chilling ***
 		} else if (ench instanceof Chilling){
 			for (int cell : cone.cells) {
-				GameScene.add(Emitter.seed(cell, Math.round(8 * powerMulti), Freezing.class));
+				GameScene.add(actorLoop.seed(cell, Math.round(8 * powerMulti), Freezing.class));
 			}
 
 		//*** Shocking ***
 		} else if (ench instanceof Shocking){
 			for (int cell : cone.cells) {
-				GameScene.add(Emitter.seed(cell, Math.round(8 * powerMulti), Electricity.class));
+				GameScene.add(actorLoop.seed(cell, Math.round(8 * powerMulti), Electricity.class));
 			}
 
 		//*** Blooming ***

@@ -25,8 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -104,7 +104,7 @@ public class WandOfFireblast extends DamageWand {
 					Dungeon.level.heaps.get(cell).burn();
 				}
 			} else {
-				GameScene.add( Emitter.seed( cell, 1+chargesPerCast(), Fire.class ) );
+				GameScene.add( actorLoop.seed( cell, 1+chargesPerCast(), Fire.class ) );
 			}
 
 			Character ch = Actor.getCharacterOnPosition( cell );
@@ -125,7 +125,7 @@ public class WandOfFireblast extends DamageWand {
 				if (Dungeon.level.trueDistance(cell+i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
 						&& Dungeon.level.flamable[cell+i]
 						&& Fire.volumeAt(cell+i, Fire.class) == 0){
-					GameScene.add( Emitter.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
+					GameScene.add( actorLoop.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
 				}
 			}
 		}

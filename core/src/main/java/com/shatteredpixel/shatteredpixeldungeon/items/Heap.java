@@ -140,7 +140,7 @@ public class Heap implements Bundlable {
 		if (items.isEmpty()) {
 			destroy();
 		} else if (sprite != null) {
-			sprite.view(this).place( pos );
+			sprite.setView(this).place( pos );
 		}
 		
 		return item;
@@ -172,7 +172,7 @@ public class Heap implements Bundlable {
 		}
 		
 		if (sprite != null) {
-			sprite.view(this).place( pos );
+			sprite.setView(this).place( pos );
 		}
 
 		if (TippedDart.lostDarts > 0){
@@ -202,7 +202,7 @@ public class Heap implements Bundlable {
 		if (items.isEmpty()){
 			destroy();
 		} else if (sprite != null) {
-			sprite.view(this).place( pos );
+			sprite.setView(this).place( pos );
 		}
 	}
 	
@@ -250,7 +250,7 @@ public class Heap implements Bundlable {
 			if (isEmpty()) {
 				destroy();
 			} else if (sprite != null) {
-				sprite.view(this).place( pos );
+				sprite.setView(this).place( pos );
 			}
 			
 		}
@@ -306,7 +306,7 @@ public class Heap implements Bundlable {
 			if (isEmpty()){
 				destroy();
 			} else if (sprite != null) {
-				sprite.view(this).place( pos );
+				sprite.setView(this).place( pos );
 			}
 		}
 	}
@@ -335,7 +335,7 @@ public class Heap implements Bundlable {
 			if (isEmpty()) {
 				destroy();
 			} else if (sprite != null) {
-				sprite.view(this).place( pos );
+				sprite.setView(this).place( pos );
 			}
 		}
 	}

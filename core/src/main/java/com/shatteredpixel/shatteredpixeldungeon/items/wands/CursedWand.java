@@ -28,12 +28,12 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ConfusionGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ParalyticGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Regrowth;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
@@ -140,7 +140,7 @@ public class CursedWand {
 
 			//spawns some regrowth
 			case 1:
-				GameScene.add( Emitter.seed(targetPos, 30, Regrowth.class));
+				GameScene.add( actorLoop.seed(targetPos, 30, Regrowth.class));
 				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				return true;
 
@@ -169,13 +169,13 @@ public class CursedWand {
 				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				switch (Random.Int(3)) {
 					case 0: default:
-						GameScene.add( Emitter.seed( targetPos, 800, ConfusionGas.class ) );
+						GameScene.add( actorLoop.seed( targetPos, 800, ConfusionGas.class ) );
 						return true;
 					case 1:
-						GameScene.add( Emitter.seed( targetPos, 500, ToxicGas.class ) );
+						GameScene.add( actorLoop.seed( targetPos, 500, ToxicGas.class ) );
 						return true;
 					case 2:
-						GameScene.add( Emitter.seed( targetPos, 200, ParalyticGas.class ) );
+						GameScene.add( actorLoop.seed( targetPos, 200, ParalyticGas.class ) );
 						return true;
 				}
 		}
@@ -330,10 +330,10 @@ public class CursedWand {
 			//great forest fire!
 			case 0: default:
 				for (int i = 0; i < Dungeon.level.length(); i++){
-					GameScene.add( Emitter.seed(i, 15, Regrowth.class));
+					GameScene.add( actorLoop.seed(i, 15, Regrowth.class));
 				}
 				do {
-					GameScene.add(Emitter.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
+					GameScene.add(actorLoop.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
 				} while (Random.Int(5) != 0);
 				new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);

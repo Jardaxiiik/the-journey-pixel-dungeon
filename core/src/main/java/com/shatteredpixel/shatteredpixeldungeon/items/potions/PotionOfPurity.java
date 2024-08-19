@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -56,19 +56,19 @@ public class PotionOfPurity extends Potion {
 		
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), DISTANCE );
 		
-		ArrayList<Emitter> emitters = new ArrayList<>();
+		ArrayList<actorLoop> actorLoops = new ArrayList<>();
 		for (Class c : affectedBlobs){
-			Emitter b = Dungeon.level.blobs.get(c);
+			actorLoop b = Dungeon.level.blobs.get(c);
 			if (b != null && b.volume > 0){
-				emitters.add(b);
+				actorLoops.add(b);
 			}
 		}
 		
 		for (int i=0; i < Dungeon.level.length(); i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				
-				for (Emitter emitter : emitters) {
-					emitter.clear(i);
+				for (actorLoop actorLoop : actorLoops) {
+					actorLoop.clear(i);
 				}
 				
 				if (Dungeon.level.heroFOV[i]) {

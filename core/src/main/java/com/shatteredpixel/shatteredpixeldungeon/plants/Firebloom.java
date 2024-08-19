@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.plants;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -48,7 +48,7 @@ public class Firebloom extends Plant {
 			Buff.affect(ch, FireImbue.class).set( FireImbue.DURATION*0.3f );
 		}
 		
-		GameScene.add( Emitter.seed( pos, 2, Fire.class ) );
+		GameScene.add( actorLoop.seed( pos, 2, Fire.class ) );
 		
 		if (Dungeon.level.heroFOV[pos]) {
 			CellEmitter.get( pos ).burst( FlameParticle.FACTORY, 5 );

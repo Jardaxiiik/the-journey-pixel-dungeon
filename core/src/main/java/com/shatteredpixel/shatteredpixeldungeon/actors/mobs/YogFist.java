@@ -26,10 +26,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Fire;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.StormCloud;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -237,7 +237,7 @@ public abstract class YogFist extends Mob {
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 				int vol = Fire.volumeAt(position +i, Fire.class);
 				if (vol < 4 && !Dungeon.level.water[position + i] && !Dungeon.level.solid[position + i]){
-					GameScene.add( Emitter.seed( position + i, 4 - vol, Fire.class ) );
+					GameScene.add( actorLoop.seed( position + i, 4 - vol, Fire.class ) );
 				}
 			}
 
@@ -260,7 +260,7 @@ public abstract class YogFist extends Mob {
 				if (!Dungeon.level.water[enemy.position +i] && !Dungeon.level.solid[enemy.position +i]){
 					int vol = Fire.volumeAt(enemy.position +i, Fire.class);
 					if (vol < 4){
-						GameScene.add( Emitter.seed( enemy.position + i, 4 - vol, Fire.class ) );
+						GameScene.add( actorLoop.seed( enemy.position + i, 4 - vol, Fire.class ) );
 					}
 				}
 			}
@@ -382,7 +382,7 @@ public abstract class YogFist extends Mob {
 		@Override
 		protected boolean playGameTurn() {
 			//ensures toxic gas acts at the appropriate time when added
-			GameScene.add(Emitter.seed(position, 0, ToxicGas.class));
+			GameScene.add(actorLoop.seed(position, 0, ToxicGas.class));
 
 			if (Dungeon.level.water[position] && healthPoints < healthMax) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healthMax /50), FloatingText.HEALING);
@@ -417,7 +417,7 @@ public abstract class YogFist extends Mob {
 		@Override
 		protected void zap() {
 			spendTimeAdjusted( 1f );
-			GameScene.add(Emitter.seed(enemy.position, 100, ToxicGas.class));
+			GameScene.add(actorLoop.seed(enemy.position, 100, ToxicGas.class));
 		}
 
 		@Override

@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Emitter;
-import com.shatteredpixel.shatteredpixeldungeon.actors.emitters.Web;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -74,7 +74,7 @@ public class WandOfDisintegration extends DamageWand {
 		
 		ArrayList<Character> characters = new ArrayList<>();
 
-		Emitter web = Dungeon.level.blobs.get(Web.class);
+		actorLoop web = Dungeon.level.blobs.get(Web.class);
 
 		int terrainPassed = 2, terrainBonus = 0;
 		for (int c : beam.subPath(1, maxDistance)) {
