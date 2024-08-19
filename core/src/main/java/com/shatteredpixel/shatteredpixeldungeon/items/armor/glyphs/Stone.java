@@ -34,8 +34,8 @@ public class Stone extends Armor.Glyph {
 	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 		
 		testing = true;
-		float evasion = defender.defenseSkill(attacker);
-		float accuracy = attacker.attackSkill(defender);
+		float evasion = defender.getEvasionAgainstAttacker(attacker);
+		float accuracy = attacker.getAccuracyAgainstTarget(defender);
 		testing = false;
 
 		evasion *= genericProcChanceMultiplier(defender);

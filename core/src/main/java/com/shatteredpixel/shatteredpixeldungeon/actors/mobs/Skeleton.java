@@ -54,33 +54,33 @@ public class Skeleton extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 2, 10 );
 	}
 	
 	@Override
-	public void die( Object cause ) {
+	public void die( Object source) {
 		
-		super.die( cause );
+		super.die(source);
 		
-		if (cause == Chasm.class) return;
+		if (source == Chasm.class) return;
 		
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-			Character ch = findChar( pos + PathFinder.OFFSETS_NEIGHBOURS8[i] );
+			Character ch = getCharacterOnPosition( position + PathFinder.OFFSETS_NEIGHBOURS8[i] );
 			if (ch != null && ch.isAlive()) {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
 				//armor is 2x effective against bone explosion
 				damage = Math.max( 0,  damage - (ch.drRoll() + ch.drRoll()) );
-				ch.damage( damage, this );
+				ch.receiveDamageFromSource( damage, this );
 				if (ch == Dungeon.hero && !ch.isAlive()) {
 					heroKilled = true;
 				}
 			}
 		}
 		
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.level.heroFOV[position]) {
 			Sample.INSTANCE.play( Assets.Sounds.BONES );
 		}
 		
@@ -91,20 +91,20 @@ public class Skeleton extends Mob {
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		//each drop makes future drops 1/2 as likely
 		// so loot chance looks like: 1/6, 1/12, 1/24, 1/48, etc.
-		return super.lootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.SKELE_WEP.count);
+		return super.getLootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.SKELE_WEP.count);
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.SKELE_WEP.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 12;
 	}
 	

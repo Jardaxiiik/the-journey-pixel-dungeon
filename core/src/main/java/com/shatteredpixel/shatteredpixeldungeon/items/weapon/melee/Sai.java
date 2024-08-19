@@ -69,7 +69,7 @@ public class Sai extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -83,14 +83,14 @@ public class Sai extends MeleeWeapon {
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.sprite.attack(enemy.position, new Callback() {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
 
 				int recentHits = 0;
-				ComboStrikeTracker buff = hero.buff(ComboStrikeTracker.class);
+				ComboStrikeTracker buff = hero.getBuff(ComboStrikeTracker.class);
 				if (buff != null){
 					recentHits = buff.totalHits();
 					buff.detach();
@@ -154,7 +154,7 @@ public class Sai extends MeleeWeapon {
 				detach();
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 

@@ -60,10 +60,10 @@ public class Torch extends Item {
 		
 		if (action.equals( AC_LIGHT )) {
 			
-			hero.spend( TIME_TO_LIGHT );
+			hero.spendTimeAdjusted( TIME_TO_LIGHT );
 			hero.busy();
 			
-			hero.sprite.operate( hero.pos );
+			hero.sprite.operate( hero.position);
 			
 			detach( hero.belongings.backpack );
 			

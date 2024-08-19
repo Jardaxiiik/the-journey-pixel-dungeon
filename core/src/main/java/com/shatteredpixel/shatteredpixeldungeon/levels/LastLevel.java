@@ -166,7 +166,7 @@ public class LastLevel extends Level {
 
 	@Override
 	protected void createItems() {
-		drop( new Amulet(), AMULET_POS );
+		dropItemOnPosition( new Amulet(), AMULET_POS );
 	}
 
 	@Override
@@ -175,8 +175,8 @@ public class LastLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}

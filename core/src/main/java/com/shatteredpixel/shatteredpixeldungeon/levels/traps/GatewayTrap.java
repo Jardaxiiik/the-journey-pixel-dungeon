@@ -56,13 +56,13 @@ public class GatewayTrap extends Trap {
 
 		if (telePos == -1){
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-				Character ch = Actor.findChar(pos + i);
+				Character ch = Actor.getCharacterOnPosition(pos + i);
 				if (ch != null){
 					if (ScrollOfTeleportation.teleportChar(ch)) {
 						if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
 							((Mob) ch).state = ((Mob) ch).WANDERING;
 						}
-						telePos = ch.pos;
+						telePos = ch.position;
 						break;
 					}
 				}
@@ -73,7 +73,7 @@ public class GatewayTrap extends Trap {
 					Item item = heap.pickUp();
 
 					if (cell != -1) {
-						Dungeon.level.drop( item, cell );
+						Dungeon.level.dropItemOnPosition( item, cell );
 						telePos = cell;
 						break;
 					}
@@ -86,14 +86,14 @@ public class GatewayTrap extends Trap {
 			ArrayList<Integer> telePositions = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[telePos+i]
-						&& Actor.findChar( telePos+i ) == null){
+						&& Actor.getCharacterOnPosition( telePos+i ) == null){
 					telePositions.add(telePos+i);
 				}
 			}
 			Random.shuffle(telePositions);
 
 			if (Dungeon.level.passable[telePos]
-					&& Actor.findChar( telePos ) == null){
+					&& Actor.getCharacterOnPosition( telePos ) == null){
 				telePositions.add(0, telePos);
 			}
 
@@ -106,10 +106,10 @@ public class GatewayTrap extends Trap {
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 
-				Character ch = Actor.findChar(pos + i);
-				if (ch != null && !Character.hasProp(ch, Character.Property.IMMOVABLE)){
+				Character ch = Actor.getCharacterOnPosition(pos + i);
+				if (ch != null && !Character.hasProperty(ch, Character.Property.IMMOVABLE)){
 					int newPos = -1;
-					if (Character.hasProp(ch, Character.Property.LARGE)){
+					if (Character.hasProperty(ch, Character.Property.LARGE)){
 						if (!largeCharPositions.isEmpty()){
 							newPos = largeCharPositions.get(0);
 						}
@@ -134,7 +134,7 @@ public class GatewayTrap extends Trap {
 				Heap heap = Dungeon.level.heaps.get(pos + i);
 				if (heap != null && heap.type == Heap.Type.HEAP){
 					Item item = heap.pickUp();
-					Dungeon.level.drop( item, telePos );
+					Dungeon.level.dropItemOnPosition( item, telePos );
 					if (item instanceof Honeypot.ShatteredPot){
 						((Honeypot.ShatteredPot)item).movePot(pos, telePos);
 					}

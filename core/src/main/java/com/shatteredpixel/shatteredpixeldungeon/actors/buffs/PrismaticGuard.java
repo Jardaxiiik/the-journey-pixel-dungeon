@@ -51,20 +51,20 @@ public class PrismaticGuard extends Buff {
 		int v = hero.visibleEnemies();
 		for (int i=0; i < v; i++) {
 			Mob mob = hero.visibleEnemy( i );
-			if ( mob.isAlive() && !mob.isInvulnerable(PrismaticImage.class)
+			if ( mob.isAlive() && !mob.isInvulnerableToEffectType(PrismaticImage.class)
 					&& mob.state != mob.PASSIVE && mob.state != mob.WANDERING && mob.state != mob.SLEEPING && !hero.mindVisionEnemies.contains(mob)
-					&& (closest == null || Dungeon.level.distance(hero.pos, mob.pos) < Dungeon.level.distance(hero.pos, closest.pos))) {
+					&& (closest == null || Dungeon.level.distance(hero.position, mob.position) < Dungeon.level.distance(hero.position, closest.position))) {
 				closest = mob;
 			}
 		}
 		
-		if (closest != null && Dungeon.level.distance(hero.pos, closest.pos) < 5){
+		if (closest != null && Dungeon.level.distance(hero.position, closest.position) < 5){
 			//spawn guardian
 			int bestPos = -1;
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				int p = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.findChar( p ) == null && Dungeon.level.passable[p]) {
-					if (bestPos == -1 || Dungeon.level.trueDistance(p, closest.pos) < Dungeon.level.trueDistance(bestPos, closest.pos)){
+				int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+				if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
+					if (bestPos == -1 || Dungeon.level.trueDistance(p, closest.position) < Dungeon.level.trueDistance(bestPos, closest.position)){
 						bestPos = p;
 					}
 				}
@@ -78,15 +78,15 @@ public class PrismaticGuard extends Buff {
 				
 				detach();
 			} else {
-				spend( TICK );
+				spendTimeAdjusted( TICK );
 			}
 			
 			
 		} else {
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 		}
 		
-		LockedFloor lock = target.buff(LockedFloor.class);
+		LockedFloor lock = target.getBuff(LockedFloor.class);
 		if (HP < maxHP() && Regeneration.regenOn()){
 			HP += 0.1f;
 		}

@@ -199,7 +199,7 @@ public class CavesBossLevel extends Level {
 	protected void createMobs() {
 		for (int i : pylonPositions) {
 			Pylon pylon = new Pylon();
-			pylon.pos = i;
+			pylon.position = i;
 			mobs.add(pylon);
 		}
 	}
@@ -219,7 +219,7 @@ public class CavesBossLevel extends Level {
 					pos = randomRespawnCell(null);
 				} while (pos == entrance());
 				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -231,8 +231,8 @@ public class CavesBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -261,7 +261,7 @@ public class CavesBossLevel extends Level {
 		int gatePos = pointToCell(new Point(gate.left, gate.top));
 		if (ch == Dungeon.hero && !locked && solid[gatePos]){
 			for (int pos : pylonPositions){
-				if (Dungeon.level.distance(ch.pos, pos) <= 3){
+				if (Dungeon.level.distance(ch.position, pos) <= 3){
 					seal();
 					break;
 				}
@@ -285,17 +285,17 @@ public class CavesBossLevel extends Level {
 			do {
 				n = entrance + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 			} while (!Dungeon.level.passable[n]);
-			Heap dropped = Dungeon.level.drop(heap.pickUp(), n);
+			Heap dropped = Dungeon.level.dropItemOnPosition(heap.pickUp(), n);
 			dropped.seen = heap.seen;
 		}
 
-		Character ch = Actor.findChar( entrance );
+		Character ch = Actor.getCharacterOnPosition( entrance );
 		if (ch != null) {
 			int n;
 			do {
 				n = entrance + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int( 8 )];
 			} while (!Dungeon.level.passable[n]);
-			ch.pos = n;
+			ch.position = n;
 			ch.sprite.place(n);
 		}
 
@@ -309,8 +309,8 @@ public class CavesBossLevel extends Level {
 		DM300 boss = new DM300();
 		boss.state = boss.WANDERING;
 		do {
-			boss.pos = pointToCell(Random.element(mainArena.getPoints()));
-		} while (!openSpace[boss.pos] || map[boss.pos] == Terrain.EMPTY_SP || Actor.findChar(boss.pos) != null);
+			boss.position = pointToCell(Random.element(mainArena.getPoints()));
+		} while (!openSpace[boss.position] || map[boss.position] == Terrain.EMPTY_SP || Actor.getCharacterOnPosition(boss.position) != null);
 		GameScene.add( boss );
 
 		Game.runOnRenderThread(new Callback() {
@@ -369,7 +369,7 @@ public class CavesBossLevel extends Level {
 		} else if (!pylons.isEmpty()) {
 			Pylon closest = null;
 			for (Pylon p : pylons){
-				if (closest == null || trueDistance(p.pos, Dungeon.hero.pos) < trueDistance(closest.pos, Dungeon.hero.pos)){
+				if (closest == null || trueDistance(p.position, Dungeon.hero.position) < trueDistance(closest.position, Dungeon.hero.position)){
 					closest = p;
 				}
 			}
@@ -735,7 +735,7 @@ public class CavesBossLevel extends Level {
 						for (int k : pylonPositions) {
 							if (k == j) {
 								if (Dungeon.level.locked
-										&& !(Actor.findChar(k) instanceof Pylon)) {
+										&& !(Actor.getCharacterOnPosition(k) instanceof Pylon)) {
 									data[i] = 38;
 								} else {
 									data[i] = -1;
@@ -823,10 +823,10 @@ public class CavesBossLevel extends Level {
 
 					if (off[cell] > 0){
 
-						Character ch = Actor.findChar(cell);
+						Character ch = Actor.getCharacterOnPosition(cell);
 						if (ch != null && !(ch instanceof DM300) && !ch.flying) {
 							Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
-							ch.damage( Random.NormalIntRange(6, 12), new Electricity());
+							ch.receiveDamageFromSource( Random.NormalIntRange(6, 12), new Electricity());
 							ch.sprite.flash();
 
 							if (ch == Dungeon.hero){
@@ -858,7 +858,7 @@ public class CavesBossLevel extends Level {
 			@Override
 			public void emit(com.watabou.noosa.particles.Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){
-					for (Character c : Actor.chars()){
+					for (Character c : Actor.getCharacters()){
 						if (c instanceof Pylon && c.alignment != Character.Alignment.NEUTRAL){
 							energySourceSprite = c.sprite;
 							break;

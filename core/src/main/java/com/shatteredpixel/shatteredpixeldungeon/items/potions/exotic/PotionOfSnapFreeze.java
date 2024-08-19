@@ -53,7 +53,7 @@ public class PotionOfSnapFreeze extends ExoticPotion {
 				
 				Freezing.affect( cell + offset );
 				
-				Character ch = Actor.findChar( cell + offset);
+				Character ch = Actor.getCharacterOnPosition( cell + offset);
 				if (ch != null){
 					Buff.affect(ch, Roots.class, Roots.DURATION*2f);
 				}

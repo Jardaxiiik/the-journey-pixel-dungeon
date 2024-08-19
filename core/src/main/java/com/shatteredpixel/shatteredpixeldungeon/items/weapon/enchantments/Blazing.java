@@ -47,7 +47,7 @@ public class Blazing extends Weapon.Enchantment {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			if (defender.buff(Burning.class) == null){
+			if (defender.getBuff(Burning.class) == null){
 				Buff.affect(defender, Burning.class).reignite(defender, 8f);
 				powerMulti -= 1;
 			}
@@ -56,7 +56,7 @@ public class Blazing extends Weapon.Enchantment {
 				int burnDamage = Random.NormalIntRange( 1, 3 + Dungeon.scalingDepth()/4 );
 				burnDamage = Math.round(burnDamage * 0.67f * powerMulti);
 				if (burnDamage > 0) {
-					defender.damage(burnDamage, this);
+					defender.receiveDamageFromSource(burnDamage, this);
 				}
 			}
 			

@@ -57,12 +57,12 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange(10, 20);
 	}
 
 	@Override
-	public int attackSkill(Character target) {
+	public int getAccuracyAgainstTarget(Character target) {
 		return 22;
 	}
 
@@ -105,9 +105,9 @@ public class Spinner extends Mob {
 		if (!(lastState == WANDERING && state == HUNTING)) {
 			if (!shotWebVisually){
 				if (enemy != null && enemySeen) {
-					lastEnemyPos = enemy.pos;
+					lastEnemyPos = enemy.position;
 				} else {
-					lastEnemyPos = Dungeon.hero.pos;
+					lastEnemyPos = Dungeon.hero.position;
 				}
 			}
 			shotWebVisually = false;
@@ -139,21 +139,21 @@ public class Spinner extends Mob {
 		if (enemy == null) return -1;
 
 		//don't web a non-moving enemy that we're going to attack
-		if (state != FLEEING && enemy.pos == lastEnemyPos && canAttack(enemy)){
+		if (state != FLEEING && enemy.position == lastEnemyPos && canAttackEnemy(enemy)){
 			return -1;
 		}
 		
 		Ballistica b;
 		//aims web in direction enemy is moving, or between self and enemy if they aren't moving
-		if (lastEnemyPos == enemy.pos){
-			b = new Ballistica( enemy.pos, pos, Ballistica.WONT_STOP );
+		if (lastEnemyPos == enemy.position){
+			b = new Ballistica( enemy.position, position, Ballistica.WONT_STOP );
 		} else {
-			b = new Ballistica( lastEnemyPos, enemy.pos, Ballistica.WONT_STOP );
+			b = new Ballistica( lastEnemyPos, enemy.position, Ballistica.WONT_STOP );
 		}
 		
 		int collisionIndex = 0;
 		for (int i = 0; i < b.path.size(); i++){
-			if (b.path.get(i) == enemy.pos){
+			if (b.path.get(i) == enemy.position){
 				collisionIndex = i;
 				break;
 			}
@@ -167,9 +167,9 @@ public class Spinner extends Mob {
 		int webPos = b.path.get( collisionIndex+1 );
 
 		//ensure we aren't shooting the web through walls
-		int projectilePos = new Ballistica( pos, webPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID).collisionPos;
+		int projectilePos = new Ballistica(position, webPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID).collisionPos;
 		
-		if (webPos != enemy.pos && projectilePos == webPos && Dungeon.level.passable[webPos]){
+		if (webPos != enemy.position && projectilePos == webPos && Dungeon.level.passable[webPos]){
 			return webPos;
 		} else {
 			return -1;
@@ -182,14 +182,14 @@ public class Spinner extends Mob {
 		if (webPos != -1){
 			int i;
 			for (i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i++){
-				if ((enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]) == webPos){
+				if ((enemy.position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]) == webPos){
 					break;
 				}
 			}
 			
 			//spread to the tile hero was moving towards and the two adjacent ones
-			int leftPos = enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[left(i)];
-			int rightPos = enemy.pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[right(i)];
+			int leftPos = enemy.position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[left(i)];
+			int rightPos = enemy.position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[right(i)];
 			
 			if (Dungeon.level.passable[leftPos]) applyWebToCell(leftPos);
 			if (Dungeon.level.passable[webPos])  applyWebToCell(webPos);
@@ -197,7 +197,7 @@ public class Spinner extends Mob {
 			
 			webCoolDown = 10;
 
-			if (Dungeon.level.heroFOV[enemy.pos]){
+			if (Dungeon.level.heroFOV[enemy.position]){
 				Dungeon.hero.interrupt();
 			}
 		}
@@ -227,7 +227,7 @@ public class Spinner extends Mob {
 	private class Hunting extends Mob.Hunting {
 
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (enemyInFOV && webCoolDown <= 0 && lastEnemyPos != -1){
 				if (webPos() != -1){
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
@@ -241,16 +241,16 @@ public class Spinner extends Mob {
 				}
 			}
 
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 	}
 
 	private class Fleeing extends Mob.Fleeing {
 
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			if (buff( Terror.class ) == null && buff( Dread.class ) == null &&
-					enemyInFOV && enemy.buff( Poison.class ) == null){
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
+			if (getBuff( Terror.class ) == null && getBuff( Dread.class ) == null &&
+					enemyInFOV && enemy.getBuff( Poison.class ) == null){
 				state = HUNTING;
 				return true;
 			}
@@ -267,7 +267,7 @@ public class Spinner extends Mob {
 					}
 				}
 			}
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 
 	}

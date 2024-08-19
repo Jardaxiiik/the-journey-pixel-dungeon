@@ -49,10 +49,10 @@ public class Regeneration extends Buff {
 				}
 			}
 
-			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.hero.buff( ChaliceOfBlood.chaliceRegen.class);
+			ChaliceOfBlood.chaliceRegen regenBuff = Dungeon.hero.getBuff( ChaliceOfBlood.chaliceRegen.class);
 
 			float delay = REGENERATION_DELAY;
-			if (regenBuff != null && target.buff(MagicImmune.class) == null) {
+			if (regenBuff != null && target.getBuff(MagicImmune.class) == null) {
 				if (regenBuff.isCursed()) {
 					delay *= 1.5f;
 				} else {
@@ -61,7 +61,7 @@ public class Regeneration extends Buff {
 					delay /= RingOfEnergy.artifactChargeMultiplier(target);
 				}
 			}
-			spend( delay );
+			spendTimeAdjusted( delay );
 			
 		} else {
 			
@@ -77,7 +77,7 @@ public class Regeneration extends Buff {
 	}
 
 	public static boolean regenOn(){
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
 		if (lock != null && !lock.regenOn()){
 			return false;
 		}

@@ -181,7 +181,7 @@ public class AttackIndicator extends Tag {
 	protected void onClick() {
 		super.onClick();
 		if (enabled && Dungeon.hero.ready) {
-			if (Dungeon.hero.chooseHeroActionBasedOnTile( lastTarget.pos )) {
+			if (Dungeon.hero.chooseHeroActionBasedOnTile( lastTarget.position)) {
 				Dungeon.hero.next();
 			}
 		}

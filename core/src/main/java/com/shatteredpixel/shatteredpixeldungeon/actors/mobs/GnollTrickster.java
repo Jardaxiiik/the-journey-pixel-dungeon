@@ -61,14 +61,14 @@ public class GnollTrickster extends Gnoll {
 	private int combo = 0;
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 16;
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return !Dungeon.level.adjacent( pos, enemy.pos )
-				&& (super.canAttack(enemy) || new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos);
+	protected boolean canAttackEnemy(Character enemy ) {
+		return !Dungeon.level.adjacent(position, enemy.position)
+				&& (super.canAttackEnemy(enemy) || new Ballistica(position, enemy.position, Ballistica.PROJECTILE).collisionPos == enemy.position);
 	}
 
 	@Override
@@ -80,10 +80,10 @@ public class GnollTrickster extends Gnoll {
 
 		if (effect > 2) {
 
-			if (effect >=6 && enemy.buff(Burning.class) == null){
+			if (effect >=6 && enemy.getBuff(Burning.class) == null){
 
-				if (Dungeon.level.flamable[enemy.pos])
-					GameScene.add(Emitter.seed(enemy.pos, 4, Fire.class));
+				if (Dungeon.level.flamable[enemy.position])
+					GameScene.add(Emitter.seed(enemy.position, 4, Fire.class));
 				Buff.affect(enemy, Burning.class).reignite( enemy );
 
 			} else
@@ -94,34 +94,34 @@ public class GnollTrickster extends Gnoll {
 	}
 
 	@Override
-	protected boolean getCloser( int target ) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		combo = 0; //if he's moving, he isn't attacking, reset combo.
 		if (state == HUNTING) {
-			return enemySeen && getFurther( target );
+			return enemySeen && moveAwayFromTarget(targetPosition);
 		} else {
-			return super.getCloser( target );
+			return super.moveCloserToTarget(targetPosition);
 		}
 	}
 
 	@Override
-	public void aggro(Character ch) {
+	public void startHunting(Character ch) {
 		//cannot be aggroed to something it can't see
-		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
-			super.aggro(ch);
+		if (ch == null || fieldOfView == null || fieldOfView[ch.position]) {
+			super.startHunting(ch);
 		}
 	}
 	
 	@Override
-	public Item createLoot() {
-		MissileWeapon drop = (MissileWeapon)super.createLoot();
+	public Item getLootItem() {
+		MissileWeapon drop = (MissileWeapon)super.getLootItem();
 		//half quantity, rounded up
 		drop.quantity((drop.quantity()+1)/2);
 		return drop;
 	}
 	
 	@Override
-	public void die( Object cause ) {
-		super.die( cause );
+	public void die( Object source) {
+		super.die(source);
 
 		Ghost.Quest.process();
 	}
@@ -132,7 +132,7 @@ public class GnollTrickster extends Gnoll {
 			//of two potential wander positions, picks the one closest to the hero
 			int pos1 = super.randomDestination();
 			int pos2 = super.randomDestination();
-			PathFinder.buildDistanceMap(Dungeon.hero.pos, Dungeon.level.passable);
+			PathFinder.buildDistanceMap(Dungeon.hero.position, Dungeon.level.passable);
 			if (PathFinder.distance[pos2] < PathFinder.distance[pos1]){
 				return pos2;
 			} else {

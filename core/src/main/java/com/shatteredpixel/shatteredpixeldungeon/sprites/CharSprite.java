@@ -111,7 +111,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected AlphaTweener invisible;
 	protected Flare aura;
 	
-	protected EmoIcon emo;
+	protected EmoIcon iconAboveHead;
 	protected CharHealthIndicator health;
 
 	private Tweener jumpTweener;
@@ -146,8 +146,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		this.ch = ch;
 		ch.sprite = this;
 		
-		place( ch.pos );
-		turnTo( ch.pos, Random.Int( Dungeon.level.length() ) );
+		place( ch.position);
+		turnTo( ch.position, Random.Int( Dungeon.level.length() ) );
 		renderShadow = true;
 		
 		if (ch != Dungeon.hero) {
@@ -200,7 +200,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			float x = destinationCenter().x;
 			float y = destinationCenter().y - height()/2f;
 			if (ch != null) {
-				FloatingText.show( x, y, ch.pos, text, color, icon, true );
+				FloatingText.show( x, y, ch.position, text, color, icon, true );
 			} else {
 				FloatingText.show( x, y, -1, text, color, icon, true );
 			}
@@ -254,7 +254,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public synchronized void attack( int cell, Callback callback ) {
 		animCallback = callback;
-		turnTo( ch.pos, cell );
+		turnTo( ch.position, cell );
 		play( attack );
 	}
 	
@@ -264,7 +264,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public synchronized void operate( int cell, Callback callback ) {
 		animCallback = callback;
-		turnTo( ch.pos, cell );
+		turnTo( ch.position, cell );
 		play( operate );
 	}
 	
@@ -274,7 +274,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public synchronized void zap( int cell, Callback callback ) {
 		animCallback = callback;
-		turnTo( ch.pos, cell );
+		turnTo( ch.position, cell );
 		play( zap );
 	}
 	
@@ -558,8 +558,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			hideSleep();
 		}
 		synchronized (EmoIcon.class) {
-			if (emo != null && emo.alive) {
-				emo.visible = visible;
+			if (iconAboveHead != null && iconAboveHead.alive) {
+				iconAboveHead.visible = visible;
 			}
 		}
 	}
@@ -574,12 +574,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void showSleep() {
 		synchronized (EmoIcon.class) {
-			if (!(emo instanceof EmoIcon.Sleep)) {
-				if (emo != null) {
-					emo.killAndErase();
+			if (!(iconAboveHead instanceof EmoIcon.Sleep)) {
+				if (iconAboveHead != null) {
+					iconAboveHead.killAndErase();
 				}
-				emo = new EmoIcon.Sleep(this);
-				emo.visible = visible;
+				iconAboveHead = new EmoIcon.Sleep(this);
+				iconAboveHead.visible = visible;
 			}
 		}
 		idle();
@@ -587,60 +587,60 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	
 	public void hideSleep() {
 		synchronized (EmoIcon.class) {
-			if (emo instanceof EmoIcon.Sleep) {
-				emo.killAndErase();
-				emo = null;
+			if (iconAboveHead instanceof EmoIcon.Sleep) {
+				iconAboveHead.killAndErase();
+				iconAboveHead = null;
 			}
 		}
 	}
 	
 	public void showAlert() {
 		synchronized (EmoIcon.class) {
-			if (!(emo instanceof EmoIcon.Alert)) {
-				if (emo != null) {
-					emo.killAndErase();
+			if (!(iconAboveHead instanceof EmoIcon.Alert)) {
+				if (iconAboveHead != null) {
+					iconAboveHead.killAndErase();
 				}
-				emo = new EmoIcon.Alert(this);
-				emo.visible = visible;
+				iconAboveHead = new EmoIcon.Alert(this);
+				iconAboveHead.visible = visible;
 			}
 		}
 	}
 	
 	public void hideAlert() {
 		synchronized (EmoIcon.class) {
-			if (emo instanceof EmoIcon.Alert) {
-				emo.killAndErase();
-				emo = null;
+			if (iconAboveHead instanceof EmoIcon.Alert) {
+				iconAboveHead.killAndErase();
+				iconAboveHead = null;
 			}
 		}
 	}
 	
 	public void showLost() {
 		synchronized (EmoIcon.class) {
-			if (!(emo instanceof EmoIcon.Lost)) {
-				if (emo != null) {
-					emo.killAndErase();
+			if (!(iconAboveHead instanceof EmoIcon.Lost)) {
+				if (iconAboveHead != null) {
+					iconAboveHead.killAndErase();
 				}
-				emo = new EmoIcon.Lost(this);
-				emo.visible = visible;
+				iconAboveHead = new EmoIcon.Lost(this);
+				iconAboveHead.visible = visible;
 			}
 		}
 	}
 	
 	public void hideLost() {
 		synchronized (EmoIcon.class) {
-			if (emo instanceof EmoIcon.Lost) {
-				emo.killAndErase();
-				emo = null;
+			if (iconAboveHead instanceof EmoIcon.Lost) {
+				iconAboveHead.killAndErase();
+				iconAboveHead = null;
 			}
 		}
 	}
 
 	public void hideEmo(){
 		synchronized (EmoIcon.class) {
-			if (emo != null) {
-				emo.killAndErase();
-				emo = null;
+			if (iconAboveHead != null) {
+				iconAboveHead.killAndErase();
+				iconAboveHead = null;
 			}
 		}
 	}
@@ -712,8 +712,8 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void onComplete( Tweener tweener ) {
 		if (tweener == jumpTweener) {
 
-			if (visible && Dungeon.level.water[ch.pos] && !ch.flying) {
-				GameScene.ripple( ch.pos );
+			if (visible && Dungeon.level.water[ch.position] && !ch.flying) {
+				GameScene.ripple( ch.position);
 			}
 			if (jumpCallback != null) {
 				jumpCallback.call();

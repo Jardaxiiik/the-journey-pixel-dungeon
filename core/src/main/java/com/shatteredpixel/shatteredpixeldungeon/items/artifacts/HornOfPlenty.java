@@ -75,7 +75,7 @@ public class HornOfPlenty extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (hero.buff(MagicImmune.class) != null) return actions;
+		if (hero.getBuff(MagicImmune.class) != null) return actions;
 		if (isEquipped( hero ) && charge > 0) {
 			actions.add(AC_SNACK);
 			actions.add(AC_EAT);
@@ -91,7 +91,7 @@ public class HornOfPlenty extends Artifact {
 
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_EAT) || action.equals(AC_SNACK)){
 
@@ -120,7 +120,7 @@ public class HornOfPlenty extends Artifact {
 				charge -= chargesToUse;
 				Talent.onArtifactUsed(hero);
 
-				hero.sprite.operate(hero.pos);
+				hero.sprite.operate(hero.position);
 				hero.busy();
 				SpellSprite.show(hero, SpellSprite.FOOD);
 				Sample.INSTANCE.play(Assets.Sounds.EAT);
@@ -131,9 +131,9 @@ public class HornOfPlenty extends Artifact {
 						|| Dungeon.hero.hasTalent(Talent.MYSTICAL_MEAL)
 						|| Dungeon.hero.hasTalent(Talent.INVIGORATING_MEAL)
 						|| Dungeon.hero.hasTalent(Talent.FOCUSED_MEAL)){
-					hero.spend(Food.TIME_TO_EAT - 2);
+					hero.spendTimeAdjusted(Food.TIME_TO_EAT - 2);
 				} else {
-					hero.spend(Food.TIME_TO_EAT);
+					hero.spendTimeAdjusted(Food.TIME_TO_EAT);
 				}
 
 				Talent.onFoodEaten(hero, satietyPerCharge * chargesToUse, this);
@@ -162,7 +162,7 @@ public class HornOfPlenty extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !cursed && target.getBuff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			if (partialCharge >= 1){
 				partialCharge--;
@@ -265,7 +265,7 @@ public class HornOfPlenty extends Artifact {
 	public class hornRecharge extends ArtifactBuff{
 
 		public void gainCharge(float levelPortion) {
-			if (cursed || target.buff(MagicImmune.class) != null) return;
+			if (cursed || target.getBuff(MagicImmune.class) != null) return;
 			
 			if (charge < chargeCap) {
 
@@ -327,9 +327,9 @@ public class HornOfPlenty extends Artifact {
 					GLog.w( Messages.get(HornOfPlenty.class, "reject") );
 				} else {
 					Hero hero = Dungeon.hero;
-					hero.sprite.operate( hero.pos );
+					hero.sprite.operate( hero.position);
 					hero.busy();
-					hero.spend( Food.TIME_TO_EAT );
+					hero.spendTimeAdjusted( Food.TIME_TO_EAT );
 
 					((HornOfPlenty)curItem).gainFoodValue(((Food)item));
 					item.detach(hero.belongings.backpack);

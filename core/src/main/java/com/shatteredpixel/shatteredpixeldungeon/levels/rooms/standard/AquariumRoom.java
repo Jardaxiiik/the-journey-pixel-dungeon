@@ -67,8 +67,8 @@ public class AquariumRoom extends StandardRoom {
 		for (int i=0; i < numFish; i++) {
 			Piranha piranha = Piranha.random();
 			do {
-				piranha.pos = level.pointToCell(random(3));
-			} while (level.map[piranha.pos] != Terrain.WATER|| level.findMob( piranha.pos ) != null);
+				piranha.position = level.pointToCell(random(3));
+			} while (level.map[piranha.position] != Terrain.WATER|| level.findMob( piranha.position) != null);
 			level.mobs.add( piranha );
 		}
 		

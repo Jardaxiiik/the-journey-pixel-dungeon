@@ -132,7 +132,7 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 		SpiritBow.SpiritArrow arrow = bow.knockArrow();
 		if (arrow == null) return;
 		
-		Character ch = (Character) Actor.findById(object);
+		Character ch = (Character) Actor.getById(object);
 		if (ch == null) return;
 		
 		int cell = QuickSlotButton.autoAim(ch, arrow);

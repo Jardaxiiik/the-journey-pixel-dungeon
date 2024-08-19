@@ -106,7 +106,7 @@ public class Emitter extends Actor {
 	@Override
 	public boolean playGameTurn() {
 		
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		
 		if (volume > 0) {
 
@@ -239,8 +239,8 @@ public class Emitter extends Actor {
 		if (gas == null) {
 			gas = Reflection.newInstance(type);
 			//this ensures that gasses do not get an 'extra turn' if they are added by a mob or buff
-			if (Actor.curActorPriority() < gas.actPriority) {
-				gas.spend(1f);
+			if (Actor.getCurrentActorPriority() < gas.actPriority) {
+				gas.spendTimeAdjusted(1f);
 			}
 		}
 		

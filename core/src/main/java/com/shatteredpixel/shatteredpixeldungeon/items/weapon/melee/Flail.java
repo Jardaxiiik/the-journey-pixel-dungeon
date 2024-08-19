@@ -66,16 +66,16 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	public float accuracyFactor(Character owner, Character target) {
-		SpinAbilityTracker spin = owner.buff(SpinAbilityTracker.class);
+		SpinAbilityTracker spin = owner.getBuff(SpinAbilityTracker.class);
 		if (spin != null) {
-			Actor.add(new Actor() {
+			Actor.addActor(new Actor() {
 				{ actPriority = VFX_PRIO; }
 				@Override
 				protected boolean playGameTurn() {
 					if (owner instanceof Hero && !target.isAlive()){
 						onAbilityKill((Hero)owner, target);
 					}
-					Actor.remove(this);
+					Actor.removeActor(this);
 					return true;
 				}
 			});
@@ -91,7 +91,7 @@ public class Flail extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Character target){
-		if (Dungeon.hero.buff(SpinAbilityTracker.class) != null){
+		if (Dungeon.hero.getBuff(SpinAbilityTracker.class) != null){
 			return 0;
 		} else {
 			return 2;
@@ -101,7 +101,7 @@ public class Flail extends MeleeWeapon {
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
 
-		SpinAbilityTracker spin = hero.buff(SpinAbilityTracker.class);
+		SpinAbilityTracker spin = hero.getBuff(SpinAbilityTracker.class);
 		if (spin != null && spin.spins >= 3){
 			GLog.w(Messages.get(this, "spin_warn"));
 			return;
@@ -115,7 +115,7 @@ public class Flail extends MeleeWeapon {
 		spin.spins++;
 		Buff.prolong(hero, SpinAbilityTracker.class, 3f);
 		Sample.INSTANCE.play(Assets.Sounds.CHAINS, 1, 1, 0.9f + 0.1f*spin.spins);
-		hero.sprite.operate(hero.pos);
+		hero.sprite.operate(hero.position);
 		hero.spendAndNext(Actor.TICK);
 		BuffIndicator.refreshHero();
 

@@ -50,13 +50,13 @@ public class Paralysis extends FlavourBuff {
 	
 	public void processDamage( int damage ){
 		if (target == null) return;
-		ParalysisResist resist = target.buff(ParalysisResist.class);
+		ParalysisResist resist = target.getBuff(ParalysisResist.class);
 		if (resist == null){
 			resist = Buff.affect(target, ParalysisResist.class);
 		}
 		resist.damage += damage;
 		if (Random.NormalIntRange(0, resist.damage) >= Random.NormalIntRange(0, target.healthPoints)){
-			if (Dungeon.level.heroFOV[target.pos]) {
+			if (Dungeon.level.heroFOV[target.position]) {
 				target.sprite.showStatus(CharSprite.NEUTRAL, Messages.get(this, "out"));
 			}
 			detach();
@@ -96,11 +96,11 @@ public class Paralysis extends FlavourBuff {
 		
 		@Override
 		public boolean playGameTurn() {
-			if (target.buff(Paralysis.class) == null) {
+			if (target.getBuff(Paralysis.class) == null) {
 				damage -= Math.ceil(damage / 10f);
 				if (damage >= 0) detach();
 			}
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 		

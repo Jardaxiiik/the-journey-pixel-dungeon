@@ -87,7 +87,7 @@ public class Poison extends Buff implements Hero.Doom {
 	@Override
 	public boolean attachTo(Character target) {
 		if (super.attachTo(target) && target.sprite != null){
-			CellEmitter.center(target.pos).burst( PoisonParticle.SPLASH, 5 );
+			CellEmitter.center(target.position).burst( PoisonParticle.SPLASH, 5 );
 			return true;
 		} else
 			return false;
@@ -97,8 +97,8 @@ public class Poison extends Buff implements Hero.Doom {
 	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
-			target.damage( (int)(left / 3) + 1, this );
-			spend( TICK );
+			target.receiveDamageFromSource( (int)(left / 3) + 1, this );
+			spendTimeAdjusted( TICK );
 			
 			if ((left -= TICK) <= 0) {
 				detach();

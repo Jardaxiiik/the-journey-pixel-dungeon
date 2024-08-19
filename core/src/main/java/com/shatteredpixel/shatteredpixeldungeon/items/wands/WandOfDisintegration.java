@@ -80,7 +80,7 @@ public class WandOfDisintegration extends DamageWand {
 		for (int c : beam.subPath(1, maxDistance)) {
 			
 			Character ch;
-			if ((ch = Actor.findChar( c )) != null) {
+			if ((ch = Actor.getCharacterOnPosition( c )) != null) {
 
 				//we don't want to count passed terrain after the last enemy hit. That would be a lot of bonus levels.
 				//terrainPassed starts at 2, equivalent of rounding up when /3 for integer arithmetic.
@@ -117,7 +117,7 @@ public class WandOfDisintegration extends DamageWand {
 		int lvl = level + (characters.size()-1) + terrainBonus;
 		for (Character ch : characters) {
 			wandProc(ch, chargesPerCast());
-			ch.damage( damageRoll(lvl), this );
+			ch.receiveDamageFromSource( damageRoll(lvl), this );
 			ch.sprite.centerEmitter().burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 			ch.sprite.flash();
 		}

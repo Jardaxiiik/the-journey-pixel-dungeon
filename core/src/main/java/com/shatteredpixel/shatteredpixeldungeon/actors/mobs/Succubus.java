@@ -69,7 +69,7 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 25, 30 );
 	}
 	
@@ -77,7 +77,7 @@ public class Succubus extends Mob {
 	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		
-		if (enemy.buff(Charm.class) != null ){
+		if (enemy.getBuff(Charm.class) != null ){
 			int shield = (healthPoints - healthMax) + (5 + damage);
 			if (shield > 0){
 				healthPoints = healthMax;
@@ -91,14 +91,14 @@ public class Succubus extends Mob {
 				healthPoints += 5 + damage;
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.level.heroFOV[position]) {
 				Sample.INSTANCE.play( Assets.Sounds.CHARMS );
 			}
 		} else if (Random.Int( 3 ) == 0) {
 			Charm c = Buff.affect( enemy, Charm.class, Charm.DURATION/2f );
-			c.object = id();
+			c.object = getId();
 			c.ignoreNextHit = true; //so that the -5 duration from succubus hit is ignored
-			if (Dungeon.level.heroFOV[enemy.pos]) {
+			if (Dungeon.level.heroFOV[enemy.position]) {
 				enemy.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 5);
 				Sample.INSTANCE.play(Assets.Sounds.CHARMS);
 			}
@@ -108,11 +108,11 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	protected boolean getCloser( int target ) {
-		if (fieldOfView[target] && Dungeon.level.distance( pos, target ) > 2 && blinkCooldown <= 0 && !rooted) {
+	protected boolean moveCloserToTarget(int targetPosition) {
+		if (fieldOfView[targetPosition] && Dungeon.level.distance(position, targetPosition) > 2 && blinkCooldown <= 0 && !rooted) {
 			
-			if (blink( target )) {
-				spend(-1 / speed());
+			if (blink(targetPosition)) {
+				spendTimeAdjusted(-1 / getSpeed());
 				return true;
 			} else {
 				return false;
@@ -121,27 +121,27 @@ public class Succubus extends Mob {
 		} else {
 
 			blinkCooldown--;
-			return super.getCloser( target );
+			return super.moveCloserToTarget(targetPosition);
 			
 		}
 	}
 	
 	private boolean blink( int target ) {
 		
-		Ballistica route = new Ballistica( pos, target, Ballistica.PROJECTILE);
+		Ballistica route = new Ballistica(position, target, Ballistica.PROJECTILE);
 		int cell = route.collisionPos;
 
 		//can't occupy the same cell as another char, so move back one.
-		if (Actor.findChar( cell ) != null && cell != this.pos)
+		if (Actor.getCharacterOnPosition( cell ) != null && cell != this.position)
 			cell = route.path.get(route.dist-1);
 
-		if (Dungeon.level.avoid[ cell ] || (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[cell])){
+		if (Dungeon.level.avoid[ cell ] || (getProperties().contains(Property.LARGE) && !Dungeon.level.openSpace[cell])){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 				cell = route.collisionPos + n;
 				if (Dungeon.level.passable[cell]
-						&& Actor.findChar( cell ) == null
-						&& (!properties().contains(Property.LARGE) || Dungeon.level.openSpace[cell])) {
+						&& Actor.getCharacterOnPosition( cell ) == null
+						&& (!getProperties().contains(Property.LARGE) || Dungeon.level.openSpace[cell])) {
 					candidates.add( cell );
 				}
 			}
@@ -160,7 +160,7 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 40;
 	}
 	
@@ -170,7 +170,7 @@ public class Succubus extends Mob {
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Class<?extends Scroll> loot;
 		do{
 			loot = (Class<? extends Scroll>) Random.oneOf(ItemGenerator.Category.SCROLL.classes);

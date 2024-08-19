@@ -71,7 +71,7 @@ public class CloakOfShadows extends Artifact {
 		ArrayList<String> actions = super.actions( hero );
 		if ((isEquipped( hero ) || hero.hasTalent(Talent.LIGHT_CLOAK))
 				&& !cursed
-				&& hero.buff(MagicImmune.class) == null
+				&& hero.getBuff(MagicImmune.class) == null
 				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_STEALTH);
 		}
@@ -83,7 +83,7 @@ public class CloakOfShadows extends Artifact {
 
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals( AC_STEALTH )) {
 
@@ -92,21 +92,21 @@ public class CloakOfShadows extends Artifact {
 				else if (cursed)       GLog.i( Messages.get(this, "cursed") );
 				else if (charge <= 0)  GLog.i( Messages.get(this, "no_charge") );
 				else {
-					hero.spend( 1f );
+					hero.spendTimeAdjusted( 1f );
 					hero.busy();
 					Sample.INSTANCE.play(Assets.Sounds.MELD);
 					activeBuff = activeBuff();
 					activeBuff.attachTo(hero);
 					Talent.onArtifactUsed(Dungeon.hero);
-					hero.sprite.operate(hero.pos);
+					hero.sprite.operate(hero.position);
 				}
 			} else {
 				activeBuff.detach();
 				activeBuff = null;
-				if (hero.invisible <= 0 && hero.buff(Preparation.class) != null){
-					hero.buff(Preparation.class).detach();
+				if (hero.invisible <= 0 && hero.getBuff(Preparation.class) != null){
+					hero.getBuff(Preparation.class).detach();
 				}
-				hero.sprite.operate( hero.pos );
+				hero.sprite.operate( hero.position);
 			}
 
 		}
@@ -175,7 +175,7 @@ public class CloakOfShadows extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (cursed || target.getBuff(MagicImmune.class) != null) return;
 
 		if (charge < chargeCap) {
 			if (!isEquipped(target)) amount *= 0.75f*target.pointsInTalent(Talent.LIGHT_CLOAK)/3f;
@@ -225,7 +225,7 @@ public class CloakOfShadows extends Artifact {
 	public class cloakRecharge extends ArtifactBuff{
 		@Override
 		public boolean playGameTurn() {
-			if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null) {
+			if (charge < chargeCap && !cursed && target.getBuff(MagicImmune.class) == null) {
 				if (activeBuff == null && Regeneration.regenOn()) {
 					float missing = (chargeCap - charge);
 					if (level() > 7) missing += 5*(level() - 7)/3f;
@@ -255,7 +255,7 @@ public class CloakOfShadows extends Artifact {
 
 			updateQuickslot();
 
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			return true;
 		}
@@ -346,7 +346,7 @@ public class CloakOfShadows extends Artifact {
 				updateQuickslot();
 			}
 
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			return true;
 		}

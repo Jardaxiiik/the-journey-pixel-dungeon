@@ -68,7 +68,7 @@ public class CryptRoom extends SpecialRoom {
 			cy = top + 2;
 		}
 		
-		level.drop( prize( level ), cx + cy * level.width() ).type = Heap.Type.TOMB;
+		level.dropItemOnPosition( prize( level ), cx + cy * level.width() ).type = Heap.Type.TOMB;
 	}
 	
 	private static Item prize( Level level ) {

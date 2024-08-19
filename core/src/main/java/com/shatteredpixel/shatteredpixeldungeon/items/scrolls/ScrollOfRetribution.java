@@ -58,14 +58,14 @@ public class ScrollOfRetribution extends Scroll {
 
 		//calculate targets first, in case damaging/blinding a target affects hero vision
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Dungeon.level.heroFOV[mob.pos]) {
+			if (Dungeon.level.heroFOV[mob.position]) {
 				targets.add(mob);
 			}
 		}
 
 		for (Mob mob : targets){
 			//deals 10%HT, plus 0-90%HP based on scaling
-			mob.damage(Math.round(mob.healthMax /10f + (mob.healthPoints * power * 0.225f)), this);
+			mob.receiveDamageFromSource(Math.round(mob.healthMax /10f + (mob.healthPoints * power * 0.225f)), this);
 			if (mob.isAlive()) {
 				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}

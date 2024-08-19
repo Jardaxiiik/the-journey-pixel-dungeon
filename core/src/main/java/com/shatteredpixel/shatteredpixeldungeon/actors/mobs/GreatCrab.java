@@ -58,11 +58,11 @@ public class GreatCrab extends Crab {
 	private int moving = 0;
 
 	@Override
-	protected boolean getCloser( int target ) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		//this is used so that the crab remains slower, but still detects the player at the expected rate.
 		moving++;
 		if (moving < 3) {
-			return super.getCloser( target );
+			return super.moveCloserToTarget(targetPosition);
 		} else {
 			moving = 0;
 			return true;
@@ -71,25 +71,25 @@ public class GreatCrab extends Crab {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ){
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage){
 		//crab blocks all wand damage from the hero if it sees them.
 		//Direct damage is negated, but add-on effects and environmental effects go through as normal.
 		if (enemySeen
 				&& state != SLEEPING
 				&& paralysed == 0
-				&& src instanceof Wand
+				&& sourceOfDamage instanceof Wand
 				&& enemy == Dungeon.hero
 				&& enemy.invisible == 0){
 			GLog.n( Messages.get(this, "noticed") );
 			sprite.showStatus( CharSprite.NEUTRAL, Messages.get(this, "def_verb") );
 			Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, Random.Float(0.96f, 1.05f));
 		} else {
-			super.damage( dmg, src );
+			super.receiveDamageFromSource( dmg, sourceOfDamage);
 		}
 	}
 
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		//crab blocks all melee attacks from its current target
 		if (enemySeen
 				&& state != SLEEPING
@@ -102,12 +102,12 @@ public class GreatCrab extends Crab {
 			}
 			return INFINITE_EVASION;
 		}
-		return super.defenseSkill( enemy );
+		return super.getEvasionAgainstAttacker( enemy );
 	}
 
 	@Override
-	public void die( Object cause ) {
-		super.die( cause );
+	public void die( Object source) {
+		super.die(source);
 
 		Ghost.Quest.process();
 	}
@@ -118,7 +118,7 @@ public class GreatCrab extends Crab {
 			//of two potential wander positions, picks the one closest to the hero
 			int pos1 = super.randomDestination();
 			int pos2 = super.randomDestination();
-			PathFinder.buildDistanceMap(Dungeon.hero.pos, Dungeon.level.passable);
+			PathFinder.buildDistanceMap(Dungeon.hero.position, Dungeon.level.passable);
 			if (PathFinder.distance[pos2] < PathFinder.distance[pos1]){
 				return pos2;
 			} else {

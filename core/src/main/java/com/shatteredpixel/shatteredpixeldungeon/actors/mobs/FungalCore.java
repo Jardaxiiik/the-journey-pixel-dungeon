@@ -44,13 +44,13 @@ public class FungalCore extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
+	public void die(Object source) {
+		super.die(source);
 		Blacksmith.Quest.beatBoss();
 	}
 }

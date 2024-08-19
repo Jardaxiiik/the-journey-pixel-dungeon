@@ -72,7 +72,7 @@ public class EtherealChains extends Artifact {
 	@Override
 	public ArrayList<String> actions(Hero hero) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped(hero) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped(hero) && charge > 0 && !cursed && hero.getBuff(MagicImmune.class) == null) {
 			actions.add(AC_CAST);
 		}
 		return actions;
@@ -87,7 +87,7 @@ public class EtherealChains extends Artifact {
 
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_CAST)){
 
@@ -121,15 +121,15 @@ public class EtherealChains extends Artifact {
 
 				//chains cannot be used to go where it is impossible to walk to
 				PathFinder.buildDistanceMap(target, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
-				if (!(Dungeon.level instanceof MiningLevel) && PathFinder.distance[curUser.pos] == Integer.MAX_VALUE){
+				if (!(Dungeon.level instanceof MiningLevel) && PathFinder.distance[curUser.position] == Integer.MAX_VALUE){
 					GLog.w( Messages.get(EtherealChains.class, "cant_reach") );
 					return;
 				}
 				
-				final Ballistica chain = new Ballistica(curUser.pos, target, Ballistica.STOP_TARGET);
+				final Ballistica chain = new Ballistica(curUser.position, target, Ballistica.STOP_TARGET);
 				
-				if (Actor.findChar( chain.collisionPos ) != null){
-					chainEnemy( chain, curUser, Actor.findChar( chain.collisionPos ));
+				if (Actor.getCharacterOnPosition( chain.collisionPos ) != null){
+					chainEnemy( chain, curUser, Actor.getCharacterOnPosition( chain.collisionPos ));
 				} else {
 					chainLocation( chain, curUser );
 				}
@@ -147,7 +147,7 @@ public class EtherealChains extends Artifact {
 	//pulls an enemy to a position along the chain's path, as close to the hero as possible
 	private void chainEnemy( Ballistica chain, final Hero hero, final Character enemy ){
 		
-		if (enemy.properties().contains(Character.Property.IMMOVABLE)) {
+		if (enemy.getProperties().contains(Character.Property.IMMOVABLE)) {
 			GLog.w( Messages.get(this, "cant_pull") );
 			return;
 		}
@@ -156,8 +156,8 @@ public class EtherealChains extends Artifact {
 		for (int i : chain.subPath(1, chain.dist)){
 			//prefer to the earliest point on the path
 			if (!Dungeon.level.solid[i]
-					&& Actor.findChar(i) == null
-					&& (!Character.hasProp(enemy, Character.Property.LARGE) || Dungeon.level.openSpace[i])){
+					&& Actor.getCharacterOnPosition(i) == null
+					&& (!Character.hasProperty(enemy, Character.Property.LARGE) || Dungeon.level.openSpace[i])){
 				bestPos = i;
 				break;
 			}
@@ -170,7 +170,7 @@ public class EtherealChains extends Artifact {
 		
 		final int pulledPos = bestPos;
 		
-		int chargeUse = Dungeon.level.distance(enemy.pos, pulledPos);
+		int chargeUse = Dungeon.level.distance(enemy.position, pulledPos);
 		if (chargeUse > charge) {
 			GLog.w( Messages.get(this, "no_charge") );
 			return;
@@ -184,9 +184,9 @@ public class EtherealChains extends Artifact {
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {
 			public void call() {
-				Actor.add(new Pushing(enemy, enemy.pos, pulledPos, new Callback() {
+				Actor.addActor(new Pushing(enemy, enemy.position, pulledPos, new Callback() {
 					public void call() {
-						enemy.pos = pulledPos;
+						enemy.position = pulledPos;
 						Dungeon.level.occupyCell(enemy);
 						Dungeon.observe();
 						GameScene.updateFog();
@@ -235,7 +235,7 @@ public class EtherealChains extends Artifact {
 		
 		final int newHeroPos = chain.collisionPos;
 		
-		int chargeUse = Dungeon.level.distance(hero.pos, newHeroPos);
+		int chargeUse = Dungeon.level.distance(hero.position, newHeroPos);
 		if (chargeUse > charge){
 			GLog.w( Messages.get(EtherealChains.class, "no_charge") );
 			return;
@@ -249,9 +249,9 @@ public class EtherealChains extends Artifact {
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {
 			public void call() {
-				Actor.add(new Pushing(hero, hero.pos, newHeroPos, new Callback() {
+				Actor.addActor(new Pushing(hero, hero.position, newHeroPos, new Callback() {
 					public void call() {
-						hero.pos = newHeroPos;
+						hero.position = newHeroPos;
 						Dungeon.level.occupyCell(hero);
 						hero.spendAndNext(1f);
 						Dungeon.observe();
@@ -275,7 +275,7 @@ public class EtherealChains extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (cursed || target.getBuff(MagicImmune.class) != null) return;
 		int chargeTarget = 5+(level()*2);
 		if (charge < chargeTarget*2){
 			partialCharge += 0.5f*amount;
@@ -308,7 +308,7 @@ public class EtherealChains extends Artifact {
 			int chargeTarget = 5+(level()*2);
 			if (charge < chargeTarget
 					&& !cursed
-					&& target.buff(MagicImmune.class) == null
+					&& target.getBuff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//gains a charge in 40 - 2*missingCharge turns
 				float chargeGain = (1 / (40f - (chargeTarget - charge)*2f));
@@ -325,13 +325,13 @@ public class EtherealChains extends Artifact {
 
 			updateQuickslot();
 
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			return true;
 		}
 
 		public void gainExp( float levelPortion ) {
-			if (cursed || target.buff(MagicImmune.class) != null || levelPortion == 0) return;
+			if (cursed || target.getBuff(MagicImmune.class) != null || levelPortion == 0) return;
 
 			exp += Math.round(levelPortion*100);
 

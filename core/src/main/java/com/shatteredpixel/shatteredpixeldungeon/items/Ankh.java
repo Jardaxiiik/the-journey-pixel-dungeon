@@ -79,13 +79,13 @@ public class Ankh extends Item {
 				blessed = true;
 				waterskin.empty();
 				GLog.p( Messages.get(this, "bless") );
-				hero.spend( 1f );
+				hero.spendTimeAdjusted( 1f );
 				hero.busy();
 
 
 				Sample.INSTANCE.play( Assets.Sounds.DRINK );
-				CellEmitter.get(hero.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
-				hero.sprite.operate( hero.pos );
+				CellEmitter.get(hero.position).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+				hero.sprite.operate( hero.position);
 			}
 		}
 	}

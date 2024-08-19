@@ -105,8 +105,8 @@ public class MeleeWeapon extends Weapon {
 			usesTargeting = false;
 			if (!isEquipped(hero)) {
 				if (hero.hasTalent(Talent.SWIFT_EQUIP)){
-					if (hero.buff(Talent.SwiftEquipCooldown.class) == null
-						|| hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
+					if (hero.getBuff(Talent.SwiftEquipCooldown.class) == null
+						|| hero.getBuff(Talent.SwiftEquipCooldown.class).hasSecondUse()){
 						execute(hero, AC_EQUIP);
 					} else if (hero.heroClass == HeroClass.DUELIST) {
 						GLog.w(Messages.get(this, "ability_need_equip"));
@@ -127,7 +127,7 @@ public class MeleeWeapon extends Weapon {
 			} else {
 
 				if (targetingPrompt() == null){
-					duelistAbility(hero, hero.pos);
+					duelistAbility(hero, hero.position);
 					updateQuickslot();
 				} else {
 					usesTargeting = useTargeting();
@@ -220,9 +220,9 @@ public class MeleeWeapon extends Weapon {
 			hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, "3", FloatingText.SHIELDING);
 		}
 
-		if (hero.buff(Talent.CombinedLethalityAbilityTracker.class) != null
-				&& hero.buff(Talent.CombinedLethalityAbilityTracker.class).weapon != null
-				&& hero.buff(Talent.CombinedLethalityAbilityTracker.class).weapon != this){
+		if (hero.getBuff(Talent.CombinedLethalityAbilityTracker.class) != null
+				&& hero.getBuff(Talent.CombinedLethalityAbilityTracker.class).weapon != null
+				&& hero.getBuff(Talent.CombinedLethalityAbilityTracker.class).weapon != this){
 			Buff.affect(hero, Talent.CombinedLethalityTriggerTracker.class, 5f);
 		}
 
@@ -235,7 +235,7 @@ public class MeleeWeapon extends Weapon {
 			Buff.prolong(hero, Talent.PreciseAssaultTracker.class, hero.cooldown()+4f);
 		}
 		if (hero.hasTalent(Talent.COMBINED_LETHALITY)) {
-			Talent.CombinedLethalityAbilityTracker tracker = hero.buff(Talent.CombinedLethalityAbilityTracker.class);
+			Talent.CombinedLethalityAbilityTracker tracker = hero.getBuff(Talent.CombinedLethalityAbilityTracker.class);
 			if (tracker == null || tracker.weapon == this || tracker.weapon == null){
 				Buff.affect(hero, Talent.CombinedLethalityAbilityTracker.class, hero.cooldown()).weapon = this;
 			} else {
@@ -244,7 +244,7 @@ public class MeleeWeapon extends Weapon {
 			}
 		}
 		if (hero.hasTalent(Talent.COMBINED_ENERGY)){
-			Talent.CombinedEnergyAbilityTracker tracker = hero.buff(Talent.CombinedEnergyAbilityTracker.class);
+			Talent.CombinedEnergyAbilityTracker tracker = hero.getBuff(Talent.CombinedEnergyAbilityTracker.class);
 			if (tracker == null || tracker.energySpent == -1){
 				Buff.prolong(hero, Talent.CombinedEnergyAbilityTracker.class, hero.cooldown()).wepAbilUsed = true;
 			} else {
@@ -252,8 +252,8 @@ public class MeleeWeapon extends Weapon {
 				Buff.affect(hero, MonkEnergy.class).processCombinedEnergy(tracker);
 			}
 		}
-		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
-			hero.buff(Talent.CounterAbilityTacker.class).detach();
+		if (hero.getBuff(Talent.CounterAbilityTacker.class) != null){
+			hero.getBuff(Talent.CounterAbilityTacker.class).detach();
 		}
 	}
 
@@ -270,7 +270,7 @@ public class MeleeWeapon extends Weapon {
 
 	public final float abilityChargeUse(Hero hero, Character target){
 		float chargeUse = baseChargeUse(hero, target);
-		if (hero.buff(Talent.CounterAbilityTacker.class) != null){
+		if (hero.getBuff(Talent.CounterAbilityTacker.class) != null){
 			chargeUse = Math.max(0, chargeUse-0.5f*hero.pointsInTalent(Talent.COUNTER_ABILITY));
 		}
 		return chargeUse;
@@ -329,12 +329,12 @@ public class MeleeWeapon extends Weapon {
 			if (((Hero) owner).heroClass != HeroClass.DUELIST) {
 				//persistent +10%/20%/30% ACC for other heroes
 				ACC *= 1f + 0.1f * ((Hero) owner).pointsInTalent(Talent.PRECISE_ASSAULT);
-			} else if (this instanceof Flail && owner.buff(Flail.SpinAbilityTracker.class) != null){
+			} else if (this instanceof Flail && owner.getBuff(Flail.SpinAbilityTracker.class) != null){
 				//do nothing, this is not a regular attack so don't consume preciase assault
-			} else if (owner.buff(Talent.PreciseAssaultTracker.class) != null) {
+			} else if (owner.getBuff(Talent.PreciseAssaultTracker.class) != null) {
 				// 2x/4x/8x ACC for duelist if she just used a weapon ability
 				ACC *= Math.pow(2, ((Hero) owner).pointsInTalent(Talent.PRECISE_ASSAULT));
-				owner.buff(Talent.PreciseAssaultTracker.class).detach();
+				owner.getBuff(Talent.PreciseAssaultTracker.class).detach();
 			}
 		}
 
@@ -422,8 +422,8 @@ public class MeleeWeapon extends Weapon {
 	@Override
 	public String status() {
 		if (isEquipped(Dungeon.hero)
-				&& Dungeon.hero.buff(Charger.class) != null) {
-			Charger buff = Dungeon.hero.buff(Charger.class);
+				&& Dungeon.hero.getBuff(Charger.class) != null) {
+			Charger buff = Dungeon.hero.getBuff(Charger.class);
 			if (Dungeon.hero.belongings.weapon == this) {
 				return buff.charges + "/" + buff.chargeCap();
 			} else {
@@ -470,7 +470,7 @@ public class MeleeWeapon extends Weapon {
 				}
 
 				int points = ((Hero)target).pointsInTalent(Talent.WEAPON_RECHARGING);
-				if (points > 0 && target.buff(Recharging.class) != null || target.buff(ArtifactRecharge.class) != null){
+				if (points > 0 && target.getBuff(Recharging.class) != null || target.getBuff(ArtifactRecharge.class) != null){
 					//1 every 10 turns at +1, 6 turns at +2
 					partialCharge += 1/(14f - 4f*points);
 				}
@@ -506,7 +506,7 @@ public class MeleeWeapon extends Weapon {
 				ActionIndicator.setAction(this);
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
@@ -627,7 +627,7 @@ public class MeleeWeapon extends Weapon {
 			Dungeon.hero.belongings.weapon = Dungeon.hero.belongings.secondWep;
 			Dungeon.hero.belongings.secondWep = temp;
 
-			Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+			Dungeon.hero.sprite.operate(Dungeon.hero.position);
 			Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 
 			ActionIndicator.setAction(this);

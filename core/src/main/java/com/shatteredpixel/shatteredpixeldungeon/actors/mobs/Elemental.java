@@ -78,7 +78,7 @@ public abstract class Elemental extends Mob {
 	protected boolean summonedALly;
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		if (!summonedALly) {
 			return Random.NormalIntRange(20, 25);
 		} else {
@@ -88,7 +88,7 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		if (!summonedALly) {
 			return 25;
 		} else {
@@ -122,26 +122,26 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		if (super.canAttack(enemy)){
+	protected boolean canAttackEnemy(Character enemy ) {
+		if (super.canAttackEnemy(enemy)){
 			return true;
 		} else {
-			return rangedCooldown < 0 && new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT ).collisionPos == enemy.pos;
+			return rangedCooldown < 0 && new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT ).collisionPos == enemy.position;
 		}
 	}
 	
-	protected boolean doAttack( Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 		
-		if (Dungeon.level.adjacent( pos, enemy.pos )
+		if (Dungeon.level.adjacent(position, targetCharacter.position)
 				|| rangedCooldown > 0
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT ).collisionPos != enemy.pos) {
+				|| new Ballistica(position, targetCharacter.position, Ballistica.MAGIC_BOLT ).collisionPos != targetCharacter.position) {
 			
-			return super.doAttack( enemy );
+			return super.attackCharacter(targetCharacter);
 			
 		} else {
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {
+				sprite.zap( targetCharacter.position);
 				return false;
 			} else {
 				zap();
@@ -159,11 +159,11 @@ public abstract class Elemental extends Mob {
 	}
 	
 	protected void zap() {
-		spend( 1f );
+		spendTimeAdjusted( 1f );
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (hit( this, enemy, true )) {
+		if (isTargetHitByAttack( this, enemy, true )) {
 			
 			rangedProc( enemy );
 			
@@ -180,12 +180,12 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		if (harmfulBuffs.contains( buff.getClass() )) {
-			damage( Random.NormalIntRange( healthMax /2, healthMax * 3/5 ), buff );
+			receiveDamageFromSource( Random.NormalIntRange( healthMax /2, healthMax * 3/5 ), buff );
 			return false;
 		} else {
-			return super.add( buff );
+			return super.addBuff( buff );
 		}
 	}
 	
@@ -232,7 +232,7 @@ public abstract class Elemental extends Mob {
 		
 		@Override
 		protected void meleeProc(Character enemy, int damage ) {
-			if (Random.Int( 2 ) == 0 && !Dungeon.level.water[enemy.pos]) {
+			if (Random.Int( 2 ) == 0 && !Dungeon.level.water[enemy.position]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy );
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
 			}
@@ -240,7 +240,7 @@ public abstract class Elemental extends Mob {
 		
 		@Override
 		protected void rangedProc( Character enemy ) {
-			if (!Dungeon.level.water[enemy.pos]) {
+			if (!Dungeon.level.water[enemy.position]) {
 				Buff.affect( enemy, Burning.class ).reignite( enemy, 4f );
 			}
 			if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
@@ -277,27 +277,27 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		protected boolean canAttack( Character enemy ) {
-			if (super.canAttack(enemy)){
+		protected boolean canAttackEnemy(Character enemy ) {
+			if (super.canAttackEnemy(enemy)){
 				return true;
 			} else {
-				return rangedCooldown < 0 && new Ballistica( pos, enemy.pos, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos == enemy.pos;
+				return rangedCooldown < 0 && new Ballistica(position, enemy.position, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos == enemy.position;
 			}
 		}
 
-		protected boolean doAttack( Character enemy ) {
+		protected boolean attackCharacter(Character targetCharacter) {
 
 			if (rangedCooldown > 0) {
 
-				return super.doAttack( enemy );
+				return super.attackCharacter(targetCharacter);
 
-			} else if (new Ballistica( pos, enemy.pos, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos == enemy.pos) {
+			} else if (new Ballistica(position, targetCharacter.position, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos == targetCharacter.position) {
 
 				//set up an attack for next turn
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					int target = enemy.pos + i;
-					if (target != pos && new Ballistica(pos, target, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET).collisionPos == target){
+					int target = targetCharacter.position + i;
+					if (target != position && new Ballistica(position, target, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET).collisionPos == target){
 						candidates.add(target);
 					}
 				}
@@ -312,25 +312,25 @@ public abstract class Elemental extends Mob {
 					}
 
 					GLog.n(Messages.get(this, "charging"));
-					spend(GameMath.gate(attackDelay(), (int)Math.ceil(Dungeon.hero.cooldown()), 3*attackDelay()));
+					spendTimeAdjusted(GameMath.gate(getAttackDelay(), (int)Math.ceil(Dungeon.hero.cooldown()), 3* getAttackDelay()));
 					Dungeon.hero.interrupt();
 					return true;
 				} else {
 					rangedCooldown = 1;
-					return super.doAttack(enemy);
+					return super.attackCharacter(targetCharacter);
 				}
 
 
 			} else {
 				rangedCooldown = 1;
-				return super.doAttack(enemy);
+				return super.attackCharacter(targetCharacter);
 			}
 		}
 
 		@Override
 		protected void zap() {
 			if (targetingPos != -1) {
-				spend(1f);
+				spendTimeAdjusted(1f);
 
 				Invisibility.dispel(this);
 
@@ -343,7 +343,7 @@ public abstract class Elemental extends Mob {
 							GameScene.add(Emitter.seed(targetingPos + i, 8, Fire.class));
 						}
 
-						Character target = Actor.findChar(targetingPos + i);
+						Character target = Actor.getCharacterOnPosition(targetingPos + i);
 						if (target != null && target != this) {
 							Buff.affect(target, Burning.class).reignite(target);
 						}
@@ -357,20 +357,20 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public int attackSkill(Character target) {
+		public int getAccuracyAgainstTarget(Character target) {
 			if (!summonedALly) {
 				return 15;
 			} else {
-				return super.attackSkill(target);
+				return super.getAccuracyAgainstTarget(target);
 			}
 		}
 
 		@Override
-		public int damageRoll() {
+		public int getDamageRoll() {
 			if (!summonedALly) {
 				return Random.NormalIntRange(10, 12);
 			} else {
-				return super.damageRoll();
+				return super.getDamageRoll();
 			}
 		}
 
@@ -383,10 +383,10 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public void die(Object cause) {
-			super.die(cause);
+		public void die(Object source) {
+			super.die(source);
 			if (alignment == Alignment.ENEMY) {
-				Dungeon.level.drop( new Embers(), pos ).sprite.drop();
+				Dungeon.level.dropItemOnPosition( new Embers(), position).sprite.drop();
 				Statistics.questScores[1] = 2000;
 				Game.runOnRenderThread(new Callback() {
 					@Override
@@ -410,8 +410,8 @@ public abstract class Elemental extends Mob {
 		}
 
 		@Override
-		public String description() {
-			String desc = super.description();
+		public String getDescription() {
+			String desc = super.getDescription();
 
 			if (summonedALly){
 				desc += " " + Messages.get(this, "desc_ally");
@@ -463,15 +463,15 @@ public abstract class Elemental extends Mob {
 		
 		@Override
 		protected void meleeProc(Character enemy, int damage ) {
-			if (Random.Int( 3 ) == 0 || Dungeon.level.water[enemy.pos]) {
-				Freezing.freeze( enemy.pos );
+			if (Random.Int( 3 ) == 0 || Dungeon.level.water[enemy.position]) {
+				Freezing.freeze( enemy.position);
 				if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
 			}
 		}
 		
 		@Override
 		protected void rangedProc( Character enemy ) {
-			Freezing.freeze( enemy.pos );
+			Freezing.freeze( enemy.position);
 			if (enemy.sprite.visible) Splash.at( enemy.sprite.center(), sprite.blood(), 5);
 		}
 	}
@@ -493,15 +493,15 @@ public abstract class Elemental extends Mob {
 			ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 			Shocking.arc( this, enemy, 2, affected, arcs );
 			
-			if (!Dungeon.level.water[enemy.pos]) {
+			if (!Dungeon.level.water[enemy.position]) {
 				affected.remove( enemy );
 			}
 			
 			for (Character ch : affected) {
-				ch.damage( Math.round( damage * 0.4f ), Shocking.class );
+				ch.receiveDamageFromSource( Math.round( damage * 0.4f ), Shocking.class );
 				if (ch == Dungeon.hero && !ch.isAlive()){
 					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
 				}
 			}
 

@@ -44,7 +44,7 @@ public class StoneOfAggression extends Runestone {
 	@Override
 	protected void activate(int cell) {
 		
-		Character ch = Actor.findChar( cell );
+		Character ch = Actor.getCharacterOnPosition( cell );
 		
 		if (ch != null) {
 			if (ch.alignment == Character.Alignment.ENEMY) {
@@ -56,7 +56,7 @@ public class StoneOfAggression extends Runestone {
 			Sample.INSTANCE.play( Assets.Sounds.READ );
 		} else {
 			//Item.onThrow
-			Heap heap = Dungeon.level.drop( this, cell );
+			Heap heap = Dungeon.level.dropItemOnPosition( this, cell );
 			if (!heap.isEmpty()) {
 				heap.sprite.drop( cell );
 			}
@@ -94,10 +94,10 @@ public class StoneOfAggression extends Runestone {
 				if (target.alignment == Character.Alignment.ENEMY) {
 					for (Mob m : Dungeon.level.mobs) {
 						if (m.alignment == Character.Alignment.ENEMY && m.isTargeting(target)) {
-							m.aggro(null);
+							m.startHunting(null);
 						}
 						if (target instanceof Mob && ((Mob) target).isTargeting(m)){
-							((Mob) target).aggro(null);
+							((Mob) target).startHunting(null);
 						}
 					}
 				}

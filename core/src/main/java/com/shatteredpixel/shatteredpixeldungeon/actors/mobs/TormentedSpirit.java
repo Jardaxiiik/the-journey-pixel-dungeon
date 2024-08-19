@@ -43,13 +43,13 @@ public class TormentedSpirit extends Wraith {
 
 	//50% more damage scaling than regular wraiths
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1 + Math.round(1.5f*level)/2, 2 + Math.round(1.5f*level) );
 	}
 
 	//50% more accuracy (and by extension evasion) scaling than regular wraiths
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 10 + Math.round(1.5f*level);
 	}
 
@@ -73,7 +73,7 @@ public class TormentedSpirit extends Wraith {
 		prize.cursed = false;
 		prize.cursedKnown = true;
 
-		Dungeon.level.drop(prize, pos).sprite.drop();
+		Dungeon.level.dropItemOnPosition(prize, position).sprite.drop();
 
 		destroy();
 		sprite.die();

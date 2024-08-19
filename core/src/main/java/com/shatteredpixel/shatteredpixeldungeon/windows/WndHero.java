@@ -144,10 +144,10 @@ public class WndHero extends WndTabbed {
 
 			IconTitle title = new IconTitle();
 			title.icon( HeroSprite.avatar(hero.heroClass, hero.tier()) );
-			if (hero.name().equals(hero.className()))
+			if (hero.getName().equals(hero.className()))
 				title.label( Messages.get(this, "title", hero.lvl, hero.className() ).toUpperCase( Locale.ENGLISH ) );
 			else
-				title.label((hero.name() + "\n" + Messages.get(this, "title", hero.lvl, hero.className())).toUpperCase(Locale.ENGLISH));
+				title.label((hero.getName() + "\n" + Messages.get(this, "title", hero.lvl, hero.className())).toUpperCase(Locale.ENGLISH));
 			title.color(Window.TITLE_COLOR);
 			title.setRect( 0, 0, WIDTH-16, 0 );
 			add(title);
@@ -178,7 +178,7 @@ public class WndHero extends WndTabbed {
 			if (strBonus > 0)           statSlot( Messages.get(this, "str"), hero.attributeStrength + " + " + strBonus );
 			else if (strBonus < 0)      statSlot( Messages.get(this, "str"), hero.attributeStrength + " - " + -strBonus );
 			else                        statSlot( Messages.get(this, "str"), hero.getAttributeStrength() );
-			if (hero.shielding() > 0)   statSlot( Messages.get(this, "health"), hero.healthPoints + "+" + hero.shielding() + "/" + hero.healthMax);
+			if (hero.getShielding() > 0)   statSlot( Messages.get(this, "health"), hero.healthPoints + "+" + hero.getShielding() + "/" + hero.healthMax);
 			else                        statSlot( Messages.get(this, "health"), (hero.healthPoints) + "/" + hero.healthMax);
 			statSlot( Messages.get(this, "exp"), hero.exp + "/" + hero.maxExp() );
 
@@ -278,7 +278,7 @@ public class WndHero extends WndTabbed {
 		
 		private void setupList() {
 			Component content = buffList.content();
-			for (Buff buff : Dungeon.hero.buffs()) {
+			for (Buff buff : Dungeon.hero.getBuffs()) {
 				if (buff.icon() != BuffIndicator.NONE) {
 					BuffSlot slot = new BuffSlot(buff);
 					slot.setRect(0, pos, WIDTH, slot.icon.height());

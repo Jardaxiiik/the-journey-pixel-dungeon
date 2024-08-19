@@ -110,10 +110,10 @@ public class Pickaxe extends MeleeWeapon {
 			
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				
-				final int pos = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
+				final int pos = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
 				if (Dungeon.level.map[pos] == Terrain.WALL_DECO) {
 				
-					hero.spend( TIME_TO_MINE );
+					hero.spendTimeAdjusted( TIME_TO_MINE );
 					hero.busy();
 					
 					hero.sprite.attack( pos, new Callback() {
@@ -131,7 +131,7 @@ public class Pickaxe extends MeleeWeapon {
 							if (gold.doPickUp( Dungeon.hero )) {
 								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", gold.name())) );
 							} else {
-								Dungeon.level.drop( gold, hero.pos ).sprite.drop();
+								Dungeon.level.dropItemOnPosition( gold, hero.position).sprite.drop();
 							}
 							
 							hero.onOperateComplete();
@@ -150,7 +150,7 @@ public class Pickaxe extends MeleeWeapon {
 	@Override
 	public int proc(Character attacker, Character defender, int damage ) {
 		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
-			Actor.add(new Actor() {
+			Actor.addActor(new Actor() {
 
 				{
 					actPriority = VFX_PRIO;
@@ -163,7 +163,7 @@ public class Pickaxe extends MeleeWeapon {
 						updateQuickslot();
 					}
 
-					Actor.remove(this);
+					Actor.removeActor(this);
 					return true;
 				}
 			});
@@ -199,7 +199,7 @@ public class Pickaxe extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
@@ -213,11 +213,11 @@ public class Pickaxe extends MeleeWeapon {
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.sprite.attack(enemy.position, new Callback() {
 			@Override
 			public void call() {
 				float damageMulti = 1f;
-				if (Character.hasProp(enemy, Character.Property.INORGANIC)
+				if (Character.hasProperty(enemy, Character.Property.INORGANIC)
 						|| enemy instanceof Swarm
 						|| enemy instanceof Bee
 						|| enemy instanceof Crab

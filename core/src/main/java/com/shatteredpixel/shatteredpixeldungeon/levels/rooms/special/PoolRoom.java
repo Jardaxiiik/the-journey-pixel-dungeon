@@ -84,7 +84,7 @@ public class PoolRoom extends SpecialRoom {
 		}
 		
 		int pos = x + y * level.width();
-		level.drop( prize( level ), pos ).type = Heap.Type.CHEST;
+		level.dropItemOnPosition( prize( level ), pos ).type = Heap.Type.CHEST;
 		Painter.set( level, pos, Terrain.PEDESTAL );
 		
 		level.addItemToSpawn( new PotionOfInvisibility() );
@@ -92,8 +92,8 @@ public class PoolRoom extends SpecialRoom {
 		for (int i=0; i < NPIRANHAS; i++) {
 			Piranha piranha = Piranha.random();
 			do {
-				piranha.pos = level.pointToCell(random());
-			} while (level.map[piranha.pos] != Terrain.WATER|| level.findMob( piranha.pos ) != null);
+				piranha.position = level.pointToCell(random());
+			} while (level.map[piranha.position] != Terrain.WATER|| level.findMob( piranha.position) != null);
 			level.mobs.add( piranha );
 		}
 	}

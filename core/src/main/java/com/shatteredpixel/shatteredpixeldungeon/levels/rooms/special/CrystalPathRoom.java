@@ -206,15 +206,15 @@ public class CrystalPathRoom extends SpecialRoom {
 
 		//least valuable items go into rooms 2&3, then rooms 0&1, and finally 4&5
 		int shuffle = Random.Int(2);
-		level.drop(potions.remove(0), level.pointToCell(rooms[shuffle == 1 ? 2 : 3].center()));
-		level.drop(scrolls.remove(0), level.pointToCell(rooms[shuffle == 1 ? 3 : 2].center()));
+		level.dropItemOnPosition(potions.remove(0), level.pointToCell(rooms[shuffle == 1 ? 2 : 3].center()));
+		level.dropItemOnPosition(scrolls.remove(0), level.pointToCell(rooms[shuffle == 1 ? 3 : 2].center()));
 
-		level.drop(potions.remove(0), level.pointToCell(rooms[shuffle == 1 ? 0 : 1].center()));
-		level.drop(scrolls.remove(0), level.pointToCell(rooms[shuffle == 1 ? 1 : 0].center()));
+		level.dropItemOnPosition(potions.remove(0), level.pointToCell(rooms[shuffle == 1 ? 0 : 1].center()));
+		level.dropItemOnPosition(scrolls.remove(0), level.pointToCell(rooms[shuffle == 1 ? 1 : 0].center()));
 
 		//player can only see these if they unlock the previous doors, so don't count them for exploration
-		level.drop(potions.remove(0), shuffle == 1 ? prize1 : prize2).autoExplored = true;
-		level.drop(scrolls.remove(0), shuffle == 1 ? prize2 : prize1).autoExplored = true;
+		level.dropItemOnPosition(potions.remove(0), shuffle == 1 ? prize1 : prize2).autoExplored = true;
+		level.dropItemOnPosition(scrolls.remove(0), shuffle == 1 ? prize2 : prize1).autoExplored = true;
 
 		level.addItemToSpawn( new CrystalKey( Dungeon.depth ) );
 		level.addItemToSpawn( new CrystalKey( Dungeon.depth ) );

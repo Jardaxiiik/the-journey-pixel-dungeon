@@ -204,7 +204,7 @@ public enum Talent {
 			} else {
 				detach();
 			}
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			return true;
 		}
 
@@ -229,7 +229,7 @@ public enum Talent {
 	};
 	public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}};
 	public static class SeerShotCooldown extends FlavourBuff{
-		public int icon() { return target.buff(RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
+		public int icon() { return target.getBuff(RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0.7f, 0.4f, 0.7f); }
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
 	};
@@ -241,10 +241,10 @@ public enum Talent {
 		public void tintIcon(Image icon) { icon.hardlight(0.5f, 0f, 1f); }
 		@Override
 		public boolean playGameTurn() {
-			if (pos != target.pos) {
+			if (pos != target.position) {
 				detach();
 			} else {
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 			}
 			return true;
 		}
@@ -431,7 +431,7 @@ public enum Talent {
 		if (talent == LIGHT_CLOAK && hero.heroClass == HeroClass.ROGUE){
 			for (Item item : Dungeon.hero.belongings.backpack){
 				if (item instanceof CloakOfShadows){
-					if (hero.buff(LostInventory.class) == null || item.keptThroughLostInventory()) {
+					if (hero.getBuff(LostInventory.class) == null || item.keptThroughLostInventory()) {
 						((CloakOfShadows) item).activate(Dungeon.hero);
 					}
 				}
@@ -449,11 +449,11 @@ public enum Talent {
 		if (talent == UNENCUMBERED_SPIRIT && hero.pointsInTalent(talent) == 3){
 			Item toGive = new ClothArmor().identify();
 			if (!toGive.collect()){
-				Dungeon.level.drop(toGive, hero.pos).sprite.drop();
+				Dungeon.level.dropItemOnPosition(toGive, hero.position).sprite.drop();
 			}
 			toGive = new Gloves().identify();
 			if (!toGive.collect()){
-				Dungeon.level.drop(toGive, hero.pos).sprite.drop();
+				Dungeon.level.dropItemOnPosition(toGive, hero.position).sprite.drop();
 			}
 		}
 	}
@@ -550,7 +550,7 @@ public enum Talent {
 	public static void onPotionUsed( Hero hero, int cell, float factor ){
 		if (hero.hasTalent(LIQUID_WILLPOWER)){
 			if (hero.heroClass == HeroClass.WARRIOR) {
-				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+				BrokenSeal.WarriorShield shield = hero.getBuff(BrokenSeal.WarriorShield.class);
 				if (shield != null) {
 					// 50/75% of total shield
 					int shieldToGive = Math.round(factor * shield.maxShield() * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
@@ -571,7 +571,7 @@ public enum Talent {
 			}
 			Random.shuffle(grassCells);
 			for (int grassCell : grassCells){
-				Character ch = Actor.findChar(grassCell);
+				Character ch = Actor.getCharacterOnPosition(grassCell);
 				if (ch != null && ch.alignment == Character.Alignment.ENEMY){
 					//1/2 turns of roots
 					Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));
@@ -678,33 +678,33 @@ public enum Talent {
 
 	public static int onAttackProc(Hero hero, Character enemy, int dmg ){
 		if (hero.hasTalent(Talent.SUCKER_PUNCH)
-				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
-				&& enemy.buff(SuckerPunchTracker.class) == null){
+				&& enemy instanceof Mob && ((Mob) enemy).isSurprisedBy(hero)
+				&& enemy.getBuff(SuckerPunchTracker.class) == null){
 			dmg += Random.IntRange(hero.pointsInTalent(Talent.SUCKER_PUNCH) , 2);
 			Buff.affect(enemy, SuckerPunchTracker.class);
 		}
 
 		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Character.Alignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
-				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.id();
-			} else if (hero.buff(FollowupStrikeTracker.class) != null
-					&& hero.buff(FollowupStrikeTracker.class).object == enemy.id()){
+				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.getId();
+			} else if (hero.getBuff(FollowupStrikeTracker.class) != null
+					&& hero.getBuff(FollowupStrikeTracker.class).object == enemy.getId()){
 				dmg += 1 + hero.pointsInTalent(FOLLOWUP_STRIKE);
-				hero.buff(FollowupStrikeTracker.class).detach();
+				hero.getBuff(FollowupStrikeTracker.class).detach();
 			}
 		}
 
-		if (hero.buff(Talent.SpiritBladesTracker.class) != null
+		if (hero.getBuff(Talent.SpiritBladesTracker.class) != null
 				&& Random.Int(10) < 3*hero.pointsInTalent(Talent.SPIRIT_BLADES)){
 			SpiritBow bow = hero.belongings.getItem(SpiritBow.class);
 			if (bow != null) dmg = bow.proc( hero, enemy, dmg );
-			hero.buff(Talent.SpiritBladesTracker.class).detach();
+			hero.getBuff(Talent.SpiritBladesTracker.class).detach();
 		}
 
 		if (hero.hasTalent(PATIENT_STRIKE)){
-			if (hero.buff(PatientStrikeTracker.class) != null
+			if (hero.getBuff(PatientStrikeTracker.class) != null
 					&& !(hero.belongings.attackingWeapon() instanceof MissileWeapon)){
-				hero.buff(PatientStrikeTracker.class).detach();
+				hero.getBuff(PatientStrikeTracker.class).detach();
 				dmg += Random.IntRange(hero.pointsInTalent(Talent.PATIENT_STRIKE), 2);
 			}
 		}
@@ -712,10 +712,10 @@ public enum Talent {
 		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Character.Alignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
 				if (!(hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow)) {
-					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();
+					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.getId();
 				}
-			} else if (hero.buff(DeadlyFollowupTracker.class) != null
-					&& hero.buff(DeadlyFollowupTracker.class).object == enemy.id()){
+			} else if (hero.getBuff(DeadlyFollowupTracker.class) != null
+					&& hero.getBuff(DeadlyFollowupTracker.class).object == enemy.getId()){
 				dmg = Math.round(dmg * (1.0f + .08f*hero.pointsInTalent(DEADLY_FOLLOWUP)));
 			}
 		}

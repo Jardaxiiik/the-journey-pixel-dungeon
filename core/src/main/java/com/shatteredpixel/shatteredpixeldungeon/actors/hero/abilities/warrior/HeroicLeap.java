@@ -56,7 +56,7 @@ public class HeroicLeap extends ArmorAbility {
 	@Override
 	public float chargeUse( Hero hero ) {
 		float chargeUse = super.chargeUse(hero);
-		if (hero.buff(DoubleJumpTracker.class) != null){
+		if (hero.getBuff(DoubleJumpTracker.class) != null){
 			//reduced charge use by 16%/30%/41%/50%
 			chargeUse *= Math.pow(0.84, hero.pointsInTalent(Talent.DOUBLE_JUMP));
 		}
@@ -72,12 +72,12 @@ public class HeroicLeap extends ArmorAbility {
 				return;
 			}
 
-			Ballistica route = new Ballistica(hero.pos, target, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
+			Ballistica route = new Ballistica(hero.position, target, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
 			int cell = route.collisionPos;
 
 			//can't occupy the same cell as another char, so move back one.
 			int backTrace = route.dist-1;
-			while (Actor.findChar( cell ) != null && cell != hero.pos) {
+			while (Actor.getCharacterOnPosition( cell ) != null && cell != hero.position) {
 				cell = route.path.get(backTrace);
 				backTrace--;
 			}
@@ -87,25 +87,25 @@ public class HeroicLeap extends ArmorAbility {
 
 			final int dest = cell;
 			hero.busy();
-			hero.sprite.jump(hero.pos, cell, new Callback() {
+			hero.sprite.jump(hero.position, cell, new Callback() {
 				@Override
 				public void call() {
-					hero.move(dest);
+					hero.moveToPosition(dest);
 					Dungeon.level.occupyCell(hero);
 					Dungeon.observe();
 					GameScene.updateFog();
 
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
-						Character mob = Actor.findChar(hero.pos + i);
+						Character mob = Actor.getCharacterOnPosition(hero.position + i);
 						if (mob != null && mob != hero && mob.alignment != Character.Alignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
 								int damage = Random.NormalIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
 								damage += Math.round(hero.drRoll()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));
 								damage -= mob.drRoll();
-								mob.damage(damage, hero);
+								mob.receiveDamageFromSource(damage, hero);
 							}
-							if (mob.pos == hero.pos + i && hero.hasTalent(Talent.IMPACT_WAVE)){
-								Ballistica trajectory = new Ballistica(mob.pos, mob.pos + i, Ballistica.MAGIC_BOLT);
+							if (mob.position == hero.position + i && hero.hasTalent(Talent.IMPACT_WAVE)){
+								Ballistica trajectory = new Ballistica(mob.position, mob.position + i, Ballistica.MAGIC_BOLT);
 								int strength = 1+hero.pointsInTalent(Talent.IMPACT_WAVE);
 								WandOfBlastWave.throwChar(mob, trajectory, strength, true, true, HeroicLeap.this);
 								if (Random.Int(4) < hero.pointsInTalent(Talent.IMPACT_WAVE)){
@@ -121,8 +121,8 @@ public class HeroicLeap extends ArmorAbility {
 					Invisibility.dispel();
 					hero.spendAndNext(Actor.TICK);
 
-					if (hero.buff(DoubleJumpTracker.class) != null){
-						hero.buff(DoubleJumpTracker.class).detach();
+					if (hero.getBuff(DoubleJumpTracker.class) != null){
+						hero.getBuff(DoubleJumpTracker.class).detach();
 					} else {
 						if (hero.hasTalent(Talent.DOUBLE_JUMP)) {
 							Buff.affect(hero, DoubleJumpTracker.class, 3);

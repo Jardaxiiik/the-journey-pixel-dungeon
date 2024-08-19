@@ -60,7 +60,7 @@ public class Shockwave extends ArmorAbility {
 
 	@Override
 	public int targetedPos(Character user, int dst) {
-		return new Ballistica( user.pos, dst, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
+		return new Ballistica( user.position, dst, Ballistica.STOP_SOLID | Ballistica.STOP_TARGET ).collisionPos;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class Shockwave extends ArmorAbility {
 		if (target == null){
 			return;
 		}
-		if (target == hero.pos){
+		if (target == hero.position){
 			GLog.w(Messages.get(this, "self_target"));
 			return;
 		}
@@ -77,7 +77,7 @@ public class Shockwave extends ArmorAbility {
 		armor.charge -= chargeUse(hero);
 		Item.updateQuickslot();
 
-		Ballistica aim = new Ballistica(hero.pos, target, Ballistica.WONT_STOP);
+		Ballistica aim = new Ballistica(hero.position, target, Ballistica.WONT_STOP);
 
 		int maxDist = 5 + hero.pointsInTalent(Talent.EXPANDING_WAVE);
 		int dist = Math.min(aim.dist, maxDist);
@@ -111,7 +111,7 @@ public class Shockwave extends ArmorAbility {
 
 						for (int cell : cone.cells){
 
-							Character ch = Actor.findChar(cell);
+							Character ch = Actor.getCharacterOnPosition(cell);
 							if (ch != null && ch.alignment != hero.alignment){
 								int scalingStr = hero.getAttributeStrength()-10;
 								int damage = Random.NormalIntRange(5 + scalingStr, 10 + 2*scalingStr);
@@ -126,12 +126,12 @@ public class Shockwave extends ArmorAbility {
 									boolean wasEnemy = ch.alignment == Character.Alignment.ENEMY
 											|| (ch instanceof Mimic && ch.alignment == Character.Alignment.NEUTRAL);
 									damage = hero.attackProc(ch, damage);
-									ch.damage(damage, hero);
+									ch.receiveDamageFromSource(damage, hero);
 									if (hero.subClass == HeroSubClass.GLADIATOR && wasEnemy){
 										Buff.affect( hero, Combo.class ).hit( ch );
 									}
 								} else {
-									ch.damage(damage, hero);
+									ch.receiveDamageFromSource(damage, hero);
 								}
 								if (ch.isAlive()){
 									if (Random.Int(4) < hero.pointsInTalent(Talent.SHOCK_FORCE)){

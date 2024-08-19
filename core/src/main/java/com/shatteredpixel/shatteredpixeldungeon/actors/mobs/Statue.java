@@ -85,30 +85,30 @@ public class Statue extends Mob {
 	
 	@Override
 	protected boolean playGameTurn() {
-		if (levelGenStatue && Dungeon.level.visited[pos]) {
+		if (levelGenStatue && Dungeon.level.visited[position]) {
 			Notes.add( Notes.Landmark.STATUE );
 		}
 		return super.playGameTurn();
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return weapon.damageRoll(this);
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return (int)((9 + Dungeon.depth) * weapon.accuracyFactor( this, target ));
 	}
 	
 	@Override
-	public float attackDelay() {
-		return super.attackDelay()*weapon.delayFactor( this );
+	public float getAttackDelay() {
+		return super.getAttackDelay()*weapon.delayFactor( this );
 	}
 
 	@Override
-	protected boolean canAttack(Character enemy) {
-		return super.canAttack(enemy) || weapon.canReach(this, enemy.pos);
+	protected boolean canAttackEnemy(Character enemy) {
+		return super.canAttackEnemy(enemy) || weapon.canReach(this, enemy.position);
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public boolean add(Buff buff) {
-		if (super.add(buff)) {
+	public boolean addBuff(Buff buff) {
+		if (super.addBuff(buff)) {
 			if (state == PASSIVE && buff.type == Buff.buffType.NEGATIVE) {
 				state = HUNTING;
 			}
@@ -128,13 +128,13 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 
 		if (state == PASSIVE) {
 			state = HUNTING;
 		}
 		
-		super.damage( dmg, src );
+		super.receiveDamageFromSource( dmg, sourceOfDamage);
 	}
 	
 	@Override
@@ -143,7 +143,7 @@ public class Statue extends Mob {
 		damage = weapon.proc( this, enemy, damage );
 		if (!enemy.isAlive() && enemy == Dungeon.hero){
 			Dungeon.fail(this);
-			GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
+			GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
 		}
 		return damage;
 	}
@@ -154,10 +154,10 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public void die( Object cause ) {
+	public void die( Object source) {
 		weapon.identify(false);
-		Dungeon.level.drop( weapon, pos ).sprite.drop();
-		super.die( cause );
+		Dungeon.level.dropItemOnPosition( weapon, position).sprite.drop();
+		super.die(source);
 	}
 	
 	@Override
@@ -169,7 +169,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0f;
 	}
 
@@ -180,7 +180,7 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		return Messages.get(this, "desc", weapon.name());
 	}
 	

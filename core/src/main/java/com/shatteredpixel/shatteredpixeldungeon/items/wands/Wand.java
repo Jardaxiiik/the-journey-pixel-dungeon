@@ -121,7 +121,7 @@ public abstract class Wand extends Item {
 
 	@Override
 	public int targetingPos(Hero user, int dst) {
-		return new Ballistica( user.pos, dst, collisionProperties ).collisionPos;
+		return new Ballistica( user.position, dst, collisionProperties ).collisionPos;
 	}
 
 	public abstract void onZap(Ballistica attack);
@@ -130,7 +130,7 @@ public abstract class Wand extends Item {
 
 	//not affected by enchantment proc chance changers
 	public static float procChanceMultiplier( Character attacker ){
-		if (attacker.buff(Talent.EmpoweredStrikeTracker.class) != null){
+		if (attacker.getBuff(Talent.EmpoweredStrikeTracker.class) != null){
 			return 1f + ((Hero)attacker).pointsInTalent(Talent.EMPOWERED_STRIKE)/2f;
 		}
 		return 1f;
@@ -138,13 +138,13 @@ public abstract class Wand extends Item {
 
 	public boolean tryToZap( Hero owner, int target ){
 
-		if (owner.buff(WildMagic.WildMagicTracker.class) == null && owner.buff(MagicImmune.class) != null){
+		if (owner.getBuff(WildMagic.WildMagicTracker.class) == null && owner.getBuff(MagicImmune.class) != null){
 			GLog.w( Messages.get(this, "no_magic") );
 			return false;
 		}
 
 		//if we're using wild magic, then assume we have charges
-		if ( owner.buff(WildMagic.WildMagicTracker.class) != null || curCharges >= chargesPerCast()){
+		if ( owner.getBuff(WildMagic.WildMagicTracker.class) != null || curCharges >= chargesPerCast()){
 			return true;
 		} else {
 			GLog.w(Messages.get(this, "fizzles"));
@@ -199,7 +199,7 @@ public abstract class Wand extends Item {
 	protected static void wandProc(Character target, int wandLevel, int chargesUsed){
 		if (Dungeon.hero.hasTalent(Talent.ARCANE_VISION)) {
 			int dur = 5 + 5*Dungeon.hero.pointsInTalent(Talent.ARCANE_VISION);
-			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.id();
+			Buff.append(Dungeon.hero, TalismanOfForesight.CharAwareness.class, dur).charID = target.getId();
 		}
 
 		if (target != Dungeon.hero &&
@@ -340,11 +340,11 @@ public abstract class Wand extends Item {
 			//inside staff, still need to apply degradation
 			if (charger.target == Dungeon.hero
 					&& !Dungeon.hero.belongings.contains(this)
-					&& Dungeon.hero.buff( Degrade.class ) != null){
+					&& Dungeon.hero.getBuff( Degrade.class ) != null){
 				lvl = Degrade.reduceLevel(lvl);
 			}
 
-			if (charger.target.buff(ScrollEmpower.class) != null){
+			if (charger.target.getBuff(ScrollEmpower.class) != null){
 				lvl += 2;
 			}
 
@@ -352,7 +352,7 @@ public abstract class Wand extends Item {
 				lvl += ((Hero)charger.target).pointsInTalent(Talent.DESPERATE_POWER);
 			}
 
-			if (charger.target.buff(WildMagic.WildMagicTracker.class) != null){
+			if (charger.target.getBuff(WildMagic.WildMagicTracker.class) != null){
 				int bonus = 4 + ((Hero)charger.target).pointsInTalent(Talent.WILD_POWER);
 				if (Random.Int(2) == 0) bonus++;
 				bonus /= 2; // +2/+2.5/+3/+3.5/+4 at 0/1/2/3/4 talent points
@@ -363,7 +363,7 @@ public abstract class Wand extends Item {
 				}
 			}
 
-			WandOfMagicMissile.MagicCharge buff = charger.target.buff(WandOfMagicMissile.MagicCharge.class);
+			WandOfMagicMissile.MagicCharge buff = charger.target.getBuff(WandOfMagicMissile.MagicCharge.class);
 			if (buff != null && buff.level() > lvl){
 				return buff.level();
 			}
@@ -426,14 +426,14 @@ public abstract class Wand extends Item {
 
 		//remove magic charge at a higher priority, if we are benefiting from it are and not the
 		//wand that just applied it
-		WandOfMagicMissile.MagicCharge buff = curUser.buff(WandOfMagicMissile.MagicCharge.class);
+		WandOfMagicMissile.MagicCharge buff = curUser.getBuff(WandOfMagicMissile.MagicCharge.class);
 		if (buff != null
 				&& buff.wandJustApplied() != this
 				&& buff.level() == buffedLvl()
 				&& buffedLvl() > super.buffedLvl()){
 			buff.detach();
 		} else {
-			ScrollEmpower empower = curUser.buff(ScrollEmpower.class);
+			ScrollEmpower empower = curUser.getBuff(ScrollEmpower.class);
 			if (empower != null){
 				empower.use();
 			}
@@ -586,13 +586,13 @@ public abstract class Wand extends Item {
 					return;
 				}
 
-				final Ballistica shot = new Ballistica( curUser.pos, target, curWand.collisionProperties(target));
+				final Ballistica shot = new Ballistica( curUser.position, target, curWand.collisionProperties(target));
 				int cell = shot.collisionPos;
 				
-				if (target == curUser.pos || cell == curUser.pos) {
-					if (target == curUser.pos && curUser.hasTalent(Talent.SHIELD_BATTERY)){
+				if (target == curUser.position || cell == curUser.position) {
+					if (target == curUser.position && curUser.hasTalent(Talent.SHIELD_BATTERY)){
 
-						if (curUser.buff(MagicImmune.class) != null){
+						if (curUser.getBuff(MagicImmune.class) != null){
 							GLog.w( Messages.get(Wand.class, "no_magic") );
 							return;
 						}
@@ -607,7 +607,7 @@ public abstract class Wand extends Item {
 						Buff.affect(curUser, Barrier.class).setShield(Math.round(shield));
 						curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.round(shield)), FloatingText.SHIELDING);
 						curWand.curCharges = 0;
-						curUser.sprite.operate(curUser.pos);
+						curUser.sprite.operate(curUser.position);
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
 						updateQuickslot();
@@ -621,10 +621,10 @@ public abstract class Wand extends Item {
 				curUser.sprite.zap(cell);
 
 				//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
-				if (Actor.findChar(target) != null)
-					QuickSlotButton.target(Actor.findChar(target));
+				if (Actor.getCharacterOnPosition(target) != null)
+					QuickSlotButton.target(Actor.getCharacterOnPosition(target));
 				else
-					QuickSlotButton.target(Actor.findChar(cell));
+					QuickSlotButton.target(Actor.getCharacterOnPosition(cell));
 				
 				if (curWand.tryToZap(curUser, target)) {
 					
@@ -666,7 +666,7 @@ public abstract class Wand extends Item {
 						}
 						CursedWand.cursedZap(curWand,
 								curUser,
-								new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT),
+								new Ballistica(curUser.position, target, Ballistica.MAGIC_BOLT),
 								new Callback() {
 									@Override
 									public void call() {
@@ -709,7 +709,7 @@ public abstract class Wand extends Item {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 				}
 				return true;
 			}
@@ -718,7 +718,7 @@ public abstract class Wand extends Item {
 		
 		@Override
 		public boolean playGameTurn() {
-			if (curCharges < maxCharges && target.buff(MagicImmune.class) == null)
+			if (curCharges < maxCharges && target.getBuff(MagicImmune.class) == null)
 				recharge();
 			
 			while (partialCharge >= 1 && curCharges < maxCharges) {
@@ -731,7 +731,7 @@ public abstract class Wand extends Item {
 				partialCharge = 0;
 			}
 			
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			
 			return true;
 		}
@@ -746,7 +746,7 @@ public abstract class Wand extends Item {
 			if (Regeneration.regenOn())
 				partialCharge += (1f/turnsToCharge) * RingOfEnergy.wandChargeMultiplier(target);
 
-			for (Recharging bonus : target.buffs(Recharging.class)){
+			for (Recharging bonus : target.getBuffs(Recharging.class)){
 				if (bonus != null && bonus.remainder() > 0f) {
 					partialCharge += CHARGE_BUFF_BONUS * bonus.remainder();
 				}

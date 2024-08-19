@@ -56,7 +56,7 @@ public class Light extends FlavourBuff {
 	}
 
 	public void weaken( int amount ){
-		spend(-amount);
+		spendTimeAdjusted(-amount);
 	}
 	
 	@Override

@@ -99,7 +99,7 @@ public class MineLargeRoom extends CaveRoom {
 			}
 
 			CrystalGuardian m = new CrystalGuardian();
-			m.pos = level.pointToCell(p);
+			m.position = level.pointToCell(p);
 			level.mobs.add(m);
 			Painter.set(level, p, Terrain.EMPTY);
 
@@ -127,8 +127,8 @@ public class MineLargeRoom extends CaveRoom {
 
 			int sapperPos = level.pointToCell(random(5));
 			GnollSapper s = new GnollSapper();
-			s.pos = sapperPos;
-			s.spawnPos = s.pos;
+			s.position = sapperPos;
+			s.spawnPos = s.position;
 			level.mobs.add(s);
 
 			int guardPos;
@@ -136,7 +136,7 @@ public class MineLargeRoom extends CaveRoom {
 				guardPos = sapperPos+PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
 			} while (level.map[guardPos] != Terrain.EMPTY);
 			GnollGuard g = new GnollGuard();
-			g.pos = guardPos;
+			g.position = guardPos;
 			level.mobs.add(g);
 			s.linkPartner(g);
 
@@ -200,7 +200,7 @@ public class MineLargeRoom extends CaveRoom {
 
 			Point p = center();
 			FungalSentry m = new FungalSentry();
-			m.pos = level.pointToCell(p);
+			m.position = level.pointToCell(p);
 			level.mobs.add(m);
 			Painter.set(level, p, Terrain.GRASS);
 

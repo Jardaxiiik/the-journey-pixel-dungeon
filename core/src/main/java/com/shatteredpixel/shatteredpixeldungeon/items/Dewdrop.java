@@ -80,7 +80,7 @@ public class Dewdrop extends Item {
 			shield = heal - effect;
 			int maxShield = Math.round(hero.healthMax *0.2f*hero.pointsInTalent(Talent.SHIELDING_DEW));
 			int curShield = 0;
-			if (hero.buff(Barrier.class) != null) curShield = hero.buff(Barrier.class).shielding();
+			if (hero.getBuff(Barrier.class) != null) curShield = hero.getBuff(Barrier.class).shielding();
 			shield = Math.min(shield, maxShield-curShield);
 		}
 		if (effect > 0 || shield > 0) {

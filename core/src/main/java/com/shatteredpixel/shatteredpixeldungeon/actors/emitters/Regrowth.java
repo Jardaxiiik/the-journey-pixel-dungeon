@@ -47,10 +47,10 @@ public class Regrowth extends Emitter {
 						int c = Dungeon.level.map[cell];
 						int c1 = c;
 						if (c == Terrain.EMPTY || c == Terrain.EMBERS || c == Terrain.EMPTY_DECO) {
-							c1 = (cur[cell] > 9 && Actor.findChar( cell ) == null)
+							c1 = (cur[cell] > 9 && Actor.getCharacterOnPosition( cell ) == null)
 									? Terrain.HIGH_GRASS : Terrain.GRASS;
 						} else if ((c == Terrain.GRASS || c == Terrain.FURROWED_GRASS)
-								&& cur[cell] > 9 && Dungeon.level.plants.get(cell) == null && Actor.findChar( cell ) == null ) {
+								&& cur[cell] > 9 && Dungeon.level.plants.get(cell) == null && Actor.getCharacterOnPosition( cell ) == null ) {
 							c1 = Terrain.HIGH_GRASS;
 						}
 
@@ -59,9 +59,9 @@ public class Regrowth extends Emitter {
 							GameScene.updateMap( cell );
 						}
 
-						Character ch = Actor.findChar( cell );
+						Character ch = Actor.getCharacterOnPosition( cell );
 						if (ch != null
-								&& !ch.isImmune(this.getClass())
+								&& !ch.isImmuneToEffectType(this.getClass())
 								&& off[cell] > 1) {
 							Buff.prolong( ch, Roots.class, TICK );
 						}

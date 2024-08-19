@@ -55,11 +55,11 @@ public class FlockTrap extends Trap {
 		for (int i : spawnPoints){
 			Trap t;
 			if (Dungeon.level.insideMap(i)
-					&& Actor.findChar(i) == null
+					&& Actor.getCharacterOnPosition(i) == null
 					&& !(Dungeon.level.pit[i])) {
 				Sheep sheep = new Sheep();
 				sheep.lifespan = 6;
-				sheep.pos = i;
+				sheep.position = i;
 				GameScene.add(sheep);
 				CellEmitter.get(i).burst(Speck.factory(Speck.WOOL), 4);
 				//before the tile is pressed, directly trigger traps to avoid sfx spam

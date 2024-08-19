@@ -64,7 +64,7 @@ public class Foliage extends Emitter {
 		}
 		
 		Hero hero = Dungeon.hero;
-		if (hero.isAlive() && cur[hero.pos] > 0) {
+		if (hero.isAlive() && cur[hero.position] > 0) {
 			Shadows s = Buff.affect( hero, Shadows.class );
 			if (s != null){
 				s.prolong();

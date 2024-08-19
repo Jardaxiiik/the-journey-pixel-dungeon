@@ -54,7 +54,7 @@ public class Chasm implements Hero.Doom {
 	private static int heroPos;
 	
 	public static void heroJump( final Hero hero ) {
-		heroPos = hero.pos;
+		heroPos = hero.position;
 		Game.runOnRenderThread(new Callback() {
 			@Override
 			public void call() {
@@ -83,7 +83,7 @@ public class Chasm implements Hero.Doom {
 							@Override
 							protected void onSelect( int index ) {
 								if (index == 0 && elapsed > 0.2f) {
-									if (Dungeon.hero.pos == heroPos) {
+									if (Dungeon.hero.position == heroPos) {
 										jumpConfirmed = true;
 										hero.resume();
 									}
@@ -130,7 +130,7 @@ public class Chasm implements Hero.Doom {
 		
 		Hero hero = Dungeon.hero;
 		
-		FeatherFall.FeatherBuff b = hero.buff(FeatherFall.FeatherBuff.class);
+		FeatherFall.FeatherBuff b = hero.getBuff(FeatherFall.FeatherBuff.class);
 		
 		if (b != null){
 			hero.sprite.emitter().burst( Speck.factory( Speck.JET ), 20);
@@ -146,7 +146,7 @@ public class Chasm implements Hero.Doom {
 		//The lower the hero's HP, the more bleed and the less upfront damage.
 		//Hero has a 50% chance to bleed out at 66% HP, and begins to risk instant-death at 25%
 		Buff.affect( hero, Bleeding.class).set( Math.round(hero.healthMax / (6f + (6f*(hero.healthPoints /(float)hero.healthMax)))), Chasm.class);
-		hero.damage( Math.max( hero.healthPoints / 2, Random.NormalIntRange( hero.healthPoints / 2, hero.healthMax / 4 )), new Chasm() );
+		hero.receiveDamageFromSource( Math.max( hero.healthPoints / 2, Random.NormalIntRange( hero.healthPoints / 2, hero.healthMax / 4 )), new Chasm() );
 	}
 
 	public static void mobFall( Mob mob ) {

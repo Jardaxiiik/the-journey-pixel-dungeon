@@ -41,7 +41,7 @@ public class Rat extends Mob {
 
 	@Override
 	protected boolean playGameTurn() {
-		if (Dungeon.level.heroFOV[pos] && Dungeon.hero.armorAbility instanceof Ratmogrify){
+		if (Dungeon.level.heroFOV[position] && Dungeon.hero.armorAbility instanceof Ratmogrify){
 			alignment = Alignment.ALLY;
 			if (state == SLEEPING) state = WANDERING;
 		}
@@ -49,12 +49,12 @@ public class Rat extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1, 4 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 8;
 	}
 	

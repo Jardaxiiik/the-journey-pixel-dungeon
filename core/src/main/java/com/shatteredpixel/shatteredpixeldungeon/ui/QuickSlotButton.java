@@ -93,7 +93,7 @@ public class QuickSlotButton extends Button {
 						GameScene.handleCell(cell);
 					} else {
 						//couldn't auto-aim, just target the position and hope for the best.
-						GameScene.handleCell( lastTarget.pos );
+						GameScene.handleCell( lastTarget.position);
 					}
 				} else {
 					Item item = select(slotNum);
@@ -304,7 +304,7 @@ public class QuickSlotButton extends Button {
 	
 	private void enableSlot() {
 		slot.enable(Dungeon.quickslot.isNonePlaceholder( slotNum )
-				&& (Dungeon.hero.buff(LostInventory.class) == null || Dungeon.quickslot.getItem(slotNum).keptThroughLostInventory()));
+				&& (Dungeon.hero.getBuff(LostInventory.class) == null || Dungeon.quickslot.getItem(slotNum).keptThroughLostInventory()));
 	}
 
 	public void slotMargins( int left, int top, int right, int bottom){
@@ -318,10 +318,10 @@ public class QuickSlotButton extends Button {
 	private void useTargeting() {
 
 		if (lastTarget != null &&
-				Actor.chars().contains( lastTarget ) &&
+				Actor.getCharacters().contains( lastTarget ) &&
 				lastTarget.isAlive() &&
 				lastTarget.alignment != Character.Alignment.ALLY &&
-				Dungeon.level.heroFOV[lastTarget.pos]) {
+				Dungeon.level.heroFOV[lastTarget.position]) {
 
 			targetingSlot = slotNum;
 			CharSprite sprite = lastTarget.sprite;
@@ -352,15 +352,15 @@ public class QuickSlotButton extends Button {
 	public static int autoAim(Character target, Item item){
 
 		//first try to directly target
-		if (item.targetingPos(Dungeon.hero, target.pos) == target.pos) {
-			return target.pos;
+		if (item.targetingPos(Dungeon.hero, target.position) == target.position) {
+			return target.position;
 		}
 
 		//Otherwise pick nearby tiles to try and 'angle' the shot, auto-aim basically.
-		PathFinder.buildDistanceMap( target.pos, BArray.not( new boolean[Dungeon.level.length()], null ), 2 );
+		PathFinder.buildDistanceMap( target.position, BArray.not( new boolean[Dungeon.level.length()], null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
-					&& item.targetingPos(Dungeon.hero, i) == target.pos)
+					&& item.targetingPos(Dungeon.hero, i) == target.position)
 				return i;
 		}
 

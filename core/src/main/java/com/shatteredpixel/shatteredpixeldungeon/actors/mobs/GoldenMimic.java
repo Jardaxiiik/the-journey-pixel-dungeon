@@ -47,31 +47,31 @@ public class GoldenMimic extends Mimic {
 	}
 
 	@Override
-	public String name() {
+	public String getName() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "locked_chest");
 		} else {
-			return super.name();
+			return super.getName();
 		}
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "locked_chest_desc") + "\n\n" + Messages.get(this, "hidden_hint");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 
 	public void stopHiding(){
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
 			enemy = Dungeon.hero;
-			target = Dungeon.hero.pos;
+			target = Dungeon.hero.position;
 			GLog.w(Messages.get(this, "reveal") );
-			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
+			CellEmitter.get(position).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 0.85f);
 		}
 	}

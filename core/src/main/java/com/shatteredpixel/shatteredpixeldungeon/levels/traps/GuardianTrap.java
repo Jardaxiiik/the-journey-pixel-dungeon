@@ -60,10 +60,10 @@ public class GuardianTrap extends Trap {
 			Guardian guardian = new Guardian();
 			guardian.createWeapon(false);
 			guardian.state = guardian.WANDERING;
-			guardian.pos = Dungeon.level.randomRespawnCell( guardian );
-			if (guardian.pos != -1) {
+			guardian.position = Dungeon.level.randomRespawnCell( guardian );
+			if (guardian.position != -1) {
 				GameScene.add(guardian);
-				guardian.beckon(Dungeon.hero.pos);
+				guardian.beckon(Dungeon.hero.position);
 			}
 		}
 

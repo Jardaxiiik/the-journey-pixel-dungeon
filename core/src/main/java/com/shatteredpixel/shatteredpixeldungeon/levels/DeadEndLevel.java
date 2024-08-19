@@ -109,7 +109,7 @@ public class DeadEndLevel extends Level {
 			ArrayList<Item> bonesItems = Bones.get();
 			if (bonesItems != null) {
 				for (Item i : bonesItems) {
-					drop(i, entrance()-width()).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, entrance()-width()).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();

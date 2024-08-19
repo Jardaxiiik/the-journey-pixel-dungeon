@@ -34,7 +34,7 @@ public class WndInfoMob extends WndTitledMessage {
 	
 	public WndInfoMob( Mob mob ) {
 
-		super( new MobTitle( mob ), mob.info() );
+		super( new MobTitle( mob ), mob.getUpdatedDescription() );
 		
 	}
 	
@@ -49,7 +49,7 @@ public class WndInfoMob extends WndTitledMessage {
 		
 		public MobTitle( Mob mob ) {
 			
-			name = PixelScene.renderTextBlock( Messages.titleCase( mob.name() ), 9 );
+			name = PixelScene.renderTextBlock( Messages.titleCase( mob.getName() ), 9 );
 			name.hardlight( TITLE_COLOR );
 			add( name );
 			

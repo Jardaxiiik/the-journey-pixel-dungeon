@@ -61,7 +61,7 @@ public class Mace extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Character target){
-		if (target == null || (target instanceof Mob && ((Mob) target).surprisedBy(hero))) {
+		if (target == null || (target instanceof Mob && ((Mob) target).isSurprisedBy(hero))) {
 			return 1;
 		} else {
 			return 2;
@@ -78,7 +78,7 @@ public class Mace extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -93,7 +93,7 @@ public class Mace extends MeleeWeapon {
 		hero.belongings.abilityWeapon = null;
 
 		//need to separately check charges here, as non-surprise attacks cost 2
-		if (enemy instanceof Mob && !((Mob) enemy).surprisedBy(hero)){
+		if (enemy instanceof Mob && !((Mob) enemy).isSurprisedBy(hero)){
 			Charger charger = Buff.affect(hero, Charger.class);
 			if (Dungeon.hero.belongings.weapon == wep) {
 				if (charger.charges + charger.partialCharge < wep.abilityChargeUse(hero, enemy)){
@@ -108,7 +108,7 @@ public class Mace extends MeleeWeapon {
 			}
 		}
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.sprite.attack(enemy.position, new Callback() {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);

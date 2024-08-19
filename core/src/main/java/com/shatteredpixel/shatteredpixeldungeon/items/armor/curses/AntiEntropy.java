@@ -45,10 +45,10 @@ public class AntiEntropy extends Glyph {
 		if ( Random.Float() < procChance ) {
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				Freezing.affect(defender.pos+i);
+				Freezing.affect(defender.position +i);
 			}
 
-			if (!Dungeon.level.water[defender.pos]) {
+			if (!Dungeon.level.water[defender.position]) {
 				Buff.affect(defender, Burning.class).reignite(defender, 4);
 			}
 			defender.sprite.emitter().burst( FlameParticle.FACTORY, 5 );

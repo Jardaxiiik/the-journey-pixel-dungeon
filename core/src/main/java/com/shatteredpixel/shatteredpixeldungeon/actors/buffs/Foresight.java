@@ -45,7 +45,7 @@ public class Foresight extends FlavourBuff {
 		if (super.attachTo(target)){
 			//this way we get a nice VFX sweep on initial activation
 			if (target == Dungeon.hero){
-				Dungeon.level.mapped[target.pos] = false;
+				Dungeon.level.mapped[target.position] = false;
 				Dungeon.hero.search(false);
 			}
 			return true;

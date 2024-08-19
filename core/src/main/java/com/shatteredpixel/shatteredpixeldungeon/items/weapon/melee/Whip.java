@@ -58,13 +58,13 @@ public class Whip extends MeleeWeapon {
 		Character closest = null;
 
 		hero.belongings.abilityWeapon = this;
-		for (Character ch : Actor.chars()){
+		for (Character ch : Actor.getCharacters()){
 			if (ch.alignment == Character.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
-					&& Dungeon.level.heroFOV[ch.pos]
+					&& Dungeon.level.heroFOV[ch.position]
 					&& hero.canAttack(ch)){
 				targets.add(ch);
-				if (closest == null || Dungeon.level.trueDistance(hero.pos, closest.pos) > Dungeon.level.trueDistance(hero.pos, ch.pos)){
+				if (closest == null || Dungeon.level.trueDistance(hero.position, closest.position) > Dungeon.level.trueDistance(hero.position, ch.position)){
 					closest = ch;
 				}
 			}
@@ -78,7 +78,7 @@ public class Whip extends MeleeWeapon {
 
 		throwSound();
 		Character finalClosest = closest;
-		hero.sprite.attack(hero.pos, new Callback() {
+		hero.sprite.attack(hero.position, new Callback() {
 			@Override
 			public void call() {
 				beforeAbilityUsed(hero, finalClosest);

@@ -60,8 +60,8 @@ public class ChaliceOfBlood extends Artifact {
 		if (isEquipped( hero )
 				&& level() < levelCap
 				&& !cursed
-				&& !hero.isInvulnerable(getClass())
-				&& hero.buff(MagicImmune.class) == null)
+				&& !hero.isInvulnerableToEffectType(getClass())
+				&& hero.getBuff(MagicImmune.class) == null)
 			actions.add(AC_PRICK);
 		return actions;
 	}
@@ -99,21 +99,21 @@ public class ChaliceOfBlood extends Artifact {
 	private void prick(Hero hero){
 		int damage = 5 + 3*(level()*level());
 
-		Earthroot.Armor armor = hero.buff(Earthroot.Armor.class);
+		Earthroot.Armor armor = hero.getBuff(Earthroot.Armor.class);
 		if (armor != null) {
 			damage = armor.absorb(damage);
 		}
 
-		WandOfLivingEarth.RockArmor rockArmor = hero.buff(WandOfLivingEarth.RockArmor.class);
+		WandOfLivingEarth.RockArmor rockArmor = hero.getBuff(WandOfLivingEarth.RockArmor.class);
 		if (rockArmor != null) {
 			damage = rockArmor.absorb(damage);
 		}
 
 		damage -= hero.drRoll();
 
-		hero.sprite.operate( hero.pos );
+		hero.sprite.operate( hero.position);
 		hero.busy();
-		hero.spend(3f);
+		hero.spendTimeAdjusted(3f);
 		GLog.w( Messages.get(this, "onprick") );
 		if (damage <= 0){
 			damage = 1;
@@ -122,7 +122,7 @@ public class ChaliceOfBlood extends Artifact {
 			hero.sprite.emitter().burst( ShadowParticle.CURSE, 4+(damage/10) );
 		}
 
-		hero.damage(damage, this);
+		hero.receiveDamageFromSource(damage, this);
 
 		if (!hero.isAlive()) {
 			Badges.validateDeathFromFriendlyMagic();
@@ -156,7 +156,7 @@ public class ChaliceOfBlood extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (cursed || target.getBuff(MagicImmune.class) != null) return;
 
 		//grants 5 turns of healing up-front, if hero isn't starving
 		if (target.isStarving()) return;

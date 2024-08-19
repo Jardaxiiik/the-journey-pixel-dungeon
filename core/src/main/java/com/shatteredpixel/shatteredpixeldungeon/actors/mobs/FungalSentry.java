@@ -52,30 +52,30 @@ public class FungalSentry extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	protected boolean getFurther(int target) {
+	protected boolean moveAwayFromTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange(5, 10);
 	}
 
 	@Override
 	//TODO attack is a little permissive atm?
-	protected boolean canAttack( Character enemy ) {
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	protected boolean canAttackEnemy(Character enemy ) {
+		return super.canAttackEnemy(enemy)
+				|| new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT).collisionPos == enemy.position;
 	}
 
 	//TODO if we want to allow them to be literally killed, probably should give them a heal if hero is out of FOV, or similar
@@ -87,7 +87,7 @@ public class FungalSentry extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 50;
 	}
 
@@ -99,7 +99,7 @@ public class FungalSentry extends Mob {
 	private class Waiting extends Mob.Wandering{
 
 		@Override
-		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 			//always notices the hero
 			if (enemyInFOV) {
 
@@ -114,7 +114,7 @@ public class FungalSentry extends Mob {
 
 		@Override
 		protected boolean noticeEnemy() {
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return super.noticeEnemy();
 		}
 	}

@@ -79,7 +79,7 @@ public class Feint extends ArmorAbility {
 			return;
 		}
 
-		if (!Dungeon.level.adjacent(hero.pos, target)){
+		if (!Dungeon.level.adjacent(hero.position, target)){
 			GLog.w(Messages.get(this, "too_far"));
 			return;
 		}
@@ -90,20 +90,20 @@ public class Feint extends ArmorAbility {
 			return;
 		}
 
-		if (Dungeon.level.solid[target] || Actor.findChar(target) != null){
+		if (Dungeon.level.solid[target] || Actor.getCharacterOnPosition(target) != null){
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
 		}
 
 		hero.busy();
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		hero.sprite.jump(hero.pos, target, 0, 0.1f, new Callback() {
+		hero.sprite.jump(hero.position, target, 0, 0.1f, new Callback() {
 			@Override
 			public void call() {
-				if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
-					Door.leave( hero.pos );
+				if (Dungeon.level.map[hero.position] == Terrain.OPEN_DOOR) {
+					Door.leave( hero.position);
 				}
-				hero.pos = target;
+				hero.position = target;
 				Dungeon.level.occupyCell(hero);
 				Invisibility.dispel();
 				hero.spendAndNext(1f);
@@ -111,15 +111,15 @@ public class Feint extends ArmorAbility {
 		});
 
 		AfterImage image = new AfterImage();
-		image.pos = hero.pos;
+		image.position = hero.position;
 		GameScene.add(image, 1);
 
 		int imageAttackPos;
 		Character enemyTarget = TargetHealthIndicator.instance.target();
 		if (enemyTarget != null && enemyTarget.alignment == Character.Alignment.ENEMY){
-			imageAttackPos = enemyTarget.pos;
+			imageAttackPos = enemyTarget.position;
 		} else {
-			imageAttackPos = image.pos + (image.pos - target);
+			imageAttackPos = image.position + (image.position - target);
 		}
 		//do a purely visual attack
 		hero.sprite.parent.add(new Delayer(0f){
@@ -136,8 +136,8 @@ public class Feint extends ArmorAbility {
 
 		for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )){
 			if ((m.isTargeting(hero) && m.state == m.HUNTING) ||
-					(m.alignment == Character.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.pos, image.pos) <= 2)){
-				m.aggro(image);
+					(m.alignment == Character.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.position, image.position) <= 2)){
+				m.startHunting(image);
 			}
 		}
 
@@ -180,12 +180,12 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 
 		}
 
 		@Override
-		public int defenseSkill(Character enemy) {
+		public int getEvasionAgainstAttacker(Character enemy) {
 			if (enemy.alignment == Alignment.ENEMY) {
 				if (enemy instanceof Mob) {
 					((Mob) enemy).clearEnemy();
@@ -206,7 +206,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		public boolean add( Buff buff ) {
+		public boolean addBuff(Buff buff ) {
 			return false;
 		}
 

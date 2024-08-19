@@ -61,12 +61,12 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 12, 18 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 25;
 	}
 	
@@ -76,22 +76,22 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	protected boolean canAttackEnemy(Character enemy ) {
+		return super.canAttackEnemy(enemy)
+				|| new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT).collisionPos == enemy.position;
 	}
 	
-	protected boolean doAttack( Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 
-		if (Dungeon.level.adjacent( pos, enemy.pos )
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
+		if (Dungeon.level.adjacent(position, targetCharacter.position)
+				|| new Ballistica(position, targetCharacter.position, Ballistica.MAGIC_BOLT).collisionPos != targetCharacter.position) {
 			
-			return super.doAttack( enemy );
+			return super.attackCharacter(targetCharacter);
 			
 		} else {
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {
+				sprite.zap( targetCharacter.position);
 				return false;
 			} else {
 				zap();
@@ -104,11 +104,11 @@ public class Warlock extends Mob implements Callback {
 	public static class DarkBolt{}
 	
 	protected void zap() {
-		spend( TIME_TO_ZAP );
+		spendTimeAdjusted( TIME_TO_ZAP );
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (hit( this, enemy, true )) {
+		if (isTargetHitByAttack( this, enemy, true )) {
 			//TODO would be nice for this to work on ghost/statues too
 			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {
 				Buff.prolong( enemy, Degrade.class, Degrade.DURATION );
@@ -117,7 +117,7 @@ public class Warlock extends Mob implements Callback {
 			
 			int dmg = Random.NormalIntRange( 12, 18 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new DarkBolt() );
+			enemy.receiveDamageFromSource( dmg, new DarkBolt() );
 			
 			if (enemy == Dungeon.hero && !enemy.isAlive()) {
 				Badges.validateDeathFromEnemyMagic();
@@ -140,7 +140,7 @@ public class Warlock extends Mob implements Callback {
 	}
 
 	@Override
-	public Item createLoot(){
+	public Item getLootItem(){
 
 		// 1/6 chance for healing, scaling to 0 over 8 drops
 		if (Random.Int(3) == 0 && Random.Int(8) > Dungeon.LimitedDrops.WARLOCK_HP.count ){

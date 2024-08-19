@@ -80,18 +80,18 @@ public class Ooze extends Buff {
 	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			if (Dungeon.scalingDepth() > 5) {
-				target.damage(1 + Dungeon.scalingDepth() / 5, this);
+				target.receiveDamageFromSource(1 + Dungeon.scalingDepth() / 5, this);
 			} else if (Dungeon.scalingDepth() == 5){
-				target.damage(1, this); //1 dmg per turn vs Goo
+				target.receiveDamageFromSource(1, this); //1 dmg per turn vs Goo
 			} else if (Random.Int(2) == 0) {
-				target.damage(1, this); //0.5 dmg per turn in sewers
+				target.receiveDamageFromSource(1, this); //0.5 dmg per turn in sewers
 			}
 
 			if (!target.isAlive() && target == Dungeon.hero) {
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "ondeath") );
 			}
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			left -= TICK;
 			if (left <= 0){
 				detach();
@@ -99,7 +99,7 @@ public class Ooze extends Buff {
 		} else {
 			detach();
 		}
-		if (Dungeon.level.water[target.pos]) {
+		if (Dungeon.level.water[target.position]) {
 			detach();
 		}
 		return true;

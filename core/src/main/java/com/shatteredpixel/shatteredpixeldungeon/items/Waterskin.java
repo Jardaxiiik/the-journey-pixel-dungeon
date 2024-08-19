@@ -89,7 +89,7 @@ public class Waterskin extends Item {
 				float missingHealthPercent = 1f - (hero.healthPoints / (float)hero.healthMax);
 
 				int curShield = 0;
-				if (hero.buff(Barrier.class) != null) curShield = hero.buff(Barrier.class).shielding();
+				if (hero.getBuff(Barrier.class) != null) curShield = hero.getBuff(Barrier.class).shielding();
 				int maxShield = Math.round(hero.healthMax *0.2f*hero.pointsInTalent(Talent.SHIELDING_DEW));
 				if (hero.hasTalent(Talent.SHIELDING_DEW)){
 					float missingShieldPercent = 1f - (curShield / (float)maxShield);
@@ -106,11 +106,11 @@ public class Waterskin extends Item {
 				if (Dewdrop.consumeDew(dropsNeeded, hero, true)){
 					volume -= dropsNeeded;
 
-					hero.spend(TIME_TO_DRINK);
+					hero.spendTimeAdjusted(TIME_TO_DRINK);
 					hero.busy();
 
 					Sample.INSTANCE.play(Assets.Sounds.DRINK);
-					hero.sprite.operate(hero.pos);
+					hero.sprite.operate(hero.position);
 
 					updateQuickslot();
 				}

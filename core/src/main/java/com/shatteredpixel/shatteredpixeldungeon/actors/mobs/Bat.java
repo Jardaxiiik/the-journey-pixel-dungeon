@@ -49,12 +49,12 @@ public class Bat extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 5, 18 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 16;
 	}
 	
@@ -77,14 +77,14 @@ public class Bat extends Mob {
 	}
 	
 	@Override
-	public float lootChance(){
-		return super.lootChance() * ((7f - Dungeon.LimitedDrops.BAT_HP.count) / 7f);
+	public float getLootChance(){
+		return super.getLootChance() * ((7f - Dungeon.LimitedDrops.BAT_HP.count) / 7f);
 	}
 	
 	@Override
-	public Item createLoot(){
+	public Item getLootItem(){
 		Dungeon.LimitedDrops.BAT_HP.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 	
 }

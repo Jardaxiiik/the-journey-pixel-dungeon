@@ -68,12 +68,12 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange(20, 30);
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 30;
 	}
 	
@@ -88,22 +88,22 @@ public class Eye extends Mob {
 	public boolean beamCharged;
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
+	protected boolean canAttackEnemy(Character enemy ) {
 
 		if (beamCooldown == 0) {
-			Ballistica aim = new Ballistica(pos, enemy.pos, Ballistica.STOP_SOLID);
+			Ballistica aim = new Ballistica(position, enemy.position, Ballistica.STOP_SOLID);
 
-			if (enemy.invisible == 0 && !isCharmedBy(enemy) && fieldOfView[enemy.pos]
-					&& (super.canAttack(enemy) || aim.subPath(1, aim.dist).contains(enemy.pos))){
+			if (enemy.invisible == 0 && !isCharmedBy(enemy) && fieldOfView[enemy.position]
+					&& (super.canAttackEnemy(enemy) || aim.subPath(1, aim.dist).contains(enemy.position))){
 				beam = aim;
-				beamTarget = enemy.pos;
+				beamTarget = enemy.position;
 				return true;
 			} else {
 				//if the beam is charged, it has to attack, will aim at previous location of target.
 				return beamCharged;
 			}
 		} else {
-			return super.canAttack(enemy);
+			return super.canAttackEnemy(enemy);
 		}
 	}
 
@@ -114,8 +114,8 @@ public class Eye extends Mob {
 			sprite.idle();
 		}
 		if (beam == null && beamTarget != -1) {
-			beam = new Ballistica(pos, beamTarget, Ballistica.STOP_SOLID);
-			sprite.turnTo(pos, beamTarget);
+			beam = new Ballistica(position, beamTarget, Ballistica.STOP_SOLID);
+			sprite.turnTo(position, beamTarget);
 		}
 		if (beamCooldown > 0)
 			beamCooldown--;
@@ -123,21 +123,21 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	protected boolean doAttack( Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 
-		beam = new Ballistica(pos, beamTarget, Ballistica.STOP_SOLID);
-		if (beamCooldown > 0 || (!beamCharged && !beam.subPath(1, beam.dist).contains(enemy.pos))) {
-			return super.doAttack(enemy);
+		beam = new Ballistica(position, beamTarget, Ballistica.STOP_SOLID);
+		if (beamCooldown > 0 || (!beamCharged && !beam.subPath(1, beam.dist).contains(targetCharacter.position))) {
+			return super.attackCharacter(targetCharacter);
 		} else if (!beamCharged){
-			((EyeSprite)sprite).charge( enemy.pos );
-			spend( attackDelay()*2f );
+			((EyeSprite)sprite).charge( targetCharacter.position);
+			spendTimeAdjusted( getAttackDelay()*2f );
 			beamCharged = true;
 			return true;
 		} else {
 
-			spend( attackDelay() );
+			spendTimeAdjusted( getAttackDelay() );
 			
-			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[beam.collisionPos] ) {
+			if (Dungeon.level.heroFOV[position] || Dungeon.level.heroFOV[beam.collisionPos] ) {
 				sprite.zap( beam.collisionPos );
 				return false;
 			} else {
@@ -150,9 +150,9 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (beamCharged) dmg /= 4;
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 	
 	//used so resistances can differentiate between melee and magical attacks
@@ -178,15 +178,15 @@ public class Eye extends Mob {
 
 			}
 
-			Character ch = Actor.findChar( pos );
+			Character ch = Actor.getCharacterOnPosition( pos );
 			if (ch == null) {
 				continue;
 			}
 
-			if (hit( this, ch, true )) {
+			if (isTargetHitByAttack( this, ch, true )) {
 				int dmg = Random.NormalIntRange( 30, 50 );
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-				ch.damage( dmg, new DeathGaze() );
+				ch.receiveDamageFromSource( dmg, new DeathGaze() );
 
 				if (Dungeon.level.heroFOV[pos]) {
 					ch.sprite.flash();
@@ -213,7 +213,7 @@ public class Eye extends Mob {
 
 	//generates an average of 1 dew, 0.25 seeds, and 0.25 stones
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Item loot;
 		switch(Random.Int(4)){
 			case 0: case 1: default:
@@ -221,11 +221,11 @@ public class Eye extends Mob {
 				int ofs;
 				do {
 					ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-				} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
-				if (Dungeon.level.heaps.get(pos+ofs) == null) {
-					Dungeon.level.drop(new Dewdrop(), pos + ofs).sprite.drop(pos);
+				} while (Dungeon.level.solid[position + ofs] && !Dungeon.level.passable[position + ofs]);
+				if (Dungeon.level.heaps.get(position +ofs) == null) {
+					Dungeon.level.dropItemOnPosition(new Dewdrop(), position + ofs).sprite.drop(position);
 				} else {
-					Dungeon.level.drop(new Dewdrop(), pos + ofs).sprite.drop(pos + ofs);
+					Dungeon.level.dropItemOnPosition(new Dewdrop(), position + ofs).sprite.drop(position + ofs);
 				}
 				break;
 			case 2:
@@ -267,13 +267,13 @@ public class Eye extends Mob {
 
 	private class Hunting extends Mob.Hunting{
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			//even if enemy isn't seen, attack them if the beam is charged
-			if (beamCharged && enemy != null && canAttack(enemy)) {
+			if (beamCharged && enemy != null && canAttackEnemy(enemy)) {
 				enemySeen = enemyInFOV;
-				return doAttack(enemy);
+				return attackCharacter(enemy);
 			}
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 	}
 }

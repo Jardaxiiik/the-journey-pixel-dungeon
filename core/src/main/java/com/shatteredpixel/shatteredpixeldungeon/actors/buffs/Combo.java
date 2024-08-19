@@ -93,7 +93,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		count++;
 		comboTime = 5f;
 
-		if (!enemy.isAlive() || (enemy.buff(Corruption.class) != null && enemy.healthPoints == enemy.healthMax)){
+		if (!enemy.isAlive() || (enemy.getBuff(Corruption.class) != null && enemy.healthPoints == enemy.healthMax)){
 			comboTime = Math.max(comboTime, 15*((Hero)target).pointsInTalent(Talent.CLEAVE));
 		}
 
@@ -125,7 +125,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	@Override
 	public boolean playGameTurn() {
 		comboTime-=TICK;
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		if (comboTime <= 0) {
 			detach();
 		}
@@ -283,7 +283,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 		@Override
 		public void detach() {
-			if (!parried && target.buff(Combo.class) != null) target.buff(Combo.class).detach();
+			if (!parried && target.getBuff(Combo.class) != null) target.getBuff(Combo.class).detach();
 			super.detach();
 		}
 	}
@@ -295,12 +295,12 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 		@Override
 		public boolean playGameTurn() {
-			if (target.buff(Combo.class) != null) {
+			if (target.getBuff(Combo.class) != null) {
 				moveBeingUsed = ComboMove.PARRY;
-				target.sprite.attack(enemy.pos, new Callback() {
+				target.sprite.attack(enemy.position, new Callback() {
 					@Override
 					public void call() {
-						target.buff(Combo.class).doAttack(enemy);
+						target.getBuff(Combo.class).doAttack(enemy);
 						next();
 					}
 				});
@@ -341,14 +341,14 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				break;
 		}
 
-		int oldPos = enemy.pos;
+		int oldPos = enemy.position;
 		if (hero.attack(enemy, dmgMulti, dmgBonus, Character.INFINITE_ACCURACY)){
 			//special on-hit effects
 			switch (moveBeingUsed) {
 				case CLOBBER:
 					if (!wasAlly) hit(enemy);
 					//trace a ballistica to our target (which will also extend past them
-					Ballistica trajectory = new Ballistica(target.pos, enemy.pos, Ballistica.STOP_TARGET);
+					Ballistica trajectory = new Ballistica(target.position, enemy.position, Ballistica.STOP_TARGET);
 					//trim it to just be the part that goes past them
 					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 					//knock them back along that ballistica, ensuring they don't fall into a pit
@@ -362,7 +362,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							dist--;
 						}
 					}
-					if (enemy.pos == oldPos) {
+					if (enemy.position == oldPos) {
 						WandOfBlastWave.throwChar(enemy, trajectory, dist, true, false, hero);
 					}
 					break;
@@ -370,27 +370,27 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					hit(enemy);
 					break;
 				case CRUSH:
-					WandOfBlastWave.BlastWave.blast(enemy.pos);
-					PathFinder.buildDistanceMap(target.pos, BArray.not(Dungeon.level.solid, null), 3);
-					for (Character ch : Actor.chars()) {
+					WandOfBlastWave.BlastWave.blast(enemy.position);
+					PathFinder.buildDistanceMap(target.position, BArray.not(Dungeon.level.solid, null), 3);
+					for (Character ch : Actor.getCharacters()) {
 						if (ch != enemy && ch.alignment == Character.Alignment.ENEMY
-								&& PathFinder.distance[ch.pos] < Integer.MAX_VALUE) {
-							int aoeHit = Math.round(target.damageRoll() * 0.25f * count);
+								&& PathFinder.distance[ch.position] < Integer.MAX_VALUE) {
+							int aoeHit = Math.round(target.getDamageRoll() * 0.25f * count);
 							aoeHit /= 2;
 							aoeHit -= ch.drRoll();
-							if (ch.buff(Vulnerable.class) != null) aoeHit *= 1.33f;
+							if (ch.getBuff(Vulnerable.class) != null) aoeHit *= 1.33f;
 							if (ch instanceof DwarfKing){
 								//change damage type for DK so that crush AOE doesn't count for DK's challenge badge
-								ch.damage(aoeHit, this);
+								ch.receiveDamageFromSource(aoeHit, this);
 							} else {
-								ch.damage(aoeHit, target);
+								ch.receiveDamageFromSource(aoeHit, target);
 							}
 							ch.sprite.bloodBurstA(target.sprite.center(), aoeHit);
 							ch.sprite.flash();
 
 							if (!ch.isAlive()) {
-								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null) {
-									BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.getBuff(BrokenSeal.WarriorShield.class) != null) {
+									BrokenSeal.WarriorShield shield = hero.getBuff(BrokenSeal.WarriorShield.class);
 									int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 									shield.supercharge(shieldAmt);
 									hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
@@ -424,7 +424,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				//fury attacks as many times as you have combo count
 				if (count > 0 && enemy.isAlive() && hero.canAttack(enemy) &&
 						(wasAlly || enemy.alignment != target.alignment)){
-					target.sprite.attack(enemy.pos, new Callback() {
+					target.sprite.attack(enemy.position, new Callback() {
 						@Override
 						public void call() {
 							doAttack(enemy);
@@ -446,8 +446,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		if (!enemy.isAlive() || (!wasAlly && enemy.alignment == target.alignment)) {
-			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null){
-				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.getBuff(BrokenSeal.WarriorShield.class) != null){
+				BrokenSeal.WarriorShield shield = hero.getBuff(BrokenSeal.WarriorShield.class);
 				int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
 				shield.supercharge(shieldAmt);
 				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldAmt), FloatingText.SHIELDING);
@@ -461,7 +461,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Character enemy = Actor.findChar( cell );
+			final Character enemy = Actor.getCharacterOnPosition( cell );
 			if (enemy == null
 					|| enemy == target
 					|| !Dungeon.level.heroFOV[cell]
@@ -470,11 +470,11 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 			} else if (!((Hero)target).canAttack(enemy)){
 				if (((Hero) target).pointsInTalent(Talent.ENHANCED_COMBO) < 3
-					|| Dungeon.level.distance(target.pos, enemy.pos) > 1 + target.buff(Combo.class).count/3){
+					|| Dungeon.level.distance(target.position, enemy.position) > 1 + target.getBuff(Combo.class).count/3){
 					GLog.w(Messages.get(Combo.class, "bad_target"));
 				} else {
-					Ballistica c = new Ballistica(target.pos, enemy.pos, Ballistica.PROJECTILE);
-					if (c.collisionPos == enemy.pos){
+					Ballistica c = new Ballistica(target.position, enemy.position, Ballistica.PROJECTILE);
+					if (c.collisionPos == enemy.position){
 						final int leapPos = c.path.get(c.dist-1);
 						if (!Dungeon.level.passable[leapPos] && !(target.flying && Dungeon.level.avoid[leapPos])){
 							GLog.w(Messages.get(Combo.class, "bad_target"));
@@ -483,10 +483,10 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							GLog.w(Messages.get(Combo.class, "bad_target"));
 						} else {
 							Dungeon.hero.busy();
-							target.sprite.jump(target.pos, leapPos, new Callback() {
+							target.sprite.jump(target.position, leapPos, new Callback() {
 								@Override
 								public void call() {
-									target.move(leapPos);
+									target.moveToPosition(leapPos);
 									Dungeon.level.occupyCell(target);
 									Dungeon.observe();
 									GameScene.updateFog();

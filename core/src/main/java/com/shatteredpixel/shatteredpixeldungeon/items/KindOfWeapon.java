@@ -119,14 +119,14 @@ abstract public class KindOfWeapon extends EquipableItem {
 			}
 
 			if (wasInInv && hero.hasTalent(Talent.SWIFT_EQUIP)) {
-				if (hero.buff(Talent.SwiftEquipCooldown.class) == null){
+				if (hero.getBuff(Talent.SwiftEquipCooldown.class) == null){
 					hero.spendAndNext(-hero.cooldown());
 					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
 					GLog.i(Messages.get(this, "swift_equip"));
-				} else if (hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
+				} else if (hero.getBuff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
 					hero.spendAndNext(-hero.cooldown());
-					hero.buff(Talent.SwiftEquipCooldown.class).secondUse = false;
+					hero.getBuff(Talent.SwiftEquipCooldown.class).secondUse = false;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else {
 					hero.spendAndNext(TIME_TO_EQUIP);
@@ -163,14 +163,14 @@ abstract public class KindOfWeapon extends EquipableItem {
 			}
 
 			if (wasInInv && hero.hasTalent(Talent.SWIFT_EQUIP)) {
-				if (hero.buff(Talent.SwiftEquipCooldown.class) == null){
+				if (hero.getBuff(Talent.SwiftEquipCooldown.class) == null){
 					hero.spendAndNext(-hero.cooldown());
 					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
 					GLog.i(Messages.get(this, "swift_equip"));
-				} else if (hero.buff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
+				} else if (hero.getBuff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
 					hero.spendAndNext(-hero.cooldown());
-					hero.buff(Talent.SwiftEquipCooldown.class).secondUse = false;
+					hero.getBuff(Talent.SwiftEquipCooldown.class).secondUse = false;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else {
 					hero.spendAndNext(TIME_TO_EQUIP);
@@ -242,17 +242,17 @@ abstract public class KindOfWeapon extends EquipableItem {
 	
 	public boolean canReach(Character owner, int target){
 		int reach = reachFactor(owner);
-		if (Dungeon.level.distance( owner.pos, target ) > reach){
+		if (Dungeon.level.distance( owner.position, target ) > reach){
 			return false;
 		} else {
 			boolean[] passable = BArray.not(Dungeon.level.solid, null);
-			for (Character ch : Actor.chars()) {
-				if (ch != owner) passable[ch.pos] = false;
+			for (Character ch : Actor.getCharacters()) {
+				if (ch != owner) passable[ch.position] = false;
 			}
 			
 			PathFinder.buildDistanceMap(target, passable, reach);
 			
-			return PathFinder.distance[owner.pos] <= reach;
+			return PathFinder.distance[owner.position] <= reach;
 		}
 	}
 

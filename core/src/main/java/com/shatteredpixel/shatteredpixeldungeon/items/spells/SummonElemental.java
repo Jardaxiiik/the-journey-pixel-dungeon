@@ -89,16 +89,16 @@ public class SummonElemental extends Spell {
 		ArrayList<Integer> spawnPoints = new ArrayList<>();
 
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-			int p = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.findChar( p ) == null && Dungeon.level.passable[p]) {
+			int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+			if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 				spawnPoints.add( p );
 			}
 		}
 
 		if (!spawnPoints.isEmpty()){
 
-			for (Character ch : Actor.chars()){
-				if (ch instanceof Elemental && ch.buff(InvisAlly.class) != null){
+			for (Character ch : Actor.getCharacters()){
+				if (ch instanceof Elemental && ch.getBuff(InvisAlly.class) != null){
 					ScrollOfTeleportation.appear( ch, Random.element(spawnPoints) );
 					((Elemental) ch).state = ((Elemental) ch).HUNTING;
 					curUser.spendAndNext(Actor.TICK);
@@ -113,7 +113,7 @@ public class SummonElemental extends Spell {
 			elemental.healthPoints = elemental.healthMax;
 			ScrollOfTeleportation.appear( elemental, Random.element(spawnPoints) );
 			Invisibility.dispel(curUser);
-			curUser.sprite.operate(curUser.pos);
+			curUser.sprite.operate(curUser.position);
 			curUser.spendAndNext(Actor.TICK);
 
 			summonClass = Elemental.AllyNewBornElemental.class;
@@ -207,7 +207,7 @@ public class SummonElemental extends Spell {
 				summonClass = Elemental.ChaosElemental.class;
 			}
 
-			curUser.sprite.operate(curUser.pos);
+			curUser.sprite.operate(curUser.position);
 
 			updateQuickslot();
 		}

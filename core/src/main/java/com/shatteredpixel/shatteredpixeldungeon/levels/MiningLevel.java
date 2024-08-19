@@ -186,7 +186,7 @@ public class MiningLevel extends CavesLevel {
 					losBlocking[cell] = false;
 				}
 				for (Item i : bonesItems) {
-					drop(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -196,7 +196,7 @@ public class MiningLevel extends CavesLevel {
 			map[cell] = Terrain.GRASS;
 			losBlocking[cell] = false;
 		}
-		drop( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
+		dropItemOnPosition( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
 		if (Blacksmith.Quest.Type() == Blacksmith.Quest.GNOLL){
 			//drop a second ration for the gnoll quest type, more mining required!
 			cell = randomDropCell();
@@ -204,7 +204,7 @@ public class MiningLevel extends CavesLevel {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
 			}
-			drop( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
+			dropItemOnPosition( ItemGenerator.randomUsingDefaults(ItemGenerator.Category.FOOD), cell );
 		}
 
 		if (Dungeon.isChallenged(Challenges.DARKNESS)){
@@ -213,7 +213,7 @@ public class MiningLevel extends CavesLevel {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
 			}
-			drop( new Torch(), cell );
+			dropItemOnPosition( new Torch(), cell );
 		}
 	}
 

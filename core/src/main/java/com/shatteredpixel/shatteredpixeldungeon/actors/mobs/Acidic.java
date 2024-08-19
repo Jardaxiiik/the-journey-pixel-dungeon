@@ -46,15 +46,15 @@ public class Acidic extends Scorpio {
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage ) {
-		if (Dungeon.level.adjacent(pos, enemy.pos)){
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage ) {
+		if (Dungeon.level.adjacent(position, enemy.position)){
 			Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
 		}
-		return super.defenseProc( enemy, damage );
+		return super.getDamageReceivedFromEnemyReducedByDefense( enemy, damage );
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		return new PotionOfExperience();
 	}
 }

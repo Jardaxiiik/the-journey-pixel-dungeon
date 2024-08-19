@@ -39,8 +39,8 @@ public abstract class AllyBuff extends Buff{
 	public boolean attachTo(Character target) {
 		if (super.attachTo(target)){
 			target.alignment = Character.Alignment.ALLY;
-			if (target.buff(PinCushion.class) != null){
-				target.buff(PinCushion.class).detach();
+			if (target.getBuff(PinCushion.class) != null){
+				target.getBuff(PinCushion.class).detach();
 			}
 			return true;
 		} else {
@@ -54,8 +54,8 @@ public abstract class AllyBuff extends Buff{
 		boolean wasEnemy = enemy.alignment == Character.Alignment.ENEMY || enemy instanceof Mimic;
 		Buff.affect(enemy, buffCls);
 
-		if (enemy.buff(buffCls) != null && wasEnemy){
-			enemy.rollToDropLoot();
+		if (enemy.getBuff(buffCls) != null && wasEnemy){
+			enemy.dropLoot();
 
 			Statistics.enemiesSlain++;
 			Badges.validateMonstersSlain();

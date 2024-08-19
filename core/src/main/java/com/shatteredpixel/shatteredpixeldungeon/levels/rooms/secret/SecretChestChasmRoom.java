@@ -64,49 +64,49 @@ public class SecretChestChasmRoom extends SecretRoom {
 		
 		Point p = new Point(left+3, top+3);
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		level.dropItemOnPosition(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.x = right-3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		level.dropItemOnPosition(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.y = bottom-3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		level.dropItemOnPosition(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p.x = left+3;
 		Painter.set(level, p, Terrain.EMPTY_SP);
-		level.drop(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
+		level.dropItemOnPosition(ItemGenerator.randomUsingDefaults(), level.pointToCell(p)).type = Heap.Type.LOCKED_CHEST;
 		if (level.heaps.get(level.pointToCell(p)) != null) chests++;
 		
 		p = new Point(left+1, top+1);
 		Painter.set(level, p, Terrain.EMPTY_SP);
 		if (chests > 0) {
-			level.drop(new GoldenKey(Dungeon.depth), level.pointToCell(p));
+			level.dropItemOnPosition(new GoldenKey(Dungeon.depth), level.pointToCell(p));
 			chests--;
 		}
 		
 		p.x = right-1;
 		Painter.set(level, p, Terrain.EMPTY_SP);
 		if (chests > 0) {
-			level.drop(new GoldenKey(Dungeon.depth), level.pointToCell(p));
+			level.dropItemOnPosition(new GoldenKey(Dungeon.depth), level.pointToCell(p));
 			chests--;
 		}
 		
 		p.y = bottom-1;
 		Painter.set(level, p, Terrain.EMPTY_SP);
 		if (chests > 0) {
-			level.drop(new GoldenKey(Dungeon.depth), level.pointToCell(p));
+			level.dropItemOnPosition(new GoldenKey(Dungeon.depth), level.pointToCell(p));
 			chests--;
 		}
 		
 		p.x = left+1;
 		Painter.set(level, p, Terrain.EMPTY_SP);
 		if (chests > 0) {
-			level.drop(new GoldenKey(Dungeon.depth), level.pointToCell(p));
+			level.dropItemOnPosition(new GoldenKey(Dungeon.depth), level.pointToCell(p));
 			chests--;
 		}
 		

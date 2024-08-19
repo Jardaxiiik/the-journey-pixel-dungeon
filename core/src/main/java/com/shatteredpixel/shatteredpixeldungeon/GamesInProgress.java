@@ -143,7 +143,7 @@ public class GamesInProgress {
 		info.exp = Dungeon.hero.exp;
 		info.healthPoint = Dungeon.hero.healthPoints;
 		info.ht = Dungeon.hero.healthMax;
-		info.shield = Dungeon.hero.shielding();
+		info.shield = Dungeon.hero.getShielding();
 		info.heroClass = Dungeon.hero.heroClass;
 		info.subClass = Dungeon.hero.subClass;
 		info.armorTier = Dungeon.hero.tier();

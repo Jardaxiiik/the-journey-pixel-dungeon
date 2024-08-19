@@ -78,7 +78,7 @@ public class Rapier extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		//duelist can lunge out of her FOV, but this wastes the ability instead of cancelling if there is no target
 		if (Dungeon.level.heroFOV[target]) {
 			if (enemy == null || enemy == hero || hero.isCharmedBy(enemy)) {
@@ -87,8 +87,8 @@ public class Rapier extends MeleeWeapon {
 			}
 		}
 
-		if (hero.rooted || Dungeon.level.distance(hero.pos, target) < 2
-				|| Dungeon.level.distance(hero.pos, target)-1 > wep.reachFactor(hero)){
+		if (hero.rooted || Dungeon.level.distance(hero.position, target) < 2
+				|| Dungeon.level.distance(hero.position, target)-1 > wep.reachFactor(hero)){
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			if (hero.rooted) PixelScene.shake( 1, 1f );
 			return;
@@ -96,11 +96,11 @@ public class Rapier extends MeleeWeapon {
 
 		int lungeCell = -1;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (Dungeon.level.distance(hero.pos+i, target) <= wep.reachFactor(hero)
-					&& Actor.findChar(hero.pos+i) == null
-					&& (Dungeon.level.passable[hero.pos+i] || (Dungeon.level.avoid[hero.pos+i] && hero.flying))){
-				if (lungeCell == -1 || Dungeon.level.trueDistance(hero.pos + i, target) < Dungeon.level.trueDistance(lungeCell, target)){
-					lungeCell = hero.pos + i;
+			if (Dungeon.level.distance(hero.position +i, target) <= wep.reachFactor(hero)
+					&& Actor.getCharacterOnPosition(hero.position +i) == null
+					&& (Dungeon.level.passable[hero.position +i] || (Dungeon.level.avoid[hero.position +i] && hero.flying))){
+				if (lungeCell == -1 || Dungeon.level.trueDistance(hero.position + i, target) < Dungeon.level.trueDistance(lungeCell, target)){
+					lungeCell = hero.position + i;
 				}
 			}
 		}
@@ -114,19 +114,19 @@ public class Rapier extends MeleeWeapon {
 
 		hero.busy();
 		Sample.INSTANCE.play(Assets.Sounds.MISS);
-		hero.sprite.jump(hero.pos, dest, 0, 0.1f, new Callback() {
+		hero.sprite.jump(hero.position, dest, 0, 0.1f, new Callback() {
 			@Override
 			public void call() {
-				if (Dungeon.level.map[hero.pos] == Terrain.OPEN_DOOR) {
-					Door.leave( hero.pos );
+				if (Dungeon.level.map[hero.position] == Terrain.OPEN_DOOR) {
+					Door.leave( hero.position);
 				}
-				hero.pos = dest;
+				hero.position = dest;
 				Dungeon.level.occupyCell(hero);
 				Dungeon.observe();
 
 				hero.belongings.abilityWeapon = wep; //set this early to we can check canAttack
 				if (enemy != null && hero.canAttack(enemy)) {
-					hero.sprite.attack(enemy.pos, new Callback() {
+					hero.sprite.attack(enemy.position, new Callback() {
 						@Override
 						public void call() {
 
@@ -146,7 +146,7 @@ public class Rapier extends MeleeWeapon {
 				} else {
 					wep.beforeAbilityUsed(hero, null);
 					GLog.w(Messages.get(Rapier.class, "ability_no_target"));
-					hero.spendAndNext(1/hero.speed());
+					hero.spendAndNext(1/hero.getSpeed());
 					wep.afterAbilityUsed(hero);
 				}
 			}

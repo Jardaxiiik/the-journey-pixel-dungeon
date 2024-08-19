@@ -44,12 +44,12 @@ public class SecretHoneypotRoom extends SecretRoom {
 		brokenPotPos.y = (brokenPotPos.y + entrance().y) / 2;
 		
 		Honeypot.ShatteredPot pot = new Honeypot.ShatteredPot();
-		level.drop(pot, level.pointToCell(brokenPotPos));
+		level.dropItemOnPosition(pot, level.pointToCell(brokenPotPos));
 		
 		Bee bee = new Bee();
 		bee.spawn( Dungeon.depth );
 		bee.healthPoints = bee.healthMax;
-		bee.pos = level.pointToCell(brokenPotPos);
+		bee.position = level.pointToCell(brokenPotPos);
 		level.mobs.add( bee );
 		
 		bee.setPotInfo(level.pointToCell(brokenPotPos), null);
@@ -67,6 +67,6 @@ public class SecretHoneypotRoom extends SecretRoom {
 			itemPos = level.pointToCell(random());
 		} while (level.heaps.get(itemPos) != null);
 		
-		level.drop(item, itemPos);
+		level.dropItemOnPosition(item, itemPos);
 	}
 }

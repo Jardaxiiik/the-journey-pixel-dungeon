@@ -65,7 +65,7 @@ public class DeathMark extends ArmorAbility {
 	@Override
 	public float chargeUse( Hero hero ) {
 		float chargeUse = super.chargeUse(hero);
-		if (hero.buff(DoubleMarkTracker.class) != null){
+		if (hero.getBuff(DoubleMarkTracker.class) != null){
 			//reduced charge use by 30%/50%/65%/75%
 			chargeUse *= Math.pow(0.707, hero.pointsInTalent(Talent.DOUBLE_MARK));
 		}
@@ -78,7 +78,7 @@ public class DeathMark extends ArmorAbility {
 			return;
 		}
 
-		Character ch = Actor.findChar(target);
+		Character ch = Actor.getCharacterOnPosition(target);
 
 		if (ch == null || !Dungeon.level.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
@@ -98,8 +98,8 @@ public class DeathMark extends ArmorAbility {
 
 		hero.next();
 
-		if (hero.buff(DoubleMarkTracker.class) != null){
-			hero.buff(DoubleMarkTracker.class).detach();
+		if (hero.getBuff(DoubleMarkTracker.class) != null){
+			hero.getBuff(DoubleMarkTracker.class).detach();
 		} else if (hero.hasTalent(Talent.DOUBLE_MARK)) {
 			Buff.affect(hero, DoubleMarkTracker.class, 0.01f);
 		}
@@ -107,25 +107,25 @@ public class DeathMark extends ArmorAbility {
 	}
 
 	public static void processFearTheReaper( Character ch ){
-		if (ch.healthPoints > 0 || ch.buff(DeathMarkTracker.class) == null){
+		if (ch.healthPoints > 0 || ch.getBuff(DeathMarkTracker.class) == null){
 			return;
 		}
 
 		if (Dungeon.hero.hasTalent(Talent.FEAR_THE_REAPER)) {
 			if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 2) {
-				Buff.prolong(ch, Terror.class, 5f).object = Dungeon.hero.id();
+				Buff.prolong(ch, Terror.class, 5f).object = Dungeon.hero.getId();
 			}
 			Buff.prolong(ch, Cripple.class, 5f);
 
 			if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) >= 3) {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				PathFinder.buildDistanceMap(ch.pos, passable, 3);
+				PathFinder.buildDistanceMap(ch.position, passable, 3);
 
-				for (Character near : Actor.chars()) {
+				for (Character near : Actor.getCharacters()) {
 					if (near != ch && near.alignment == Character.Alignment.ENEMY
-							&& PathFinder.distance[near.pos] != Integer.MAX_VALUE) {
+							&& PathFinder.distance[near.position] != Integer.MAX_VALUE) {
 						if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
-							Buff.prolong(near, Terror.class, 5f).object = Dungeon.hero.id();
+							Buff.prolong(near, Terror.class, 5f).object = Dungeon.hero.getId();
 						}
 						Buff.prolong(near, Cripple.class, 5f);
 					}

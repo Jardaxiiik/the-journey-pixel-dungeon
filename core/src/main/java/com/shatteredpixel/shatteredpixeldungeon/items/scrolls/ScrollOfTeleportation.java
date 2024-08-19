@@ -69,9 +69,9 @@ public class ScrollOfTeleportation extends Scroll {
 	
 	public static boolean teleportToLocation(Character ch, int pos){
 		PathFinder.buildDistanceMap(pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
-		if (PathFinder.distance[ch.pos] == Integer.MAX_VALUE
+		if (PathFinder.distance[ch.position] == Integer.MAX_VALUE
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
-				|| Actor.findChar(pos) != null){
+				|| Actor.getCharacterOnPosition(pos) != null){
 			if (ch == Dungeon.hero){
 				GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );
 			}
@@ -99,7 +99,7 @@ public class ScrollOfTeleportation extends Scroll {
 			return teleportInNonRegularLevel( ch, false );
 		}
 
-		if (Character.hasProp(ch, Character.Property.IMMOVABLE) || ch.isImmune(source)){
+		if (Character.hasProperty(ch, Character.Property.IMMOVABLE) || ch.isImmuneToEffectType(source)){
 			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
@@ -164,7 +164,7 @@ public class ScrollOfTeleportation extends Scroll {
 			int cell;
 			for (Point p : r.charPlaceablePoints(level)){
 				cell = level.pointToCell(p);
-				if (level.passable[cell] && !level.visited[cell] && !level.secret[cell] && Actor.findChar(cell) == null){
+				if (level.passable[cell] && !level.visited[cell] && !level.secret[cell] && Actor.getCharacterOnPosition(cell) == null){
 					candidates.add(cell);
 				}
 			}
@@ -183,7 +183,7 @@ public class ScrollOfTeleportation extends Scroll {
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (!room.inside(level.cellToPoint(doorPos + i))
 								&& level.passable[doorPos + i]
-								&& Actor.findChar(doorPos + i) == null){
+								&& Actor.getCharacterOnPosition(doorPos + i) == null){
 							secretDoor = room instanceof SecretRoom;
 							pos = doorPos + i;
 							break;
@@ -213,7 +213,7 @@ public class ScrollOfTeleportation extends Scroll {
 	//prefers not seen(optional) > not visible > visible
 	private static boolean teleportInNonRegularLevel(Character ch, boolean preferNotSeen ){
 
-		if (Character.hasProp(ch, Character.Property.IMMOVABLE)){
+		if (Character.hasProperty(ch, Character.Property.IMMOVABLE)){
 			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
@@ -224,16 +224,16 @@ public class ScrollOfTeleportation extends Scroll {
 
 		boolean[] passable = Dungeon.level.passable;
 
-		if (Character.hasProp(ch, Character.Property.LARGE)){
+		if (Character.hasProperty(ch, Character.Property.LARGE)){
 			passable = BArray.or(passable, Dungeon.level.openSpace, null);
 		}
 
-		PathFinder.buildDistanceMap(ch.pos, passable);
+		PathFinder.buildDistanceMap(ch.position, passable);
 
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
 					&& !Dungeon.level.secret[i]
-					&& Actor.findChar(i) == null){
+					&& Actor.getCharacterOnPosition(i) == null){
 				if (preferNotSeen && !Dungeon.level.visited[i]){
 					notSeenValid.add(i);
 				} else if (Dungeon.level.heroFOV[i]){
@@ -278,16 +278,16 @@ public class ScrollOfTeleportation extends Scroll {
 
 		ch.sprite.interruptMotion();
 
-		if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[ch.pos]){
+		if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[ch.position]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
-		if (Dungeon.level.heroFOV[ch.pos] && ch != Dungeon.hero ) {
-			CellEmitter.get(ch.pos).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
+		if (Dungeon.level.heroFOV[ch.position] && ch != Dungeon.hero ) {
+			CellEmitter.get(ch.position).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 
-		ch.move( pos, false );
-		if (ch.pos == pos) {
+		ch.moveToPosition( pos, false );
+		if (ch.position == pos) {
 			ch.sprite.interruptMotion();
 			ch.sprite.place(pos);
 		}
@@ -304,7 +304,7 @@ public class ScrollOfTeleportation extends Scroll {
 
 	//just plays the VFX for teleporting, without any position changes
 	public static void appearVFX( Character ch ){
-		if (Dungeon.level.heroFOV[ch.pos]){
+		if (Dungeon.level.heroFOV[ch.position]){
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 		}
 
@@ -313,7 +313,7 @@ public class ScrollOfTeleportation extends Scroll {
 			ch.sprite.parent.add( new AlphaTweener( ch.sprite, 1, 0.4f ) );
 		}
 
-		if (Dungeon.level.heroFOV[ch.pos]) {
+		if (Dungeon.level.heroFOV[ch.position]) {
 			ch.sprite.emitter().start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 		}
 	}

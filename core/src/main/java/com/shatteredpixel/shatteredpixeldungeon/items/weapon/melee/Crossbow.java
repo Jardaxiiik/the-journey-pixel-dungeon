@@ -44,11 +44,11 @@ public class Crossbow extends MeleeWeapon {
 	@Override
 	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
 		if (super.doUnequip(hero, collect, single)){
-			if (hero.buff(ChargedShot.class) != null &&
+			if (hero.getBuff(ChargedShot.class) != null &&
 					!(hero.belongings.weapon() instanceof Crossbow)
 					&& !(hero.belongings.secondWep() instanceof Crossbow)){
 				//clear charged shot if no crossbow is equipped
-				hero.buff(ChargedShot.class).detach();
+				hero.getBuff(ChargedShot.class).detach();
 			}
 			return true;
 		} else {
@@ -64,14 +64,14 @@ public class Crossbow extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		if (hero.buff(ChargedShot.class) != null){
+		if (hero.getBuff(ChargedShot.class) != null){
 			GLog.w(Messages.get(this, "ability_cant_use"));
 			return;
 		}
 
 		beforeAbilityUsed(hero, null);
 		Buff.affect(hero, ChargedShot.class);
-		hero.sprite.operate(hero.pos);
+		hero.sprite.operate(hero.position);
 		hero.next();
 		afterAbilityUsed(hero);
 	}

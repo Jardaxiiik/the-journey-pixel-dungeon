@@ -68,7 +68,7 @@ public class WandOfTransfusion extends Wand {
 
 		int cell = beam.collisionPos;
 
-		Character ch = Actor.findChar(cell);
+		Character ch = Actor.getCharacterOnPosition(cell);
 
 		if (ch instanceof Mob){
 			
@@ -77,7 +77,7 @@ public class WandOfTransfusion extends Wand {
 			//this wand does different things depending on the target.
 			
 			//heals/shields an ally or a charmed enemy while damaging self
-			if (ch.alignment == Character.Alignment.ALLY || ch.buff(Charm.class) != null){
+			if (ch.alignment == Character.Alignment.ALLY || ch.getBuff(Charm.class) != null){
 				
 				// 5% of max hp
 				int selfDmg = Math.round(curUser.healthMax *0.05f);
@@ -116,15 +116,15 @@ public class WandOfTransfusion extends Wand {
 				curUser.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(5+buffedLvl()), FloatingText.SHIELDING);
 				
 				//charms living enemies
-				if (!ch.properties().contains(Character.Property.UNDEAD)) {
+				if (!ch.getProperties().contains(Character.Property.UNDEAD)) {
 					Charm charm = Buff.affect(ch, Charm.class, Charm.DURATION/2f);
-					charm.object = curUser.id();
+					charm.object = curUser.getId();
 					charm.ignoreHeroAllies = true;
 					ch.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 3 );
 				
 				//harms the undead
 				} else {
-					ch.damage(Random.NormalIntRange(3 + buffedLvl(), 6+2*buffedLvl()), this);
+					ch.receiveDamageFromSource(Random.NormalIntRange(3 + buffedLvl(), 6+2*buffedLvl()), this);
 					ch.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10 + buffedLvl());
 					Sample.INSTANCE.play(Assets.Sounds.BURNING);
 				}
@@ -138,7 +138,7 @@ public class WandOfTransfusion extends Wand {
 	//this wand costs health too
 	private void damageHero(int damage){
 		
-		curUser.damage(damage, this);
+		curUser.receiveDamageFromSource(damage, this);
 
 		if (!curUser.isAlive()){
 			Badges.validateDeathFromFriendlyMagic();
@@ -149,7 +149,7 @@ public class WandOfTransfusion extends Wand {
 
 	@Override
 	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
-		if (defender.buff(Charm.class) != null && defender.buff(Charm.class).object == attacker.id()){
+		if (defender.getBuff(Charm.class) != null && defender.getBuff(Charm.class).object == attacker.getId()){
 			//grants a free use of the staff and shields self
 			freeCharge = true;
 			int shieldToGive = Math.round((2*(5 + buffedLvl()))*procChanceMultiplier(attacker));

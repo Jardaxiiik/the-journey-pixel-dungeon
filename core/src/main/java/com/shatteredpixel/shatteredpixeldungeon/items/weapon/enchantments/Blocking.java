@@ -88,7 +88,7 @@ public class Blocking extends Weapon.Enchantment {
 		public void fx(boolean on) {
 			if (on) {
 				target.sprite.add(CharSprite.State.SHIELDED);
-			} else if (target.buff(Barrier.class) == null) {
+			} else if (target.getBuff(Barrier.class) == null) {
 				target.sprite.remove(CharSprite.State.SHIELDED);
 			}
 		}

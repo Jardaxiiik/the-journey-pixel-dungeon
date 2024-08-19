@@ -77,12 +77,12 @@ public class Food extends Item {
 			satisfy(hero);
 			GLog.i( Messages.get(this, "eat_msg") );
 			
-			hero.sprite.operate( hero.pos );
+			hero.sprite.operate( hero.position);
 			hero.busy();
 			SpellSprite.show( hero, SpellSprite.FOOD );
 			Sample.INSTANCE.play( Assets.Sounds.EAT );
 			
-			hero.spend( eatingTime() );
+			hero.spendTimeAdjusted( eatingTime() );
 
 			Talent.onFoodEaten(hero, energy, this);
 			
@@ -110,7 +110,7 @@ public class Food extends Item {
 			foodVal /= 3f;
 		}
 
-		Artifact.ArtifactBuff buff = hero.buff( HornOfPlenty.hornRecharge.class );
+		Artifact.ArtifactBuff buff = hero.getBuff( HornOfPlenty.hornRecharge.class );
 		if (buff != null && buff.isCursed()){
 			foodVal *= 0.67f;
 			GLog.n( Messages.get(Hunger.class, "cursedhorn") );

@@ -121,7 +121,7 @@ abstract public class MissileWeapon extends Weapon {
 				
 				//try to put the upgraded into inventory, if it didn't already merge
 				if (upgraded.quantity() == 1 && !upgraded.collect()) {
-					Dungeon.level.drop(upgraded, Dungeon.hero.pos);
+					Dungeon.level.dropItemOnPosition(upgraded, Dungeon.hero.position);
 				}
 				updateQuickslot();
 				return upgraded;
@@ -173,8 +173,8 @@ abstract public class MissileWeapon extends Weapon {
 		}
 
 		if (projecting
-				&& (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.findChar(dst) != null)
-				&& Dungeon.level.distance(user.pos, dst) <= Math.round(4 * Enchantment.genericProcChanceMultiplier(user))){
+				&& (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.getCharacterOnPosition(dst) != null)
+				&& Dungeon.level.distance(user.position, dst) <= Math.round(4 * Enchantment.genericProcChanceMultiplier(user))){
 			return dst;
 		} else {
 			return super.throwPos(user, dst);
@@ -184,7 +184,7 @@ abstract public class MissileWeapon extends Weapon {
 	@Override
 	public float accuracyFactor(Character owner, Character target) {
 		float accFactor = super.accuracyFactor(owner, target);
-		if (owner instanceof Hero && owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()){
+		if (owner instanceof Hero && owner.getBuff(Momentum.class) != null && owner.getBuff(Momentum.class).freerunning()){
 			accFactor *= 1f + 0.2f*((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM);
 		}
 
@@ -194,7 +194,7 @@ abstract public class MissileWeapon extends Weapon {
 	}
 
 	protected float adjacentAccFactor(Character owner, Character target){
-		if (Dungeon.level.adjacent( owner.pos, target.pos )) {
+		if (Dungeon.level.adjacent( owner.position, target.position)) {
 			if (owner instanceof Hero){
 				return (0.5f + 0.2f*((Hero) owner).pointsInTalent(Talent.POINT_BLANK));
 			} else {
@@ -213,15 +213,15 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	protected void onThrow( int cell ) {
-		Character enemy = Actor.findChar( cell );
+		Character enemy = Actor.getCharacterOnPosition( cell );
 		if (enemy == null || enemy == curUser) {
 			parent = null;
 
 			//metamorphed seer shot logic
 			if (curUser.hasTalent(Talent.SEER_SHOT)
 					&& curUser.heroClass != HeroClass.HUNTRESS
-					&& curUser.buff(Talent.SeerShotCooldown.class) == null){
-				if (Actor.findChar(cell) == null) {
+					&& curUser.getBuff(Talent.SeerShotCooldown.class) == null){
+				if (Actor.getCharacterOnPosition(cell) == null) {
 					RevealedArea a = Buff.affect(curUser, RevealedArea.class, 5 * curUser.pointsInTalent(Talent.SEER_SHOT));
 					a.depth = Dungeon.depth;
 					a.pos = cell;
@@ -248,7 +248,7 @@ abstract public class MissileWeapon extends Weapon {
 				//do nothing
 			} else {
 				SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
-				if (bow != null && bow.enchantment != null && Dungeon.hero.buff(MagicImmune.class) == null) {
+				if (bow != null && bow.enchantment != null && Dungeon.hero.getBuff(MagicImmune.class) == null) {
 					damage = bow.enchantment.proc(this, attacker, defender, damage);
 				}
 			}
@@ -295,7 +295,7 @@ abstract public class MissileWeapon extends Weapon {
 					return;
 				}
 			}
-			Dungeon.level.drop( this, cell ).sprite.drop();
+			Dungeon.level.dropItemOnPosition( this, cell ).sprite.drop();
 		}
 	}
 	
@@ -377,7 +377,7 @@ abstract public class MissileWeapon extends Weapon {
 			if (exStr > 0) {
 				damage += Random.IntRange( 0, exStr );
 			}
-			if (owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()) {
+			if (owner.getBuff(Momentum.class) != null && owner.getBuff(Momentum.class).freerunning()) {
 				damage = Math.round(damage * (1f + 0.15f * ((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM)));
 			}
 		}

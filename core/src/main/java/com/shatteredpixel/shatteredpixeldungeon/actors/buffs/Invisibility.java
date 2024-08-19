@@ -88,26 +88,26 @@ public class Invisibility extends FlavourBuff {
 
 	public static void dispel(Character ch){
 
-		for ( Buff invis : ch.buffs( Invisibility.class )){
+		for ( Buff invis : ch.getBuffs( Invisibility.class )){
 			invis.detach();
 		}
-		CloakOfShadows.cloakStealth cloakBuff = ch.buff( CloakOfShadows.cloakStealth.class );
+		CloakOfShadows.cloakStealth cloakBuff = ch.getBuff( CloakOfShadows.cloakStealth.class );
 		if (cloakBuff != null) {
 			cloakBuff.dispel();
 		}
 
 		//these aren't forms of invisibility, but do dispel at the same time as it.
-		TimekeepersHourglass.timeFreeze timeFreeze = ch.buff( TimekeepersHourglass.timeFreeze.class );
+		TimekeepersHourglass.timeFreeze timeFreeze = ch.getBuff( TimekeepersHourglass.timeFreeze.class );
 		if (timeFreeze != null) {
 			timeFreeze.detach();
 		}
 
-		Preparation prep = ch.buff( Preparation.class );
+		Preparation prep = ch.getBuff( Preparation.class );
 		if (prep != null){
 			prep.detach();
 		}
 
-		Swiftthistle.TimeBubble bubble =  ch.buff( Swiftthistle.TimeBubble.class );
+		Swiftthistle.TimeBubble bubble =  ch.getBuff( Swiftthistle.TimeBubble.class );
 		if (bubble != null){
 			bubble.detach();
 		}

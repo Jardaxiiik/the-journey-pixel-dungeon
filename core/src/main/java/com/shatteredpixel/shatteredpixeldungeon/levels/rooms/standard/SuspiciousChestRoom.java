@@ -64,7 +64,7 @@ public class SuspiciousChestRoom extends StandardRoom {
 		if (Random.Int(3) == 0) {
 			level.mobs.add(Mimic.spawnAt(center, i));
 		} else {
-			level.drop(i, center).type = Heap.Type.CHEST;
+			level.dropItemOnPosition(i, center).type = Heap.Type.CHEST;
 		}
 	}
 }

@@ -87,16 +87,16 @@ public class SmokeBomb extends ArmorAbility {
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 		if (target != null) {
 
-			if (target != hero.pos && hero.rooted){
+			if (target != hero.position && hero.rooted){
 				PixelScene.shake( 1, 1f );
 				return;
 			}
 
-			PathFinder.buildDistanceMap(hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), 6);
+			PathFinder.buildDistanceMap(hero.position, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), 6);
 
 			if ( PathFinder.distance[target] == Integer.MAX_VALUE ||
 					!Dungeon.level.heroFOV[target] ||
-					(target != hero.pos && Actor.findChar( target ) != null)) {
+					(target != hero.position && Actor.getCharacterOnPosition( target ) != null)) {
 
 				GLog.w( Messages.get(this, "fov") );
 				return;
@@ -109,7 +109,7 @@ public class SmokeBomb extends ArmorAbility {
 
 			if (!shadowStepping) {
 				for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-					if (Dungeon.level.adjacent(mob.pos, hero.pos) && mob.alignment != Character.Alignment.ALLY) {
+					if (Dungeon.level.adjacent(mob.position, hero.position) && mob.alignment != Character.Alignment.ALLY) {
 						Buff.prolong(mob, Blindness.class, Blindness.DURATION / 2f);
 						if (mob.state == mob.HUNTING) mob.state = mob.WANDERING;
 						mob.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 4);
@@ -117,14 +117,14 @@ public class SmokeBomb extends ArmorAbility {
 				}
 
 				if (hero.hasTalent(Talent.BODY_REPLACEMENT)) {
-					for (Character ch : Actor.chars()){
+					for (Character ch : Actor.getCharacters()){
 						if (ch instanceof NinjaLog){
 							ch.die(null);
 						}
 					}
 
 					NinjaLog n = new NinjaLog();
-					n.pos = hero.pos;
+					n.position = hero.position;
 					GameScene.add(n);
 					Dungeon.level.occupyCell(n);
 				}
@@ -137,7 +137,7 @@ public class SmokeBomb extends ArmorAbility {
 				}
 			}
 
-			CellEmitter.get( hero.pos ).burst( Speck.factory( Speck.WOOL ), 10 );
+			CellEmitter.get( hero.position).burst( Speck.factory( Speck.WOOL ), 10 );
 			ScrollOfTeleportation.appear( hero, target );
 			Sample.INSTANCE.play( Assets.Sounds.PUFF );
 			Dungeon.level.occupyCell( hero );

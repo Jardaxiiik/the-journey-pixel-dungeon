@@ -63,24 +63,24 @@ public class Guard extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange(4, 12);
 	}
 
 	private boolean chain(int target){
-		if (chainsUsed || enemy.properties().contains(Property.IMMOVABLE))
+		if (chainsUsed || enemy.getProperties().contains(Property.IMMOVABLE))
 			return false;
 
-		Ballistica chain = new Ballistica(pos, target, Ballistica.PROJECTILE);
+		Ballistica chain = new Ballistica(position, target, Ballistica.PROJECTILE);
 
-		if (chain.collisionPos != enemy.pos
+		if (chain.collisionPos != enemy.position
 				|| chain.path.size() < 2
 				|| Dungeon.level.pit[chain.path.get(1)])
 			return false;
 		else {
 			int newPos = -1;
 			for (int i : chain.subPath(1, chain.dist)){
-				if (!Dungeon.level.solid[i] && Actor.findChar(i) == null){
+				if (!Dungeon.level.solid[i] && Actor.getCharacterOnPosition(i) == null){
 					newPos = i;
 					break;
 				}
@@ -101,7 +101,7 @@ public class Guard extends Mob {
 							Effects.Type.CHAIN,
 							new Callback() {
 						public void call() {
-							Actor.add(new Pushing(enemy, enemy.pos, newPosFinal, new Callback() {
+							Actor.addActor(new Pushing(enemy, enemy.position, newPosFinal, new Callback() {
 								public void call() {
 									pullEnemy(enemy, newPosFinal);
 								}
@@ -119,7 +119,7 @@ public class Guard extends Mob {
 	}
 
 	private void pullEnemy(Character enemy, int pullPos ){
-		enemy.pos = pullPos;
+		enemy.position = pullPos;
 		enemy.sprite.place(pullPos);
 		Dungeon.level.occupyCell(enemy);
 		Cripple.prolong(enemy, Cripple.class, 4f);
@@ -131,7 +131,7 @@ public class Guard extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 12;
 	}
 
@@ -141,16 +141,16 @@ public class Guard extends Mob {
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		//each drop makes future drops 1/2 as likely
 		// so loot chance looks like: 1/5, 1/10, 1/20, 1/40, etc.
-		return super.lootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.GUARD_ARM.count);
+		return super.getLootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.GUARD_ARM.count);
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.GUARD_ARM.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 
 	private final String CHAINSUSED = "chainsused";
@@ -169,20 +169,20 @@ public class Guard extends Mob {
 	
 	private class Hunting extends Mob.Hunting{
 		@Override
-		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 			enemySeen = enemyInFOV;
 			
 			if (!chainsUsed
 					&& enemyInFOV
 					&& !isCharmedBy( enemy )
-					&& !canAttack( enemy )
-					&& Dungeon.level.distance( pos, enemy.pos ) < 5
+					&& !canAttackEnemy( enemy )
+					&& Dungeon.level.distance(position, enemy.position) < 5
 
 					
-					&& chain(enemy.pos)){
+					&& chain(enemy.position)){
 				return !(sprite.visible || enemy.sprite.visible);
 			} else {
-				return super.act( enemyInFOV, justAlerted );
+				return super.playGameTurn( enemyInFOV, justAlerted );
 			}
 			
 		}

@@ -98,14 +98,14 @@ public class BeaconOfReturning extends Spell {
 	private void setBeacon(Hero hero ){
 		returnDepth = Dungeon.depth;
 		returnBranch = Dungeon.branch;
-		returnPos = hero.pos;
+		returnPos = hero.position;
 		
-		hero.spend( 1f );
+		hero.spendTimeAdjusted( 1f );
 		hero.busy();
 		
 		GLog.i( Messages.get(this, "set") );
 		
-		hero.sprite.operate( hero.pos );
+		hero.sprite.operate( hero.position);
 		Sample.INSTANCE.play( Assets.Sounds.BEACON );
 		updateQuickslot();
 	}
@@ -114,15 +114,15 @@ public class BeaconOfReturning extends Spell {
 		
 		if (returnDepth == Dungeon.depth && returnBranch == Dungeon.branch) {
 
-			Character existing = Actor.findChar(returnPos);
+			Character existing = Actor.getCharacterOnPosition(returnPos);
 			if (existing != null && existing != hero){
-				Character toPush = !Character.hasProp(existing, Character.Property.IMMOVABLE) ? hero : existing;
+				Character toPush = !Character.hasProperty(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = returnPos + n;
-					if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
-							&& (!Character.hasProp(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
+					if (!Dungeon.level.solid[cell] && Actor.getCharacterOnPosition( cell ) == null
+							&& (!Character.hasProperty(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 						candidates.add( cell );
 					}
 				}
@@ -132,8 +132,8 @@ public class BeaconOfReturning extends Spell {
 					if (toPush == hero){
 						returnPos = candidates.get(0);
 					} else {
-						Actor.add( new Pushing( toPush, toPush.pos, candidates.get(0) ) );
-						toPush.pos = candidates.get(0);
+						Actor.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ) );
+						toPush.position = candidates.get(0);
 						Dungeon.level.occupyCell(toPush);
 					}
 				} else {

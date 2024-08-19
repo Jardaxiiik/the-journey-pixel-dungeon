@@ -111,13 +111,13 @@ public class LloydsBeacon extends Artifact {
 		if (action == AC_SET || action == AC_RETURN) {
 			
 			if (Dungeon.bossLevel() || !Dungeon.interfloorTeleportAllowed()) {
-				hero.spend( LloydsBeacon.TIME_TO_USE );
+				hero.spendTimeAdjusted( LloydsBeacon.TIME_TO_USE );
 				GLog.w( Messages.get(this, "preventing") );
 				return;
 			}
 			
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				Character ch = Actor.findChar(hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i]);
+				Character ch = Actor.getCharacterOnPosition(hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i]);
 				if (ch != null && ch.alignment == Character.Alignment.ENEMY) {
 					GLog.w( Messages.get(this, "creatures") );
 					return;
@@ -145,12 +145,12 @@ public class LloydsBeacon extends Artifact {
 		} else if (action == AC_SET) {
 			
 			returnDepth = Dungeon.depth;
-			returnPos = hero.pos;
+			returnPos = hero.position;
 			
-			hero.spend( LloydsBeacon.TIME_TO_USE );
+			hero.spendTimeAdjusted( LloydsBeacon.TIME_TO_USE );
 			hero.busy();
 			
-			hero.sprite.operate( hero.pos );
+			hero.sprite.operate( hero.position);
 			Sample.INSTANCE.play( Assets.Sounds.BEACON );
 			
 			GLog.i( Messages.get(this, "return") );
@@ -160,12 +160,12 @@ public class LloydsBeacon extends Artifact {
 			if (returnDepth == Dungeon.depth) {
 				ScrollOfTeleportation.appear( hero, returnPos );
 				for(Mob m : Dungeon.level.mobs){
-					if (m.pos == hero.pos){
+					if (m.position == hero.position){
 						//displace mob
 						for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
-							if (Actor.findChar(m.pos+i) == null && Dungeon.level.passable[m.pos + i]){
-								m.pos += i;
-								m.sprite.point(m.sprite.worldToCamera(m.pos));
+							if (Actor.getCharacterOnPosition(m.position +i) == null && Dungeon.level.passable[m.position + i]){
+								m.position += i;
+								m.sprite.point(m.sprite.worldToCamera(m.position));
 								break;
 							}
 						}
@@ -198,12 +198,12 @@ public class LloydsBeacon extends Artifact {
 			charge -= Dungeon.scalingDepth() > 20 ? 2 : 1;
 			updateQuickslot();
 
-			if (Actor.findChar(target) == curUser){
+			if (Actor.getCharacterOnPosition(target) == curUser){
 				ScrollOfTeleportation.teleportChar(curUser);
 				curUser.spendAndNext(1f);
 			} else {
-				final Ballistica bolt = new Ballistica( curUser.pos, target, Ballistica.MAGIC_BOLT );
-				final Character ch = Actor.findChar(bolt.collisionPos);
+				final Ballistica bolt = new Ballistica( curUser.position, target, Ballistica.MAGIC_BOLT );
+				final Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 
 				if (ch == curUser){
 					ScrollOfTeleportation.teleportChar(curUser);
@@ -235,17 +235,17 @@ public class LloydsBeacon extends Artifact {
 
 											GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 
-										} else if (ch.properties().contains(Character.Property.IMMOVABLE)) {
+										} else if (ch.getProperties().contains(Character.Property.IMMOVABLE)) {
 
 											GLog.w( Messages.get(LloydsBeacon.class, "tele_fail") );
 
 										} else  {
 
-											ch.pos = pos;
+											ch.position = pos;
 											if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING){
 												((Mob) ch).state = ((Mob) ch).WANDERING;
 											}
-											ch.sprite.place(ch.pos);
+											ch.sprite.place(ch.position);
 											ch.sprite.visible = Dungeon.level.heroFOV[pos];
 
 										}
@@ -325,7 +325,7 @@ public class LloydsBeacon extends Artifact {
 			}
 
 			updateQuickslot();
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			return true;
 		}
 	}

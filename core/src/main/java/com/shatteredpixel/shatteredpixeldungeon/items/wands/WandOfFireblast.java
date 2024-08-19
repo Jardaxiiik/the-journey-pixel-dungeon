@@ -107,7 +107,7 @@ public class WandOfFireblast extends DamageWand {
 				GameScene.add( Emitter.seed( cell, 1+chargesPerCast(), Fire.class ) );
 			}
 
-			Character ch = Actor.findChar( cell );
+			Character ch = Actor.getCharacterOnPosition( cell );
 			if (ch != null) {
 				affectedCharacters.add(ch);
 			}
@@ -132,7 +132,7 @@ public class WandOfFireblast extends DamageWand {
 
 		for ( Character ch : affectedCharacters){
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), this);
+			ch.receiveDamageFromSource(damageRoll(), this);
 			if (ch.isAlive()) {
 				Buff.affect(ch, Burning.class).reignite(ch);
 				switch (chargesPerCast()) {
@@ -200,7 +200,7 @@ public class WandOfFireblast extends DamageWand {
 
 	@Override
 	protected int chargesPerCast() {
-		if (cursed || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null){
+		if (cursed || charger != null && charger.target.getBuff(WildMagic.WildMagicTracker.class) != null){
 			return 1;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.

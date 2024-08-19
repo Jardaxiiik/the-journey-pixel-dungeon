@@ -70,21 +70,21 @@ public class GeyserTrap extends Trap {
 		}
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			Character ch = Actor.findChar(pos + i);
+			Character ch = Actor.getCharacterOnPosition(pos + i);
 			if (ch != null){
 
 				//does the equivalent of a bomb's damage against fiery enemies.
-				if (Character.hasProp(ch, Character.Property.FIERY)){
+				if (Character.hasProperty(ch, Character.Property.FIERY)){
 					int dmg = Random.NormalIntRange(5 + scalingDepth(), 10 + scalingDepth()*2);
 					dmg *= 0.67f;
-					if (!ch.isImmune(GeyserTrap.class)){
-						ch.damage(dmg, this);
+					if (!ch.isImmuneToEffectType(GeyserTrap.class)){
+						ch.receiveDamageFromSource(dmg, this);
 					}
 				}
 
 				if (ch.isAlive()) {
 					//trace a ballistica to our target (which will also extend past them)
-					Ballistica trajectory = new Ballistica(pos, ch.pos, Ballistica.STOP_TARGET);
+					Ballistica trajectory = new Ballistica(pos, ch.position, Ballistica.STOP_TARGET);
 					//trim it to just be the part that goes past them
 					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 					//knock them back along that ballistica
@@ -93,7 +93,7 @@ public class GeyserTrap extends Trap {
 			}
 		}
 
-		Character ch = Actor.findChar(pos);
+		Character ch = Actor.getCharacterOnPosition(pos);
 		if (ch != null){
 			int targetpos = -1;
 			if (centerKnockBackDirection != -1){
@@ -116,10 +116,10 @@ public class GeyserTrap extends Trap {
 			}
 
 			//does the equivalent of a bomb's damage against fiery enemies.
-			if (Character.hasProp(ch, Character.Property.FIERY)){
+			if (Character.hasProperty(ch, Character.Property.FIERY)){
 				int dmg = Random.NormalIntRange(5 + scalingDepth(), 10 + scalingDepth()*2);
-				if (!ch.isImmune(GeyserTrap.class)){
-					ch.damage(dmg, this);
+				if (!ch.isImmuneToEffectType(GeyserTrap.class)){
+					ch.receiveDamageFromSource(dmg, this);
 				}
 			}
 

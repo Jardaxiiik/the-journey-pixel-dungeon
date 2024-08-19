@@ -58,12 +58,12 @@ public class DM100 extends Mob implements Callback {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 2, 8 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 11;
 	}
 	
@@ -73,53 +73,53 @@ public class DM100 extends Mob implements Callback {
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	protected boolean canAttackEnemy(Character enemy ) {
+		return super.canAttackEnemy(enemy)
+				|| new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT).collisionPos == enemy.position;
 	}
 	
 	//used so resistances can differentiate between melee and magical attacks
 	public static class LightningBolt{}
 	
 	@Override
-	protected boolean doAttack( Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 
-		if (Dungeon.level.adjacent( pos, enemy.pos )
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
+		if (Dungeon.level.adjacent(position, targetCharacter.position)
+				|| new Ballistica(position, targetCharacter.position, Ballistica.MAGIC_BOLT).collisionPos != targetCharacter.position) {
 			
-			return super.doAttack( enemy );
+			return super.attackCharacter(targetCharacter);
 			
 		} else {
 			
-			spend( TIME_TO_ZAP );
+			spendTimeAdjusted( TIME_TO_ZAP );
 
 			Invisibility.dispel(this);
-			if (hit( this, enemy, true )) {
+			if (isTargetHitByAttack( this, targetCharacter, true )) {
 				int dmg = Random.NormalIntRange(3, 10);
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-				enemy.damage( dmg, new LightningBolt() );
+				targetCharacter.receiveDamageFromSource( dmg, new LightningBolt() );
 
-				if (enemy.sprite.visible) {
-					enemy.sprite.centerEmitter().burst(SparkParticle.FACTORY, 3);
-					enemy.sprite.flash();
+				if (targetCharacter.sprite.visible) {
+					targetCharacter.sprite.centerEmitter().burst(SparkParticle.FACTORY, 3);
+					targetCharacter.sprite.flash();
 				}
 				
-				if (enemy == Dungeon.hero) {
+				if (targetCharacter == Dungeon.hero) {
 					
 					PixelScene.shake( 2, 0.3f );
 					
-					if (!enemy.isAlive()) {
+					if (!targetCharacter.isAlive()) {
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail( this );
 						GLog.n( Messages.get(this, "zap_kill") );
 					}
 				}
 			} else {
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				targetCharacter.sprite.showStatus( CharSprite.NEUTRAL,  targetCharacter.defenseVerb() );
 			}
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {
+				sprite.zap( targetCharacter.position);
 				return false;
 			} else {
 				return true;

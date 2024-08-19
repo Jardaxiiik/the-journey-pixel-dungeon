@@ -50,7 +50,7 @@ public class GrimTrap extends Trap {
 	public void activate() {
 
 		//we handle this inside of a separate actor as the trap may produce a visual effect we need to pause for
-		Actor.add(new Actor() {
+		Actor.addActor(new Actor() {
 
 			{
 				actPriority = VFX_PRIO;
@@ -58,18 +58,18 @@ public class GrimTrap extends Trap {
 
 			@Override
 			protected boolean playGameTurn() {
-				Actor.remove(this);
-				Character target = Actor.findChar(pos);
+				Actor.removeActor(this);
+				Character target = Actor.getCharacterOnPosition(pos);
 
 				//find the closest char that can be aimed at
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
-					for (Character ch : Actor.chars()){
+					for (Character ch : Actor.getCharacters()){
 						if (!ch.isAlive()) continue;
-						float curDist = Dungeon.level.trueDistance(pos, ch.pos);
+						float curDist = Dungeon.level.trueDistance(pos, ch.position);
 						if (ch.invisible > 0) curDist += 1000;
-						Ballistica bolt = new Ballistica(pos, ch.pos, Ballistica.PROJECTILE);
-						if (bolt.collisionPos == ch.pos && curDist < closestDist){
+						Ballistica bolt = new Ballistica(pos, ch.position, Ballistica.PROJECTILE);
+						if (bolt.collisionPos == ch.position && curDist < closestDist){
 							target = ch;
 							closestDist = curDist;
 						}
@@ -87,7 +87,7 @@ public class GrimTrap extends Trap {
 					}
 
 					final int finalDmg = damage;
-					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
+					if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.position]) {
 						((MagicMissile)finalTarget.sprite.parent.recycle(MagicMissile.class)).reset(
 								MagicMissile.SHADOW,
 								DungeonTilemap.tileCenterToWorld(pos),
@@ -95,7 +95,7 @@ public class GrimTrap extends Trap {
 								new Callback() {
 									@Override
 									public void call() {
-										finalTarget.damage(finalDmg, GrimTrap.this);
+										finalTarget.receiveDamageFromSource(finalDmg, GrimTrap.this);
 										if (finalTarget == Dungeon.hero) {
 											Sample.INSTANCE.play(Assets.Sounds.CURSED);
 											if (!finalTarget.isAlive()) {
@@ -112,7 +112,7 @@ public class GrimTrap extends Trap {
 								});
 						return false;
 					} else {
-						finalTarget.damage(finalDmg, GrimTrap.this);
+						finalTarget.receiveDamageFromSource(finalDmg, GrimTrap.this);
 						return true;
 					}
 				} else {

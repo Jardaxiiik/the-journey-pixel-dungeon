@@ -171,7 +171,7 @@ public class MagesStaff extends MeleeWeapon {
 			ArtifactRecharge.chargeArtifacts(hero, hero.pointsInTalent(Talent.MYSTICAL_CHARGE)/2f);
 		}
 
-		Talent.EmpoweredStrikeTracker empoweredStrike = attacker.buff(Talent.EmpoweredStrikeTracker.class);
+		Talent.EmpoweredStrikeTracker empoweredStrike = attacker.getBuff(Talent.EmpoweredStrikeTracker.class);
 		if (empoweredStrike != null){
 			damage = Math.round( damage * (1f + Dungeon.hero.pointsInTalent(Talent.EMPOWERED_STRIKE)/6f));
 		}
@@ -185,7 +185,7 @@ public class MagesStaff extends MeleeWeapon {
 
 		if (empoweredStrike != null){
 			empoweredStrike.detach();
-			if (!(defender instanceof Mob) || !((Mob) defender).surprisedBy(attacker)){
+			if (!(defender instanceof Mob) || !((Mob) defender).isSurprisedBy(attacker)){
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG, 0.75f, 1.2f);
 			}
 		}
@@ -230,14 +230,14 @@ public class MagesStaff extends MeleeWeapon {
 				counter.countUp(1);
 				this.wand.level(0);
 				if (!this.wand.collect()) {
-					Dungeon.level.drop(this.wand, owner.pos);
+					Dungeon.level.dropItemOnPosition(this.wand, owner.position);
 				}
 				GLog.newLine();
 				GLog.p(Messages.get(this, "preserved"));
 			} else {
 				ArcaneResin resin = new ArcaneResin();
 				if (!resin.collect()) {
-					Dungeon.level.drop(resin, owner.pos);
+					Dungeon.level.dropItemOnPosition(resin, owner.position);
 				}
 				GLog.newLine();
 				GLog.p(Messages.get(this, "preserved_resin"));
@@ -446,8 +446,8 @@ public class MagesStaff extends MeleeWeapon {
 
 					String bodyText = Messages.get(MagesStaff.class, "imbue_desc", newLevel);
 					int preservesLeft = Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION) ? 5 : 0;
-					if (Dungeon.hero.buff(Talent.WandPreservationCounter.class) != null){
-						preservesLeft -= Dungeon.hero.buff(Talent.WandPreservationCounter.class).count();
+					if (Dungeon.hero.getBuff(Talent.WandPreservationCounter.class) != null){
+						preservesLeft -= Dungeon.hero.getBuff(Talent.WandPreservationCounter.class).count();
 					}
 					if (Dungeon.hero.hasTalent(Talent.WAND_PRESERVATION)){
 						int preserveChance = Dungeon.hero.pointsInTalent(Talent.WAND_PRESERVATION) == 1 ? 67 : 100;

@@ -67,28 +67,28 @@ public class Wandmaker extends NPC {
 	
 	@Override
 	protected boolean playGameTurn() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
 		}
-		if (Dungeon.level.visited[pos] && Quest.wand1 != null){
+		if (Dungeon.level.visited[position] && Quest.wand1 != null){
 			Notes.add( Notes.Landmark.WANDMAKER );
 		}
 		return super.playGameTurn();
 	}
 	
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return INFINITE_EVASION;
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 	
@@ -99,7 +99,7 @@ public class Wandmaker extends NPC {
 	
 	@Override
 	public boolean interact(Character c) {
-		sprite.turnTo( pos, Dungeon.hero.pos );
+		sprite.turnTo(position, Dungeon.hero.position);
 
 		if (c != Dungeon.hero){
 			return true;
@@ -132,13 +132,13 @@ public class Wandmaker extends NPC {
 				String msg;
 				switch(Quest.type){
 					case 1: default:
-						msg = Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.hero.name()));
+						msg = Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.hero.getName()));
 						break;
 					case 2:
-						msg = Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.hero.name()));
+						msg = Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.hero.getName()));
 						break;
 					case 3:
-						msg = Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.hero.name()));
+						msg = Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.hero.getName()));
 						break;
 				}
 				Game.runOnRenderThread(new Callback() {
@@ -161,7 +161,7 @@ public class Wandmaker extends NPC {
 					msg1 += Messages.get(this, "intro_rogue");
 					break;
 				case MAGE:
-					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.name()));
+					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.getName()));
 					break;
 				case HUNTRESS:
 					msg1 += Messages.get(this, "intro_huntress");
@@ -299,16 +299,16 @@ public class Wandmaker extends NPC {
 				//Do not spawn wandmaker on the entrance, a trap, or in front of a door.
 				do {
 					validPos = true;
-					npc.pos = level.pointToCell(room.random());
-					if (npc.pos == level.entrance()){
+					npc.position = level.pointToCell(room.random());
+					if (npc.position == level.entrance()){
 						validPos = false;
 					}
 					for (Point door : room.connected.values()){
-						if (level.trueDistance( npc.pos, level.pointToCell( door ) ) <= 1){
+						if (level.trueDistance( npc.position, level.pointToCell( door ) ) <= 1){
 							validPos = false;
 						}
 					}
-					if (level.traps.get(npc.pos) != null){
+					if (level.traps.get(npc.position) != null){
 						validPos = false;
 					}
 				} while (!validPos);
@@ -372,12 +372,12 @@ public class Wandmaker extends NPC {
 			//and...
 			if (type == 1){
 				//hero is in the mass grave room
-				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.pos) instanceof MassGraveRoom) {
+				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.position) instanceof MassGraveRoom) {
 					return true;
 				}
 
 				//or if they are corpse dust cursed
-				for (Buff b : Dungeon.hero.buffs()) {
+				for (Buff b : Dungeon.hero.getBuffs()) {
 					if (b instanceof CorpseDust.DustGhostSpawner) {
 						return true;
 					}
@@ -393,7 +393,7 @@ public class Wandmaker extends NPC {
 				}
 
 				//or hero is in the ritual room and all 4 candles are with them
-				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.pos) instanceof RitualSiteRoom) {
+				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.position) instanceof RitualSiteRoom) {
 					int candles = 0;
 					if (Dungeon.hero.belongings.getItem(CeremonialCandle.class) != null){
 						candles += Dungeon.hero.belongings.getItem(CeremonialCandle.class).quantity();
@@ -422,7 +422,7 @@ public class Wandmaker extends NPC {
 				return false;
 			} else {
 				//hero is in the rot garden room and the rot heart is alive
-				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.pos) instanceof RotGardenRoom) {
+				if (((RegularLevel) Dungeon.level).room(Dungeon.hero.position) instanceof RotGardenRoom) {
 					for (Mob m : Dungeon.level.mobs) {
 						if (m instanceof RotHeart) {
 							return true;

@@ -147,7 +147,7 @@ public class SewerBossLevel extends SewerLevel {
 					pos = pointToCell(roomEntrance.random());
 				} while (pos == entrance() || solid[pos]);
 				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -160,8 +160,8 @@ public class SewerBossLevel extends SewerLevel {
 			int cell = pointToCell(p);
 			if (passable[cell]
 					&& roomEntrance.inside(p)
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}

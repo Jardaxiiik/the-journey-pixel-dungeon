@@ -139,7 +139,7 @@ import java.util.LinkedHashSet;
 
 public abstract class Character extends Actor {
 	
-	public int pos = 0;
+	public int position = 0;
 	
 	public CharSprite sprite;
 	
@@ -176,40 +176,40 @@ public abstract class Character extends Actor {
 		Dungeon.level.updateFieldOfView( this, fieldOfView );
 
 		//throw any items that are on top of an immovable char
-		if (properties().contains(Property.IMMOVABLE)){
+		if (getProperties().contains(Property.IMMOVABLE)){
 			throwItems();
 		}
 		return false;
 	}
 
 	protected void throwItems(){
-		Heap heap = Dungeon.level.heaps.get( pos );
+		Heap heap = Dungeon.level.heaps.get(position);
 		if (heap != null && heap.type == Heap.Type.HEAP
 				&& !(heap.peek() instanceof Tengu.BombAbility.BombItem)
 				&& !(heap.peek() instanceof Tengu.ShockerAbility.ShockerItem)) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Dungeon.level.passable[pos+n]){
-					candidates.add(pos+n);
+				if (Dungeon.level.passable[position +n]){
+					candidates.add(position +n);
 				}
 			}
 			if (!candidates.isEmpty()){
-				Dungeon.level.drop( heap.pickUp(), Random.element(candidates) ).sprite.drop( pos );
+				Dungeon.level.dropItemOnPosition( heap.pickUp(), Random.element(candidates) ).sprite.drop(position);
 			}
 		}
 	}
 
-	public String name(){
+	public String getName(){
 		return Messages.get(this, "name");
 	}
 
 	public boolean canInteract(Character c){
-		if (Dungeon.level.adjacent( pos, c.pos )){
+		if (Dungeon.level.adjacent(position, c.position)){
 			return true;
 		} else if (c instanceof Hero
 				&& alignment == Alignment.ALLY
-				&& !hasProp(this, Property.IMMOVABLE)
-				&& Dungeon.level.distance(pos, c.pos) <= 2*Dungeon.hero.pointsInTalent(Talent.ALLY_WARP)){
+				&& !hasProperty(this, Property.IMMOVABLE)
+				&& Dungeon.level.distance(position, c.position) <= 2*Dungeon.hero.pointsInTalent(Talent.ALLY_WARP)){
 			return true;
 		} else {
 			return false;
@@ -221,34 +221,34 @@ public abstract class Character extends Actor {
 
 		//don't allow char to swap onto hazard unless they're flying
 		//you can swap onto a hazard though, as you're not the one instigating the swap
-		if (!Dungeon.level.passable[pos] && !c.flying){
+		if (!Dungeon.level.passable[position] && !c.flying){
 			return true;
 		}
 
 		//can't swap into a space without room
-		if (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[c.pos]
-			|| c.properties().contains(Property.LARGE) && !Dungeon.level.openSpace[pos]){
+		if (getProperties().contains(Property.LARGE) && !Dungeon.level.openSpace[c.position]
+			|| c.getProperties().contains(Property.LARGE) && !Dungeon.level.openSpace[position]){
 			return true;
 		}
 
 		//we do a little raw position shuffling here so that the characters are never
 		// on the same cell when logic such as occupyCell() is triggered
-		int oldPos = pos;
-		int newPos = c.pos;
+		int oldPos = position;
+		int newPos = c.position;
 
 		//can't swap or ally warp if either char is immovable
-		if (hasProp(this, Property.IMMOVABLE) || hasProp(c, Property.IMMOVABLE)){
+		if (hasProperty(this, Property.IMMOVABLE) || hasProperty(c, Property.IMMOVABLE)){
 			return true;
 		}
 
 		//warp instantly with allies in this case
 		if (c == Dungeon.hero && Dungeon.hero.hasTalent(Talent.ALLY_WARP)){
-			PathFinder.buildDistanceMap(c.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
-			if (PathFinder.distance[pos] == Integer.MAX_VALUE){
+			PathFinder.buildDistanceMap(c.position, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
+			if (PathFinder.distance[position] == Integer.MAX_VALUE){
 				return true;
 			}
-			pos = newPos;
-			c.pos = oldPos;
+			position = newPos;
+			c.position = oldPos;
 			ScrollOfTeleportation.appear(this, newPos);
 			ScrollOfTeleportation.appear(c, oldPos);
 			Dungeon.observe();
@@ -257,19 +257,19 @@ public abstract class Character extends Actor {
 		}
 
 		//can't swap places if one char has restricted movement
-		if (rooted || c.rooted || buff(Vertigo.class) != null || c.buff(Vertigo.class) != null){
+		if (rooted || c.rooted || getBuff(Vertigo.class) != null || c.getBuff(Vertigo.class) != null){
 			return true;
 		}
 
-		c.pos = oldPos;
+		c.position = oldPos;
 		moveSprite( oldPos, newPos );
-		move( newPos );
+		moveToPosition( newPos );
 
-		c.pos = newPos;
+		c.position = newPos;
 		c.sprite.move( newPos, oldPos );
-		c.move( oldPos );
+		c.moveToPosition( oldPos );
 		
-		c.spend( 1 / c.speed() );
+		c.spendTimeAdjusted( 1 / c.getSpeed() );
 
 		if (c == Dungeon.hero){
 			if (Dungeon.hero.subClass == HeroSubClass.FREERUNNER){
@@ -294,7 +294,7 @@ public abstract class Character extends Actor {
 		}
 	}
 
-	public void hitSound( float pitch ){
+	public void playHitSound(float pitch ){
 		Sample.INSTANCE.play(Assets.Sounds.HIT, 1, pitch);
 	}
 
@@ -313,7 +313,7 @@ public abstract class Character extends Actor {
 		
 		super.storeInBundle( bundle );
 		
-		bundle.put( POS, pos );
+		bundle.put( POS, position);
 		bundle.put( TAG_HP, healthPoints);
 		bundle.put( TAG_HT, healthMax);
 		bundle.put( BUFFS, buffs );
@@ -324,7 +324,7 @@ public abstract class Character extends Actor {
 		
 		super.restoreFromBundle( bundle );
 		
-		pos = bundle.getInt( POS );
+		position = bundle.getInt( POS );
 		healthPoints = bundle.getInt( TAG_HP );
 		healthMax = bundle.getInt( TAG_HT );
 		
@@ -343,9 +343,9 @@ public abstract class Character extends Actor {
 
 		if (enemy == null) return false;
 		
-		boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
+		boolean visibleFight = Dungeon.level.heroFOV[position] || Dungeon.level.heroFOV[enemy.position];
 
-		if (enemy.isInvulnerable(getClass())) {
+		if (enemy.isInvulnerableToEffectType(getClass())) {
 
 			if (visibleFight) {
 				enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
@@ -355,7 +355,7 @@ public abstract class Character extends Actor {
 
 			return false;
 
-		} else if (hit( this, enemy, accMulti, false )) {
+		} else if (isTargetHitByAttack( this, enemy, accMulti, false )) {
 			
 			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
 			
@@ -363,11 +363,11 @@ public abstract class Character extends Actor {
 				Hero h = (Hero)this;
 				if (h.belongings.attackingWeapon() instanceof MissileWeapon
 						&& h.subClass == HeroSubClass.SNIPER
-						&& !Dungeon.level.adjacent(h.pos, enemy.pos)){
+						&& !Dungeon.level.adjacent(h.position, enemy.position)){
 					dr = 0;
 				}
 
-				if (h.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+				if (h.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
 					dr = 0;
 				} else if (h.subClass == HeroSubClass.MONK) {
 					//3 turns with standard attack delay
@@ -378,26 +378,26 @@ public abstract class Character extends Actor {
 			//we use a float here briefly so that we don't have to constantly round while
 			// potentially applying various multiplier effects
 			float dmg;
-			Preparation prep = buff(Preparation.class);
+			Preparation prep = getBuff(Preparation.class);
 			if (prep != null){
 				dmg = prep.damageRoll(this);
 				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.BOUNTY_HUNTER)) {
 					Buff.affect(Dungeon.hero, Talent.BountyHunterTracker.class, 0.0f);
 				}
 			} else {
-				dmg = damageRoll();
+				dmg = getDamageRoll();
 			}
 
 			dmg = Math.round(dmg*dmgMulti);
 
-			Berserk berserk = buff(Berserk.class);
+			Berserk berserk = getBuff(Berserk.class);
 			if (berserk != null) dmg = berserk.damageFactor(dmg);
 
-			if (buff( Fury.class ) != null) {
+			if (getBuff( Fury.class ) != null) {
 				dmg *= 1.5f;
 			}
 
-			for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
+			for (ChampionEnemy buff : getBuffs(ChampionEnemy.class)){
 				dmg *= buff.meleeDamageFactor();
 			}
 
@@ -407,39 +407,39 @@ public abstract class Character extends Actor {
 			dmg += dmgBonus;
 
 			//friendly endure
-			Endure.EndureTracker endure = buff(Endure.EndureTracker.class);
+			Endure.EndureTracker endure = getBuff(Endure.EndureTracker.class);
 			if (endure != null) dmg = endure.damageFactor(dmg);
 
 			//enemy endure
-			endure = enemy.buff(Endure.EndureTracker.class);
+			endure = enemy.getBuff(Endure.EndureTracker.class);
 			if (endure != null){
 				dmg = endure.adjustDamageTaken(dmg);
 			}
 
-			if (enemy.buff(ScrollOfChallenge.ChallengeArena.class) != null){
+			if (enemy.getBuff(ScrollOfChallenge.ChallengeArena.class) != null){
 				dmg *= 0.67f;
 			}
 
-			if (enemy.buff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null){
+			if (enemy.getBuff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null){
 				dmg *= 0.2f;
 			}
 
-			if ( buff(Weakness.class) != null ){
+			if ( getBuff(Weakness.class) != null ){
 				dmg *= 0.67f;
 			}
 			
-			int effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
+			int effectiveDamage = enemy.getDamageReceivedFromEnemyReducedByDefense( this, Math.round(dmg) );
 			//do not trigger on-hit logic if defenseProc returned a negative value
 			if (effectiveDamage >= 0) {
 				effectiveDamage = Math.max(effectiveDamage - dr, 0);
 
-				if (enemy.buff(Viscosity.ViscosityTracker.class) != null) {
-					effectiveDamage = enemy.buff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
-					enemy.buff(Viscosity.ViscosityTracker.class).detach();
+				if (enemy.getBuff(Viscosity.ViscosityTracker.class) != null) {
+					effectiveDamage = enemy.getBuff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
+					enemy.getBuff(Viscosity.ViscosityTracker.class).detach();
 				}
 
 				//vulnerable specifically applies after armor reductions
-				if (enemy.buff(Vulnerable.class) != null) {
+				if (enemy.getBuff(Vulnerable.class) != null) {
 					effectiveDamage *= 1.33f;
 				}
 
@@ -447,7 +447,7 @@ public abstract class Character extends Actor {
 			}
 			if (visibleFight) {
 				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
-					hitSound(Random.Float(0.87f, 1.15f));
+					playHitSound(Random.Float(0.87f, 1.15f));
 				}
 			}
 
@@ -457,10 +457,10 @@ public abstract class Character extends Actor {
 				return true;
 			}
 
-			enemy.damage( effectiveDamage, this );
+			enemy.receiveDamageFromSource( effectiveDamage, this );
 
-			if (buff(FireImbue.class) != null)  buff(FireImbue.class).proc(enemy);
-			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
+			if (getBuff(FireImbue.class) != null)  getBuff(FireImbue.class).proc(enemy);
+			if (getBuff(FrostImbue.class) != null) getBuff(FrostImbue.class).proc(enemy);
 
 			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
 				enemy.healthPoints = 0;
@@ -468,7 +468,7 @@ public abstract class Character extends Actor {
 					enemy.die(this);
 				} else {
 					//helps with triggering any on-damage effects that need to activate
-					enemy.damage(-1, this);
+					enemy.receiveDamageFromSource(-1, this);
 					DeathMark.processFearTheReaper(enemy);
 				}
 				if (enemy.sprite != null) {
@@ -476,17 +476,17 @@ public abstract class Character extends Actor {
 				}
 			}
 
-			Talent.CombinedLethalityTriggerTracker combinedLethality = buff(Talent.CombinedLethalityTriggerTracker.class);
+			Talent.CombinedLethalityTriggerTracker combinedLethality = getBuff(Talent.CombinedLethalityTriggerTracker.class);
 			if (combinedLethality != null){
-				if ( enemy.isAlive() && enemy.alignment != alignment && !Character.hasProp(enemy, Property.BOSS)
-						&& !Character.hasProp(enemy, Property.MINIBOSS) && this instanceof Hero &&
+				if ( enemy.isAlive() && enemy.alignment != alignment && !Character.hasProperty(enemy, Property.BOSS)
+						&& !Character.hasProperty(enemy, Property.MINIBOSS) && this instanceof Hero &&
 						(enemy.healthPoints /(float)enemy.healthMax) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
 					enemy.healthPoints = 0;
 					if (!enemy.isAlive()) {
 						enemy.die(this);
 					} else {
 						//helps with triggering any on-damage effects that need to activate
-						enemy.damage(-1, this);
+						enemy.receiveDamageFromSource(-1, this);
 						DeathMark.processFearTheReaper(enemy);
 					}
 					if (enemy.sprite != null) {
@@ -513,10 +513,10 @@ public abstract class Character extends Actor {
 						Badges.validateDeathFromFriendlyMagic();
 					}
 					Dungeon.fail( this );
-					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
 					
 				} else if (this == Dungeon.hero) {
-					GLog.i( Messages.capitalize(Messages.get(Character.class, "defeat", enemy.name())) );
+					GLog.i( Messages.capitalize(Messages.get(Character.class, "defeat", enemy.getName())) );
 				}
 			}
 			
@@ -538,26 +538,26 @@ public abstract class Character extends Actor {
 	public static int INFINITE_ACCURACY = 1_000_000;
 	public static int INFINITE_EVASION = 1_000_000;
 
-	final public static boolean hit(Character attacker, Character defender, boolean magic ) {
-		return hit(attacker, defender, magic ? 2f : 1f, magic);
+	final public static boolean isTargetHitByAttack(Character attacker, Character defender, boolean magic ) {
+		return isTargetHitByAttack(attacker, defender, magic ? 2f : 1f, magic);
 	}
 
-	public static boolean hit(Character attacker, Character defender, float accMulti, boolean magic ) {
-		float acuStat = attacker.attackSkill( defender );
-		float defStat = defender.defenseSkill( attacker );
+	public static boolean isTargetHitByAttack(Character attacker, Character defender, float accMulti, boolean magic ) {
+		float acuStat = attacker.getAccuracyAgainstTarget( defender );
+		float defStat = defender.getEvasionAgainstAttacker( attacker );
 
 		if (defender instanceof Hero && ((Hero) defender).damageInterrupt){
 			((Hero) defender).interrupt();
 		}
 
 		//invisible chars always hit (for the hero this is surprise attacking)
-		if (attacker.invisible > 0 && attacker.canSurpriseAttack()){
+		if (attacker.invisible > 0 && attacker.canDoSurpriseAttack()){
 			acuStat = INFINITE_ACCURACY;
 		}
 
-		if (defender.buff(MonkEnergy.MonkAbility.Focus.FocusBuff.class) != null && !magic){
+		if (defender.getBuff(MonkEnergy.MonkAbility.Focus.FocusBuff.class) != null && !magic){
 			defStat = INFINITE_EVASION;
-			defender.buff(MonkEnergy.MonkAbility.Focus.FocusBuff.class).detach();
+			defender.getBuff(MonkEnergy.MonkAbility.Focus.FocusBuff.class).detach();
 			Buff.affect(defender, MonkEnergy.MonkAbility.Focus.FocusActivation.class, 0);
 		}
 
@@ -570,19 +570,19 @@ public abstract class Character extends Actor {
 		}
 
 		float acuRoll = Random.Float( acuStat );
-		if (attacker.buff(Bless.class) != null) acuRoll *= 1.25f;
-		if (attacker.buff(  Hex.class) != null) acuRoll *= 0.8f;
-		if (attacker.buff( Daze.class) != null) acuRoll *= 0.5f;
-		for (ChampionEnemy buff : attacker.buffs(ChampionEnemy.class)){
+		if (attacker.getBuff(Bless.class) != null) acuRoll *= 1.25f;
+		if (attacker.getBuff(  Hex.class) != null) acuRoll *= 0.8f;
+		if (attacker.getBuff( Daze.class) != null) acuRoll *= 0.5f;
+		for (ChampionEnemy buff : attacker.getBuffs(ChampionEnemy.class)){
 			acuRoll *= buff.evasionAndAccuracyFactor();
 		}
 		acuRoll *= AscensionChallenge.statModifier(attacker);
 		
 		float defRoll = Random.Float( defStat );
-		if (defender.buff(Bless.class) != null) defRoll *= 1.25f;
-		if (defender.buff(  Hex.class) != null) defRoll *= 0.8f;
-		if (defender.buff( Daze.class) != null) defRoll *= 0.5f;
-		for (ChampionEnemy buff : defender.buffs(ChampionEnemy.class)){
+		if (defender.getBuff(Bless.class) != null) defRoll *= 1.25f;
+		if (defender.getBuff(  Hex.class) != null) defRoll *= 0.8f;
+		if (defender.getBuff( Daze.class) != null) defRoll *= 0.5f;
+		for (ChampionEnemy buff : defender.getBuffs(ChampionEnemy.class)){
 			defRoll *= buff.evasionAndAccuracyFactor();
 		}
 		defRoll *= AscensionChallenge.statModifier(defender);
@@ -590,11 +590,11 @@ public abstract class Character extends Actor {
 		return (acuRoll * accMulti) >= defRoll;
 	}
 	
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 0;
 	}
 	
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return 0;
 	}
 	
@@ -610,7 +610,7 @@ public abstract class Character extends Actor {
 		return dr;
 	}
 	
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return 1;
 	}
 	
@@ -618,15 +618,15 @@ public abstract class Character extends Actor {
 	// atm attack is always post-armor and defence is already pre-armor
 	
 	public int attackProc(Character enemy, int damage ) {
-		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
+		for (ChampionEnemy buff : getBuffs(ChampionEnemy.class)){
 			buff.onAttackProc( enemy );
 		}
 		return damage;
 	}
 	
-	public int defenseProc(Character enemy, int damage ) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage ) {
 
-		Earthroot.Armor armor = buff( Earthroot.Armor.class );
+		Earthroot.Armor armor = getBuff( Earthroot.Armor.class );
 		if (armor != null) {
 			damage = armor.absorb( damage );
 		}
@@ -634,18 +634,18 @@ public abstract class Character extends Actor {
 		return damage;
 	}
 	
-	public float speed() {
+	public float getSpeed() {
 		float speed = baseSpeed;
-		if ( buff( Cripple.class ) != null ) speed /= 2f;
-		if ( buff( Stamina.class ) != null) speed *= 1.5f;
-		if ( buff( Adrenaline.class ) != null) speed *= 2f;
-		if ( buff( Haste.class ) != null) speed *= 3f;
-		if ( buff( Dread.class ) != null) speed *= 2f;
+		if ( getBuff( Cripple.class ) != null ) speed /= 2f;
+		if ( getBuff( Stamina.class ) != null) speed *= 1.5f;
+		if ( getBuff( Adrenaline.class ) != null) speed *= 2f;
+		if ( getBuff( Haste.class ) != null) speed *= 3f;
+		if ( getBuff( Dread.class ) != null) speed *= 2f;
 		return speed;
 	}
 
 	//currently only used by invisible chars, or by the hero
-	public boolean canSurpriseAttack(){
+	public boolean canDoSurpriseAttack(){
 		return true;
 	}
 	
@@ -653,47 +653,47 @@ public abstract class Character extends Actor {
 	private int cachedShield = 0;
 	public boolean needsShieldUpdate = true;
 	
-	public int shielding(){
+	public int getShielding(){
 		if (!needsShieldUpdate){
 			return cachedShield;
 		}
 		
 		cachedShield = 0;
-		for (ShieldBuff s : buffs(ShieldBuff.class)){
+		for (ShieldBuff s : getBuffs(ShieldBuff.class)){
 			cachedShield += s.shielding();
 		}
 		needsShieldUpdate = false;
 		return cachedShield;
 	}
 	
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage ) {
 		
 		if (!isAlive() || dmg < 0) {
 			return;
 		}
 
-		if(isInvulnerable(src.getClass())){
+		if(isInvulnerableToEffectType(sourceOfDamage.getClass())){
 			sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 			return;
 		}
 
-		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
+		for (ChampionEnemy buff : getBuffs(ChampionEnemy.class)){
 			dmg = (int) Math.ceil(dmg * buff.damageTakenFactor());
 		}
 
-		if (!(src instanceof LifeLink) && buff(LifeLink.class) != null){
-			HashSet<LifeLink> links = buffs(LifeLink.class);
+		if (!(sourceOfDamage instanceof LifeLink) && getBuff(LifeLink.class) != null){
+			HashSet<LifeLink> links = getBuffs(LifeLink.class);
 			for (LifeLink link : links.toArray(new LifeLink[0])){
-				if (Actor.findById(link.object) == null){
+				if (Actor.getById(link.object) == null){
 					links.remove(link);
 					link.detach();
 				}
 			}
 			dmg = (int)Math.ceil(dmg / (float)(links.size()+1));
 			for (LifeLink link : links){
-				Character ch = (Character)Actor.findById(link.object);
+				Character ch = (Character)Actor.getById(link.object);
 				if (ch != null) {
-					ch.damage(dmg, link);
+					ch.receiveDamageFromSource(dmg, link);
 					if (!ch.isAlive()) {
 						link.detach();
 					}
@@ -701,71 +701,71 @@ public abstract class Character extends Actor {
 			}
 		}
 
-		Terror t = buff(Terror.class);
+		Terror t = getBuff(Terror.class);
 		if (t != null){
 			t.recover();
 		}
-		Dread d = buff(Dread.class);
+		Dread d = getBuff(Dread.class);
 		if (d != null){
 			d.recover();
 		}
-		Charm c = buff(Charm.class);
+		Charm c = getBuff(Charm.class);
 		if (c != null){
-			c.recover(src);
+			c.recover(sourceOfDamage);
 		}
-		if (this.buff(Frost.class) != null){
+		if (this.getBuff(Frost.class) != null){
 			Buff.detach( this, Frost.class );
 		}
-		if (this.buff(MagicalSleep.class) != null){
+		if (this.getBuff(MagicalSleep.class) != null){
 			Buff.detach(this, MagicalSleep.class);
 		}
-		if (this.buff(Doom.class) != null && !isImmune(Doom.class)){
+		if (this.getBuff(Doom.class) != null && !isImmuneToEffectType(Doom.class)){
 			dmg *= 1.67f;
 		}
-		if (alignment != Alignment.ALLY && this.buff(DeathMark.DeathMarkTracker.class) != null){
+		if (alignment != Alignment.ALLY && this.getBuff(DeathMark.DeathMarkTracker.class) != null){
 			dmg *= 1.25f;
 		}
 		
-		Class<?> srcClass = src.getClass();
-		if (isImmune( srcClass )) {
+		Class<?> srcClass = sourceOfDamage.getClass();
+		if (isImmuneToEffectType( srcClass )) {
 			dmg = 0;
 		} else {
-			dmg = Math.round( dmg * resist( srcClass ));
+			dmg = Math.round( dmg * getResistanceMultiplierToEffectType( srcClass ));
 		}
 		
 		//TODO improve this when I have proper damage source logic
-		if (AntiMagic.RESISTS.contains(src.getClass()) && buff(ArcaneArmor.class) != null){
-			dmg -= Random.NormalIntRange(0, buff(ArcaneArmor.class).level());
+		if (AntiMagic.RESISTS.contains(sourceOfDamage.getClass()) && getBuff(ArcaneArmor.class) != null){
+			dmg -= Random.NormalIntRange(0, getBuff(ArcaneArmor.class).level());
 			if (dmg < 0) dmg = 0;
 		}
 
-		if (buff(Sickle.HarvestBleedTracker.class) != null){
-			if (isImmune(Bleeding.class)){
+		if (getBuff(Sickle.HarvestBleedTracker.class) != null){
+			if (isImmuneToEffectType(Bleeding.class)){
 				sprite.showStatus(CharSprite.POSITIVE, Messages.titleCase(Messages.get(this, "immune")));
-				buff(Sickle.HarvestBleedTracker.class).detach();
+				getBuff(Sickle.HarvestBleedTracker.class).detach();
 				return;
 			}
 
-			Bleeding b = buff(Bleeding.class);
+			Bleeding b = getBuff(Bleeding.class);
 			if (b == null){
 				b = new Bleeding();
 			}
 			b.announced = false;
-			b.set(dmg*buff(Sickle.HarvestBleedTracker.class).bleedFactor, Sickle.HarvestBleedTracker.class);
+			b.set(dmg* getBuff(Sickle.HarvestBleedTracker.class).bleedFactor, Sickle.HarvestBleedTracker.class);
 			b.attachTo(this);
 			sprite.showStatus(CharSprite.WARNING, Messages.titleCase(b.name()) + " " + (int)b.level());
-			buff(Sickle.HarvestBleedTracker.class).detach();
+			getBuff(Sickle.HarvestBleedTracker.class).detach();
 			return;
 		}
 		
-		if (buff( Paralysis.class ) != null) {
-			buff( Paralysis.class ).processDamage(dmg);
+		if (getBuff( Paralysis.class ) != null) {
+			getBuff( Paralysis.class ).processDamage(dmg);
 		}
 
 		int shielded = dmg;
 		//FIXME: when I add proper damage properties, should add an IGNORES_SHIELDS property to use here.
-		if (!(src instanceof Hunger)){
-			for (ShieldBuff s : buffs(ShieldBuff.class)){
+		if (!(sourceOfDamage instanceof Hunger)){
+			for (ShieldBuff s : getBuffs(ShieldBuff.class)){
 				dmg = s.absorbDamage(dmg);
 				if (dmg == 0) break;
 			}
@@ -773,64 +773,64 @@ public abstract class Character extends Actor {
 		shielded -= dmg;
 		healthPoints -= dmg;
 
-		if (healthPoints > 0 && buff(Grim.GrimTracker.class) != null){
+		if (healthPoints > 0 && getBuff(Grim.GrimTracker.class) != null){
 
-			float finalChance = buff(Grim.GrimTracker.class).maxChance;
+			float finalChance = getBuff(Grim.GrimTracker.class).maxChance;
 			finalChance *= (float)Math.pow( ((healthMax - healthPoints) / (float) healthMax), 2);
 
 			if (Random.Float() < finalChance) {
-				int extraDmg = Math.round(healthPoints *resist(Grim.class));
+				int extraDmg = Math.round(healthPoints * getResistanceMultiplierToEffectType(Grim.class));
 				dmg += extraDmg;
 				healthPoints -= extraDmg;
 
 				sprite.emitter().burst( ShadowParticle.UP, 5 );
-				if (!isAlive() && buff(Grim.GrimTracker.class).qualifiesForBadge){
+				if (!isAlive() && getBuff(Grim.GrimTracker.class).qualifiesForBadge){
 					Badges.validateGrimWeapon();
 				}
 			}
 		}
 
-		if (healthPoints < 0 && src instanceof Character && alignment == Alignment.ENEMY){
-			if (((Character) src).buff(Kinetic.KineticTracker.class) != null){
+		if (healthPoints < 0 && sourceOfDamage instanceof Character && alignment == Alignment.ENEMY){
+			if (((Character) sourceOfDamage).getBuff(Kinetic.KineticTracker.class) != null){
 				int dmgToAdd = -healthPoints;
-				dmgToAdd -= ((Character) src).buff(Kinetic.KineticTracker.class).conservedDamage;
-				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Character) src));
+				dmgToAdd -= ((Character) sourceOfDamage).getBuff(Kinetic.KineticTracker.class).conservedDamage;
+				dmgToAdd = Math.round(dmgToAdd * Weapon.Enchantment.genericProcChanceMultiplier((Character) sourceOfDamage));
 				if (dmgToAdd > 0) {
-					Buff.affect((Character) src, Kinetic.ConservedDamage.class).setBonus(dmgToAdd);
+					Buff.affect((Character) sourceOfDamage, Kinetic.ConservedDamage.class).setBonus(dmgToAdd);
 				}
-				((Character) src).buff(Kinetic.KineticTracker.class).detach();
+				((Character) sourceOfDamage).getBuff(Kinetic.KineticTracker.class).detach();
 			}
 		}
 		
 		if (sprite != null) {
 			//defaults to normal damage icon if no other ones apply
 			int                                                         icon = FloatingText.PHYS_DMG;
-			if (NO_ARMOR_PHYSICAL_SOURCES.contains(src.getClass()))     icon = FloatingText.PHYS_DMG_NO_BLOCK;
-			if (AntiMagic.RESISTS.contains(src.getClass()))             icon = FloatingText.MAGIC_DMG;
-			if (src instanceof Pickaxe)                                 icon = FloatingText.PICK_DMG;
+			if (NO_ARMOR_PHYSICAL_SOURCES.contains(sourceOfDamage.getClass()))     icon = FloatingText.PHYS_DMG_NO_BLOCK;
+			if (AntiMagic.RESISTS.contains(sourceOfDamage.getClass()))             icon = FloatingText.MAGIC_DMG;
+			if (sourceOfDamage instanceof Pickaxe)                                 icon = FloatingText.PICK_DMG;
 
 			//special case for sniper when using ranged attacks
-			if (src == Dungeon.hero
+			if (sourceOfDamage == Dungeon.hero
 					&& Dungeon.hero.subClass == HeroSubClass.SNIPER
-					&& !Dungeon.level.adjacent(Dungeon.hero.pos, pos)
+					&& !Dungeon.level.adjacent(Dungeon.hero.position, position)
 					&& Dungeon.hero.belongings.attackingWeapon() instanceof MissileWeapon){
 				icon = FloatingText.PHYS_DMG_NO_BLOCK;
 			}
 
-			if (src instanceof Hunger)                                  icon = FloatingText.HUNGER;
-			if (src instanceof Burning)                                 icon = FloatingText.BURNING;
-			if (src instanceof Chill || src instanceof Frost)        icon = FloatingText.FROST;
-			if (src instanceof GeyserTrap || src instanceof StormCloud) icon = FloatingText.WATER;
-			if (src instanceof Burning)                                 icon = FloatingText.BURNING;
-			if (src instanceof Electricity)                             icon = FloatingText.SHOCKING;
-			if (src instanceof Bleeding)                                icon = FloatingText.BLEEDING;
-			if (src instanceof ToxicGas)                                icon = FloatingText.TOXIC;
-			if (src instanceof Corrosion)                               icon = FloatingText.CORROSION;
-			if (src instanceof Poison)                                  icon = FloatingText.POISON;
-			if (src instanceof Ooze)                                    icon = FloatingText.OOZE;
-			if (src instanceof Viscosity.DeferedDamage)                 icon = FloatingText.DEFERRED;
-			if (src instanceof Corruption)                              icon = FloatingText.CORRUPTION;
-			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
+			if (sourceOfDamage instanceof Hunger)                                  icon = FloatingText.HUNGER;
+			if (sourceOfDamage instanceof Burning)                                 icon = FloatingText.BURNING;
+			if (sourceOfDamage instanceof Chill || sourceOfDamage instanceof Frost)        icon = FloatingText.FROST;
+			if (sourceOfDamage instanceof GeyserTrap || sourceOfDamage instanceof StormCloud) icon = FloatingText.WATER;
+			if (sourceOfDamage instanceof Burning)                                 icon = FloatingText.BURNING;
+			if (sourceOfDamage instanceof Electricity)                             icon = FloatingText.SHOCKING;
+			if (sourceOfDamage instanceof Bleeding)                                icon = FloatingText.BLEEDING;
+			if (sourceOfDamage instanceof ToxicGas)                                icon = FloatingText.TOXIC;
+			if (sourceOfDamage instanceof Corrosion)                               icon = FloatingText.CORROSION;
+			if (sourceOfDamage instanceof Poison)                                  icon = FloatingText.POISON;
+			if (sourceOfDamage instanceof Ooze)                                    icon = FloatingText.OOZE;
+			if (sourceOfDamage instanceof Viscosity.DeferedDamage)                 icon = FloatingText.DEFERRED;
+			if (sourceOfDamage instanceof Corruption)                              icon = FloatingText.CORRUPTION;
+			if (sourceOfDamage instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
 
 			sprite.showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
 		}
@@ -838,8 +838,8 @@ public abstract class Character extends Actor {
 		if (healthPoints < 0) healthPoints = 0;
 
 		if (!isAlive()) {
-			die( src );
-		} else if (healthPoints == 0 && buff(DeathMark.DeathMarkTracker.class) != null){
+			die( sourceOfDamage );
+		} else if (healthPoints == 0 && getBuff(DeathMark.DeathMarkTracker.class) != null){
 			DeathMark.processFearTheReaper(this);
 		}
 	}
@@ -862,35 +862,35 @@ public abstract class Character extends Actor {
 	
 	public void destroy() {
 		healthPoints = 0;
-		Actor.remove( this );
+		Actor.removeActor( this );
 
-		for (Character ch : Actor.chars().toArray(new Character[0])){
-			if (ch.buff(Charm.class) != null && ch.buff(Charm.class).object == id()){
-				ch.buff(Charm.class).detach();
+		for (Character ch : Actor.getCharacters().toArray(new Character[0])){
+			if (ch.getBuff(Charm.class) != null && ch.getBuff(Charm.class).object == getId()){
+				ch.getBuff(Charm.class).detach();
 			}
-			if (ch.buff(Dread.class) != null && ch.buff(Dread.class).object == id()){
-				ch.buff(Dread.class).detach();
+			if (ch.getBuff(Dread.class) != null && ch.getBuff(Dread.class).object == getId()){
+				ch.getBuff(Dread.class).detach();
 			}
-			if (ch.buff(Terror.class) != null && ch.buff(Terror.class).object == id()){
-				ch.buff(Terror.class).detach();
+			if (ch.getBuff(Terror.class) != null && ch.getBuff(Terror.class).object == getId()){
+				ch.getBuff(Terror.class).detach();
 			}
-			if (ch.buff(SnipersMark.class) != null && ch.buff(SnipersMark.class).object == id()){
-				ch.buff(SnipersMark.class).detach();
+			if (ch.getBuff(SnipersMark.class) != null && ch.getBuff(SnipersMark.class).object == getId()){
+				ch.getBuff(SnipersMark.class).detach();
 			}
-			if (ch.buff(Talent.FollowupStrikeTracker.class) != null
-					&& ch.buff(Talent.FollowupStrikeTracker.class).object == id()){
-				ch.buff(Talent.FollowupStrikeTracker.class).detach();
+			if (ch.getBuff(Talent.FollowupStrikeTracker.class) != null
+					&& ch.getBuff(Talent.FollowupStrikeTracker.class).object == getId()){
+				ch.getBuff(Talent.FollowupStrikeTracker.class).detach();
 			}
-			if (ch.buff(Talent.DeadlyFollowupTracker.class) != null
-					&& ch.buff(Talent.DeadlyFollowupTracker.class).object == id()){
-				ch.buff(Talent.DeadlyFollowupTracker.class).detach();
+			if (ch.getBuff(Talent.DeadlyFollowupTracker.class) != null
+					&& ch.getBuff(Talent.DeadlyFollowupTracker.class).object == getId()){
+				ch.getBuff(Talent.DeadlyFollowupTracker.class).detach();
 			}
 		}
 	}
 	
-	public void die( Object src ) {
+	public void die( Object source ) {
 		destroy();
-		if (src != Chasm.class) sprite.die();
+		if (source != Chasm.class) sprite.die();
 	}
 
 	//we cache this info to prevent having to call buff(...) in isAlive.
@@ -907,46 +907,46 @@ public abstract class Character extends Actor {
 	}
 
 	@Override
-	protected void spendConstant(float time) {
-		TimekeepersHourglass.timeFreeze freeze = buff(TimekeepersHourglass.timeFreeze.class);
+	protected void spendTime(float time) {
+		TimekeepersHourglass.timeFreeze freeze = getBuff(TimekeepersHourglass.timeFreeze.class);
 		if (freeze != null) {
 			freeze.processTime(time);
 			return;
 		}
 
-		Swiftthistle.TimeBubble bubble = buff(Swiftthistle.TimeBubble.class);
+		Swiftthistle.TimeBubble bubble = getBuff(Swiftthistle.TimeBubble.class);
 		if (bubble != null){
 			bubble.processTime(time);
 			return;
 		}
 
-		super.spendConstant(time);
+		super.spendTime(time);
 	}
 
 	@Override
-	protected void spend( float time ) {
+	protected void spendTimeAdjusted(float time ) {
 
 		float timeScale = 1f;
-		if (buff( Slow.class ) != null) {
+		if (getBuff( Slow.class ) != null) {
 			timeScale *= 0.5f;
 			//slowed and chilled do not stack
-		} else if (buff( Chill.class ) != null) {
-			timeScale *= buff( Chill.class ).speedFactor();
+		} else if (getBuff( Chill.class ) != null) {
+			timeScale *= getBuff( Chill.class ).speedFactor();
 		}
-		if (buff( Speed.class ) != null) {
+		if (getBuff( Speed.class ) != null) {
 			timeScale *= 2.0f;
 		}
 		
-		super.spend( time / timeScale );
+		super.spendTimeAdjusted( time / timeScale );
 	}
 	
-	public synchronized LinkedHashSet<Buff> buffs() {
+	public synchronized LinkedHashSet<Buff> getBuffs() {
 		return new LinkedHashSet<>(buffs);
 	}
 	
 	@SuppressWarnings("unchecked")
 	//returns all buffs assignable from the given buff class
-	public synchronized <T extends Buff> HashSet<T> buffs( Class<T> c ) {
+	public synchronized <T extends Buff> HashSet<T> getBuffs(Class<T> c ) {
 		HashSet<T> filtered = new HashSet<>();
 		for (Buff b : buffs) {
 			if (c.isInstance( b )) {
@@ -958,7 +958,7 @@ public abstract class Character extends Actor {
 
 	@SuppressWarnings("unchecked")
 	//returns an instance of the specific buff class, if it exists. Not just assignable
-	public synchronized  <T extends Buff> T buff( Class<T> c ) {
+	public synchronized  <T extends Buff> T getBuff(Class<T> c ) {
 		for (Buff b : buffs) {
 			if (b.getClass() == c) {
 				return (T)b;
@@ -968,7 +968,7 @@ public abstract class Character extends Actor {
 	}
 
 	public synchronized boolean isCharmedBy( Character ch ) {
-		int chID = ch.id();
+		int chID = ch.getId();
 		for (Buff b : buffs) {
 			if (b instanceof Charm && ((Charm)b).object == chID) {
 				return true;
@@ -977,9 +977,9 @@ public abstract class Character extends Actor {
 		return false;
 	}
 
-	public synchronized boolean add( Buff buff ) {
+	public synchronized boolean addBuff(Buff buff ) {
 
-		if (buff(PotionOfCleansing.Cleanse.class) != null) { //cleansing buff
+		if (getBuff(PotionOfCleansing.Cleanse.class) != null) { //cleansing buff
 			if (buff.type == Buff.buffType.NEGATIVE
 					&& !(buff instanceof AllyBuff)
 					&& !(buff instanceof LostInventory)){
@@ -987,12 +987,12 @@ public abstract class Character extends Actor {
 			}
 		}
 
-		if (sprite != null && buff(Challenge.SpectatorFreeze.class) != null){
+		if (sprite != null && getBuff(Challenge.SpectatorFreeze.class) != null){
 			return false; //can't add buffs while frozen and game is loaded
 		}
 
 		buffs.add( buff );
-		if (Actor.chars().contains(this)) Actor.add( buff );
+		if (Actor.getCharacters().contains(this)) Actor.addActor( buff );
 
 		if (sprite != null && buff.announced) {
 			switch (buff.type) {
@@ -1013,17 +1013,17 @@ public abstract class Character extends Actor {
 
 	}
 	
-	public synchronized boolean remove( Buff buff ) {
+	public synchronized boolean removeBuff(Buff buff ) {
 		
 		buffs.remove( buff );
-		Actor.remove( buff );
+		Actor.removeActor( buff );
 
 		return true;
 	}
 	
-	public synchronized void remove( Class<? extends Buff> buffClass ) {
-		for (Buff buff : buffs( buffClass )) {
-			remove( buff );
+	public synchronized void removeBuff(Class<? extends Buff> buffClass ) {
+		for (Buff buff : getBuffs( buffClass )) {
+			removeBuff( buff );
 		}
 	}
 	
@@ -1040,45 +1040,45 @@ public abstract class Character extends Actor {
 		}
 	}
 	
-	public float stealth() {
+	public float getStealth() {
 		return 0;
 	}
 
-	public final void move( int step ) {
-		move( step, true );
+	public final void moveToPosition(int step ) {
+		moveToPosition( step, true );
 	}
 
 	//travelling may be false when a character is moving instantaneously, such as via teleportation
-	public void move( int step, boolean travelling ) {
+	public void moveToPosition(int newPosition, boolean travelling ) {
 
-		if (travelling && Dungeon.level.adjacent( step, pos ) && buff( Vertigo.class ) != null) {
+		if (travelling && Dungeon.level.adjacent(newPosition, position) && getBuff( Vertigo.class ) != null) {
 			sprite.interruptMotion();
-			int newPos = pos + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int( 8 )];
+			int newPos = position + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int( 8 )];
 			if (!(Dungeon.level.passable[newPos] || Dungeon.level.avoid[newPos])
-					|| (properties().contains(Property.LARGE) && !Dungeon.level.openSpace[newPos])
-					|| Actor.findChar( newPos ) != null)
+					|| (getProperties().contains(Property.LARGE) && !Dungeon.level.openSpace[newPos])
+					|| Actor.getCharacterOnPosition( newPos ) != null)
 				return;
 			else {
-				sprite.move(pos, newPos);
-				step = newPos;
+				sprite.move(position, newPos);
+				newPosition = newPos;
 			}
 		}
 
-		if (Dungeon.level.map[pos] == Terrain.OPEN_DOOR) {
-			Door.leave( pos );
+		if (Dungeon.level.map[position] == Terrain.OPEN_DOOR) {
+			Door.leave(position);
 		}
 
-		pos = step;
+		position = newPosition;
 		
 		if (this != Dungeon.hero) {
-			sprite.visible = Dungeon.level.heroFOV[pos];
+			sprite.visible = Dungeon.level.heroFOV[position];
 		}
 		
 		Dungeon.level.occupyCell(this );
 	}
 	
-	public int distance( Character other ) {
-		return Dungeon.level.distance( pos, other.pos );
+	public int getDistanceToOtherCharacter(Character other ) {
+		return Dungeon.level.distance(position, other.position);
 	}
 
 	public boolean[] modifyPassable( boolean[] passable){
@@ -1104,12 +1104,12 @@ public abstract class Character extends Actor {
 	
 	//returns percent effectiveness after resistances
 	//TODO currently resistances reduce effectiveness by a static 50%, and do not stack.
-	public float resist( Class effect ){
+	public float getResistanceMultiplierToEffectType(Class effect ){
 		HashSet<Class> resists = new HashSet<>(resistances);
-		for (Property p : properties()){
-			resists.addAll(p.resistances());
+		for (Property p : getProperties()){
+			resists.addAll(p.getResistances());
 		}
-		for (Buff b : buffs()){
+		for (Buff b : getBuffs()){
 			resists.addAll(b.resistances());
 		}
 		
@@ -1124,12 +1124,12 @@ public abstract class Character extends Actor {
 	
 	protected final HashSet<Class> immunities = new HashSet<>();
 	
-	public boolean isImmune(Class effect ){
+	public boolean isImmuneToEffectType(Class effect ){
 		HashSet<Class> immunes = new HashSet<>(immunities);
-		for (Property p : properties()){
-			immunes.addAll(p.immunities());
+		for (Property p : getProperties()){
+			immunes.addAll(p.getImmunities());
 		}
-		for (Buff b : buffs()){
+		for (Buff b : getBuffs()){
 			immunes.addAll(b.immunities());
 		}
 		
@@ -1143,16 +1143,16 @@ public abstract class Character extends Actor {
 
 	//similar to isImmune, but only factors in damage.
 	//Is used in AI decision-making
-	public boolean isInvulnerable( Class effect ){
-		return buff(Challenge.SpectatorFreeze.class) != null;
+	public boolean isInvulnerableToEffectType(Class effect ){
+		return getBuff(Challenge.SpectatorFreeze.class) != null;
 	}
 
 	protected HashSet<Property> properties = new HashSet<>();
 
-	public HashSet<Property> properties() {
+	public HashSet<Property> getProperties() {
 		HashSet<Property> props = new HashSet<>(properties);
 		//TODO any more of these and we should make it a property of the buff, like with resistances/immunities
-		if (buff(ChampionEnemy.Giant.class) != null) {
+		if (getBuff(ChampionEnemy.Giant.class) != null) {
 			props.add(Property.LARGE);
 		}
 		return props;
@@ -1191,17 +1191,17 @@ public abstract class Character extends Actor {
 			this.immunities = immunities;
 		}
 		
-		public HashSet<Class> resistances(){
+		public HashSet<Class> getResistances(){
 			return new HashSet<>(resistances);
 		}
 		
-		public HashSet<Class> immunities(){
+		public HashSet<Class> getImmunities(){
 			return new HashSet<>(immunities);
 		}
 
 	}
 
-	public static boolean hasProp(Character ch, Property p){
-		return (ch != null && ch.properties().contains(p));
+	public static boolean hasProperty(Character ch, Property p){
+		return (ch != null && ch.getProperties().contains(p));
 	}
 }

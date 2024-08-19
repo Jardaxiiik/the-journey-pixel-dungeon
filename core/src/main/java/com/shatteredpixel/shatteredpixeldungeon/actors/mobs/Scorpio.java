@@ -55,12 +55,12 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 30, 40 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 36;
 	}
 	
@@ -70,9 +70,9 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return !Dungeon.level.adjacent( pos, enemy.pos )
-				&& (super.canAttack(enemy) || new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos);
+	protected boolean canAttackEnemy(Character enemy ) {
+		return !Dungeon.level.adjacent(position, enemy.position)
+				&& (super.canAttackEnemy(enemy) || new Ballistica(position, enemy.position, Ballistica.PROJECTILE).collisionPos == enemy.position);
 	}
 	
 	@Override
@@ -86,24 +86,24 @@ public class Scorpio extends Mob {
 	}
 	
 	@Override
-	protected boolean getCloser( int target ) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		if (state == HUNTING) {
-			return enemySeen && getFurther( target );
+			return enemySeen && moveAwayFromTarget(targetPosition);
 		} else {
-			return super.getCloser( target );
+			return super.moveCloserToTarget(targetPosition);
 		}
 	}
 	
 	@Override
-	public void aggro(Character ch) {
+	public void startHunting(Character ch) {
 		//cannot be aggroed to something it can't see
-		if (ch == null || fieldOfView == null || fieldOfView[ch.pos]) {
-			super.aggro(ch);
+		if (ch == null || fieldOfView == null || fieldOfView[ch.position]) {
+			super.startHunting(ch);
 		}
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Class<?extends Potion> loot;
 		do{
 			loot = (Class<? extends Potion>) Random.oneOf(ItemGenerator.Category.POTION.classes);

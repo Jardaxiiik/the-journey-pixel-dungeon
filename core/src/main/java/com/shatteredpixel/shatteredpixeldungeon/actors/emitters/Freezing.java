@@ -66,16 +66,16 @@ public class Freezing extends Emitter {
 	}
 	
 	public static void freeze( int cell ){
-		Character ch = Actor.findChar( cell );
-		if (ch != null && !ch.isImmune(Freezing.class)) {
-			if (ch.buff(Frost.class) != null){
+		Character ch = Actor.getCharacterOnPosition( cell );
+		if (ch != null && !ch.isImmuneToEffectType(Freezing.class)) {
+			if (ch.getBuff(Frost.class) != null){
 				Buff.affect(ch, Frost.class, 2f);
 			} else {
-				Chill chill = ch.buff(Chill.class);
+				Chill chill = ch.getBuff(Chill.class);
 				float turnsToAdd = Dungeon.level.water[cell] ? 5f : 3f;
 				if (chill != null){
 					float chillToCap = Chill.DURATION - chill.cooldown();
-					chillToCap /= ch.resist(Chill.class); //account for resistance to chill
+					chillToCap /= ch.getResistanceMultiplierToEffectType(Chill.class); //account for resistance to chill
 					turnsToAdd = Math.min(turnsToAdd, chillToCap);
 				}
 				if (turnsToAdd > 0f) {
@@ -83,7 +83,7 @@ public class Freezing extends Emitter {
 				}
 				if (chill != null
 						&& chill.cooldown() >= Chill.DURATION &&
-						!ch.isImmune(Frost.class)){
+						!ch.isImmuneToEffectType(Frost.class)){
 					Buff.affect(ch, Frost.class, Frost.DURATION);
 				}
 			}
@@ -107,9 +107,9 @@ public class Freezing extends Emitter {
 	//legacy functionality from before this was a proper blob. Returns true if this cell is visible
 	public static boolean affect( int cell ) {
 		
-		Character ch = Actor.findChar( cell );
+		Character ch = Actor.getCharacterOnPosition( cell );
 		if (ch != null) {
-			if (Dungeon.level.water[ch.pos]){
+			if (Dungeon.level.water[ch.position]){
 				Buff.prolong(ch, Frost.class, Frost.DURATION * 3);
 			} else {
 				Buff.prolong(ch, Frost.class, Frost.DURATION);

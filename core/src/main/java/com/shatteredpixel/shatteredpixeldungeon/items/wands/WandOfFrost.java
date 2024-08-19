@@ -78,28 +78,28 @@ public class WandOfFrost extends DamageWand {
 
 		}
 
-		Character ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 		if (ch != null){
 
 			int damage = damageRoll();
 
-			if (ch.buff(Frost.class) != null){
+			if (ch.getBuff(Frost.class) != null){
 				return; //do nothing, can't affect a frozen target
 			}
-			if (ch.buff(Chill.class) != null){
+			if (ch.getBuff(Chill.class) != null){
 				//6.67% less damage per turn of chill remaining, to a max of 10 turns (50% dmg)
-				float chillturns = Math.min(10, ch.buff(Chill.class).cooldown());
+				float chillturns = Math.min(10, ch.getBuff(Chill.class).cooldown());
 				damage = (int)Math.round(damage * Math.pow(0.9333f, chillturns));
 			} else {
 				ch.sprite.burst( 0xFF99CCFF, buffedLvl() / 2 + 2 );
 			}
 
 			wandProc(ch, chargesPerCast());
-			ch.damage(damage, this);
+			ch.receiveDamageFromSource(damage, this);
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, 1.1f * Random.Float(0.87f, 1.15f) );
 
 			if (ch.isAlive()){
-				if (Dungeon.level.water[ch.pos])
+				if (Dungeon.level.water[ch.position])
 					Buff.affect(ch, Chill.class, 4+buffedLvl());
 				else
 					Buff.affect(ch, Chill.class, 2+buffedLvl());
@@ -121,7 +121,7 @@ public class WandOfFrost extends DamageWand {
 
 	@Override
 	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
-		Chill chill = defender.buff(Chill.class);
+		Chill chill = defender.getBuff(Chill.class);
 
 		if (chill != null) {
 

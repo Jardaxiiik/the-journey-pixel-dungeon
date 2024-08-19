@@ -76,22 +76,22 @@ public class Swarm extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1, 4 );
 	}
 	
 	@Override
-	public int defenseProc(Character enemy, int damage ) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage ) {
 
 		if (healthPoints >= damage + 2) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
-			int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
+			int[] neighbours = {position + 1, position - 1, position + Dungeon.level.width(), position - Dungeon.level.width()};
 			for (int n : neighbours) {
 				if (!Dungeon.level.solid[n]
-						&& Actor.findChar( n ) == null
+						&& Actor.getCharacterOnPosition( n ) == null
 						&& (Dungeon.level.passable[n] || Dungeon.level.avoid[n])
-						&& (!properties().contains(Property.LARGE) || Dungeon.level.openSpace[n])) {
+						&& (!getProperties().contains(Property.LARGE) || Dungeon.level.openSpace[n])) {
 					candidates.add( n );
 				}
 			}
@@ -99,12 +99,12 @@ public class Swarm extends Mob {
 			if (candidates.size() > 0) {
 				
 				Swarm clone = split();
-				clone.pos = Random.element( candidates );
+				clone.position = Random.element( candidates );
 				clone.state = clone.HUNTING;
 				GameScene.add( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
 
 				clone.healthPoints = (healthPoints - damage) / 2;
-				Actor.add( new Pushing( clone, pos, clone.pos ) );
+				Actor.addActor( new Pushing( clone, position, clone.position) );
 
 				Dungeon.level.occupyCell(clone);
 				
@@ -112,11 +112,11 @@ public class Swarm extends Mob {
 			}
 		}
 		
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 10;
 	}
 	
@@ -124,30 +124,30 @@ public class Swarm extends Mob {
 		Swarm clone = new Swarm();
 		clone.generation = generation + 1;
 		clone.EXP = 0;
-		if (buff( Burning.class ) != null) {
+		if (getBuff( Burning.class ) != null) {
 			Buff.affect( clone, Burning.class ).reignite( clone );
 		}
-		if (buff( Poison.class ) != null) {
+		if (getBuff( Poison.class ) != null) {
 			Buff.affect( clone, Poison.class ).set(2);
 		}
-		for (Buff b : buffs(AllyBuff.class)){
+		for (Buff b : getBuffs(AllyBuff.class)){
 			Buff.affect( clone, b.getClass());
 		}
-		for (Buff b : buffs(ChampionEnemy.class)){
+		for (Buff b : getBuffs(ChampionEnemy.class)){
 			Buff.affect( clone, b.getClass());
 		}
 		return clone;
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		lootChance = 1f/(6 * (generation+1) );
-		return super.lootChance() * (5f - Dungeon.LimitedDrops.SWARM_HP.count) / 5f;
+		return super.getLootChance() * (5f - Dungeon.LimitedDrops.SWARM_HP.count) / 5f;
 	}
 	
 	@Override
-	public Item createLoot(){
+	public Item getLootItem(){
 		Dungeon.LimitedDrops.SWARM_HP.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 }

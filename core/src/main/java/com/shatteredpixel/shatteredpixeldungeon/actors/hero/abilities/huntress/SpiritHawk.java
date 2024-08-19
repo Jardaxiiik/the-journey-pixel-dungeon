@@ -94,8 +94,8 @@ public class SpiritHawk extends ArmorAbility {
 		} else {
 			ArrayList<Integer> spawnPoints = new ArrayList<>();
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				int p = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.findChar(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+				int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+				if (Actor.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 					spawnPoints.add(p);
 				}
 			}
@@ -105,10 +105,10 @@ public class SpiritHawk extends ArmorAbility {
 				armor.updateQuickslot();
 
 				ally = new HawkAlly();
-				ally.pos = Random.element(spawnPoints);
+				ally.position = Random.element(spawnPoints);
 				GameScene.add(ally);
 
-				ScrollOfTeleportation.appear(ally, ally.pos);
+				ScrollOfTeleportation.appear(ally, ally.position);
 				Dungeon.observe();
 
 				Invisibility.dispel();
@@ -132,7 +132,7 @@ public class SpiritHawk extends ArmorAbility {
 	}
 
 	private static HawkAlly getHawk(){
-		for (Character ch : Actor.chars()){
+		for (Character ch : Actor.getCharacters()){
 			if (ch instanceof HawkAlly){
 				return (HawkAlly) ch;
 			}
@@ -158,7 +158,7 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public int attackSkill(Character target) {
+		public int getAccuracyAgainstTarget(Character target) {
 			return 60;
 		}
 
@@ -166,17 +166,17 @@ public class SpiritHawk extends ArmorAbility {
 		private float timeRemaining = 100f;
 
 		@Override
-		public int defenseSkill(Character enemy) {
+		public int getEvasionAgainstAttacker(Character enemy) {
 			if (Dungeon.hero.hasTalent(Talent.SWIFT_SPIRIT) &&
 					dodgesUsed < 2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)) {
 				dodgesUsed++;
 				return Character.INFINITE_EVASION;
 			}
-			return super.defenseSkill(enemy);
+			return super.getEvasionAgainstAttacker(enemy);
 		}
 
 		@Override
-		public int damageRoll() {
+		public int getDamageRoll() {
 			return Random.NormalIntRange(5, 10);
 		}
 
@@ -216,13 +216,13 @@ public class SpiritHawk extends ArmorAbility {
 			baseSpeed = 2f + Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
 			boolean result = super.playGameTurn();
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
-			GameScene.updateFog(pos, viewDistance+(int)Math.ceil(speed()));
+			GameScene.updateFog(position, viewDistance+(int)Math.ceil(getSpeed()));
 			return result;
 		}
 
 		@Override
-		protected void spend(float time) {
-			super.spend(time);
+		protected void spendTimeAdjusted(float time) {
+			super.spendTimeAdjusted(time);
 			timeRemaining -= time;
 		}
 
@@ -252,7 +252,7 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public String description() {
+		public String getDescription() {
 			String message = Messages.get(this, "desc", (int)timeRemaining);
 			if (dodgesUsed < 2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)){
 				message += "\n" + Messages.get(this, "desc_dodges", (2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT) - dodgesUsed));

@@ -41,7 +41,7 @@ public class Barkskin extends Buff {
 	public boolean playGameTurn() {
 		if (target.isAlive()) {
 
-			spend( interval );
+			spendTimeAdjusted( interval );
 			if (--level <= 0) {
 				detach();
 			}
@@ -63,7 +63,7 @@ public class Barkskin extends Buff {
 		if (level <= value) {
 			level = value;
 			interval = time;
-			spend(time - cooldown() - 1);
+			spendTimeAdjusted(time - cooldown() - 1);
 		}
 	}
 	
@@ -114,7 +114,7 @@ public class Barkskin extends Buff {
 
 	public static int currentLevel(Character ch ){
 		int level = 0;
-		for (Barkskin b : ch.buffs(Barkskin.class)){
+		for (Barkskin b : ch.getBuffs(Barkskin.class)){
 			level = Math.max(level, b.level);
 		}
 		return level;
@@ -122,7 +122,7 @@ public class Barkskin extends Buff {
 
 	//reset if a matching buff exists, otherwise append
 	public static void conditionallyAppend(Character ch, int level, int interval){
-		for (Barkskin b : ch.buffs(Barkskin.class)){
+		for (Barkskin b : ch.getBuffs(Barkskin.class)){
 			if (b.interval == interval){
 				b.set(level, interval);
 				return;

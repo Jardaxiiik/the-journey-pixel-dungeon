@@ -65,8 +65,8 @@ public class WardSprite extends MobSprite {
 		idle();
 		flash();
 		emitter().burst(MagicMissile.WardParticle.UP, 2);
-		if (Actor.findChar(pos) != null){
-			parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).sprite.center()));
+		if (Actor.getCharacterOnPosition(pos) != null){
+			parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(pos).sprite.center()));
 		} else {
 			parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 		}
@@ -125,7 +125,7 @@ public class WardSprite extends MobSprite {
 		}
 
 		resetColor();
-		if (ch != null) place(ch.pos);
+		if (ch != null) place(ch.position);
 		idle();
 
 		if (tier <= 3){

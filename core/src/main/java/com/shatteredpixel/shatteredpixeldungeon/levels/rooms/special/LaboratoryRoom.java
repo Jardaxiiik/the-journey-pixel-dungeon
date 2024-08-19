@@ -70,7 +70,7 @@ public class LaboratoryRoom extends SpecialRoom {
 		} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 						level.heaps.get( pos ) != null);
-		level.drop( new EnergyCrystal().random(), pos );
+		level.dropItemOnPosition( new EnergyCrystal().random(), pos );
 
 		int n = Random.NormalIntRange( 1, 2 );
 		for (int i=0; i < n; i++) {
@@ -79,7 +79,7 @@ public class LaboratoryRoom extends SpecialRoom {
 			} while (
 				level.map[pos] != Terrain.EMPTY_SP ||
 				level.heaps.get( pos ) != null);
-			level.drop( prize( level ), pos );
+			level.dropItemOnPosition( prize( level ), pos );
 		}
 		
 		//guide pages
@@ -112,7 +112,7 @@ public class LaboratoryRoom extends SpecialRoom {
 				} while (
 						level.map[pos] != Terrain.EMPTY_SP ||
 								level.heaps.get(pos) != null);
-				level.drop(p, pos);
+				level.dropItemOnPosition(p, pos);
 			}
 		}
 

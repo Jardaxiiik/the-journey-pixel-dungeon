@@ -279,16 +279,16 @@ public class Potion extends Item {
 		
 		detach( hero.belongings.backpack );
 		
-		hero.spend( TIME_TO_DRINK );
+		hero.spendTimeAdjusted( TIME_TO_DRINK );
 		hero.busy();
 		apply( hero );
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
 		
-		hero.sprite.operate( hero.pos );
+		hero.sprite.operate( hero.position);
 
 		if (!anonymous){
-			Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
+			Talent.onPotionUsed(curUser, curUser.position, talentFactor);
 		}
 	}
 	
@@ -311,7 +311,7 @@ public class Potion extends Item {
 	}
 	
 	public void apply( Hero hero ) {
-		shatter( hero.pos );
+		shatter( hero.position);
 	}
 	
 	public void shatter( int cell ) {
@@ -396,7 +396,7 @@ public class Potion extends Item {
 			fire.clear(cell);
 		}
 
-		Character ch = Actor.findChar(cell);
+		Character ch = Actor.getCharacterOnPosition(cell);
 		if (ch != null && ch.alignment == Character.Alignment.ALLY) {
 			Buff.detach(ch, Burning.class);
 			Buff.detach(ch, Ooze.class);

@@ -42,7 +42,7 @@ public class OozeTrap extends Trap {
 		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
 				Splash.at( pos + i, 0x000000, 5);
-				Character ch = Actor.findChar( pos + i );
+				Character ch = Actor.getCharacterOnPosition( pos + i );
 				if (ch != null && !ch.flying){
 					Buff.affect(ch, Ooze.class).set( Ooze.DURATION );
 				}

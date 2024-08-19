@@ -76,9 +76,9 @@ public class SacrificialFire extends Emitter {
 
 					if (off[cell] > 0){
 						for (int k : PathFinder.OFFSETS_NEIGHBOURS9){
-							Character ch = Actor.findChar( cell+k );
+							Character ch = Actor.getCharacterOnPosition( cell+k );
 							if (ch != null){
-								if (Dungeon.level.heroFOV[cell+k] && ch.buff( Marked.class ) == null) {
+								if (Dungeon.level.heroFOV[cell+k] && ch.getBuff( Marked.class ) == null) {
 									CellEmitter.get(cell+k).burst( SacrificialParticle.FACTORY, 5 );
 								}
 								Buff.prolong( ch, Marked.class, Marked.DURATION );
@@ -146,8 +146,8 @@ public class SacrificialFire extends Emitter {
 
 		int firePos = -1;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-			if (volume > 0 && cur[ch.pos+i] > 0){
-				firePos = ch.pos+i;
+			if (volume > 0 && cur[ch.position +i] > 0){
+				firePos = ch.position +i;
 				break;
 			}
 		}
@@ -197,9 +197,9 @@ public class SacrificialFire extends Emitter {
 					Sample.INSTANCE.play(Assets.Sounds.BURNING );
 					GLog.w( Messages.get(SacrificialFire.class, "reward"));
 					if (prize != null) {
-						Dungeon.level.drop(prize, firePos).sprite.drop();
+						Dungeon.level.dropItemOnPosition(prize, firePos).sprite.drop();
 					} else {
-						Dungeon.level.drop(SacrificeRoom.prize(Dungeon.level), firePos).sprite.drop();
+						Dungeon.level.dropItemOnPosition(SacrificeRoom.prize(Dungeon.level), firePos).sprite.drop();
 					}
 				}
 			} else {

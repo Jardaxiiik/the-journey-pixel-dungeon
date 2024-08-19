@@ -55,18 +55,18 @@ public class WandOfMagicMissile extends DamageWand {
 	@Override
 	public void onZap(Ballistica bolt) {
 				
-		Character ch = Actor.findChar( bolt.collisionPos );
+		Character ch = Actor.getCharacterOnPosition( bolt.collisionPos );
 		if (ch != null) {
 
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), this);
+			ch.receiveDamageFromSource(damageRoll(), this);
 			Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f) );
 
 			ch.sprite.burst(0xFFFFFFFF, buffedLvl() / 2 + 2);
 
 			//apply the magic charge buff if we have another wand in inventory of a lower level, or already have the buff
-			for (Wand.Charger wandCharger : curUser.buffs(Wand.Charger.class)){
-				if (wandCharger.wand().buffedLvl() < buffedLvl() || curUser.buff(MagicCharge.class) != null){
+			for (Wand.Charger wandCharger : curUser.getBuffs(Wand.Charger.class)){
+				if (wandCharger.wand().buffedLvl() < buffedLvl() || curUser.getBuff(MagicCharge.class) != null){
 					Buff.prolong(curUser, MagicCharge.class, MagicCharge.DURATION).setup(this);
 					break;
 				}
@@ -80,7 +80,7 @@ public class WandOfMagicMissile extends DamageWand {
 	@Override
 	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		SpellSprite.show(attacker, SpellSprite.CHARGE);
-		for (Wand.Charger c : attacker.buffs(Wand.Charger.class)){
+		for (Wand.Charger c : attacker.getBuffs(Wand.Charger.class)){
 			if (c.wand() != this){
 				c.gainCharge(0.5f * procChanceMultiplier(attacker));
 			}

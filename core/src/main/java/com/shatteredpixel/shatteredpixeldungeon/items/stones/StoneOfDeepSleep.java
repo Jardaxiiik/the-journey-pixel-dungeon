@@ -40,9 +40,9 @@ public class StoneOfDeepSleep extends Runestone {
 	@Override
 	protected void activate(int cell) {
 
-		if (Actor.findChar(cell) != null) {
+		if (Actor.getCharacterOnPosition(cell) != null) {
 
-			Character c = Actor.findChar(cell);
+			Character c = Actor.getCharacterOnPosition(cell);
 
 			if (c instanceof Mob){
 

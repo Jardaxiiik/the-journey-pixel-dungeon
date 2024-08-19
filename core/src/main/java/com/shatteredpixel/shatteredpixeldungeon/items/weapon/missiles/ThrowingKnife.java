@@ -52,7 +52,7 @@ public class ThrowingKnife extends MissileWeapon {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			Character enemy = hero.enemy();
-			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
+			if (enemy instanceof Mob && ((Mob) enemy).isSurprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
 				int damage = augment.damageFactor(Random.NormalIntRange(

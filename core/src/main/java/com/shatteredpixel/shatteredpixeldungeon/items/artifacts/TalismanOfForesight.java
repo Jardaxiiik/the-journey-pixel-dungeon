@@ -72,7 +72,7 @@ public class TalismanOfForesight extends Artifact {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
 				&& !cursed
-				&& hero.buff(MagicImmune.class) == null) {
+				&& hero.getBuff(MagicImmune.class) == null) {
 			actions.add(AC_SCRY);
 		}
 		return actions;
@@ -82,7 +82,7 @@ public class TalismanOfForesight extends Artifact {
 	public void execute( Hero hero, String action ) {
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_SCRY)){
 			if (!isEquipped(hero))  GLog.i( Messages.get(Artifact.class, "need_to_equip") );
@@ -98,7 +98,7 @@ public class TalismanOfForesight extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (cursed || target.buff(MagicImmune.class) != null) return;
+		if (cursed || target.getBuff(MagicImmune.class) != null) return;
 		if (charge < chargeCap){
 			charge += Math.round(2*amount);
 			if (charge >= chargeCap) {
@@ -134,34 +134,34 @@ public class TalismanOfForesight extends Artifact {
 
 		@Override
 		public void onSelect(Integer target) {
-			if (target != null && target != curUser.pos){
+			if (target != null && target != curUser.position){
 
 				//enforces at least 2 tiles of distance
-				if (Dungeon.level.adjacent(target, curUser.pos)){
-					target += (target - curUser.pos);
+				if (Dungeon.level.adjacent(target, curUser.position)){
+					target += (target - curUser.position);
 				}
 
-				float dist = Dungeon.level.trueDistance(curUser.pos, target);
+				float dist = Dungeon.level.trueDistance(curUser.position, target);
 
 				if (dist >= 3 && dist > maxDist()){
-					Ballistica trajectory = new Ballistica(curUser.pos, target, Ballistica.STOP_TARGET);
+					Ballistica trajectory = new Ballistica(curUser.position, target, Ballistica.STOP_TARGET);
 					int i = 0;
 					while (i < trajectory.path.size()
-							&& Dungeon.level.trueDistance(curUser.pos, trajectory.path.get(i)) <= maxDist()){
+							&& Dungeon.level.trueDistance(curUser.position, trajectory.path.get(i)) <= maxDist()){
 						target = trajectory.path.get(i);
 						i++;
 					}
-					dist = Dungeon.level.trueDistance(curUser.pos, target);
+					dist = Dungeon.level.trueDistance(curUser.position, target);
 				}
 
 				//starts at 200 degrees, loses 8% per tile of distance
 				float angle = Math.round(200*(float)Math.pow(0.92, dist));
-				ConeAOE cone = new ConeAOE(new Ballistica(curUser.pos, target, Ballistica.STOP_TARGET), angle);
+				ConeAOE cone = new ConeAOE(new Ballistica(curUser.position, target, Ballistica.STOP_TARGET), angle);
 
 				int earnedExp = 0;
 				boolean noticed = false;
 				for (int cell : cone.cells){
-					GameScene.effectOverFog(new CheckedCell( cell, curUser.pos ));
+					GameScene.effectOverFog(new CheckedCell( cell, curUser.position));
 					if (Dungeon.level.discoverable[cell] && !(Dungeon.level.mapped[cell] || Dungeon.level.visited[cell])){
 						Dungeon.level.mapped[cell] = true;
 						earnedExp++;
@@ -181,11 +181,11 @@ public class TalismanOfForesight extends Artifact {
 						}
 					}
 
-					Character ch = Actor.findChar(cell);
+					Character ch = Actor.getCharacterOnPosition(cell);
 					if (ch != null && ch.alignment != Character.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
-						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.id();
+						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.getId();
 
-						if (!curUser.fieldOfView[ch.pos]){
+						if (!curUser.fieldOfView[ch.position]){
 							earnedExp += 10;
 						}
 					}
@@ -262,13 +262,13 @@ public class TalismanOfForesight extends Artifact {
 
 		@Override
 		public boolean playGameTurn() {
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			checkAwareness();
 
 			if (charge < chargeCap
 					&& !cursed
-					&& target.buff(MagicImmune.class) == null
+					&& target.getBuff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//fully charges in 2000 turns at +0, scaling to 1000 turns at +10.
 				float chargeGain = (0.05f+(level()*0.005f));
@@ -293,8 +293,8 @@ public class TalismanOfForesight extends Artifact {
 
 			int distance = 3;
 
-			int cx = target.pos % Dungeon.level.width();
-			int cy = target.pos / Dungeon.level.width();
+			int cx = target.position % Dungeon.level.width();
+			int cy = target.position / Dungeon.level.width();
 			int ax = cx - distance;
 			if (ax < 0) {
 				ax = 0;
@@ -327,7 +327,7 @@ public class TalismanOfForesight extends Artifact {
 
 			if (smthFound
 					&& !cursed
-					&& target.buff(MagicImmune.class) == null){
+					&& target.getBuff(MagicImmune.class) == null){
 				if (!warn){
 					GLog.w( Messages.get(this, "uneasy") );
 					if (target instanceof Hero){
@@ -341,7 +341,7 @@ public class TalismanOfForesight extends Artifact {
 		}
 
 		public void charge(int boost){
-			if (!cursed && target.buff(MagicImmune.class) == null) {
+			if (!cursed && target.getBuff(MagicImmune.class) == null) {
 				charge = Math.min((charge + boost), chargeCap);
 				updateQuickslot();
 			}

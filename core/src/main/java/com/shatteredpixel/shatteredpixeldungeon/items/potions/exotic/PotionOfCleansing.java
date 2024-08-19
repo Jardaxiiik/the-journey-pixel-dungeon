@@ -53,7 +53,7 @@ public class PotionOfCleansing extends ExoticPotion {
 	
 	@Override
 	public void shatter(int cell) {
-		if (Actor.findChar(cell) == null){
+		if (Actor.getCharacterOnPosition(cell) == null){
 			super.shatter(cell);
 		} else {
 			splash( cell );
@@ -62,8 +62,8 @@ public class PotionOfCleansing extends ExoticPotion {
 				identify();
 			}
 			
-			if (Actor.findChar(cell) != null){
-				cleanse(Actor.findChar(cell));
+			if (Actor.getCharacterOnPosition(cell) != null){
+				cleanse(Actor.getCharacterOnPosition(cell));
 			}
 		}
 	}
@@ -73,7 +73,7 @@ public class PotionOfCleansing extends ExoticPotion {
 	}
 
 	public static void cleanse(Character ch, float duration){
-		for (Buff b : ch.buffs()){
+		for (Buff b : ch.getBuffs()){
 			if (b.type == Buff.buffType.NEGATIVE
 					&& !(b instanceof AllyBuff)
 					&& !(b instanceof LostInventory)){

@@ -58,7 +58,7 @@ public class Blooming extends Weapon.Enchantment {
 				plants = (float)Math.floor(plants);
 			}
 			
-			if (plantGrass(defender.pos)){
+			if (plantGrass(defender.position)){
 				plants--;
 				if (plants <= 0){
 					return damage;
@@ -67,15 +67,15 @@ public class Blooming extends Weapon.Enchantment {
 			
 			ArrayList<Integer> positions = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (defender.pos + i != attacker.pos) {
-					positions.add(defender.pos + i);
+				if (defender.position + i != attacker.position) {
+					positions.add(defender.position + i);
 				}
 			}
 			Random.shuffle( positions );
 
 			//The attacker's position is always lowest priority
-			if (Dungeon.level.adjacent(attacker.pos, defender.pos)){
-				positions.add(attacker.pos);
+			if (Dungeon.level.adjacent(attacker.position, defender.position)){
+				positions.add(attacker.position);
 			}
 
 			for (int i : positions){

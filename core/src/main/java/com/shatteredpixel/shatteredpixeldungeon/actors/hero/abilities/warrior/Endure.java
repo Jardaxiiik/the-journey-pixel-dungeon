@@ -51,16 +51,16 @@ public class Endure extends ArmorAbility {
 	@Override
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 
-		if (hero.buff(EndureTracker.class) != null){
-			hero.buff(EndureTracker.class).detach();
+		if (hero.getBuff(EndureTracker.class) != null){
+			hero.getBuff(EndureTracker.class).detach();
 		}
 		Buff.prolong(hero, EndureTracker.class, 12f);
 
-		Combo combo = hero.buff(Combo.class);
+		Combo combo = hero.getBuff(Combo.class);
 		if (combo != null){
 			combo.addTime(3f);
 		}
-		hero.sprite.operate(hero.pos);
+		hero.sprite.operate(hero.position);
 
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
@@ -123,8 +123,8 @@ public class Endure extends ArmorAbility {
 			damageBonus *= 1f + 0.15f*Dungeon.hero.pointsInTalent(Talent.SUSTAINED_RETRIBUTION);
 
 			int nearby = 0;
-			for (Character ch : Actor.chars()){
-				if (ch.alignment == Character.Alignment.ENEMY && Dungeon.level.distance(target.pos, ch.pos) <= 2){
+			for (Character ch : Actor.getCharacters()){
+				if (ch.alignment == Character.Alignment.ENEMY && Dungeon.level.distance(target.position, ch.position) <= 2){
 					nearby ++;
 				}
 			}

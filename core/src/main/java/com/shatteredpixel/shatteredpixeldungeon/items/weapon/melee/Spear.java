@@ -69,30 +69,30 @@ public class Spear extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
 
 		hero.belongings.abilityWeapon = wep;
-		if (!hero.canAttack(enemy) || Dungeon.level.adjacent(hero.pos, enemy.pos)){
+		if (!hero.canAttack(enemy) || Dungeon.level.adjacent(hero.position, enemy.position)){
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			hero.belongings.abilityWeapon = null;
 			return;
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.sprite.attack(enemy.position, new Callback() {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
-				int oldPos = enemy.pos;
+				int oldPos = enemy.position;
 				if (hero.attack(enemy, dmgMulti, 0, Character.INFINITE_ACCURACY)) {
-					if (enemy.isAlive() && enemy.pos == oldPos){
+					if (enemy.isAlive() && enemy.position == oldPos){
 						//trace a ballistica to our target (which will also extend past them
-						Ballistica trajectory = new Ballistica(hero.pos, enemy.pos, Ballistica.STOP_TARGET);
+						Ballistica trajectory = new Ballistica(hero.position, enemy.position, Ballistica.STOP_TARGET);
 						//trim it to just be the part that goes past them
 						trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 						//knock them back along that ballistica

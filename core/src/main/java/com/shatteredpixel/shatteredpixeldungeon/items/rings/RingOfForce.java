@@ -56,9 +56,9 @@ public class RingOfForce extends Ring {
 	@Override
 	public boolean doUnequip(Hero hero, boolean collect, boolean single) {
 		if (super.doUnequip(hero, collect, single)){
-			if (hero.buff(BrawlersStance.class) != null && hero.buff(Force.class) == null){
+			if (hero.getBuff(BrawlersStance.class) != null && hero.getBuff(Force.class) == null){
 				//clear brawler's stance if no ring of force is equipped
-				hero.buff(BrawlersStance.class).detach();
+				hero.getBuff(BrawlersStance.class).detach();
 			}
 			return true;
 		} else {
@@ -78,8 +78,8 @@ public class RingOfForce extends Ring {
 	}
 
 	public static int damageRoll( Hero hero ){
-		if (hero.buff(Force.class) != null
-				&& hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
+		if (hero.getBuff(Force.class) != null
+				&& hero.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
 			int level = getBuffedBonus(hero, Force.class);
 			float tier = tier(hero.getAttributeStrength());
 			return Random.NormalIntRange(min(level, tier), max(level, tier));
@@ -170,8 +170,8 @@ public class RingOfForce extends Ring {
 	@Override
 	public void execute(Hero hero, String action) {
 		if (action.equals(AC_ABILITY)){
-			if (hero.buff(BrawlersStance.class) != null){
-				hero.buff(BrawlersStance.class).detach();
+			if (hero.getBuff(BrawlersStance.class) != null){
+				hero.getBuff(BrawlersStance.class).detach();
 				AttackIndicator.updateState();
 			} else if (!isEquipped(hero)) {
 				GLog.w(Messages.get(MeleeWeapon.class, "ability_need_equip"));
@@ -203,16 +203,16 @@ public class RingOfForce extends Ring {
 
 	public static boolean fightingUnarmed( Hero hero ){
 		if (hero.belongings.attackingWeapon() == null
-			|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+			|| hero.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
 			return true;
 		}
 		if (hero.belongings.thrownWeapon != null || hero.belongings.abilityWeapon != null){
 			return false;
 		}
-		BrawlersStance stance = hero.buff(BrawlersStance.class);
+		BrawlersStance stance = hero.getBuff(BrawlersStance.class);
 		if (stance != null && stance.hitsLeft() > 0){
 			//clear the buff if no ring of force is equipped
-			if (hero.buff(RingOfForce.Force.class) == null){
+			if (hero.getBuff(RingOfForce.Force.class) == null){
 				stance.detach();
 				AttackIndicator.updateState();
 				return false;
@@ -227,10 +227,10 @@ public class RingOfForce extends Ring {
 		if (hero.belongings.attackingWeapon() == null){
 			return false;
 		}
-		if (hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
-			return hero.buff(MonkEnergy.MonkAbility.FlurryEmpowerTracker.class) != null;
+		if (hero.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+			return hero.getBuff(MonkEnergy.MonkAbility.FlurryEmpowerTracker.class) != null;
 		}
-		BrawlersStance stance = hero.buff(BrawlersStance.class);
+		BrawlersStance stance = hero.getBuff(BrawlersStance.class);
 		if (stance != null && stance.hitsLeft() > 0){
 			return true;
 		}
@@ -239,10 +239,10 @@ public class RingOfForce extends Ring {
 
 	public static boolean unarmedGetsWeaponAugment(Hero hero ){
 		if (hero.belongings.attackingWeapon() == null
-			|| hero.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
+			|| hero.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
 			return false;
 		}
-		BrawlersStance stance = hero.buff(BrawlersStance.class);
+		BrawlersStance stance = hero.getBuff(BrawlersStance.class);
 		if (stance != null && stance.hitsLeft() > 0){
 			return true;
 		}

@@ -66,7 +66,7 @@ public class RatKingRoom extends SecretRoom {
 		}
 
 		RatKing king = new RatKing();
-		king.pos = level.pointToCell(random( 2 ));
+		king.position = level.pointToCell(random( 2 ));
 		level.mobs.add( king );
 	}
 	
@@ -81,6 +81,6 @@ public class RatKingRoom extends SecretRoom {
 		
 		Item prize = new Gold( Random.IntRange( 10, 25 ) );
 		
-		level.drop( prize, pos ).type = Heap.Type.CHEST;
+		level.dropItemOnPosition( prize, pos ).type = Heap.Type.CHEST;
 	}
 }

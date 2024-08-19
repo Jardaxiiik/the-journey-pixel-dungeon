@@ -115,7 +115,7 @@ public abstract class FistSprite extends MobSprite {
 	public void attack( int cell ) {
 		super.attack( cell );
 
-		jump(ch.pos, ch.pos, 9, SLAM_TIME, null );
+		jump(ch.position, ch.position, 9, SLAM_TIME, null );
 	}
 
 	//different bolt, so overrides zap

@@ -60,7 +60,7 @@ public class Shocking extends Weapon.Enchantment {
 			affected.remove(defender); //defender isn't hurt by lightning
 			for (Character ch : affected) {
 				if (ch.alignment != attacker.alignment) {
-					ch.damage(Math.round(damage * 0.4f * powerMulti), this);
+					ch.receiveDamageFromSource(Math.round(damage * 0.4f * powerMulti), this);
 				}
 			}
 
@@ -89,13 +89,13 @@ public class Shocking extends Weapon.Enchantment {
 		defender.sprite.centerEmitter().burst(SparkParticle.FACTORY, 3);
 		defender.sprite.flash();
 		
-		PathFinder.buildDistanceMap( defender.pos, BArray.not( Dungeon.level.solid, null ), dist );
+		PathFinder.buildDistanceMap( defender.position, BArray.not( Dungeon.level.solid, null ), dist );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Character n = Actor.findChar(i);
+				Character n = Actor.getCharacterOnPosition(i);
 				if (n != null && n != attacker && !affected.contains(n)) {
 					arcs.add(new Lightning.Arc(defender.sprite.center(), n.sprite.center()));
-					arc(attacker, n, (Dungeon.level.water[n.pos] && !n.flying) ? 2 : 1, affected, arcs);
+					arc(attacker, n, (Dungeon.level.water[n.position] && !n.flying) ? 2 : 1, affected, arcs);
 				}
 			}
 		}

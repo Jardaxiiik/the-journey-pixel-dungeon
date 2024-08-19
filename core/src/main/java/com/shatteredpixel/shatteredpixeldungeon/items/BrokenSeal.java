@@ -163,7 +163,7 @@ public class BrokenSeal extends Item {
 							//if index is 1, then the glyph transfer happens in affixSeal
 
 							GLog.p(Messages.get(BrokenSeal.class, "affix"));
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.hero.sprite.operate(Dungeon.hero.position);
 							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 							armor.affixSeal(seal);
 							seal.detach(Dungeon.hero.belongings.backpack);
@@ -172,7 +172,7 @@ public class BrokenSeal extends Item {
 
 				} else {
 					GLog.p(Messages.get(BrokenSeal.class, "affix"));
-					Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+					Dungeon.hero.sprite.operate(Dungeon.hero.position);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
 					armor.affixSeal((BrokenSeal)curItem);
 					curItem.detach(Dungeon.hero.belongings.backpack);
@@ -215,7 +215,7 @@ public class BrokenSeal extends Item {
 				detach();
 			}
 			
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 		

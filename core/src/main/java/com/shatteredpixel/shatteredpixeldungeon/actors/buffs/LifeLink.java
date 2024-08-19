@@ -41,10 +41,10 @@ public class LifeLink extends FlavourBuff {
 	@Override
 	public void detach() {
 		super.detach();
-		Character ch = (Character)Actor.findById(object);
+		Character ch = (Character)Actor.getById(object);
 		if (!target.isActive() && ch != null){
-			for (LifeLink l : ch.buffs(LifeLink.class)){
-				if (l.object == target.id()){
+			for (LifeLink l : ch.getBuffs(LifeLink.class)){
+				if (l.object == target.getId()){
 					l.detach();
 				}
 			}

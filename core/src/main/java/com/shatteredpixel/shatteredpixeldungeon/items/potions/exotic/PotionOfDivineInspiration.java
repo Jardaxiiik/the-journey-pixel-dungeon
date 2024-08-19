@@ -64,7 +64,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 		boolean[] enabled = new boolean[5];
 		enabled[1] = enabled[2] = enabled[3] = enabled[4] = true;
 
-		DivineInspirationTracker tracker = hero.buff(DivineInspirationTracker.class);
+		DivineInspirationTracker tracker = hero.getBuff(DivineInspirationTracker.class);
 
 		if (tracker != null){
 			boolean allBoosted = true;
@@ -109,7 +109,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					identifiedByUse = false;
 
 					curUser.busy();
-					curUser.sprite.operate(curUser.pos);
+					curUser.sprite.operate(curUser.position);
 
 					curUser.spendAndNext(1f);
 
@@ -134,7 +134,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					GLog.p(Messages.get(PotionOfDivineInspiration.class, "bonus"));
 
 					if (!anonymous){
-						Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
+						Talent.onPotionUsed(curUser, curUser.position, talentFactor);
 					}
 
 				}

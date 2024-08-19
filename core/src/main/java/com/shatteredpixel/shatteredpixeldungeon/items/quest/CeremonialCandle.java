@@ -168,22 +168,22 @@ public class CeremonialCandle extends Item {
 			}
 				
 			Elemental.NewbornFireElemental elemental = new Elemental.NewbornFireElemental();
-			Character ch = Actor.findChar( ritualPos );
+			Character ch = Actor.getCharacterOnPosition( ritualPos );
 			if (ch != null) {
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = ritualPos + n;
-					if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Actor.findChar( cell ) == null) {
+					if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Actor.getCharacterOnPosition( cell ) == null) {
 						candidates.add( cell );
 					}
 				}
 				if (candidates.size() > 0) {
-					elemental.pos = Random.element( candidates );
+					elemental.position = Random.element( candidates );
 				} else {
-					elemental.pos = ritualPos;
+					elemental.position = ritualPos;
 				}
 			} else {
-				elemental.pos = ritualPos;
+				elemental.position = ritualPos;
 			}
 			elemental.state = elemental.HUNTING;
 			GameScene.add(elemental, 1);

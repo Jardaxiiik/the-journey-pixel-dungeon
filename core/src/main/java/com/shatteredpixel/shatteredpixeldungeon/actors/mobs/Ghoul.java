@@ -64,12 +64,12 @@ public class Ghoul extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 16, 22 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 24;
 	}
 
@@ -79,7 +79,7 @@ public class Ghoul extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0.5f;
 	}
 
@@ -110,33 +110,33 @@ public class Ghoul extends Mob {
 			
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
-			int[] neighbours = {pos + 1, pos - 1, pos + Dungeon.level.width(), pos - Dungeon.level.width()};
+			int[] neighbours = {position + 1, position - 1, position + Dungeon.level.width(), position - Dungeon.level.width()};
 			for (int n : neighbours) {
 				if (Dungeon.level.passable[n]
-						&& Actor.findChar( n ) == null
-						&& (!Character.hasProp(this, Property.LARGE) || Dungeon.level.openSpace[n])) {
+						&& Actor.getCharacterOnPosition( n ) == null
+						&& (!Character.hasProperty(this, Property.LARGE) || Dungeon.level.openSpace[n])) {
 					candidates.add( n );
 				}
 			}
 			
 			if (!candidates.isEmpty()){
 				Ghoul child = new Ghoul();
-				child.partnerID = this.id();
-				this.partnerID = child.id();
+				child.partnerID = this.getId();
+				this.partnerID = child.getId();
 				if (state != SLEEPING) {
 					child.state = child.WANDERING;
 				}
 				
-				child.pos = Random.element( candidates );
+				child.position = Random.element( candidates );
 
 				GameScene.add( child );
 				Dungeon.level.occupyCell(child);
 				
 				if (sprite.visible) {
-					Actor.add( new Pushing( child, pos, child.pos ) );
+					Actor.addActor( new Pushing( child, position, child.position) );
 				}
 
-				for (Buff b : buffs(ChampionEnemy.class)){
+				for (Buff b : getBuffs(ChampionEnemy.class)){
 					Buff.affect( child, b.getClass());
 				}
 
@@ -149,13 +149,13 @@ public class Ghoul extends Mob {
 	private boolean beingLifeLinked = false;
 
 	@Override
-	public void die(Object cause) {
-		if (cause != Chasm.class && cause != GhoulLifeLink.class && !Dungeon.level.pit[pos]){
+	public void die(Object source) {
+		if (source != Chasm.class && source != GhoulLifeLink.class && !Dungeon.level.pit[position]){
 			Ghoul nearby = GhoulLifeLink.searchForHost(this);
 			if (nearby != null){
 				beingLifeLinked = true;
 				timesDowned++;
-				Actor.remove(this);
+				Actor.removeActor(this);
 				Dungeon.level.mobs.remove( this );
 				Buff.append(nearby, GhoulLifeLink.class).set(timesDowned*5, this);
 				((GhoulSprite)sprite).crumple();
@@ -163,7 +163,7 @@ public class Ghoul extends Mob {
 			}
 		}
 
-		super.die(cause);
+		super.die(source);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class Ghoul extends Mob {
 	@Override
 	protected synchronized void onRemove() {
 		if (beingLifeLinked) {
-			for (Buff buff : buffs()) {
+			for (Buff buff : getBuffs()) {
 				if (buff instanceof SacrificialFire.Marked){
 					//don't remove and postpone so marked stays on
 					Buff.prolong(this, SacrificialFire.Marked.class, timesDowned*5);
@@ -198,14 +198,14 @@ public class Ghoul extends Mob {
 
 	private class Sleeping extends Mob.Sleeping {
 		@Override
-		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
-			Ghoul partner = (Ghoul) Actor.findById( partnerID );
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
+			Ghoul partner = (Ghoul) Actor.getById( partnerID );
 			if (partner != null && partner.state != partner.SLEEPING){
 				state = WANDERING;
-				target = partner.pos;
+				target = partner.position;
 				return true;
 			} else {
-				return super.act( enemyInFOV, justAlerted );
+				return super.playGameTurn( enemyInFOV, justAlerted );
 			}
 		}
 	}
@@ -216,15 +216,15 @@ public class Ghoul extends Mob {
 		protected boolean continueWandering() {
 			enemySeen = false;
 			
-			Ghoul partner = (Ghoul) Actor.findById( partnerID );
-			if (partner != null && (partner.state != partner.WANDERING || Dungeon.level.distance( pos,  partner.target) > 1)){
-				target = partner.pos;
-				int oldPos = pos;
-				if (getCloser( target )){
-					spend( 1 / speed() );
-					return moveSprite( oldPos, pos );
+			Ghoul partner = (Ghoul) Actor.getById( partnerID );
+			if (partner != null && (partner.state != partner.WANDERING || Dungeon.level.distance(position,  partner.target) > 1)){
+				target = partner.position;
+				int oldPos = position;
+				if (moveCloserToTarget( target )){
+					spendTimeAdjusted( 1 / getSpeed() );
+					return moveSprite( oldPos, position);
 				} else {
-					spend( TICK );
+					spendTimeAdjusted( TICK );
 					return true;
 				}
 			} else {
@@ -250,12 +250,12 @@ public class Ghoul extends Mob {
 				Dungeon.level.updateFieldOfView( target, target.fieldOfView );
 			}
 
-			if (!target.fieldOfView[ghoul.pos] && Dungeon.level.distance(ghoul.pos, target.pos) >= 4){
+			if (!target.fieldOfView[ghoul.position] && Dungeon.level.distance(ghoul.position, target.position) >= 4){
 				detach();
 				return true;
 			}
 
-			if (Dungeon.level.pit[ghoul.pos]){
+			if (Dungeon.level.pit[ghoul.position]){
 				super.detach();
 				ghoul.beingLifeLinked = false;
 				ghoul.die(this);
@@ -263,33 +263,33 @@ public class Ghoul extends Mob {
 			}
 
 			//have to delay this manually here are a downed ghouls can't be directly frozen otherwise
-			if (target.buff(Challenge.DuelParticipant.class) == null) {
+			if (target.getBuff(Challenge.DuelParticipant.class) == null) {
 				turnsToRevive--;
 			}
 			if (turnsToRevive <= 0){
-				if (Actor.findChar( ghoul.pos ) != null) {
+				if (Actor.getCharacterOnPosition( ghoul.position) != null) {
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
-						int cell = ghoul.pos + n;
+						int cell = ghoul.position + n;
 						if (Dungeon.level.passable[cell]
-								&& Actor.findChar( cell ) == null
-								&& (!Character.hasProp(ghoul, Property.LARGE) || Dungeon.level.openSpace[cell])) {
+								&& Actor.getCharacterOnPosition( cell ) == null
+								&& (!Character.hasProperty(ghoul, Property.LARGE) || Dungeon.level.openSpace[cell])) {
 							candidates.add( cell );
 						}
 					}
 					if (candidates.size() > 0) {
 						int newPos = Random.element( candidates );
-						Actor.add( new Pushing( ghoul, ghoul.pos, newPos ) );
-						ghoul.pos = newPos;
+						Actor.addActor( new Pushing( ghoul, ghoul.position, newPos ) );
+						ghoul.position = newPos;
 
 					} else {
-						spend(TICK);
+						spendTimeAdjusted(TICK);
 						return true;
 					}
 				}
 				ghoul.healthPoints = Math.round(ghoul.healthMax /10f);
 				ghoul.beingLifeLinked = false;
-				Actor.add(ghoul);
+				Actor.addActor(ghoul);
 				ghoul.timeToNow();
 				Dungeon.level.mobs.add(ghoul);
 				Dungeon.level.occupyCell( ghoul );
@@ -299,13 +299,13 @@ public class Ghoul extends Mob {
 				return true;
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
 		public void updateVisibility(){
 			if (ghoul != null && ghoul.sprite != null){
-				ghoul.sprite.visible = Dungeon.level.heroFOV[ghoul.pos];
+				ghoul.sprite.visible = Dungeon.level.heroFOV[ghoul.position];
 			}
 		}
 
@@ -355,16 +355,16 @@ public class Ghoul extends Mob {
 
 		public static Ghoul searchForHost(Ghoul dieing){
 
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				//don't count hero ally ghouls or duel frozen ghouls
 				if (ch != dieing && ch instanceof Ghoul
 						&& ch.alignment == dieing.alignment
-						&& ch.buff(Challenge.SpectatorFreeze.class) == null){
+						&& ch.getBuff(Challenge.SpectatorFreeze.class) == null){
 					if (ch.fieldOfView == null){
 						ch.fieldOfView = new boolean[Dungeon.level.length()];
 						Dungeon.level.updateFieldOfView( ch, ch.fieldOfView );
 					}
-					if (ch.fieldOfView[dieing.pos] || Dungeon.level.distance(ch.pos, dieing.pos) < 4){
+					if (ch.fieldOfView[dieing.position] || Dungeon.level.distance(ch.position, dieing.position) < 4){
 						return (Ghoul) ch;
 					}
 				}

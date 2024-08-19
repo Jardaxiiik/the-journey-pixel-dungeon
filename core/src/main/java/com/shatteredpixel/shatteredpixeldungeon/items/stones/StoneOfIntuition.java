@@ -108,17 +108,17 @@ public class StoneOfIntuition extends InventoryStone {
 						GLog.p( Messages.get(WndGuess.class, "correct") );
 						curUser.sprite.parent.add( new Identification( curUser.sprite.center().offset( 0, -16 ) ) );
 
-						if (curUser.buff(IntuitionUseTracker.class) == null){
+						if (curUser.getBuff(IntuitionUseTracker.class) == null){
 							GLog.h( Messages.get(WndGuess.class, "preserved") );
 							Buff.affect(curUser, IntuitionUseTracker.class);
 						} else {
 							curItem.detach( curUser.belongings.backpack );
-							curUser.buff(IntuitionUseTracker.class).detach();
+							curUser.getBuff(IntuitionUseTracker.class).detach();
 						}
 					} else {
 						curItem.detach( curUser.belongings.backpack );
-						if (curUser.buff(IntuitionUseTracker.class) != null) {
-							curUser.buff(IntuitionUseTracker.class).detach();
+						if (curUser.getBuff(IntuitionUseTracker.class) != null) {
+							curUser.getBuff(IntuitionUseTracker.class).detach();
 						}
 						GLog.n( Messages.get(WndGuess.class, "incorrect") );
 					}

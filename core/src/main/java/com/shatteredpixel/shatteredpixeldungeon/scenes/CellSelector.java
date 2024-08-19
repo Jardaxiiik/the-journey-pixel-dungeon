@@ -90,9 +90,9 @@ public class CellSelector extends ScrollArea {
 
 			//hero first
 			if (Dungeon.hero.sprite != null && Dungeon.hero.sprite.overlapsPoint( p.x, p.y )){
-				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.hero.pos);
+				PointF c = DungeonTilemap.tileCenterToWorld(Dungeon.hero.position);
 				if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
-					select(Dungeon.hero.pos, event.button);
+					select(Dungeon.hero.position, event.button);
 					return;
 				}
 			}
@@ -100,9 +100,9 @@ public class CellSelector extends ScrollArea {
 			//then mobs
 			for (Character mob : Dungeon.level.mobs.toArray(new Mob[0])){
 				if (mob.sprite != null && mob.sprite.overlapsPoint( p.x, p.y )){
-					PointF c = DungeonTilemap.tileCenterToWorld(mob.pos);
+					PointF c = DungeonTilemap.tileCenterToWorld(mob.position);
 					if (Math.abs(p.x - c.x) <= 12 && Math.abs(p.y - c.y) <= 12) {
-						select(mob.pos, event.button);
+						select(mob.position, event.button);
 						return;
 					}
 				}
@@ -135,9 +135,9 @@ public class CellSelector extends ScrollArea {
 		//Resets char and item sprite positions with the new camera zoom
 		//This is important as sprites are centered on a 16x16 tile, but may have any sprite size
 		//This can lead to none-whole coordinate, which need to be aligned with the zoom
-		for (Character c : Actor.chars()){
+		for (Character c : Actor.getCharacters()){
 			if (c.sprite != null && !c.sprite.isMoving){
-				c.sprite.point(c.sprite.worldToCamera(c.pos));
+				c.sprite.point(c.sprite.worldToCamera(c.position));
 			}
 		}
 		for (Heap heap : Dungeon.level.heaps.valueList()){
@@ -401,12 +401,12 @@ public class CellSelector extends ScrollArea {
 		for (GameAction action : actions) {
 			direction.offset(directionFromAction(action));
 		}
-		int cell = Dungeon.hero.pos;
+		int cell = Dungeon.hero.position;
 		//clamp to adjacent values (-1 to +1)
 		cell += GameMath.gate(-1, direction.x, +1);
 		cell += GameMath.gate(-1, direction.y, +1) * Dungeon.level.width();
 
-		if (cell != Dungeon.hero.pos && cell != lastCellMoved){
+		if (cell != Dungeon.hero.position && cell != lastCellMoved){
 			lastCellMoved = cell;
 			if (Dungeon.hero.chooseHeroActionBasedOnTile( cell )) {
 				Dungeon.hero.next();

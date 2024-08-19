@@ -56,7 +56,7 @@ public class ElixirOfHoneyedHealing extends Elixir {
 			Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 		}
 		
-		Character ch = Actor.findChar(cell);
+		Character ch = Actor.getCharacterOnPosition(cell);
 		if (ch != null){
 			PotionOfHealing.cure(ch);
 			PotionOfHealing.heal(ch);

@@ -94,7 +94,7 @@ public class TengusMask extends Item {
 		
 		detach( curUser.belongings.backpack );
 		
-		curUser.spend( Actor.TICK );
+		curUser.spendTimeAdjusted( Actor.TICK );
 		curUser.busy();
 		
 		curUser.subClass = way;
@@ -104,7 +104,7 @@ public class TengusMask extends Item {
 			Buff.affect(curUser, Preparation.class);
 		}
 		
-		curUser.sprite.operate( curUser.pos );
+		curUser.sprite.operate( curUser.position);
 		Sample.INSTANCE.play( Assets.Sounds.MASTERY );
 		
 		Emitter e = curUser.sprite.centerEmitter();

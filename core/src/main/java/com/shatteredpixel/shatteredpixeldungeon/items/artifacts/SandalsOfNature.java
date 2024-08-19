@@ -121,7 +121,7 @@ public class SandalsOfNature extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (hero.buff(MagicImmune.class) != null){
+		if (hero.getBuff(MagicImmune.class) != null){
 			return actions;
 		}
 		if (isEquipped( hero ) && !cursed) {
@@ -140,7 +140,7 @@ public class SandalsOfNature extends Artifact {
 	public void execute( Hero hero, String action ) {
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_FEED)){
 
@@ -164,7 +164,7 @@ public class SandalsOfNature extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		target.buff(Naturalism.class).charge(amount);
+		target.getBuff(Naturalism.class).charge(amount);
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public class SandalsOfNature extends Artifact {
 
 	public class Naturalism extends ArtifactBuff{
 		public void charge(float amount) {
-			if (cursed || target.buff(MagicImmune.class) != null) return;
+			if (cursed || target.getBuff(MagicImmune.class) != null) return;
 			if (charge < chargeCap){
 				//0.5 charge per grass at +0, up to 1 at +10
 				float chargeGain = (3f + level())/6f;
@@ -290,10 +290,10 @@ public class SandalsOfNature extends Artifact {
 				curSeedEffect = item.getClass();
 
 				Hero hero = Dungeon.hero;
-				hero.sprite.operate( hero.pos );
+				hero.sprite.operate( hero.position);
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
 				hero.busy();
-				hero.spend( Actor.TICK );
+				hero.spendTimeAdjusted( Actor.TICK );
 				if (seeds.size() >= 3+(level()*3)){
 					seeds.clear();
 					upgrade();
@@ -316,11 +316,11 @@ public class SandalsOfNature extends Artifact {
 		public void onSelect(Integer cell) {
 			if (cell != null){
 
-				if (!Dungeon.level.heroFOV[cell] || Dungeon.level.distance(curUser.pos, cell) > 3){
+				if (!Dungeon.level.heroFOV[cell] || Dungeon.level.distance(curUser.position, cell) > 3){
 					GLog.w(Messages.get(SandalsOfNature.class, "out_of_range"));
 				} else {
 
-					Ballistica aim = new Ballistica(curUser.pos, cell, Ballistica.STOP_TARGET);
+					Ballistica aim = new Ballistica(curUser.position, cell, Ballistica.STOP_TARGET);
 					for (int c : aim.subPath(0, aim.dist)){
 						CellEmitter.get( c ).burst( LeafParticle.GENERAL, 6 );
 					}
@@ -329,7 +329,7 @@ public class SandalsOfNature extends Artifact {
 					Invisibility.dispel(curUser);
 
 					Plant plant = ((Plant.Seed) Reflection.newInstance(curSeedEffect)).couch(cell, null);
-					plant.activate(Actor.findChar(cell));
+					plant.activate(Actor.getCharacterOnPosition(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
 

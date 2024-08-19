@@ -46,7 +46,7 @@ public class FlashingTrap extends Trap {
 	@Override
 	public void activate() {
 		
-		Character c = Actor.findChar( pos );
+		Character c = Actor.getCharacterOnPosition( pos );
 		
 		if (c != null) {
 			int damage = Math.max( 0,  (4 + scalingDepth()/2) - c.drRoll()/2 );

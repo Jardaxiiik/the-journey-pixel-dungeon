@@ -82,23 +82,23 @@ public class Ghost extends NPC {
 
 	@Override
 	protected boolean playGameTurn() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
 		}
-		if (Dungeon.level.heroFOV[pos] && !Quest.completed()){
+		if (Dungeon.level.heroFOV[position] && !Quest.completed()){
 			Notes.add( Notes.Landmark.GHOST );
 		}
 		return super.playGameTurn();
 	}
 
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	
 	@Override
-	public float speed() {
+	public float getSpeed() {
 		return 0.5f;
 	}
 	
@@ -108,12 +108,12 @@ public class Ghost extends NPC {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 	
@@ -124,7 +124,7 @@ public class Ghost extends NPC {
 	
 	@Override
 	public boolean interact(Character c) {
-		sprite.turnTo( pos, c.pos );
+		sprite.turnTo(position, c.position);
 		
 		Sample.INSTANCE.play( Assets.Sounds.GHOST );
 
@@ -169,18 +169,18 @@ public class Ghost extends NPC {
 			switch (Quest.type){
 				case 1: default:
 					questBoss = new FetidRat();
-					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.getName())); break;
 				case 2:
 					questBoss = new GnollTrickster();
-					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.getName())); break;
 				case 3:
 					questBoss = new GreatCrab();
-					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.name())); break;
+					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.getName())); break;
 			}
 
-			questBoss.pos = Dungeon.level.randomRespawnCell( this );
+			questBoss.position = Dungeon.level.randomRespawnCell( this );
 
-			if (questBoss.pos != -1) {
+			if (questBoss.position != -1) {
 				GameScene.add(questBoss);
 				Quest.given = true;
 				Notes.add( Notes.Landmark.GHOST );
@@ -302,8 +302,8 @@ public class Ghost extends NPC {
 				
 				Ghost ghost = new Ghost();
 				do {
-					ghost.pos = level.pointToCell(room.random());
-				} while (ghost.pos == -1 || ghost.pos == level.exit());
+					ghost.position = level.pointToCell(room.random());
+				} while (ghost.position == -1 || ghost.position == level.exit());
 				level.mobs.add( ghost );
 				
 				spawned = true;

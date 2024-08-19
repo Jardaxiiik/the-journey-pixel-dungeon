@@ -52,7 +52,7 @@ public class BattleAxe extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Character target){
-		if (target == null || (target instanceof Mob && ((Mob) target).surprisedBy(hero))) {
+		if (target == null || (target instanceof Mob && ((Mob) target).isSurprisedBy(hero))) {
 			return 1;
 		} else {
 			return 2;

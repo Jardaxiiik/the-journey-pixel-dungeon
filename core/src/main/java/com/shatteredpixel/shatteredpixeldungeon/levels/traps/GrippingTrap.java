@@ -41,7 +41,7 @@ public class GrippingTrap extends Trap {
 	@Override
 	public void activate() {
 
-		Character c = Actor.findChar( pos );
+		Character c = Actor.getCharacterOnPosition( pos );
 
 		if (c != null && !c.flying) {
 			int damage = Math.max( 0,  (2 + scalingDepth()/2) - c.drRoll()/2 );

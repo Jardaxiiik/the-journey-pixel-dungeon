@@ -267,10 +267,10 @@ abstract public class ClassArmor extends Armor {
 								identify();
 
 								GLog.p( Messages.get(ClassArmor.class, "transfer_complete") );
-								hero.sprite.operate(hero.pos);
+								hero.sprite.operate(hero.position);
 								hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
 								Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-								hero.spend(Actor.TICK);
+								hero.spendTimeAdjusted(Actor.TICK);
 								hero.busy();
 
 							}
@@ -317,7 +317,7 @@ abstract public class ClassArmor extends Armor {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 				}
 				return true;
 			}
@@ -335,7 +335,7 @@ abstract public class ClassArmor extends Armor {
 					charge = 100;
 				}
 			}
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 	}

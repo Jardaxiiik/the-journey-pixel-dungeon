@@ -116,7 +116,7 @@ public class CrystalChoiceRoom extends SpecialRoom {
 					pos = level.pointToCell(room1.random(0));
 				}
 			} while (level.heaps.get(pos) != null);
-			level.drop(reward, pos);
+			level.dropItemOnPosition(reward, pos);
 		}
 
 		Item hidden = ItemGenerator.random(Random.oneOf(
@@ -124,7 +124,7 @@ public class CrystalChoiceRoom extends SpecialRoom {
 				ItemGenerator.Category.RING,
 				ItemGenerator.Category.ARTIFACT
 		));
-		Heap chest = level.drop(hidden, level.pointToCell(room2.center()));
+		Heap chest = level.dropItemOnPosition(hidden, level.pointToCell(room2.center()));
 		chest.type = Heap.Type.CHEST;
 		//opening the chest is optional, so it doesn't count for exploration bonus
 		chest.autoExplored = true;

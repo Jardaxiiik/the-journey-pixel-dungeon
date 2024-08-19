@@ -46,7 +46,7 @@ public class BowFragment extends RemainsItem {
 	protected void doEffect(Hero hero) {
 		ArrayList<Integer> grassCells = new ArrayList<>();
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-			grassCells.add(hero.pos+i);
+			grassCells.add(hero.position +i);
 		}
 		Random.shuffle(grassCells);
 		for (int grassCell : grassCells){

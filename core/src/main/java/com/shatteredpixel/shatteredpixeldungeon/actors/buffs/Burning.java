@@ -89,16 +89,16 @@ public class Burning extends Buff implements Hero.Doom {
 	@Override
 	public boolean playGameTurn() {
 		
-		if (target.isAlive() && !target.isImmune(getClass())) {
+		if (target.isAlive() && !target.isImmuneToEffectType(getClass())) {
 			
 			int damage = Random.NormalIntRange( 1, 3 + Dungeon.scalingDepth()/4 );
 			Buff.detach( target, Chill.class);
 
-			if (target instanceof Hero && target.buff(TimekeepersHourglass.timeStasis.class) == null) {
+			if (target instanceof Hero && target.getBuff(TimekeepersHourglass.timeStasis.class) == null) {
 				
 				Hero hero = (Hero)target;
 
-				hero.damage( damage, this );
+				hero.receiveDamageFromSource( damage, this );
 				burnIncrement++;
 
 				//at 4+ turns, there is a (turns-3)/3 chance an item burns
@@ -107,7 +107,7 @@ public class Burning extends Buff implements Hero.Doom {
 
 					ArrayList<Item> burnable = new ArrayList<>();
 					//does not reach inside of containers
-					if (hero.buff(LostInventory.class) == null) {
+					if (hero.getBuff(LostInventory.class) == null) {
 						for (Item i : hero.belongings.backpack.items) {
 							if (!i.unique && (i instanceof Scroll || i instanceof MysteryMeat || i instanceof FrozenCarpaccio)) {
 								burnable.add(i);
@@ -121,15 +121,15 @@ public class Burning extends Buff implements Hero.Doom {
 						if (toBurn instanceof MysteryMeat || toBurn instanceof FrozenCarpaccio){
 							ChargrilledMeat steak = new ChargrilledMeat();
 							if (!steak.collect( hero.belongings.backpack )) {
-								Dungeon.level.drop( steak, hero.pos ).sprite.drop();
+								Dungeon.level.dropItemOnPosition( steak, hero.position).sprite.drop();
 							}
 						}
-						Heap.burnFX( hero.pos );
+						Heap.burnFX( hero.position);
 					}
 				}
 				
 			} else {
-				target.damage( damage, this );
+				target.receiveDamageFromSource( damage, this );
 			}
 
 			if (target instanceof Thief && ((Thief) target).item != null) {
@@ -151,15 +151,15 @@ public class Burning extends Buff implements Hero.Doom {
 			detach();
 		}
 		
-		if (Dungeon.level.flamable[target.pos] && Emitter.volumeAt(target.pos, Fire.class) == 0) {
-			GameScene.add( Emitter.seed( target.pos, 4, Fire.class ) );
+		if (Dungeon.level.flamable[target.position] && Emitter.volumeAt(target.position, Fire.class) == 0) {
+			GameScene.add( Emitter.seed( target.position, 4, Fire.class ) );
 		}
 		
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		left -= TICK;
 		
 		if (left <= 0 ||
-			(Dungeon.level.water[target.pos] && !target.flying)) {
+			(Dungeon.level.water[target.position] && !target.flying)) {
 			
 			detach();
 		}
@@ -172,7 +172,7 @@ public class Burning extends Buff implements Hero.Doom {
 	}
 	
 	public void reignite(Character ch, float duration ) {
-		if (ch.isImmune(Burning.class)){
+		if (ch.isImmuneToEffectType(Burning.class)){
 			//TODO this only works for the hero, not others who can have brimstone+arcana effect
 			// e.g. prismatic image, shadow clone
 			if (ch instanceof Hero

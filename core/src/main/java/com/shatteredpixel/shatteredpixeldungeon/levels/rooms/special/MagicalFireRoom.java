@@ -103,10 +103,10 @@ public class MagicalFireRoom extends SpecialRoom {
 				pos = level.pointToCell(behindFire.random(0));
 			} while (level.heaps.get(pos) != null);
 			if (honeyPot){
-				level.drop( new Honeypot(), pos);
+				level.dropItemOnPosition( new Honeypot(), pos);
 				honeyPot = false;
 			} else
-				level.drop( prize( level ), pos );
+				level.dropItemOnPosition( prize( level ), pos );
 		}
 
 		level.addItemToSpawn(new PotionOfFrost());
@@ -215,8 +215,8 @@ public class MagicalFireRoom extends SpecialRoom {
 						}
 
 						//ignite adjacent chars
-						Character ch = Actor.findChar(cell);
-						if (ch != null && !ch.isImmune(getClass())) {
+						Character ch = Actor.getCharacterOnPosition(cell);
+						if (ch != null && !ch.isImmuneToEffectType(getClass())) {
 							Buff.affect(ch, Burning.class).reignite(ch, 4f);
 						}
 

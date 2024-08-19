@@ -74,12 +74,12 @@ public class CrystalWisp extends Mob{
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 5, 10 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 18;
 	}
 
@@ -89,22 +89,22 @@ public class CrystalWisp extends Mob{
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	protected boolean canAttackEnemy(Character enemy ) {
+		return super.canAttackEnemy(enemy)
+				|| new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT).collisionPos == enemy.position;
 	}
 
-	protected boolean doAttack(Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 
-		if (Dungeon.level.adjacent( pos, enemy.pos )
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
+		if (Dungeon.level.adjacent(position, targetCharacter.position)
+				|| new Ballistica(position, targetCharacter.position, Ballistica.MAGIC_BOLT).collisionPos != targetCharacter.position) {
 
-			return super.doAttack( enemy );
+			return super.attackCharacter(targetCharacter);
 
 		} else {
 
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {
+				sprite.zap( targetCharacter.position);
 				return false;
 			} else {
 				zap();
@@ -117,14 +117,14 @@ public class CrystalWisp extends Mob{
 	public static class LightBeam {}
 
 	private void zap() {
-		spend( 1f );
+		spendTimeAdjusted( 1f );
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (hit( this, enemy, true )) {
+		if (isTargetHitByAttack( this, enemy, true )) {
 
 			int dmg = Random.NormalIntRange( 5, 10 );
-			enemy.damage( dmg, new LightBeam() );
+			enemy.receiveDamageFromSource( dmg, new LightBeam() );
 
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
 				Badges.validateDeathFromEnemyMagic();

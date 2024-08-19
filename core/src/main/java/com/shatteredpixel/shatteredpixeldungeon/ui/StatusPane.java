@@ -240,7 +240,7 @@ public class StatusPane extends Component {
 		super.update();
 		
 		int health = Dungeon.hero.healthPoints;
-		int shield = Dungeon.hero.shielding();
+		int shield = Dungeon.hero.getShielding();
 		int max = Dungeon.hero.healthMax;
 
 		if (!Dungeon.hero.isAlive()) {

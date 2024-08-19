@@ -50,7 +50,7 @@ public class Amulet extends Item {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (hero.buff(AscensionChallenge.class) != null){
+		if (hero.getBuff(AscensionChallenge.class) != null){
 			actions.clear();
 		} else {
 			actions.add(AC_END);
@@ -74,10 +74,10 @@ public class Amulet extends Item {
 			
 			if (!Statistics.amuletObtained) {
 				Statistics.amuletObtained = true;
-				hero.spend(-TIME_TO_PICK_UP);
+				hero.spendTimeAdjusted(-TIME_TO_PICK_UP);
 
 				//delay with an actor here so pickup behaviour can fully process.
-				Actor.add(new Actor(){
+				Actor.addActor(new Actor(){
 
 					{
 						actPriority = VFX_PRIO;
@@ -85,7 +85,7 @@ public class Amulet extends Item {
 
 					@Override
 					protected boolean playGameTurn() {
-						Actor.remove(this);
+						Actor.removeActor(this);
 						showAmuletScene( true );
 						return false;
 					}
@@ -134,7 +134,7 @@ public class Amulet extends Item {
 	public String desc() {
 		String desc = super.desc();
 
-		if (Dungeon.hero.buff(AscensionChallenge.class) == null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) == null){
 			desc += "\n\n" + Messages.get(this, "desc_origins");
 		} else {
 			desc += "\n\n" + Messages.get(this, "desc_ascent");

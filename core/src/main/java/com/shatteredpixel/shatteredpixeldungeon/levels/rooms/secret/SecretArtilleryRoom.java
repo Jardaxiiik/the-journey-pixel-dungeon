@@ -44,9 +44,9 @@ public class SecretArtilleryRoom extends SecretRoom {
 					|| level.heaps.get(itemPos) != null);
 			
 			if( i == 0 ){
-				level.drop(new Bomb.DoubleBomb(), itemPos);
+				level.dropItemOnPosition(new Bomb.DoubleBomb(), itemPos);
 			} else {
-				level.drop(ItemGenerator.randomMissile(true), itemPos);
+				level.dropItemOnPosition(ItemGenerator.randomMissile(true), itemPos);
 			}
 		}
 		

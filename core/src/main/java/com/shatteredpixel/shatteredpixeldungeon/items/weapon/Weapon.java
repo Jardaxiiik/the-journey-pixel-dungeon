@@ -110,7 +110,7 @@ abstract public class Weapon extends KindOfWeapon {
 	@Override
 	public int proc(Character attacker, Character defender, int damage ) {
 		
-		if (enchantment != null && attacker.buff(MagicImmune.class) == null) {
+		if (enchantment != null && attacker.getBuff(MagicImmune.class) == null) {
 			damage = enchantment.proc( this, attacker, defender, damage );
 		}
 		
@@ -187,7 +187,7 @@ abstract public class Weapon extends KindOfWeapon {
 
 		float ACC = this.ACC;
 
-		if (owner.buff(Wayward.WaywardBuff.class) != null && enchantment instanceof Wayward){
+		if (owner.getBuff(Wayward.WaywardBuff.class) != null && enchantment instanceof Wayward){
 			ACC /= 5;
 		}
 
@@ -214,7 +214,7 @@ abstract public class Weapon extends KindOfWeapon {
 	protected float speedMultiplier(Character owner ){
 		float multi = RingOfFuror.attackSpeedMultiplier(owner);
 
-		if (owner.buff(Scimitar.SwordDance.class) != null){
+		if (owner.getBuff(Scimitar.SwordDance.class) != null){
 			multi += 0.6f;
 		}
 
@@ -342,7 +342,7 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 
 	public boolean hasEnchant(Class<?extends Enchantment> type, Character owner) {
-		return enchantment != null && enchantment.getClass() == type && owner.buff(MagicImmune.class) == null;
+		return enchantment != null && enchantment.getClass() == type && owner.getBuff(MagicImmune.class) == null;
 	}
 	
 	//these are not used to process specific enchant effects, so magic immune doesn't affect them
@@ -391,26 +391,26 @@ abstract public class Weapon extends KindOfWeapon {
 
 		public static float genericProcChanceMultiplier( Character attacker ){
 			float multi = RingOfArcana.enchantPowerMultiplier(attacker);
-			Berserk rage = attacker.buff(Berserk.class);
+			Berserk rage = attacker.getBuff(Berserk.class);
 			if (rage != null) {
 				multi = rage.enchantFactor(multi);
 			}
 
-			if (attacker.buff(RunicBlade.RunicSlashTracker.class) != null){
+			if (attacker.getBuff(RunicBlade.RunicSlashTracker.class) != null){
 				multi += 3f;
-				attacker.buff(RunicBlade.RunicSlashTracker.class).detach();
+				attacker.getBuff(RunicBlade.RunicSlashTracker.class).detach();
 			}
 
-			if (attacker.buff(ElementalStrike.DirectedPowerTracker.class) != null){
-				multi += attacker.buff(ElementalStrike.DirectedPowerTracker.class).enchBoost;
-				attacker.buff(ElementalStrike.DirectedPowerTracker.class).detach();
+			if (attacker.getBuff(ElementalStrike.DirectedPowerTracker.class) != null){
+				multi += attacker.getBuff(ElementalStrike.DirectedPowerTracker.class).enchBoost;
+				attacker.getBuff(ElementalStrike.DirectedPowerTracker.class).detach();
 			}
 
-			if (attacker.buff(Talent.SpiritBladesTracker.class) != null
+			if (attacker.getBuff(Talent.SpiritBladesTracker.class) != null
 					&& ((Hero)attacker).pointsInTalent(Talent.SPIRIT_BLADES) == 4){
 				multi += 0.1f;
 			}
-			if (attacker.buff(Talent.StrikingWaveTracker.class) != null
+			if (attacker.getBuff(Talent.StrikingWaveTracker.class) != null
 					&& ((Hero)attacker).pointsInTalent(Talent.STRIKING_WAVE) == 4){
 				multi += 0.2f;
 			}

@@ -59,28 +59,28 @@ public class SpectralNecromancer extends Necromancer {
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void dropLoot() {
 		if (Dungeon.hero.lvl > maxLvl + 2) return;
 
-		super.rollToDropLoot();
+		super.dropLoot();
 
 		int ofs;
 		do {
 			ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-		} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
-		Dungeon.level.drop( new ScrollOfRemoveCurse(), pos + ofs ).sprite.drop( pos );
+		} while (Dungeon.level.solid[position + ofs] && !Dungeon.level.passable[position + ofs]);
+		Dungeon.level.dropItemOnPosition( new ScrollOfRemoveCurse(), position + ofs ).sprite.drop(position);
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(Object source) {
 		for (int ID : wraithIDs){
-			Actor a = Actor.findById(ID);
+			Actor a = Actor.getById(ID);
 			if (a instanceof Wraith){
 				((Wraith) a).die(null);
 			}
 		}
 
-		super.die(cause);
+		super.die(source);
 	}
 
 	private static final String WRAITH_IDS = "wraith_ids";
@@ -104,47 +104,47 @@ public class SpectralNecromancer extends Necromancer {
 
 	@Override
 	public void summonMinion() {
-		if (Actor.findChar(summoningPos) != null) {
+		if (Actor.getCharacterOnPosition(summoningPos) != null) {
 
 			//cancel if character cannot be moved
-			if (Character.hasProp(Actor.findChar(summoningPos), Property.IMMOVABLE)){
+			if (Character.hasProperty(Actor.getCharacterOnPosition(summoningPos), Property.IMMOVABLE)){
 				summoning = false;
 				((SpectralNecromancerSprite)sprite).finishSummoning();
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return;
 			}
 
-			int pushPos = pos;
+			int pushPos = position;
 			for (int c : PathFinder.OFFSETS_NEIGHBOURS8) {
-				if (Actor.findChar(summoningPos + c) == null
+				if (Actor.getCharacterOnPosition(summoningPos + c) == null
 						&& Dungeon.level.passable[summoningPos + c]
-						&& (Dungeon.level.openSpace[summoningPos + c] || !hasProp(Actor.findChar(summoningPos), Property.LARGE))
-						&& Dungeon.level.trueDistance(pos, summoningPos + c) > Dungeon.level.trueDistance(pos, pushPos)) {
+						&& (Dungeon.level.openSpace[summoningPos + c] || !hasProperty(Actor.getCharacterOnPosition(summoningPos), Property.LARGE))
+						&& Dungeon.level.trueDistance(position, summoningPos + c) > Dungeon.level.trueDistance(position, pushPos)) {
 					pushPos = summoningPos + c;
 				}
 			}
 
 			//push enemy, or wait a turn if there is no valid pushing position
-			if (pushPos != pos) {
-				Character ch = Actor.findChar(summoningPos);
-				Actor.add( new Pushing( ch, ch.pos, pushPos ) );
+			if (pushPos != position) {
+				Character ch = Actor.getCharacterOnPosition(summoningPos);
+				Actor.addActor( new Pushing( ch, ch.position, pushPos ) );
 
-				ch.pos = pushPos;
+				ch.position = pushPos;
 				Dungeon.level.occupyCell(ch );
 
 			} else {
 
-				Character blocker = Actor.findChar(summoningPos);
+				Character blocker = Actor.getCharacterOnPosition(summoningPos);
 				if (blocker.alignment != alignment){
-					blocker.damage( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
+					blocker.receiveDamageFromSource( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
 					if (blocker == Dungeon.hero && !blocker.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
-						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", name())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
 					}
 				}
 
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return;
 			}
 		}
@@ -156,12 +156,12 @@ public class SpectralNecromancer extends Necromancer {
 		Dungeon.level.occupyCell( wraith );
 		((SpectralNecromancerSprite)sprite).finishSummoning();
 
-		for (Buff b : buffs(AllyBuff.class)){
+		for (Buff b : getBuffs(AllyBuff.class)){
 			Buff.affect( wraith, b.getClass());
 		}
-		for (Buff b : buffs(ChampionEnemy.class)){
+		for (Buff b : getBuffs(ChampionEnemy.class)){
 			Buff.affect( wraith, b.getClass());
 		}
-		wraithIDs.add(wraith.id());
+		wraithIDs.add(wraith.getId());
 	}
 }

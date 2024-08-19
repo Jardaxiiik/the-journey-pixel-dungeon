@@ -59,12 +59,12 @@ public class Blacksmith extends NPC {
 	
 	@Override
 	protected boolean playGameTurn() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			die(null);
 			Notes.remove( Notes.Landmark.TROLL );
 			return true;
 		}
-		if (Dungeon.level.visited[pos] && !Quest.started()){
+		if (Dungeon.level.visited[position] && !Quest.started()){
 			Notes.add( Notes.Landmark.TROLL );
 		}
 		return super.playGameTurn();
@@ -73,7 +73,7 @@ public class Blacksmith extends NPC {
 	@Override
 	public boolean interact(Character c) {
 		
-		sprite.turnTo( pos, c.pos );
+		sprite.turnTo(position, c.position);
 
 		if (c != Dungeon.hero){
 			return true;
@@ -125,7 +125,7 @@ public class Blacksmith extends NPC {
 							if (pick.doPickUp( Dungeon.hero )) {
 								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", pick.name()) ));
 							} else {
-								Dungeon.level.drop( pick, Dungeon.hero.pos ).sprite.drop();
+								Dungeon.level.dropItemOnPosition( pick, Dungeon.hero.position).sprite.drop();
 							}
 							Quest.pickaxe = null;
 
@@ -241,17 +241,17 @@ public class Blacksmith extends NPC {
 	}
 
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 	

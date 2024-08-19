@@ -53,13 +53,13 @@ public class WaterOfHealth extends WellWater {
 
 		PotionOfHealing.cure( hero );
 		hero.belongings.uncurseEquipped();
-		hero.buff( Hunger.class ).satisfy( Hunger.STARVING );
+		hero.getBuff( Hunger.class ).satisfy( Hunger.STARVING );
 
 		hero.healthPoints = hero.healthMax;
 		hero.sprite.emitter().start( Speck.factory( Speck.HEALING ), 0.4f, 4 );
 		hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(hero.healthMax), FloatingText.HEALING);
 		
-		CellEmitter.get( hero.pos ).start( ShaftParticle.FACTORY, 0.2f, 3 );
+		CellEmitter.get( hero.position).start( ShaftParticle.FACTORY, 0.2f, 3 );
 
 		Dungeon.hero.interrupt();
 	

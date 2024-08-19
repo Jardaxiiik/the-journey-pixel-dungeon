@@ -55,12 +55,12 @@ public abstract class Shaman extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 5, 10 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 18;
 	}
 	
@@ -70,35 +70,35 @@ public abstract class Shaman extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
-		return super.canAttack(enemy)
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+	protected boolean canAttackEnemy(Character enemy ) {
+		return super.canAttackEnemy(enemy)
+				|| new Ballistica(position, enemy.position, Ballistica.MAGIC_BOLT).collisionPos == enemy.position;
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		//each drop makes future drops 1/3 as likely
 		// so loot chance looks like: 1/33, 1/100, 1/300, 1/900, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.SHAMAN_WAND.count);
+		return super.getLootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.SHAMAN_WAND.count);
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.SHAMAN_WAND.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 
-	protected boolean doAttack(Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 
-		if (Dungeon.level.adjacent( pos, enemy.pos )
-				|| new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos != enemy.pos) {
+		if (Dungeon.level.adjacent(position, targetCharacter.position)
+				|| new Ballistica(position, targetCharacter.position, Ballistica.MAGIC_BOLT).collisionPos != targetCharacter.position) {
 			
-			return super.doAttack( enemy );
+			return super.attackCharacter(targetCharacter);
 			
 		} else {
 			
-			if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-				sprite.zap( enemy.pos );
+			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {
+				sprite.zap( targetCharacter.position);
 				return false;
 			} else {
 				zap();
@@ -111,11 +111,11 @@ public abstract class Shaman extends Mob {
 	public static class EarthenBolt{}
 	
 	private void zap() {
-		spend( 1f );
+		spendTimeAdjusted( 1f );
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (hit( this, enemy, true )) {
+		if (isTargetHitByAttack( this, enemy, true )) {
 			
 			if (Random.Int( 2 ) == 0) {
 				debuff( enemy );
@@ -124,7 +124,7 @@ public abstract class Shaman extends Mob {
 			
 			int dmg = Random.NormalIntRange( 6, 15 );
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
-			enemy.damage( dmg, new EarthenBolt() );
+			enemy.receiveDamageFromSource( dmg, new EarthenBolt() );
 			
 			if (!enemy.isAlive() && enemy == Dungeon.hero) {
 				Badges.validateDeathFromEnemyMagic();
@@ -144,8 +144,8 @@ public abstract class Shaman extends Mob {
 	}
 	
 	@Override
-	public String description() {
-		return super.description() + "\n\n" + Messages.get(this, "spell_desc");
+	public String getDescription() {
+		return super.getDescription() + "\n\n" + Messages.get(this, "spell_desc");
 	}
 	
 	public static class RedShaman extends Shaman {

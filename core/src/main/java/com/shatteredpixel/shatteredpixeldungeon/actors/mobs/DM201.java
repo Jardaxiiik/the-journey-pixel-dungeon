@@ -44,19 +44,19 @@ public class DM201 extends DM200 {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 15, 25 );
 	}
 
 	private boolean threatened = false;
 
 	@Override
-	public void damage(int dmg, Object src) {
-		if ((src instanceof Character && !Dungeon.level.adjacent(pos, ((Character)src).pos))
-				|| enemy == null || !Dungeon.level.adjacent(pos, enemy.pos)){
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
+		if ((sourceOfDamage instanceof Character && !Dungeon.level.adjacent(position, ((Character) sourceOfDamage).position))
+				|| enemy == null || !Dungeon.level.adjacent(position, enemy.position)){
 			threatened = true;
 		}
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	public void onZapComplete(){
@@ -66,12 +66,12 @@ public class DM201 extends DM200 {
 
 	private void zap( ){
 		threatened = false;
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 
-		GameScene.add(Emitter.seed(enemy.pos, 15, CorrosiveGas.class).setStrength(8));
+		GameScene.add(Emitter.seed(enemy.position, 15, CorrosiveGas.class).setStrength(8));
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (!Dungeon.level.solid[enemy.pos+i]) {
-				GameScene.add(Emitter.seed(enemy.pos + i, 5, CorrosiveGas.class).setStrength(8));
+			if (!Dungeon.level.solid[enemy.position +i]) {
+				GameScene.add(Emitter.seed(enemy.position + i, 5, CorrosiveGas.class).setStrength(8));
 			}
 		}
 
@@ -83,43 +83,43 @@ public class DM201 extends DM200 {
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	protected boolean getFurther(int target) {
+	protected boolean moveAwayFromTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void dropLoot() {
 		if (Dungeon.hero.lvl > maxLvl + 2) return;
 
-		super.rollToDropLoot();
+		super.dropLoot();
 
 		int ofs;
 		do {
 			ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-		} while (Dungeon.level.solid[pos + ofs] && !Dungeon.level.passable[pos + ofs]);
-		Dungeon.level.drop( new MetalShard(), pos + ofs ).sprite.drop( pos );
+		} while (Dungeon.level.solid[position + ofs] && !Dungeon.level.passable[position + ofs]);
+		Dungeon.level.dropItemOnPosition( new MetalShard(), position + ofs ).sprite.drop(position);
 	}
 
 	private class Hunting extends Mob.Hunting {
 
 		@Override
-		public boolean act( boolean enemyInFOV, boolean justAlerted ) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 
 			if (threatened && enemyInFOV){
 				if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-					sprite.zap( enemy.pos );
+					sprite.zap( enemy.position);
 					return false;
 				} else {
 					zap();
 					return true;
 				}
 			} else {
-				return super.act( enemyInFOV, justAlerted );
+				return super.playGameTurn( enemyInFOV, justAlerted );
 			}
 
 		}

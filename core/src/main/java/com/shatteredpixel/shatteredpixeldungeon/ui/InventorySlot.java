@@ -101,7 +101,7 @@ public class InventorySlot extends ItemSlot {
 
 			if (item.name() == null) {
 				enable( false );
-			} else if (Dungeon.hero.buff(LostInventory.class) != null
+			} else if (Dungeon.hero.getBuff(LostInventory.class) != null
 					&& !item.keptThroughLostInventory()){
 				enable(false);
 			}

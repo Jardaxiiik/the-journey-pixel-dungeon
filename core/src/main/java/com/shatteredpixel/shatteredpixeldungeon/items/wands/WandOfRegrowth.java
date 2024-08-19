@@ -110,7 +110,7 @@ public class WandOfRegrowth extends Wand {
 			if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
 					terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
 				i.remove();
-			} else if (Character.hasProp(Actor.findChar(cell), Character.Property.IMMOVABLE)) {
+			} else if (Character.hasProperty(Actor.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)) {
 				i.remove();
 			} else if (Dungeon.level.plants.get(cell) != null){
 				i.remove();
@@ -119,7 +119,7 @@ public class WandOfRegrowth extends Wand {
 					Level.set(cell, Terrain.GRASS);
 					GameScene.updateMap( cell );
 				}
-				Character ch = Actor.findChar(cell);
+				Character ch = Actor.getCharacterOnPosition(cell);
 				if (ch != null){
 					if (ch instanceof DwarfKing){
 						Statistics.qualifiedForBossChallengeBadge = false;
@@ -135,16 +135,16 @@ public class WandOfRegrowth extends Wand {
 		if (chargesPerCast() >= 3){
 			Lotus l = new Lotus();
 			l.setLevel(buffedLvl());
-			if (cells.contains(target) && Actor.findChar(target) == null){
+			if (cells.contains(target) && Actor.getCharacterOnPosition(target) == null){
 				cells.remove((Integer)target);
-				l.pos = target;
+				l.position = target;
 				GameScene.add(l);
 			} else {
 				for (int i = bolt.path.size()-1; i >= 0; i--){
 					int c = bolt.path.get(i);
-					if (cells.contains(c) && Actor.findChar(c) == null){
+					if (cells.contains(c) && Actor.getCharacterOnPosition(c) == null){
 						cells.remove((Integer)c);
-						l.pos = c;
+						l.position = c;
 						GameScene.add(l);
 						break;
 					}
@@ -223,11 +223,11 @@ public class WandOfRegrowth extends Wand {
 	public void onHit(MagesStaff staff, Character attacker, Character defender, int damage) {
 		//like pre-nerf vampiric enchantment, except with herbal healing buff, only in grass
 		boolean grass = false;
-		int terr = Dungeon.level.map[attacker.pos];
+		int terr = Dungeon.level.map[attacker.position];
 		if (terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS){
 			grass = true;
 		}
-		terr = Dungeon.level.map[defender.pos];
+		terr = Dungeon.level.map[defender.position];
 		if (terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS){
 			grass = true;
 		}
@@ -280,7 +280,7 @@ public class WandOfRegrowth extends Wand {
 
 	@Override
 	protected int chargesPerCast() {
-		if (cursed || charger != null && charger.target.buff(WildMagic.WildMagicTracker.class) != null){
+		if (cursed || charger != null && charger.target.getBuff(WildMagic.WildMagicTracker.class) != null){
 			return 1;
 		}
 		//consumes 30% of current charges, rounded up, with a min of 1 and a max of 3.
@@ -349,9 +349,9 @@ public class WandOfRegrowth extends Wand {
 			for (int i = 0; i < nDrops && !candidates.isEmpty(); i++){
 				Integer c = Random.element(candidates);
 				if (Dungeon.level.heaps.get(c) == null) {
-					Dungeon.level.drop(new Dewdrop(), c).sprite.drop(pos);
+					Dungeon.level.dropItemOnPosition(new Dewdrop(), c).sprite.drop(pos);
 				} else {
-					Dungeon.level.drop(new Dewdrop(), c).sprite.drop(c);
+					Dungeon.level.dropItemOnPosition(new Dewdrop(), c).sprite.drop(c);
 				}
 				candidates.remove(c);
 			}
@@ -388,7 +388,7 @@ public class WandOfRegrowth extends Wand {
 
 			for (int i = 0; i < nSeeds && !candidates.isEmpty(); i++){
 				Integer c = Random.element(candidates);
-				Dungeon.level.drop(ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), c).sprite.drop(pos);
+				Dungeon.level.dropItemOnPosition(ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), c).sprite.drop(pos);
 				candidates.remove(c);
 			}
 
@@ -422,7 +422,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		public boolean inRange(int pos){
-			return Dungeon.level.trueDistance(this.pos, pos) <= wandLvl;
+			return Dungeon.level.trueDistance(this.position, pos) <= wandLvl;
 		}
 
 		public float seedPreservation(){
@@ -447,12 +447,12 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 			//do nothing
 		}
 
 		@Override
-		public boolean add( Buff buff ) {
+		public boolean addBuff(Buff buff ) {
 			return false;
 		}
 
@@ -460,11 +460,11 @@ public class WandOfRegrowth extends Wand {
 		public void destroy() {
 			super.destroy();
 			Dungeon.observe();
-			GameScene.updateFog(pos, viewDistance+1);
+			GameScene.updateFog(position, viewDistance+1);
 		}
 
 		@Override
-		public boolean isInvulnerable(Class effect) {
+		public boolean isInvulnerableToEffectType(Class effect) {
 			return true;
 		}
 
@@ -480,7 +480,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		public String description() {
+		public String getDescription() {
 			int preservation = Math.round(seedPreservation()*100);
 			return Messages.get(this, "desc", wandLvl, preservation, preservation);
 		}

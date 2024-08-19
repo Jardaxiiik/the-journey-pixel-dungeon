@@ -70,23 +70,23 @@ public class Wraith extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1 + level/2, 2 + level );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 10 + level;
 	}
 	
 	public void adjustStats( int level ) {
 		this.level = level;
-		defenseSkill = attackSkill( null ) * 5;
+		defenseSkill = getAccuracyAgainstTarget( null ) * 5;
 		enemySeen = true;
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0f;
 	}
 
@@ -111,7 +111,7 @@ public class Wraith extends Mob {
 	}
 
 	public static Wraith spawnAt( int pos, Class<? extends Wraith> wraithClass ) {
-		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && Actor.findChar( pos ) == null) {
+		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && Actor.getCharacterOnPosition( pos ) == null) {
 
 			Wraith w;
 			//if no wraith type is specified, 1/100 chance for exotic, otherwise normal
@@ -125,7 +125,7 @@ public class Wraith extends Mob {
 				w = Reflection.newInstance(wraithClass);
 			}
 			w.adjustStats( Dungeon.scalingDepth() );
-			w.pos = pos;
+			w.position = pos;
 			w.state = w.HUNTING;
 			GameScene.add( w, SPAWN_DELAY );
 			Dungeon.level.occupyCell(w);

@@ -79,7 +79,7 @@ public class Ratmogrify extends ArmorAbility {
 			return;
 		}
 
-		Character ch = Actor.findChar(target);
+		Character ch = Actor.getCharacterOnPosition(target);
 
 		if (ch == null || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
@@ -92,8 +92,8 @@ public class Ratmogrify extends ArmorAbility {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
 
 				for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-					int p = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-					if (Actor.findChar( p ) == null && Dungeon.level.passable[p]) {
+					int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+					if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 						spawnPoints.add( p );
 					}
 				}
@@ -130,34 +130,34 @@ public class Ratmogrify extends ArmorAbility {
 					Buff.affect(ch, Adrenaline.class, 2*(hero.pointsInTalent(Talent.RATLOMACY)-1));
 				}
 			}
-		} else if (Character.hasProp(ch, Character.Property.MINIBOSS) || Character.hasProp(ch, Character.Property.BOSS)){
+		} else if (Character.hasProperty(ch, Character.Property.MINIBOSS) || Character.hasProperty(ch, Character.Property.BOSS)){
 			GLog.w(Messages.get(this, "too_strong"));
 			return;
 		} else {
 			TransmogRat rat = new TransmogRat();
 			rat.setup((Mob)ch);
-			rat.pos = ch.pos;
+			rat.position = ch.position;
 
 			//preserve champion enemy buffs
-			HashSet<ChampionEnemy> champBuffs = ch.buffs(ChampionEnemy.class);
+			HashSet<ChampionEnemy> champBuffs = ch.getBuffs(ChampionEnemy.class);
 			for (ChampionEnemy champ : champBuffs){
-				if (ch.remove(champ)) {
+				if (ch.removeBuff(champ)) {
 					ch.sprite.clearAura();
 				}
 			}
 
-			Actor.remove( ch );
+			Actor.removeActor( ch );
 			ch.sprite.killAndErase();
 			Dungeon.level.mobs.remove(ch);
 
 			for (ChampionEnemy champ : champBuffs){
-				ch.add(champ);
+				ch.addBuff(champ);
 			}
 
 			GameScene.add(rat);
 
 			TargetHealthIndicator.instance.target(null);
-			CellEmitter.get(rat.pos).burst(Speck.factory(Speck.WOOL), 4);
+			CellEmitter.get(rat.position).burst(Speck.factory(Speck.WOOL), 4);
 			Sample.INSTANCE.play(Assets.Sounds.PUFF);
 
 			Dungeon.level.occupyCell(rat);
@@ -221,7 +221,7 @@ public class Ratmogrify extends ArmorAbility {
 		public Mob getOriginal(){
 			if (original != null) {
 				original.healthPoints = healthPoints;
-				original.pos = pos;
+				original.position = position;
 			}
 			return original;
 		}
@@ -239,7 +239,7 @@ public class Ratmogrify extends ArmorAbility {
 				EXP = 0;
 				destroy();
 				sprite.killAndErase();
-				CellEmitter.get(original.pos).burst(Speck.factory(Speck.WOOL), 4);
+				CellEmitter.get(original.position).burst(Speck.factory(Speck.WOOL), 4);
 				Sample.INSTANCE.play(Assets.Sounds.PUFF);
 				return true;
 			} else {
@@ -248,9 +248,9 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		@Override
-		protected void spend(float time) {
+		protected void spendTimeAdjusted(float time) {
 			if (!allied) timeLeft -= time;
-			super.spend(time);
+			super.spendTimeAdjusted(time);
 		}
 
 		public void makeAlly() {
@@ -259,8 +259,8 @@ public class Ratmogrify extends ArmorAbility {
 			timeLeft = Float.POSITIVE_INFINITY;
 		}
 
-		public int attackSkill(Character target) {
-			return original.attackSkill(target);
+		public int getAccuracyAgainstTarget(Character target) {
+			return original.getAccuracyAgainstTarget(target);
 		}
 
 		public int drRoll() {
@@ -268,8 +268,8 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		@Override
-		public int damageRoll() {
-			int damage = original.damageRoll();
+		public int getDamageRoll() {
+			int damage = original.getDamageRoll();
 			if (!allied && Dungeon.hero.hasTalent(Talent.RATSISTANCE)){
 				damage *= Math.pow(0.9f, Dungeon.hero.pointsInTalent(Talent.RATSISTANCE));
 			}
@@ -277,19 +277,19 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		@Override
-		public float attackDelay() {
-			return original.attackDelay();
+		public float getAttackDelay() {
+			return original.getAttackDelay();
 		}
 
 		@Override
-		public void rollToDropLoot() {
-			original.pos = pos;
-			original.rollToDropLoot();
+		public void dropLoot() {
+			original.position = position;
+			original.dropLoot();
 		}
 
 		@Override
-		public String name() {
-			return Messages.get(this, "name", original.name());
+		public String getName() {
+			return Messages.get(this, "name", original.getName());
 		}
 
 		{

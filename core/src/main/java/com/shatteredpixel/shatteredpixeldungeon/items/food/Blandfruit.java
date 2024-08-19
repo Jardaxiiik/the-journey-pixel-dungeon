@@ -200,7 +200,7 @@ public class Blandfruit extends Food {
 				potionAttrib instanceof PotionOfPurity) {
 
 			potionAttrib.shatter( cell );
-			Dungeon.level.drop(new Chunks(), cell).sprite.drop();
+			Dungeon.level.dropItemOnPosition(new Chunks(), cell).sprite.drop();
 			
 		} else {
 			super.onThrow( cell );

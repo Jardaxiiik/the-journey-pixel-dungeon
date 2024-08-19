@@ -44,7 +44,7 @@ public class Kunai extends MissileWeapon {
 	
 	@Override
 	protected void onThrow(int cell) {
-		enemy = Actor.findChar(cell);
+		enemy = Actor.getCharacterOnPosition(cell);
 		super.onThrow(cell);
 	}
 	
@@ -52,7 +52,7 @@ public class Kunai extends MissileWeapon {
 	public int damageRoll(Character owner) {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
-			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
+			if (enemy instanceof Mob && ((Mob) enemy).isSurprisedBy(hero)) {
 				//deals 60% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
 				int damage = augment.damageFactor(Random.NormalIntRange(

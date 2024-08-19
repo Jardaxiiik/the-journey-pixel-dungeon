@@ -61,14 +61,14 @@ public class FungalCoreSprite extends MobSprite {
 		super.update();
 		if (curAnim != die && ch != null && visible != wasVisible){
 			if (visible){
-				DungeonWallsTilemap.skipCells.add(ch.pos - 2* Dungeon.level.width());
-				DungeonWallsTilemap.skipCells.add(ch.pos - Dungeon.level.width());
+				DungeonWallsTilemap.skipCells.add(ch.position - 2* Dungeon.level.width());
+				DungeonWallsTilemap.skipCells.add(ch.position - Dungeon.level.width());
 			} else {
-				DungeonWallsTilemap.skipCells.remove(ch.pos - 2*Dungeon.level.width());
-				DungeonWallsTilemap.skipCells.remove(ch.pos - Dungeon.level.width());
+				DungeonWallsTilemap.skipCells.remove(ch.position - 2*Dungeon.level.width());
+				DungeonWallsTilemap.skipCells.remove(ch.position - Dungeon.level.width());
 			}
-			GameScene.updateMap(ch.pos-2*Dungeon.level.width());
-			GameScene.updateMap(ch.pos-Dungeon.level.width());
+			GameScene.updateMap(ch.position -2*Dungeon.level.width());
+			GameScene.updateMap(ch.position -Dungeon.level.width());
 			wasVisible = visible;
 		}
 	}
@@ -77,10 +77,10 @@ public class FungalCoreSprite extends MobSprite {
 	public void die() {
 		super.die();
 		if (ch != null && visible){
-			DungeonWallsTilemap.skipCells.remove(ch.pos - 2*Dungeon.level.width());
-			DungeonWallsTilemap.skipCells.remove(ch.pos - Dungeon.level.width());
-			GameScene.updateMap(ch.pos-2*Dungeon.level.width());
-			GameScene.updateMap(ch.pos-Dungeon.level.width());
+			DungeonWallsTilemap.skipCells.remove(ch.position - 2*Dungeon.level.width());
+			DungeonWallsTilemap.skipCells.remove(ch.position - Dungeon.level.width());
+			GameScene.updateMap(ch.position -2*Dungeon.level.width());
+			GameScene.updateMap(ch.position -Dungeon.level.width());
 		}
 	}
 

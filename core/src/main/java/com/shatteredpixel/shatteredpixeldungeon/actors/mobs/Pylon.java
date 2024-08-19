@@ -89,28 +89,28 @@ public class Pylon extends Mob {
 		//mob logic
 		enemy = chooseEnemy();
 
-		enemySeen = enemy != null && enemy.isAlive() && fieldOfView[enemy.pos] && enemy.invisible <= 0;
+		enemySeen = enemy != null && enemy.isAlive() && fieldOfView[enemy.position] && enemy.invisible <= 0;
 		//end of char/mob logic
 
 		if (alignment == Alignment.NEUTRAL){
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
 		ArrayList<Integer> shockCells = new ArrayList<>();
 
-		shockCells.add(pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[targetNeighbor]);
+		shockCells.add(position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[targetNeighbor]);
 
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-			shockCells.add(pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+3)%8]);
-			shockCells.add(pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+5)%8]);
+			shockCells.add(position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+3)%8]);
+			shockCells.add(position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+5)%8]);
 		} else {
-			shockCells.add(pos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+4)%8]);
+			shockCells.add(position + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(targetNeighbor+4)%8]);
 		}
 
 		sprite.flash();
 
-		boolean visible = Dungeon.level.heroFOV[pos];
+		boolean visible = Dungeon.level.heroFOV[position];
 		for (int cell : shockCells){
 			if (Dungeon.level.heroFOV[cell]){
 				visible = true;
@@ -127,12 +127,12 @@ public class Pylon extends Mob {
 		}
 
 		for (int cell : shockCells) {
-			shockChar(Actor.findChar(cell));
+			shockChar(Actor.getCharacterOnPosition(cell));
 		}
 
 		targetNeighbor = (targetNeighbor+1)%8;
 
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 
 		return true;
 	}
@@ -140,7 +140,7 @@ public class Pylon extends Mob {
 	private void shockChar( Character ch ){
 		if (ch != null && !(ch instanceof DM300)){
 			ch.sprite.flash();
-			ch.damage(Random.NormalIntRange(10, 20), new Electricity());
+			ch.receiveDamageFromSource(Random.NormalIntRange(10, 20), new Electricity());
 
 			if (ch == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
@@ -172,7 +172,7 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(this, "desc_inactive");
 		} else {
@@ -186,38 +186,38 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public boolean add(Buff buff) {
+	public boolean addBuff(Buff buff) {
 		//immune to all buffs/debuffs when inactive
 		if (alignment != Alignment.NEUTRAL) {
-			return super.add(buff);
+			return super.addBuff(buff);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isInvulnerable(Class effect) {
+	public boolean isInvulnerableToEffectType(Class effect) {
 		//immune to damage when inactive
-		return alignment == Alignment.NEUTRAL || super.isInvulnerable(effect);
+		return alignment == Alignment.NEUTRAL || super.isInvulnerableToEffectType(effect);
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (dmg >= 15){
 			//takes 15/16/17/18/19/20 dmg at 15/17/20/24/29/36 incoming dmg
 			dmg = 14 + (int)(Math.sqrt(8*(dmg - 14) + 1) - 1)/2;
 		}
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass())){
+		LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
+		if (lock != null && !isImmuneToEffectType(sourceOfDamage.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/2f);
 			else                                                    lock.addTime(dmg);
 		}
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
+	public void die(Object source) {
+		super.die(source);
 		((CavesBossLevel)Dungeon.level).eliminatePylon();
 	}
 

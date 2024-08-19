@@ -75,7 +75,7 @@ public class Noisemaker extends Bomb {
 							trigger(heap);
 
 						//check if there is a nearby char, blow up if there is
-						} else if (Actor.findChar(heap.pos) != null)  {
+						} else if (Actor.getCharacterOnPosition(heap.pos) != null)  {
 
 
 							heap.items.remove(bomb);
@@ -88,7 +88,7 @@ public class Noisemaker extends Bomb {
 						//otherwise tick down our counter to alert
 						} else {
 
-							spend(TICK);
+							spendTimeAdjusted(TICK);
 							left--;
 
 							if (left <= 0){
@@ -108,7 +108,7 @@ public class Noisemaker extends Bomb {
 
 				//can't find our bomb, something must have removed it, do nothing.
 				bomb.fuse = null;
-				Actor.remove( this );
+				Actor.removeActor( this );
 				return true;
 			}
 		}

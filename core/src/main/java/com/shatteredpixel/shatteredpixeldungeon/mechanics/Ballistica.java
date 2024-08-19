@@ -121,7 +121,7 @@ public class Ballistica {
 					&& cell != sourcePos
 					&& !Dungeon.level.passable[cell]
 					&& !Dungeon.level.avoid[cell]
-					&& Actor.findChar(cell) == null) {
+					&& Actor.getCharacterOnPosition(cell) == null) {
 				collide(path.get(path.size() - 1));
 			}
 
@@ -134,7 +134,7 @@ public class Ballistica {
 					collide(cell);
 				}
 			}
-			if (collisionPos == null && cell != sourcePos && stopChars && Actor.findChar( cell ) != null) {
+			if (collisionPos == null && cell != sourcePos && stopChars && Actor.getCharacterOnPosition( cell ) != null) {
 				collide(cell);
 			}
 			if (collisionPos == null && cell == to && stopTarget){

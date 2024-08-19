@@ -90,12 +90,12 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 15, 25 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20;
 	}
 
@@ -175,22 +175,22 @@ public class DM300 extends Mob {
 			//determine if DM can reach its enemy
 			boolean canReach;
 			if (enemy == null || !enemy.isAlive()){
-				if (Dungeon.level.adjacent(pos, Dungeon.hero.pos)){
+				if (Dungeon.level.adjacent(position, Dungeon.hero.position)){
 					canReach = true;
 				} else {
-					canReach = (Dungeon.findStep(this, Dungeon.hero.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
+					canReach = (Dungeon.findStep(this, Dungeon.hero.position, Dungeon.level.openSpace, fieldOfView, true) != -1);
 				}
 			} else {
-				if (Dungeon.level.adjacent(pos, enemy.pos)){
+				if (Dungeon.level.adjacent(position, enemy.position)){
 					canReach = true;
 				} else {
-					canReach = (Dungeon.findStep(this, enemy.pos, Dungeon.level.openSpace, fieldOfView, true) != -1);
+					canReach = (Dungeon.findStep(this, enemy.position, Dungeon.level.openSpace, fieldOfView, true) != -1);
 				}
 			}
 
 			if (state != HUNTING){
 				if (Dungeon.hero.invisible <= 0 && canReach){
-					beckon(Dungeon.hero.pos);
+					beckon(Dungeon.hero.position);
 				}
 			} else {
 
@@ -204,13 +204,13 @@ public class DM300 extends Mob {
 					//try to fire gas at an enemy we can't reach
 					if (turnsSinceLastAbility >= MIN_COOLDOWN){
 						//use a coneAOE to try and account for trickshotting angles
-						ConeAOE aim = new ConeAOE(new Ballistica(pos, enemy.pos, Ballistica.WONT_STOP), Float.POSITIVE_INFINITY, 30, Ballistica.STOP_SOLID);
-						if (aim.cells.contains(enemy.pos)) {
+						ConeAOE aim = new ConeAOE(new Ballistica(position, enemy.position, Ballistica.WONT_STOP), Float.POSITIVE_INFINITY, 30, Ballistica.STOP_SOLID);
+						if (aim.cells.contains(enemy.position)) {
 							lastAbility = GAS;
 							turnsSinceLastAbility = 0;
 
 							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								sprite.zap(enemy.pos);
+								sprite.zap(enemy.position);
 								return false;
 							} else {
 								ventGas(enemy);
@@ -223,7 +223,7 @@ public class DM300 extends Mob {
 							lastAbility = ROCKS;
 							turnsSinceLastAbility = 0;
 							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								((DM300Sprite)sprite).slam(enemy.pos);
+								((DM300Sprite)sprite).slam(enemy.position);
 								return false;
 							} else {
 								dropRocks(enemy);
@@ -234,7 +234,7 @@ public class DM300 extends Mob {
 
 					}
 
-				} else if (enemy != null && enemy.isAlive() && fieldOfView[enemy.pos]) {
+				} else if (enemy != null && enemy.isAlive() && fieldOfView[enemy.position]) {
 					if (turnsSinceLastAbility > abilityCooldown) {
 
 						if (lastAbility == NONE) {
@@ -249,8 +249,8 @@ public class DM300 extends Mob {
 						}
 
 						//doesn't spend a turn if enemy is at a distance
-						if (Dungeon.level.adjacent(pos, enemy.pos)){
-							spend(TICK);
+						if (Dungeon.level.adjacent(position, enemy.position)){
+							spendTimeAdjusted(TICK);
 						}
 
 						turnsSinceLastAbility = 0;
@@ -258,7 +258,7 @@ public class DM300 extends Mob {
 
 						if (lastAbility == GAS) {
 							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								sprite.zap(enemy.pos);
+								sprite.zap(enemy.position);
 								return false;
 							} else {
 								ventGas(enemy);
@@ -267,7 +267,7 @@ public class DM300 extends Mob {
 							}
 						} else {
 							if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-								((DM300Sprite)sprite).slam(enemy.pos);
+								((DM300Sprite)sprite).slam(enemy.position);
 								return false;
 							} else {
 								dropRocks(enemy);
@@ -286,7 +286,7 @@ public class DM300 extends Mob {
 			}
 
 			if (Dungeon.hero.invisible <= 0){
-				beckon(Dungeon.hero.pos);
+				beckon(Dungeon.hero.position);
 				state = HUNTING;
 				enemy = Dungeon.hero;
 			}
@@ -314,20 +314,20 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public void move(int step, boolean travelling) {
-		super.move(step, travelling);
+	public void moveToPosition(int newPosition, boolean travelling) {
+		super.moveToPosition(newPosition, travelling);
 
 		if (travelling) PixelScene.shake( supercharged ? 3 : 1, 0.25f );
 
-		if (Dungeon.level.map[step] == Terrain.INACTIVE_TRAP && state == HUNTING) {
+		if (Dungeon.level.map[newPosition] == Terrain.INACTIVE_TRAP && state == HUNTING) {
 
 			//don't gain energy from cells that are energized
-			if (CavesBossLevel.PylonEnergy.volumeAt(pos, CavesBossLevel.PylonEnergy.class) > 0){
+			if (CavesBossLevel.PylonEnergy.volumeAt(position, CavesBossLevel.PylonEnergy.class) > 0){
 				return;
 			}
 
-			if (Dungeon.level.heroFOV[step]) {
-				if (buff(Barrier.class) == null) {
+			if (Dungeon.level.heroFOV[newPosition]) {
+				if (getBuff(Barrier.class) == null) {
 					GLog.w(Messages.get(this, "shield"));
 				}
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
@@ -341,8 +341,8 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public float speed() {
-		return super.speed() * (supercharged ? 2 : 1);
+	public float getSpeed() {
+		return super.getSpeed() * (supercharged ? 2 : 1);
 	}
 
 	@Override
@@ -352,7 +352,7 @@ public class DM300 extends Mob {
 			BossHealthBar.assignBoss(this);
 			turnsSinceLastAbility = 0;
 			yell(Messages.get(this, "notice"));
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -370,7 +370,7 @@ public class DM300 extends Mob {
 
 		int gasVented = 0;
 
-		Ballistica trajectory = new Ballistica(pos, target.pos, Ballistica.STOP_TARGET);
+		Ballistica trajectory = new Ballistica(position, target.position, Ballistica.STOP_TARGET);
 
 		int gasMulti = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 1;
 
@@ -384,7 +384,7 @@ public class DM300 extends Mob {
 		if (gasVented < 250*gasMulti){
 			int toVentAround = (int)Math.ceil(((250*gasMulti) - gasVented)/8f);
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				GameScene.add(Emitter.seed(pos+i, toVentAround, ToxicGas.class));
+				GameScene.add(Emitter.seed(position +i, toVentAround, ToxicGas.class));
 			}
 
 		}
@@ -402,9 +402,9 @@ public class DM300 extends Mob {
 		final int rockCenter;
 
 		//knock back 2 tiles if adjacent
-		if (Dungeon.level.adjacent(pos, target.pos)){
-			int oppositeAdjacent = target.pos + (target.pos - pos);
-			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
+		if (Dungeon.level.adjacent(position, target.position)){
+			int oppositeAdjacent = target.position + (target.position - position);
+			Ballistica trajectory = new Ballistica(target.position, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 2, false, false, this);
 			if (target == Dungeon.hero){
 				Dungeon.hero.interrupt();
@@ -412,9 +412,9 @@ public class DM300 extends Mob {
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 2));
 
 		//knock back 1 tile if there's 1 tile of space
-		} else if (fieldOfView[target.pos] && Dungeon.level.distance(pos, target.pos) == 2) {
-			int oppositeAdjacent = target.pos + (target.pos - pos);
-			Ballistica trajectory = new Ballistica(target.pos, oppositeAdjacent, Ballistica.MAGIC_BOLT);
+		} else if (fieldOfView[target.position] && Dungeon.level.distance(position, target.position) == 2) {
+			int oppositeAdjacent = target.position + (target.position - position);
+			Ballistica trajectory = new Ballistica(target.position, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 1, false, false, this);
 			if (target == Dungeon.hero){
 				Dungeon.hero.interrupt();
@@ -423,13 +423,13 @@ public class DM300 extends Mob {
 
 		//otherwise no knockback
 		} else {
-			rockCenter = target.pos;
+			rockCenter = target.position;
 		}
 
 		int safeCell;
 		do {
 			safeCell = rockCenter + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-		} while (safeCell == pos
+		} while (safeCell == position
 				|| (Dungeon.level.solid[safeCell] && Random.Int(2) == 0)
 				|| (Emitter.volumeAt(safeCell, CavesBossLevel.PylonEnergy.class) > 0 && Random.Int(2) == 0));
 
@@ -462,21 +462,21 @@ public class DM300 extends Mob {
 	private boolean invulnWarned = false;
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (!BossHealthBar.isAssigned()){
 			notice();
 		}
 
 		int preHP = healthPoints;
-		super.damage(dmg, src);
-		if (isInvulnerable(src.getClass())){
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
+		if (isInvulnerableToEffectType(sourceOfDamage.getClass())){
 			return;
 		}
 
 		int dmgTaken = preHP - healthPoints;
 		if (dmgTaken > 0) {
-			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-			if (lock != null && !isImmune(src.getClass())){
+			LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
+			if (lock != null && !isImmuneToEffectType(sourceOfDamage.getClass())){
 				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmgTaken/2f);
 				else                                                    lock.addTime(dmgTaken);
 			}
@@ -501,12 +501,12 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public boolean isInvulnerable(Class effect) {
+	public boolean isInvulnerableToEffectType(Class effect) {
 		if (supercharged && !invulnWarned){
 			invulnWarned = true;
 			GLog.w(Messages.get(this, "charging_hint"));
 		}
-		return supercharged || super.isInvulnerable(effect);
+		return supercharged || super.isInvulnerableToEffectType(effect);
 	}
 
 	public void supercharge(){
@@ -514,7 +514,7 @@ public class DM300 extends Mob {
 		((CavesBossLevel)Dungeon.level).activatePylon();
 		pylonsActivated++;
 
-		spend(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2f : 3f);
+		spendTimeAdjusted(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2f : 3f);
 		yell(Messages.get(this, "charging"));
 		sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
 		((DM300Sprite)sprite).updateChargeState(true);
@@ -556,9 +556,9 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die( Object source) {
 
-		super.die( cause );
+		super.die(source);
 
 		GameScene.bossSlain();
 		Dungeon.level.unseal();
@@ -569,8 +569,8 @@ public class DM300 extends Mob {
 			int ofs;
 			do {
 				ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-			} while (!Dungeon.level.passable[pos + ofs]);
-			Dungeon.level.drop( new MetalShard(), pos + ofs ).sprite.drop( pos );
+			} while (!Dungeon.level.passable[position + ofs]);
+			Dungeon.level.dropItemOnPosition( new MetalShard(), position + ofs ).sprite.drop(position);
 		}
 
 		Badges.validateBossSlain();
@@ -588,53 +588,53 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
-		if (super.getCloser(target)){
+	protected boolean moveCloserToTarget(int targetPosition) {
+		if (super.moveCloserToTarget(targetPosition)){
 			return true;
 		} else {
 
-			if (!supercharged || state != HUNTING || rooted || target == pos || Dungeon.level.adjacent(pos, target)) {
+			if (!supercharged || state != HUNTING || rooted || targetPosition == position || Dungeon.level.adjacent(position, targetPosition)) {
 				return false;
 			}
 
-			int bestpos = pos;
+			int bestpos = position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Actor.findChar(pos+i) == null &&
-						Dungeon.level.trueDistance(bestpos, target) > Dungeon.level.trueDistance(pos+i, target)){
-					bestpos = pos+i;
+				if (Actor.getCharacterOnPosition(position +i) == null &&
+						Dungeon.level.trueDistance(bestpos, targetPosition) > Dungeon.level.trueDistance(position +i, targetPosition)){
+					bestpos = position +i;
 				}
 			}
-			if (bestpos != pos){
+			if (bestpos != position){
 				Sample.INSTANCE.play( Assets.Sounds.ROCKS );
 
 				Rect gate = CavesBossLevel.gate;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-					if (Dungeon.level.map[pos+i] == Terrain.WALL || Dungeon.level.map[pos+i] == Terrain.WALL_DECO){
-						Point p = Dungeon.level.cellToPoint(pos+i);
+					if (Dungeon.level.map[position +i] == Terrain.WALL || Dungeon.level.map[position +i] == Terrain.WALL_DECO){
+						Point p = Dungeon.level.cellToPoint(position +i);
 						if (p.y < gate.bottom && p.x >= gate.left-2 && p.x < gate.right+2){
 							continue; //don't break the gate or walls around the gate
 						}
 						if (!CavesBossLevel.diggableArea.inside(p)){
 							continue; //Don't break any walls out of the boss arena
 						}
-						Level.set(pos+i, Terrain.EMPTY_DECO);
-						GameScene.updateMap(pos+i);
+						Level.set(position +i, Terrain.EMPTY_DECO);
+						GameScene.updateMap(position +i);
 					}
 				}
 				Dungeon.level.cleanWalls();
 				Dungeon.observe();
-				spend(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2f : 3f);
+				spendTimeAdjusted(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2f : 3f);
 
-				bestpos = pos;
+				bestpos = position;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (Actor.findChar(pos+i) == null && Dungeon.level.openSpace[pos+i] &&
-							Dungeon.level.trueDistance(bestpos, target) > Dungeon.level.trueDistance(pos+i, target)){
-						bestpos = pos+i;
+					if (Actor.getCharacterOnPosition(position +i) == null && Dungeon.level.openSpace[position +i] &&
+							Dungeon.level.trueDistance(bestpos, targetPosition) > Dungeon.level.trueDistance(position +i, targetPosition)){
+						bestpos = position +i;
 					}
 				}
 
-				if (bestpos != pos) {
-					move(bestpos);
+				if (bestpos != position) {
+					moveToPosition(bestpos);
 				}
 				PixelScene.shake( 5, 1f );
 
@@ -646,8 +646,8 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public String description() {
-		String desc = super.description();
+	public String getDescription() {
+		String desc = super.getDescription();
 		if (supercharged) {
 			desc += "\n\n" + Messages.get(this, "desc_supercharged");
 		}

@@ -79,7 +79,7 @@ public class ImpShopRoom extends ShopRoom {
 		}
 
 		Mob shopkeeper = new ImpShopkeeper();
-		shopkeeper.pos = pos;
+		shopkeeper.position = pos;
 		if (JourneyPixelDungeon.scene() instanceof GameScene) {
 			GameScene.add(shopkeeper);
 		} else {

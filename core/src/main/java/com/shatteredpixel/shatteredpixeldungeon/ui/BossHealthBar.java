@@ -102,7 +102,7 @@ public class BossHealthBar extends Component {
 			@Override
 			protected String hoverText() {
 				if (boss != null){
-					return boss.name();
+					return boss.getName();
 				}
 				return super.hoverText();
 			}
@@ -166,7 +166,7 @@ public class BossHealthBar extends Component {
 			} else {
 
 				int health = boss.healthPoints;
-				int shield = boss.shielding();
+				int shield = boss.getShielding();
 				int max = boss.healthMax;
 
 				hp.scale.x = Math.max( 0, (health-shield)/(float)max);

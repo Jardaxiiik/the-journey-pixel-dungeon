@@ -57,8 +57,8 @@ public class Multiplicity extends Armor.Glyph {
 			ArrayList<Integer> spawnPoints = new ArrayList<>();
 
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				int p = defender.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.findChar( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+				int p = defender.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+				if (Actor.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 					spawnPoints.add( p );
 				}
 			}
@@ -79,7 +79,7 @@ public class Multiplicity extends Armor.Glyph {
 
 					//FIXME should probably have a mob property for this
 					if (!(toDuplicate instanceof Mob)
-							|| toDuplicate.properties().contains(Character.Property.BOSS) || toDuplicate.properties().contains(Character.Property.MINIBOSS)
+							|| toDuplicate.getProperties().contains(Character.Property.BOSS) || toDuplicate.getProperties().contains(Character.Property.MINIBOSS)
 							|| toDuplicate instanceof Mimic || toDuplicate instanceof Statue || toDuplicate instanceof NPC) {
 						m = Dungeon.level.createMob();
 					} else {
@@ -92,13 +92,13 @@ public class Multiplicity extends Armor.Glyph {
 							Bundle store = new Bundle();
 							attacker.storeInBundle(store);
 							m.restoreFromBundle(store);
-							m.pos = 0;
+							m.position = 0;
 							m.healthPoints = m.healthMax;
 
 							//don't duplicate stuck projectiles
-							m.remove(m.buff(PinCushion.class));
+							m.removeBuff(m.getBuff(PinCushion.class));
 							//don't duplicate pending damage to dwarf king
-							m.remove(DwarfKing.KingDamager.class);
+							m.removeBuff(DwarfKing.KingDamager.class);
 							
 							//If a thief has stolen an item, that item is not duplicated.
 							if (m instanceof Thief) {
@@ -110,7 +110,7 @@ public class Multiplicity extends Armor.Glyph {
 
 				if (m != null) {
 
-					if (Character.hasProp(m, Character.Property.LARGE)){
+					if (Character.hasProperty(m, Character.Property.LARGE)){
 						for ( int i : spawnPoints.toArray(new Integer[0])){
 							if (!Dungeon.level.openSpace[i]){
 								//remove the value, not at the index
@@ -120,9 +120,9 @@ public class Multiplicity extends Armor.Glyph {
 					}
 
 					if (!spawnPoints.isEmpty()) {
-						m.pos = Random.element(spawnPoints);
+						m.position = Random.element(spawnPoints);
 						GameScene.add(m);
-						ScrollOfTeleportation.appear(m, m.pos);
+						ScrollOfTeleportation.appear(m, m.position);
 					}
 				}
 

@@ -77,7 +77,7 @@ public class TimekeepersHourglass extends Artifact {
 		ArrayList<String> actions = super.actions( hero );
 		if (isEquipped( hero )
 				&& !cursed
-				&& hero.buff(MagicImmune.class) == null
+				&& hero.getBuff(MagicImmune.class) == null
 				&& (charge > 0 || activeBuff != null)) {
 			actions.add(AC_ACTIVATE);
 		}
@@ -89,7 +89,7 @@ public class TimekeepersHourglass extends Artifact {
 
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_ACTIVATE)){
 
@@ -162,7 +162,7 @@ public class TimekeepersHourglass extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !cursed && target.getBuff(MagicImmune.class) == null){
 			partialCharge += 0.25f*amount;
 			if (partialCharge >= 1){
 				partialCharge--;
@@ -235,7 +235,7 @@ public class TimekeepersHourglass extends Artifact {
 
 			if (charge < chargeCap
 					&& !cursed
-					&& target.buff(MagicImmune.class) == null
+					&& target.getBuff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//90 turns to charge at full, 60 turns to charge at 0/10
 				float chargeGain = 1 / (90f - (chargeCap - charge)*3f);
@@ -251,11 +251,11 @@ public class TimekeepersHourglass extends Artifact {
 					}
 				}
 			} else if (cursed && Random.Int(10) == 0)
-				((Hero) target).spend( TICK );
+				((Hero) target).spendTimeAdjusted( TICK );
 
 			updateQuickslot();
 
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			return true;
 		}
@@ -277,7 +277,7 @@ public class TimekeepersHourglass extends Artifact {
 
 				int usedCharge = Math.min(charge, 2);
 				//buffs always act last, so the stasis buff should end a turn early.
-				spend(5*usedCharge);
+				spendTimeAdjusted(5*usedCharge);
 
 				//shouldn't punish the player for going into stasis frequently
 				Hunger hunger = Buff.affect(target, Hunger.class);

@@ -35,7 +35,7 @@ public class MagicalSleep extends Buff {
 
 	@Override
 	public boolean attachTo( Character target ) {
-		if (!target.isImmune(Sleep.class) && super.attachTo( target )) {
+		if (!target.isImmuneToEffectType(Sleep.class) && super.attachTo( target )) {
 			
 			target.paralysed++;
 			
@@ -72,7 +72,7 @@ public class MagicalSleep extends Buff {
 				detach();
 			}
 		}
-		spend( STEP );
+		spendTimeAdjusted( STEP );
 		return true;
 	}
 

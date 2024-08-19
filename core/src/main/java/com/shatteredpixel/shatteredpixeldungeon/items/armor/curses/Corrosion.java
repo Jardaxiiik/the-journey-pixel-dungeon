@@ -40,11 +40,11 @@ public class Corrosion extends Armor.Glyph {
 
 		float procChance = 1/10f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance ) {
-			int pos = defender.pos;
+			int pos = defender.position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 				Splash.at(pos+i, 0x000000, 5);
-				if (Actor.findChar(pos+i) != null)
-					Buff.affect(Actor.findChar(pos+i), Ooze.class).set( Ooze.DURATION/2 );
+				if (Actor.getCharacterOnPosition(pos+i) != null)
+					Buff.affect(Actor.getCharacterOnPosition(pos+i), Ooze.class).set( Ooze.DURATION/2 );
 			}
 		}
 

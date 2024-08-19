@@ -41,10 +41,10 @@ public class StoneOfFear extends Runestone {
 	@Override
 	protected void activate(int cell) {
 
-		Character ch = Actor.findChar( cell );
+		Character ch = Actor.getCharacterOnPosition( cell );
 
 		if (ch != null){
-			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.id();
+			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.getId();
 		}
 
 		new Flare( 5, 16 ).color( 0xFF0000, true ).show(Dungeon.hero.sprite.parent, DungeonTilemap.tileCenterToWorld(cell), 2f );

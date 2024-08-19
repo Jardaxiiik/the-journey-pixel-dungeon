@@ -55,16 +55,16 @@ public class CrystalMimic extends Mimic {
 	}
 
 	@Override
-	public String name() {
+	public String getName() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "crystal_chest");
 		} else {
-			return super.name();
+			return super.getName();
 		}
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (alignment == Alignment.NEUTRAL){
 			String desc = null;
 			for (Item i : items){
@@ -84,20 +84,20 @@ public class CrystalMimic extends Mimic {
 			}
 			return desc + "\n\n" + Messages.get(this, "hidden_hint");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 
 	//does not deal bonus damage, steals instead. See attackProc
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		if (alignment == Alignment.NEUTRAL) {
 			alignment = Alignment.ENEMY;
-			int dmg = super.damageRoll();
+			int dmg = super.getDamageRoll();
 			alignment = Alignment.NEUTRAL;
 			return dmg;
 		} else {
-			return super.damageRoll();
+			return super.getDamageRoll();
 		}
 	}
 
@@ -110,11 +110,11 @@ public class CrystalMimic extends Mimic {
 		} else {
 			Buff.affect(this, Haste.class, 1f);
 		}
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
 			enemy = Dungeon.hero;
-			target = Dungeon.hero.pos;
+			target = Dungeon.hero.position;
 			GLog.w(Messages.get(this, "reveal") );
-			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
+			CellEmitter.get(position).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 1.25f);
 		}
 	}
@@ -127,8 +127,8 @@ public class CrystalMimic extends Mimic {
 		} else {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Dungeon.level.passable[pos+i] && Actor.findChar(pos+i) == null){
-					candidates.add(pos + i);
+				if (Dungeon.level.passable[position +i] && Actor.getCharacterOnPosition(position +i) == null){
+					candidates.add(position + i);
 				}
 			}
 
@@ -158,7 +158,7 @@ public class CrystalMimic extends Mimic {
 			item.updateQuickslot();
 
 			if (item instanceof Honeypot){
-				items.add(((Honeypot)item).shatter(this, this.pos));
+				items.add(((Honeypot)item).shatter(this, this.position));
 				item.detach( hero.belongings.backpack );
 			} else {
 				items.add(item.detach( hero.belongings.backpack ));
@@ -181,7 +181,7 @@ public class CrystalMimic extends Mimic {
 	private class Fleeing extends Mob.Fleeing {
 		@Override
 		protected void escaped() {
-			if (!Dungeon.level.heroFOV[pos] && Dungeon.level.distance(Dungeon.hero.pos, pos) >= 6) {
+			if (!Dungeon.level.heroFOV[position] && Dungeon.level.distance(Dungeon.hero.position, position) >= 6) {
 				GLog.n(Messages.get(CrystalMimic.class, "escaped"));
 				destroy();
 				sprite.killAndErase();
@@ -194,7 +194,7 @@ public class CrystalMimic extends Mimic {
 		protected void nowhereToRun() {
 			super.nowhereToRun();
 			if (state == HUNTING){
-				spend(-TICK); //crystal mimics are fast!
+				spendTimeAdjusted(-TICK); //crystal mimics are fast!
 			}
 		}
 	}

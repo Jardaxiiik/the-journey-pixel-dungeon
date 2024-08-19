@@ -66,7 +66,7 @@ public class Viscosity extends Glyph {
 
 		public int deferDamage(int dmg){
 			//account for icon stomach (just skip the glyph)
-			if (target.buff(Talent.WarriorFoodImmunity.class) != null){
+			if (target.getBuff(Talent.WarriorFoodImmunity.class) != null){
 				return dmg;
 			}
 
@@ -152,7 +152,7 @@ public class Viscosity extends Glyph {
 			if (target.isAlive()) {
 
 				int damageThisTick = Math.max(1, (int)(damage*0.1f));
-				target.damage( damageThisTick, this );
+				target.receiveDamageFromSource( damageThisTick, this );
 				if (target == Dungeon.hero && !target.isAlive()) {
 
 					Badges.validateDeathFromFriendlyMagic();
@@ -160,7 +160,7 @@ public class Viscosity extends Glyph {
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 				}
-				spend( TICK );
+				spendTimeAdjusted( TICK );
 
 				damage -= damageThisTick;
 				if (damage <= 0) {

@@ -46,7 +46,7 @@ public class FrostBomb extends Bomb {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				GameScene.add(Emitter.seed(i, 10, Freezing.class));
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				if (ch != null){
 					Buff.affect(ch, Frost.class, 2f);
 				}

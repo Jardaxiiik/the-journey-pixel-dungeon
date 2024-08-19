@@ -89,19 +89,19 @@ public abstract class TippedDart extends Dart {
 						detachAll(hero.belongings.backpack);
 						new Dart().quantity(quantity).collect();
 						
-						hero.spend( 1f );
+						hero.spendTimeAdjusted( 1f );
 						hero.busy();
-						hero.sprite.operate(hero.pos);
+						hero.sprite.operate(hero.position);
 					} else if (index == 1){
 						detach(hero.belongings.backpack);
-						if (!new Dart().collect()) Dungeon.level.drop(new Dart(), hero.pos).sprite.drop();
+						if (!new Dart().collect()) Dungeon.level.dropItemOnPosition(new Dart(), hero.position).sprite.drop();
 
 						//reset durability if there are darts left in the stack
 						durability = MAX_DURABILITY;
 						
-						hero.spend( 1f );
+						hero.spendTimeAdjusted( 1f );
 						hero.busy();
-						hero.sprite.operate(hero.pos);
+						hero.sprite.operate(hero.position);
 					}
 				}
 			});
@@ -127,7 +127,7 @@ public abstract class TippedDart extends Dart {
 					return;
 				}
 			}
-			Dungeon.level.drop( d, enemy.pos ).sprite.drop();
+			Dungeon.level.dropItemOnPosition( d, enemy.position).sprite.drop();
 		}
 	}
 
@@ -158,7 +158,7 @@ public abstract class TippedDart extends Dart {
 		//checks both destination and source position
 		float lotusPreserve = 0f;
 		if (targetPos != -1){
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (ch instanceof WandOfRegrowth.Lotus){
 					WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 					if (l.inRange(targetPos)){
@@ -168,8 +168,8 @@ public abstract class TippedDart extends Dart {
 			}
 			targetPos = -1;
 		}
-		int p = curUser == null ? Dungeon.hero.pos : curUser.pos;
-		for (Character ch : Actor.chars()){
+		int p = curUser == null ? Dungeon.hero.position : curUser.position;
+		for (Character ch : Actor.getCharacters()){
 			if (ch instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 				if (l.inRange(p)){
@@ -182,7 +182,7 @@ public abstract class TippedDart extends Dart {
 		float usages = Math.round(MAX_DURABILITY/use);
 
 		//grants 4 extra uses with charged shot
-		if (Dungeon.hero.buff(Crossbow.ChargedShot.class) != null){
+		if (Dungeon.hero.getBuff(Crossbow.ChargedShot.class) != null){
 			usages += 4;
 		}
 

@@ -294,7 +294,7 @@ public class GameScene extends PixelScene {
 		add( mobs );
 
 		hero = new HeroSprite();
-		hero.place( Dungeon.hero.pos );
+		hero.place( Dungeon.hero.position);
 		hero.updateArmor();
 		mobs.add( hero );
 		
@@ -450,9 +450,9 @@ public class GameScene extends PixelScene {
 				} else if (item instanceof Plant.Seed && !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
 					Dungeon.level.plant((Plant.Seed) item, pos);
 				} else if (item instanceof Honeypot) {
-					Dungeon.level.drop(((Honeypot) item).shatter(null, pos), pos);
+					Dungeon.level.dropItemOnPosition(((Honeypot) item).shatter(null, pos), pos);
 				} else {
-					Dungeon.level.drop(item, pos);
+					Dungeon.level.dropItemOnPosition(item, pos);
 				}
 			}
 			Dungeon.droppedItemsToChasm.remove( Dungeon.depth );
@@ -478,7 +478,7 @@ public class GameScene extends PixelScene {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 				
-				for (Character ch : Actor.chars()){
+				for (Character ch : Actor.getCharacters()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayAppeared();
 					}
@@ -550,13 +550,13 @@ public class GameScene extends PixelScene {
 			}
 
 			for (Mob mob : Dungeon.level.mobs) {
-				if (!mob.buffs(ChampionEnemy.class).isEmpty()) {
+				if (!mob.getBuffs(ChampionEnemy.class).isEmpty()) {
 					GLog.w(Messages.get(ChampionEnemy.class, "warn"));
 				}
 			}
 
-			if (Dungeon.hero.buff(AscensionChallenge.class) != null){
-				Dungeon.hero.buff(AscensionChallenge.class).saySwitch();
+			if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
+				Dungeon.hero.getBuff(AscensionChallenge.class).saySwitch();
 			}
 
 			InterlevelScene.mode = InterlevelScene.Mode.NONE;
@@ -892,7 +892,7 @@ public class GameScene extends PixelScene {
 	
 	private synchronized void addMobSprite( Mob mob ) {
 		CharSprite sprite = mob.sprite();
-		sprite.visible = Dungeon.level.heroFOV[mob.pos];
+		sprite.visible = Dungeon.level.heroFOV[mob.position];
 		mobs.add( sprite );
 		sprite.link( mob );
 		sortMobSprites();
@@ -973,7 +973,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void add( Emitter gas ) {
-		Actor.add( gas );
+		Actor.addActor( gas );
 		if (scene != null) {
 			scene.addBlobSprite( gas );
 		}
@@ -997,7 +997,7 @@ public class GameScene extends PixelScene {
 		Dungeon.level.mobs.add( mob );
 		if (scene != null) {
 			scene.addMobSprite(mob);
-			Actor.add(mob);
+			Actor.addActor(mob);
 		}
 	}
 
@@ -1008,7 +1008,7 @@ public class GameScene extends PixelScene {
 	public static void add( Mob mob, float delay ) {
 		Dungeon.level.mobs.add( mob );
 		scene.addMobSprite( mob );
-		Actor.addDelayed( mob, delay );
+		Actor.addActorWithDelay( mob, delay );
 	}
 	
 	public static void add( EmoIcon icon ) {
@@ -1275,9 +1275,9 @@ public class GameScene extends PixelScene {
 	public static void afterObserve() {
 		if (scene != null) {
 			for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-				if (mob.sprite != null) mob.sprite.visible = Dungeon.level.heroFOV[mob.pos];
+				if (mob.sprite != null) mob.sprite.visible = Dungeon.level.heroFOV[mob.position];
 				if (mob instanceof Ghoul){
-					for (Ghoul.GhoulLifeLink link : mob.buffs(Ghoul.GhoulLifeLink.class)){
+					for (Ghoul.GhoulLifeLink link : mob.getBuffs(Ghoul.GhoulLifeLink.class)){
 						link.updateVisibility();
 					}
 				}
@@ -1475,11 +1475,11 @@ public class GameScene extends PixelScene {
 	private static ArrayList<Object> getObjectsAtCell( int cell ){
 		ArrayList<Object> objects = new ArrayList<>();
 
-		if (cell == Dungeon.hero.pos) {
+		if (cell == Dungeon.hero.position) {
 			objects.add(Dungeon.hero);
 
 		} else if (Dungeon.level.heroFOV[cell]) {
-			Mob mob = (Mob) Actor.findChar(cell);
+			Mob mob = (Mob) Actor.getCharacterOnPosition(cell);
 			if (mob != null) objects.add(mob);
 		}
 
@@ -1499,7 +1499,7 @@ public class GameScene extends PixelScene {
 		ArrayList<String> names = new ArrayList<>();
 		for (Object obj : objects){
 			if (obj instanceof Hero)        names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
-			else if (obj instanceof Mob)    names.add(Messages.titleCase( ((Mob)obj).name() ));
+			else if (obj instanceof Mob)    names.add(Messages.titleCase( ((Mob)obj).getName() ));
 			else if (obj instanceof Heap)   names.add(Messages.titleCase( ((Heap)obj).title() ));
 			else if (obj instanceof Plant)  names.add(Messages.titleCase( ((Plant) obj).name() ));
 			else if (obj instanceof Trap)   names.add(Messages.titleCase( ((Trap) obj).name() ));

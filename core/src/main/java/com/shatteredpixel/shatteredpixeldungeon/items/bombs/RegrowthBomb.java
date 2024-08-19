@@ -65,7 +65,7 @@ public class RegrowthBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				int t = Dungeon.level.map[i];
 				if (ch != null){
 					if (ch.alignment == Dungeon.hero.alignment) {

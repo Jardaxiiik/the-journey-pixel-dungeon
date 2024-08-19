@@ -49,17 +49,17 @@ public class DisintegrationTrap extends Trap {
 
 	@Override
 	public void activate() {
-		Character target = Actor.findChar(pos);
+		Character target = Actor.getCharacterOnPosition(pos);
 		
 		//find the closest char that can be aimed at
 		if (target == null){
 			float closestDist = Float.MAX_VALUE;
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (!ch.isAlive()) continue;
-				float curDist = Dungeon.level.trueDistance(pos, ch.pos);
+				float curDist = Dungeon.level.trueDistance(pos, ch.position);
 				if (ch.invisible > 0) curDist += 1000;
-				Ballistica bolt = new Ballistica(pos, ch.pos, Ballistica.PROJECTILE);
-				if (bolt.collisionPos == ch.pos && curDist < closestDist){
+				Ballistica bolt = new Ballistica(pos, ch.position, Ballistica.PROJECTILE);
+				if (bolt.collisionPos == ch.position && curDist < closestDist){
 					target = ch;
 					closestDist = curDist;
 				}
@@ -70,11 +70,11 @@ public class DisintegrationTrap extends Trap {
 		if (heap != null) heap.explode();
 		
 		if (target != null) {
-			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.pos]) {
+			if (Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[target.position]) {
 				Sample.INSTANCE.play(Assets.Sounds.RAY);
 				JourneyPixelDungeon.scene().add(new Beam.DeathRay(DungeonTilemap.tileCenterToWorld(pos), target.sprite.center()));
 			}
-			target.damage( Random.NormalIntRange(30, 50) + scalingDepth(), this );
+			target.receiveDamageFromSource( Random.NormalIntRange(30, 50) + scalingDepth(), this );
 			if (target == Dungeon.hero){
 				Hero hero = (Hero)target;
 				if (!hero.isAlive()){

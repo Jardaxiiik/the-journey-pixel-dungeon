@@ -56,7 +56,7 @@ public class SummoningTrap extends Trap {
 
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			int p = pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.findChar( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+			if (Actor.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 				candidates.add( p );
 			}
 		}
@@ -74,12 +74,12 @@ public class SummoningTrap extends Trap {
 
 		for (Integer point : respawnPoints) {
 			Mob mob = Dungeon.level.createMob();
-			while (Character.hasProp(mob, Character.Property.LARGE) && !Dungeon.level.openSpace[point]){
+			while (Character.hasProperty(mob, Character.Property.LARGE) && !Dungeon.level.openSpace[point]){
 				mob = Dungeon.level.createMob();
 			}
 			if (mob != null) {
 				mob.state = mob.WANDERING;
-				mob.pos = point;
+				mob.position = point;
 				GameScene.add(mob, DELAY);
 				mobs.add(mob);
 			}
@@ -89,12 +89,12 @@ public class SummoningTrap extends Trap {
 		Trap t;
 		for (Mob mob : mobs){
 			//manually trigger traps first to avoid sfx spam
-			if ((t = Dungeon.level.traps.get(mob.pos)) != null && t.active){
+			if ((t = Dungeon.level.traps.get(mob.position)) != null && t.active){
 				if (t.disarmedByActivation) t.disarm();
 				t.reveal();
 				t.activate();
 			}
-			ScrollOfTeleportation.appear(mob, mob.pos);
+			ScrollOfTeleportation.appear(mob, mob.position);
 			Dungeon.level.occupyCell(mob);
 		}
 

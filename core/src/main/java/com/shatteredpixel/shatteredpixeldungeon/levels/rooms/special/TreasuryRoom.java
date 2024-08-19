@@ -51,7 +51,7 @@ public class TreasuryRoom extends SpecialRoom {
 			if (heapType == Heap.Type.CHEST && Dungeon.depth > 1 && Random.Int( 5 ) == 0){
 				level.mobs.add(Mimic.spawnAt(pos, new Gold().random()));
 			} else {
-				level.drop( new Gold().random(), pos ).type = heapType;
+				level.dropItemOnPosition( new Gold().random(), pos ).type = heapType;
 			}
 		}
 		
@@ -61,7 +61,7 @@ public class TreasuryRoom extends SpecialRoom {
 				do {
 					pos = level.pointToCell(random());
 				} while (level.map[pos] != Terrain.EMPTY);
-				level.drop( new Gold( Random.IntRange( 5, 12 ) ), pos );
+				level.dropItemOnPosition( new Gold( Random.IntRange( 5, 12 ) ), pos );
 			}
 		}
 		

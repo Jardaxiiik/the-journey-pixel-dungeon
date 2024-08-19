@@ -59,12 +59,12 @@ public class Golem extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 25, 30 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 28;
 	}
 	
@@ -74,19 +74,19 @@ public class Golem extends Mob {
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		//each drop makes future drops 1/2 as likely
 		// so loot chance looks like: 1/8, 1/16, 1/32, 1/64, etc.
-		return super.lootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.GOLEM_EQUIP.count);
+		return super.getLootChance() * (float)Math.pow(1/2f, Dungeon.LimitedDrops.GOLEM_EQUIP.count);
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void dropLoot() {
 		Imp.Quest.process( this );
-		super.rollToDropLoot();
+		super.dropLoot();
 	}
 
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.GOLEM_EQUIP.count++;
 		//uses probability tables for demon halls
 		if (loot == ItemGenerator.Category.WEAPON){
@@ -126,14 +126,14 @@ public class Golem extends Mob {
 		enemyTeleCooldown--;
 		if (teleporting){
 			((GolemSprite)sprite).teleParticles(false);
-			if (Actor.findChar(target) == null && Dungeon.level.openSpace[target]) {
+			if (Actor.getCharacterOnPosition(target) == null && Dungeon.level.openSpace[target]) {
 				ScrollOfTeleportation.appear(this, target);
 				selfTeleCooldown = 30;
 			} else {
 				target = Dungeon.level.randomDestination(this);
 			}
 			teleporting = false;
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 		return super.playGameTurn();
@@ -145,22 +145,22 @@ public class Golem extends Mob {
 	}
 
 	public void teleportEnemy(){
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 
-		int bestPos = enemy.pos;
+		int bestPos = enemy.position;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (Dungeon.level.passable[pos + i]
-				&& Actor.findChar(pos+i) == null
-				&& Dungeon.level.trueDistance(pos+i, enemy.pos) > Dungeon.level.trueDistance(bestPos, enemy.pos)){
-				bestPos = pos+i;
+			if (Dungeon.level.passable[position + i]
+				&& Actor.getCharacterOnPosition(position +i) == null
+				&& Dungeon.level.trueDistance(position +i, enemy.position) > Dungeon.level.trueDistance(bestPos, enemy.position)){
+				bestPos = position +i;
 			}
 		}
 
-		if (enemy.buff(MagicImmune.class) != null){
-			bestPos = enemy.pos;
+		if (enemy.getBuff(MagicImmune.class) != null){
+			bestPos = enemy.position;
 		}
 
-		if (bestPos != enemy.pos){
+		if (bestPos != enemy.position){
 			ScrollOfTeleportation.appear(enemy, bestPos);
 			if (enemy instanceof Hero){
 				((Hero) enemy).interrupt();
@@ -174,9 +174,9 @@ public class Golem extends Mob {
 
 	private boolean canTele(int target){
 		if (enemyTeleCooldown > 0) return false;
-		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(pos, target)+1);
+		PathFinder.buildDistanceMap(target, BArray.not(Dungeon.level.solid, null), Dungeon.level.distance(position, target)+1);
 		//zaps can go around blocking terrain, but not through it
-		if (PathFinder.distance[pos] == Integer.MAX_VALUE){
+		if (PathFinder.distance[position] == Integer.MAX_VALUE){
 			return false;
 		}
 		return true;
@@ -188,17 +188,17 @@ public class Golem extends Mob {
 		protected boolean continueWandering() {
 			enemySeen = false;
 
-			int oldPos = pos;
-			if (target != -1 && getCloser( target )) {
-				spend( 1 / speed() );
-				return moveSprite( oldPos, pos );
-			} else if (!Dungeon.bossLevel() && target != -1 && target != pos && selfTeleCooldown <= 0) {
+			int oldPos = position;
+			if (target != -1 && moveCloserToTarget( target )) {
+				spendTimeAdjusted( 1 / getSpeed() );
+				return moveSprite( oldPos, position);
+			} else if (!Dungeon.bossLevel() && target != -1 && target != position && selfTeleCooldown <= 0) {
 				((GolemSprite)sprite).teleParticles(true);
 				teleporting = true;
-				spend( 2*TICK );
+				spendTimeAdjusted( 2*TICK );
 			} else {
 				target = randomDestination();
-				spend( TICK );
+				spendTimeAdjusted( TICK );
 			}
 
 			return true;
@@ -208,32 +208,32 @@ public class Golem extends Mob {
 	private class Hunting extends Mob.Hunting{
 
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			if (!enemyInFOV || canAttack(enemy)) {
-				return super.act(enemyInFOV, justAlerted);
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
+			if (!enemyInFOV || canAttackEnemy(enemy)) {
+				return super.playGameTurn(enemyInFOV, justAlerted);
 			} else {
 				enemySeen = true;
-				target = enemy.pos;
+				target = enemy.position;
 
-				int oldPos = pos;
+				int oldPos = position;
 
-				if (distance(enemy) >= 1 && Random.Int(100/distance(enemy)) == 0
-						&& !Character.hasProp(enemy, Property.IMMOVABLE) && canTele(target)){
+				if (getDistanceToOtherCharacter(enemy) >= 1 && Random.Int(100/ getDistanceToOtherCharacter(enemy)) == 0
+						&& !Character.hasProperty(enemy, Property.IMMOVABLE) && canTele(target)){
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+						sprite.zap( enemy.position);
 						return false;
 					} else {
 						teleportEnemy();
 						return true;
 					}
 
-				} else if (getCloser( target )) {
-					spend( 1 / speed() );
-					return moveSprite( oldPos,  pos );
+				} else if (moveCloserToTarget( target )) {
+					spendTimeAdjusted( 1 / getSpeed() );
+					return moveSprite( oldPos, position);
 
-				} else if (!Character.hasProp(enemy, Property.IMMOVABLE) && canTele(target)) {
+				} else if (!Character.hasProperty(enemy, Property.IMMOVABLE) && canTele(target)) {
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
-						sprite.zap( enemy.pos );
+						sprite.zap( enemy.position);
 						return false;
 					} else {
 						teleportEnemy();
@@ -241,7 +241,7 @@ public class Golem extends Mob {
 					}
 
 				} else {
-					spend( TICK );
+					spendTimeAdjusted( TICK );
 					return true;
 				}
 

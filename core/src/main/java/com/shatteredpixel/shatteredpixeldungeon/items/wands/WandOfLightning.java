@@ -78,19 +78,19 @@ public class WandOfLightning extends DamageWand {
 			ch.sprite.centerEmitter().burst( SparkParticle.FACTORY, 3 );
 			ch.sprite.flash();
 
-			if (ch != curUser && ch.alignment == curUser.alignment && ch.pos != bolt.collisionPos){
+			if (ch != curUser && ch.alignment == curUser.alignment && ch.position != bolt.collisionPos){
 				continue;
 			}
 			wandProc(ch, chargesPerCast());
 			if (ch == curUser && ch.isAlive()) {
-				ch.damage(Math.round(damageRoll() * multiplier * 0.5f), this);
+				ch.receiveDamageFromSource(Math.round(damageRoll() * multiplier * 0.5f), this);
 				if (!curUser.isAlive()) {
 					Badges.validateDeathFromFriendlyMagic();
 					Dungeon.fail( this );
 					GLog.n(Messages.get(this, "ondeath"));
 				}
 			} else {
-				ch.damage(Math.round(damageRoll() * multiplier), this);
+				ch.receiveDamageFromSource(Math.round(damageRoll() * multiplier), this);
 			}
 		}
 	}
@@ -110,13 +110,13 @@ public class WandOfLightning extends DamageWand {
 
 	private void arc( Character ch ) {
 
-		int dist = Dungeon.level.water[ch.pos] ? 2 : 1;
+		int dist = Dungeon.level.water[ch.position] ? 2 : 1;
 
 		ArrayList<Character> hitThisArc = new ArrayList<>();
-		PathFinder.buildDistanceMap( ch.pos, BArray.not( Dungeon.level.solid, null ), dist );
+		PathFinder.buildDistanceMap( ch.position, BArray.not( Dungeon.level.solid, null ), dist );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE){
-				Character n = Actor.findChar( i );
+				Character n = Actor.getCharacterOnPosition( i );
 				if (n == Dungeon.hero && PathFinder.distance[i] > 1)
 					//the hero is only zapped if they are adjacent
 					continue;
@@ -141,7 +141,7 @@ public class WandOfLightning extends DamageWand {
 
 		int cell = bolt.collisionPos;
 
-		Character ch = Actor.findChar( cell );
+		Character ch = Actor.getCharacterOnPosition( cell );
 		if (ch != null) {
 			if (ch instanceof DwarfKing){
 				Statistics.qualifiedForBossChallengeBadge = false;

@@ -97,23 +97,23 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 	@Override
 	public boolean playGameTurn() {
 		if (state == State.BERSERK){
-			ShieldBuff buff = target.buff(WarriorShield.class);
-			if (target.shielding() > 0) {
+			ShieldBuff buff = target.getBuff(WarriorShield.class);
+			if (target.getShielding() > 0) {
 				//lose 2.5% of shielding per turn, but no less than 1
-				int dmg = (int)Math.ceil(target.shielding() * 0.025f);
+				int dmg = (int)Math.ceil(target.getShielding() * 0.025f);
 				if (buff != null && buff.shielding() > 0) {
 					dmg = buff.absorbDamage(dmg);
 				}
 
 				if (dmg > 0){
 					//if there is leftover damage, then try to remove from other shielding buffs
-					for (ShieldBuff s : target.buffs(ShieldBuff.class)){
+					for (ShieldBuff s : target.getBuffs(ShieldBuff.class)){
 						dmg = s.absorbDamage(dmg);
 						if (dmg == 0) break;
 					}
 				}
 
-				if (target.shielding() <= 0){
+				if (target.getShielding() <= 0){
 					state = State.RECOVERING;
 					power = 0f;
 					BuffIndicator.refreshHero();
@@ -155,7 +155,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 				state = State.NORMAL;
 			}
 		}
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		return true;
 	}
 
@@ -177,13 +177,13 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 		if (target.healthPoints == 0
 				&& state == State.NORMAL
 				&& power >= 1f
-				&& target.buff(WarriorShield.class) != null
+				&& target.getBuff(WarriorShield.class) != null
 				&& ((Hero)target).hasTalent(Talent.DEATHLESS_FURY)){
 			startBerserking();
 			ActionIndicator.clearAction(this);
 		}
 
-		return state == State.BERSERK && target.shielding() > 0;
+		return state == State.BERSERK && target.getShielding() > 0;
 	}
 
 	private void startBerserking(){
@@ -210,7 +210,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 			turnRecovery *= 2f - power;
 		}
 
-		WarriorShield shield = target.buff(WarriorShield.class);
+		WarriorShield shield = target.getBuff(WarriorShield.class);
 		int shieldAmount = Math.round(shield.maxShield() * shieldMultiplier);
 		shield.supercharge(shieldAmount);
 		target.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(shieldAmount), FloatingText.SHIELDING );
@@ -267,7 +267,7 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public void doAction() {
-		WarriorShield shield = target.buff(WarriorShield.class);
+		WarriorShield shield = target.getBuff(WarriorShield.class);
 		if (shield != null && shield.maxShield() > 0) {
 			startBerserking();
 			ActionIndicator.clearAction(this);

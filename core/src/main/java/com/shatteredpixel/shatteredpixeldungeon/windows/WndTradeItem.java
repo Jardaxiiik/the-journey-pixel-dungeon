@@ -60,7 +60,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		//find the shopkeeper in the current level
 		Shopkeeper shop = null;
-		for (Character ch : Actor.chars()){
+		for (Character ch : Actor.getCharacters()){
 			if (ch instanceof Shopkeeper){
 				shop = (Shopkeeper) ch;
 				break;
@@ -141,7 +141,7 @@ public class WndTradeItem extends WndInfoItem {
 
 		pos = btnBuy.bottom();
 
-		final MasterThievesArmband.Thievery thievery = Dungeon.hero.buff(MasterThievesArmband.Thievery.class);
+		final MasterThievesArmband.Thievery thievery = Dungeon.hero.getBuff(MasterThievesArmband.Thievery.class);
 		if (thievery != null && !thievery.isCursed() && thievery.chargesToUse(item) > 0) {
 			final float chance = thievery.stealChance(item);
 			final int chargesToUse = thievery.chargesToUse(item);
@@ -155,7 +155,7 @@ public class WndTradeItem extends WndInfoItem {
 						hide();
 
 						if (!item.doPickUp(hero)) {
-							Dungeon.level.drop(item, heap.pos).sprite.drop();
+							Dungeon.level.dropItemOnPosition(item, heap.pos).sprite.drop();
 						}
 					} else {
 						GameScene.show(new WndOptions(new ItemSprite(ItemSpriteSheet.ARTIFACT_ARMBAND),
@@ -173,7 +173,7 @@ public class WndTradeItem extends WndInfoItem {
 										WndTradeItem.this.hide();
 
 										if (!item.doPickUp(hero)) {
-											Dungeon.level.drop(item, heap.pos).sprite.drop();
+											Dungeon.level.dropItemOnPosition(item, heap.pos).sprite.drop();
 										}
 									} else {
 										for (Mob mob : Dungeon.level.mobs) {
@@ -227,7 +227,7 @@ public class WndTradeItem extends WndInfoItem {
 		item.detachAll( hero.belongings.backpack );
 
 		//selling items in the sell interface doesn't spend time
-		hero.spend(-hero.cooldown());
+		hero.spendTimeAdjusted(-hero.cooldown());
 
 		new Gold( item.value() ).doPickUp( hero );
 
@@ -254,7 +254,7 @@ public class WndTradeItem extends WndInfoItem {
 			item = item.detach( hero.belongings.backpack );
 
 			//selling items in the sell interface doesn't spend time
-			hero.spend(-hero.cooldown());
+			hero.spendTimeAdjusted(-hero.cooldown());
 
 			new Gold( item.value() ).doPickUp( hero );
 
@@ -276,7 +276,7 @@ public class WndTradeItem extends WndInfoItem {
 		Dungeon.gold -= price;
 		
 		if (!item.doPickUp( Dungeon.hero )) {
-			Dungeon.level.drop( item, heap.pos ).sprite.drop();
+			Dungeon.level.dropItemOnPosition( item, heap.pos ).sprite.drop();
 		}
 	}
 }

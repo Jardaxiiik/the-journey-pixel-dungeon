@@ -76,7 +76,7 @@ public class WandOfPrismaticLight extends DamageWand {
 			}
 		}
 		
-		Character ch = Actor.findChar(beam.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(beam.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
 			affectTarget(ch);
@@ -92,15 +92,15 @@ public class WandOfPrismaticLight extends DamageWand {
 			ch.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 6 );
 		}
 
-		if (ch.properties().contains(Character.Property.DEMONIC) || ch.properties().contains(Character.Property.UNDEAD)){
+		if (ch.getProperties().contains(Character.Property.DEMONIC) || ch.getProperties().contains(Character.Property.UNDEAD)){
 			ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10+buffedLvl() );
 			Sample.INSTANCE.play(Assets.Sounds.BURNING);
 
-			ch.damage(Math.round(dmg*1.333f), this);
+			ch.receiveDamageFromSource(Math.round(dmg*1.333f), this);
 		} else {
 			ch.sprite.centerEmitter().burst( RainbowParticle.BURST, 10+buffedLvl() );
 
-			ch.damage(dmg, this);
+			ch.receiveDamageFromSource(dmg, this);
 		}
 
 	}

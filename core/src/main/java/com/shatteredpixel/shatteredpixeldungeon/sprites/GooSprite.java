@@ -97,9 +97,9 @@ public class GooSprite extends MobSprite {
 			}
 			for (int i = 0; i < Dungeon.level.length(); i++){
 				if (ch.fieldOfView != null && ch.fieldOfView[i]
-						&& Dungeon.level.distance(i, ch.pos) <= warnDist
-						&& new Ballistica( ch.pos, i, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == i
-						&& new Ballistica( i, ch.pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == ch.pos){
+						&& Dungeon.level.distance(i, ch.position) <= warnDist
+						&& new Ballistica( ch.position, i, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == i
+						&& new Ballistica( i, ch.position, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == ch.position){
 					Emitter e = CellEmitter.get(i);
 					e.pour(GooParticle.FACTORY, 0.04f);
 					pumpUpEmitters.add(e);

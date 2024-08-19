@@ -100,8 +100,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		public boolean canKO(Character defender){
-			if (defender.properties().contains(Character.Property.MINIBOSS)
-					|| defender.properties().contains(Character.Property.BOSS)){
+			if (defender.getProperties().contains(Character.Property.MINIBOSS)
+					|| defender.getProperties().contains(Character.Property.BOSS)){
 				return (defender.healthPoints /(float)defender.healthMax) < (KOThreshold()/5f);
 			} else {
 				return (defender.healthPoints /(float)defender.healthMax) < KOThreshold();
@@ -109,9 +109,9 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		}
 		
 		public int damageRoll( Character attacker ){
-			int dmg = attacker.damageRoll();
+			int dmg = attacker.getDamageRoll();
 			for( int i = 1; i < damageRolls; i++){
-				int newDmg = attacker.damageRoll();
+				int newDmg = attacker.getDamageRoll();
 				if (newDmg > dmg) dmg = newDmg;
 			}
 			return Math.round(dmg * (1f + baseDmgBonus));
@@ -138,7 +138,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 			if (AttackLevel.getLvl(turnsInvis).blinkDistance() > 0 && target == Dungeon.hero){
 				ActionIndicator.setAction(this);
 			}
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 		} else {
 			detach();
 		}
@@ -160,7 +160,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 
 	public boolean canKO( Character defender ){
-		return !defender.isInvulnerable(target.getClass()) && AttackLevel.getLvl(turnsInvis).canKO(defender);
+		return !defender.isInvulnerableToEffectType(target.getClass()) && AttackLevel.getLvl(turnsInvis).canKO(defender);
 	}
 	
 	@Override
@@ -271,7 +271,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Character enemy = Actor.findChar( cell );
+			final Character enemy = Actor.getCharacterOnPosition( cell );
 			if (enemy == null || Dungeon.hero.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell] || enemy == Dungeon.hero){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {
@@ -285,11 +285,11 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				
 				AttackLevel lvl = AttackLevel.getLvl(turnsInvis);
 
-				PathFinder.buildDistanceMap(Dungeon.hero.pos,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance());
+				PathFinder.buildDistanceMap(Dungeon.hero.position,BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), lvl.blinkDistance());
 				int dest = -1;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					//cannot blink into a cell that's occupied or impassable, only over them
-					if (Actor.findChar(cell+i) != null)     continue;
+					if (Actor.getCharacterOnPosition(cell+i) != null)     continue;
 					if (!Dungeon.level.passable[cell+i] && !(target.flying && Dungeon.level.avoid[cell+i])) {
 						continue;
 					}
@@ -298,7 +298,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 						dest = cell+i;
 					//if two cells have the same pathfinder distance, prioritize the one with the closest true distance to the hero
 					} else if (PathFinder.distance[dest] == PathFinder.distance[cell+i]){
-						if (Dungeon.level.trueDistance(Dungeon.hero.pos, dest) > Dungeon.level.trueDistance(Dungeon.hero.pos, cell+i)){
+						if (Dungeon.level.trueDistance(Dungeon.hero.position, dest) > Dungeon.level.trueDistance(Dungeon.hero.position, cell+i)){
 							dest = cell+i;
 						}
 					}
@@ -311,16 +311,16 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 					return;
 				}
 				
-				Dungeon.hero.pos = dest;
+				Dungeon.hero.position = dest;
 				Dungeon.level.occupyCell(Dungeon.hero);
 				//prevents the hero from being interrupted by seeing new enemies
 				Dungeon.observe();
 				GameScene.updateFog();
 				Dungeon.hero.checkVisibleMobs();
 				
-				Dungeon.hero.sprite.place( Dungeon.hero.pos );
-				Dungeon.hero.sprite.turnTo( Dungeon.hero.pos, cell);
-				CellEmitter.get( Dungeon.hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+				Dungeon.hero.sprite.place( Dungeon.hero.position);
+				Dungeon.hero.sprite.turnTo( Dungeon.hero.position, cell);
+				CellEmitter.get( Dungeon.hero.position).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
 				Dungeon.hero.curAction = new HeroAction.Attack( enemy );

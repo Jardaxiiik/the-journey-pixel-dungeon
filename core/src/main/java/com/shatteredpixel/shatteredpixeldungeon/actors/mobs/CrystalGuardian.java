@@ -69,39 +69,39 @@ public class CrystalGuardian extends Mob{
 		if (recovering){
 			throwItems();
 			healthPoints = Math.min(healthMax, healthPoints +5);
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.level.heroFOV[position]) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
 			}
 			if (healthPoints == healthMax){
 				recovering = false;
 				if (sprite instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) sprite).endCrumple();
 			}
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 		return super.playGameTurn();
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 10, 16 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20;
 	}
 
 	@Override
-	public int defenseSkill(Character enemy) {
+	public int getEvasionAgainstAttacker(Character enemy) {
 		if (recovering) return 0;
-		else            return super.defenseSkill(enemy);
+		else            return super.getEvasionAgainstAttacker(enemy);
 	}
 
 	@Override
-	public boolean surprisedBy(Character enemy, boolean attacking) {
+	public boolean isSurprisedBy(Character enemy, boolean attacking) {
 		if (recovering) return false;
-		else            return super.surprisedBy(enemy, attacking);
+		else            return super.isSurprisedBy(enemy, attacking);
 	}
 
 	@Override
@@ -115,14 +115,14 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
 		if (recovering){
 			sprite.showStatus(CharSprite.NEGATIVE, Integer.toString(damage));
 			healthPoints = Math.max(1, healthPoints -damage);
 			damage = -1;
 		}
 
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class CrystalGuardian extends Mob{
 		if (healthPoints <= 0){
 			healthPoints = 1;
 
-			for (Buff b : buffs()){
+			for (Buff b : getBuffs()){
 				if (!(b instanceof Doom || b instanceof Cripple)) {
 					b.detach();
 				}
@@ -145,13 +145,13 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public boolean isInvulnerable(Class effect) {
+	public boolean isInvulnerableToEffectType(Class effect) {
 		if (recovering){
 			//while recovering, immune to chars that aren't the hero or spire
 			// this is sort of a hack to prevent allies from attacking downed guardians
-			return super.isInvulnerable(effect) || (Character.class.isAssignableFrom(effect) && !Hero.class.isAssignableFrom(effect) && !CrystalSpire.class.isAssignableFrom(effect));
+			return super.isInvulnerableToEffectType(effect) || (Character.class.isAssignableFrom(effect) && !Hero.class.isAssignableFrom(effect) && !CrystalSpire.class.isAssignableFrom(effect));
 		}
-		return super.isInvulnerable(effect);
+		return super.isInvulnerableToEffectType(effect);
 	}
 
 	public CrystalGuardian(){
@@ -170,31 +170,31 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
 	@Override
-	public float speed() {
+	public float getSpeed() {
 		//crystal guardians take up to 4 turns when moving through an enclosed space
-		if (!Dungeon.level.openSpace[pos]) {
-			return Math.max(0.25f, super.speed() / 4f);
+		if (!Dungeon.level.openSpace[position]) {
+			return Math.max(0.25f, super.getSpeed() / 4f);
 		}
-		return super.speed();
+		return super.getSpeed();
 	}
 
 	@Override
-	public void move(int step, boolean travelling) {
-		super.move(step, travelling);
-		if (Dungeon.level.map[pos] == Terrain.MINE_CRYSTAL){
-			Level.set(pos, Terrain.EMPTY);
-			GameScene.updateMap(pos);
-			if (Dungeon.level.heroFOV[pos]){
-				Splash.at(pos, 0xFFFFFF, 5);
+	public void moveToPosition(int newPosition, boolean travelling) {
+		super.moveToPosition(newPosition, travelling);
+		if (Dungeon.level.map[position] == Terrain.MINE_CRYSTAL){
+			Level.set(position, Terrain.EMPTY);
+			GameScene.updateMap(position);
+			if (Dungeon.level.heroFOV[position]){
+				Splash.at(position, 0xFFFFFF, 5);
 				Sample.INSTANCE.play( Assets.Sounds.SHATTER );
 			}
 			//breaking a crystal costs an extra move, not affected by enclosed spaces though
-			spend(1/super.speed());
+			spendTimeAdjusted(1/super.getSpeed());
 		}
 	}
 
@@ -204,7 +204,7 @@ public class CrystalGuardian extends Mob{
 		if (state == HUNTING && target != -1){
 			PathFinder.buildDistanceMap(target, passable);
 
-			if (PathFinder.distance[pos] > 2*Dungeon.level.distance(pos, target)) {
+			if (PathFinder.distance[position] > 2*Dungeon.level.distance(position, target)) {
 				for (int i = 0; i < Dungeon.level.length(); i++) {
 					passable[i] = passable[i] || Dungeon.level.map[i] == Terrain.MINE_CRYSTAL;
 				}
@@ -228,8 +228,8 @@ public class CrystalGuardian extends Mob{
 		protected void awaken(boolean enemyInFOV) {
 			if (enemyInFOV){
 				//do not wake up if we see an enemy we can't actually reach
-				PathFinder.buildDistanceMap(enemy.pos, Dungeon.level.passable);
-				if (PathFinder.distance[pos] == Integer.MAX_VALUE){
+				PathFinder.buildDistanceMap(enemy.position, Dungeon.level.passable);
+				if (PathFinder.distance[position] == Integer.MAX_VALUE){
 					return;
 				}
 			}

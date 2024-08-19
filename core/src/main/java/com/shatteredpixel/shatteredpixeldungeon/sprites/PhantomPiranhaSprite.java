@@ -103,7 +103,7 @@ public class PhantomPiranhaSprite extends MobSprite {
 		super.onComplete( anim );
 
 		if (anim == attack) {
-			GameScene.ripple( ch.pos );
+			GameScene.ripple( ch.position);
 		}
 	}
 }

@@ -50,9 +50,9 @@ public class Drowsy extends Buff {
 	}
 
 	public boolean attachTo(Character target ) {
-		if (!target.isImmune(Sleep.class) && super.attachTo(target)) {
+		if (!target.isImmuneToEffectType(Sleep.class) && super.attachTo(target)) {
 			if (cooldown() == 0) {
-				spend(DURATION);
+				spendTimeAdjusted(DURATION);
 			}
 			return true;
 		}

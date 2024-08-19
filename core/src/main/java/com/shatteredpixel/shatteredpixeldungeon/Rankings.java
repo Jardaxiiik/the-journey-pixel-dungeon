@@ -269,8 +269,8 @@ public enum Rankings {
 		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
-		for(Buff b : Dungeon.hero.buffs()){
-			Dungeon.hero.remove(b);
+		for(Buff b : Dungeon.hero.getBuffs()){
+			Dungeon.hero.removeBuff(b);
 		}
 
 		rec.gameData.put( HERO, Dungeon.hero );

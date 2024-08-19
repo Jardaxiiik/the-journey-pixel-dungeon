@@ -84,7 +84,7 @@ public class Sungrass extends Plant {
 		
 		@Override
 		public boolean playGameTurn() {
-			if (target.pos != pos) {
+			if (target.position != pos) {
 				detach();
 			}
 			
@@ -116,14 +116,14 @@ public class Sungrass extends Plant {
 					((Hero)target).resting = false;
 				}
 			}
-			spend( STEP );
+			spendTimeAdjusted( STEP );
 			return true;
 		}
 
 		public void boost( int amount ){
 			if (target != null) {
 				level += amount;
-				pos = target.pos;
+				pos = target.position;
 			}
 		}
 		

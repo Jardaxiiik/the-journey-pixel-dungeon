@@ -45,8 +45,8 @@ public class NaturesPower extends ArmorAbility {
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 
 		Buff.prolong(hero, naturesPowerTracker.class, naturesPowerTracker.DURATION);
-		hero.buff(naturesPowerTracker.class).extensionsLeft = 2;
-		hero.sprite.operate(hero.pos);
+		hero.getBuff(naturesPowerTracker.class).extensionsLeft = 2;
+		hero.sprite.operate(hero.position);
 		Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 		hero.sprite.emitter().burst(LeafParticle.GENERAL, 10);
 
@@ -79,7 +79,7 @@ public class NaturesPower extends ArmorAbility {
 
 		public void extend( int turns ){
 			if (extensionsLeft > 0 && turns > 0) {
-				spend(turns);
+				spendTimeAdjusted(turns);
 				extensionsLeft--;
 			}
 		}

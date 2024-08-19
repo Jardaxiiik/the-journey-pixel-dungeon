@@ -69,7 +69,7 @@ public class WandOfLivingEarth extends DamageWand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Character ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 		int damage = damageRoll();
 		int armorToAdd = damage;
 
@@ -81,7 +81,7 @@ public class WandOfLivingEarth extends DamageWand {
 			}
 		}
 
-		RockArmor buff = curUser.buff(RockArmor.class);
+		RockArmor buff = curUser.getBuff(RockArmor.class);
 		//only grant armor if we are shooting at an enemy, a hiding mimic, or the guardian
 		if ((guardian == null || ch != guardian) && (ch == null
 				|| ch.alignment == Character.Alignment.ALLY
@@ -117,15 +117,15 @@ public class WandOfLivingEarth extends DamageWand {
 				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST, 5 + buffedLvl()/2);
 
 				wandProc(ch, chargesPerCast());
-				ch.damage(damage, this);
+				ch.receiveDamageFromSource(damage, this);
 
 				int closest = -1;
 				boolean[] passable = Dungeon.level.passable;
 
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS9) {
 					int c = bolt.collisionPos + n;
-					if (passable[c] && Actor.findChar( c ) == null
-						&& (closest == -1 || (Dungeon.level.trueDistance(c, curUser.pos) < (Dungeon.level.trueDistance(closest, curUser.pos))))) {
+					if (passable[c] && Actor.getCharacterOnPosition( c ) == null
+						&& (closest == -1 || (Dungeon.level.trueDistance(c, curUser.position) < (Dungeon.level.trueDistance(closest, curUser.position))))) {
 						closest = c;
 					}
 				}
@@ -136,17 +136,17 @@ public class WandOfLivingEarth extends DamageWand {
 					}
 					return; //do not spawn guardian or detach buff
 				} else {
-					guardian.pos = closest;
+					guardian.position = closest;
 					GameScene.add(guardian, 1);
 					Dungeon.level.occupyCell(guardian);
 				}
 
-				if (ch.alignment == Character.Alignment.ENEMY || ch.buff(Amok.class) != null) {
-					guardian.aggro(ch);
+				if (ch.alignment == Character.Alignment.ENEMY || ch.getBuff(Amok.class) != null) {
+					guardian.startHunting(ch);
 				}
 
 			} else {
-				guardian.pos = bolt.collisionPos;
+				guardian.position = bolt.collisionPos;
 				GameScene.add(guardian, 1);
 				Dungeon.level.occupyCell(guardian);
 			}
@@ -163,7 +163,7 @@ public class WandOfLivingEarth extends DamageWand {
 				ch.sprite.centerEmitter().burst(MagicMissile.EarthParticle.BURST, 5 + buffedLvl() / 2);
 
 				wandProc(ch, chargesPerCast());
-				ch.damage(damage, this);
+				ch.receiveDamageFromSource(damage, this);
 				Sample.INSTANCE.play( Assets.Sounds.HIT_MAGIC, 1, 0.8f * Random.Float(0.87f, 1.15f) );
 				
 				if (guardian == null) {
@@ -173,8 +173,8 @@ public class WandOfLivingEarth extends DamageWand {
 				} else {
 					guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
-					if (ch.alignment == Character.Alignment.ENEMY || ch.buff(Amok.class) != null) {
-						guardian.aggro(ch);
+					if (ch.alignment == Character.Alignment.ENEMY || ch.getBuff(Amok.class) != null) {
+						guardian.startHunting(ch);
 					}
 				}
 
@@ -340,19 +340,19 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public int attackSkill(Character target) {
+		public int getAccuracyAgainstTarget(Character target) {
 			//same as the hero
 			return 2*defenseSkill + 5;
 		}
 
 		@Override
 		public int attackProc(Character enemy, int damage) {
-			if (enemy instanceof Mob) ((Mob)enemy).aggro(this);
+			if (enemy instanceof Mob) ((Mob)enemy).startHunting(this);
 			return super.attackProc(enemy, damage);
 		}
 
 		@Override
-		public int damageRoll() {
+		public int getDamageRoll() {
 			return Random.NormalIntRange(2, 4 + Dungeon.scalingDepth()/2);
 		}
 
@@ -367,7 +367,7 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public String description() {
+		public String getDescription() {
 			if (Dungeon.isChallenged(Challenges.NO_ARMOR)){
 				return Messages.get(this, "desc", wandLevel, 2 + wandLevel);
 			} else {
@@ -400,7 +400,7 @@ public class WandOfLivingEarth extends DamageWand {
 		private class Wandering extends Mob.Wandering{
 
 			@Override
-			public boolean act(boolean enemyInFOV, boolean justAlerted) {
+			public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 				if (!enemyInFOV){
 					Buff.affect(Dungeon.hero, RockArmor.class).addArmor(wandLevel, healthPoints);
 					Dungeon.hero.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + wandLevel/2);
@@ -408,7 +408,7 @@ public class WandOfLivingEarth extends DamageWand {
 					sprite.die();
 					return true;
 				} else {
-					return super.act(enemyInFOV, justAlerted);
+					return super.playGameTurn(enemyInFOV, justAlerted);
 				}
 			}
 

@@ -63,7 +63,7 @@ public class WandOfCorrosion extends Wand {
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
-			Character ch = Actor.findChar(bolt.collisionPos + i);
+			Character ch = Actor.getCharacterOnPosition(bolt.collisionPos + i);
 			if (ch != null) {
 				wandProc(ch, chargesPerCast());
 
@@ -73,7 +73,7 @@ public class WandOfCorrosion extends Wand {
 			}
 		}
 		
-		if (Actor.findChar(bolt.collisionPos) == null){
+		if (Actor.getCharacterOnPosition(bolt.collisionPos) == null){
 			Dungeon.level.pressCell(bolt.collisionPos);
 		}
 	}
@@ -102,7 +102,7 @@ public class WandOfCorrosion extends Wand {
 			float powerMulti = Math.max(1f, procChance);
 			
 			Buff.affect( defender, Ooze.class ).set( Ooze.DURATION * powerMulti );
-			CellEmitter.center(defender.pos).burst( CorrosionParticle.SPLASH, 5 );
+			CellEmitter.center(defender.position).burst( CorrosionParticle.SPLASH, 5 );
 			
 		}
 	}

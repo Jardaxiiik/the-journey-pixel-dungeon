@@ -59,7 +59,7 @@ public class ShrapnelBomb extends Bomb {
 				if (Dungeon.level.heroFOV[i] && !Dungeon.level.solid[i]) {
 					CellEmitter.center( i ).burst( BlastParticle.FACTORY, 5 );
 				}
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				if (ch != null){
 					affected.add(ch);
 				}
@@ -69,9 +69,9 @@ public class ShrapnelBomb extends Bomb {
 		for (Character ch : affected){
 			//regular bomb damage, which falls off at a rate of 5% per tile of distance
 			int damage = Math.round(Random.NormalIntRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
-			damage = Math.round(damage * (1f - .05f*Dungeon.level.distance(cell, ch.pos)));
+			damage = Math.round(damage * (1f - .05f*Dungeon.level.distance(cell, ch.position)));
 			damage -= ch.drRoll();
-			ch.damage(damage, this);
+			ch.receiveDamageFromSource(damage, this);
 			if (ch == Dungeon.hero && !ch.isAlive()) {
 				Dungeon.fail(this);
 			}

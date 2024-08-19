@@ -62,11 +62,11 @@ public class Levitation extends FlavourBuff {
 
 	//used to determine if levitation is about to end
 	public boolean detachesWithinDelay(float delay){
-		if (target.buff(Swiftthistle.TimeBubble.class) != null){
+		if (target.getBuff(Swiftthistle.TimeBubble.class) != null){
 			return false;
 		}
 
-		if (target.buff(TimekeepersHourglass.timeFreeze.class) != null){
+		if (target.getBuff(TimekeepersHourglass.timeFreeze.class) != null){
 			return false;
 		}
 

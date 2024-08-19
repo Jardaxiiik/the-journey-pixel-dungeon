@@ -65,7 +65,7 @@ public class Piranha extends Mob {
 	@Override
 	protected boolean playGameTurn() {
 		
-		if (!Dungeon.level.water[pos]) {
+		if (!Dungeon.level.water[position]) {
 			dieOnLand();
 			return true;
 		} else {
@@ -74,12 +74,12 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( Dungeon.depth, 4 + Dungeon.depth * 2 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20 + Dungeon.depth * 2;
 	}
 	
@@ -89,15 +89,15 @@ public class Piranha extends Mob {
 	}
 
 	@Override
-	public boolean surprisedBy(Character enemy, boolean attacking) {
-		if (enemy == Dungeon.hero && (!attacking || ((Hero)enemy).canSurpriseAttack())){
+	public boolean isSurprisedBy(Character enemy, boolean attacking) {
+		if (enemy == Dungeon.hero && (!attacking || ((Hero)enemy).canDoSurpriseAttack())){
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 				fieldOfView = new boolean[Dungeon.level.length()];
 				Dungeon.level.updateFieldOfView( this, fieldOfView );
 			}
-			return state == SLEEPING || !fieldOfView[enemy.pos] || enemy.invisible > 0;
+			return state == SLEEPING || !fieldOfView[enemy.position] || enemy.invisible > 0;
 		}
-		return super.surprisedBy(enemy, attacking);
+		return super.isSurprisedBy(enemy, attacking);
 	}
 
 	public void dieOnLand(){
@@ -105,15 +105,15 @@ public class Piranha extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
-		super.die( cause );
+	public void die( Object source) {
+		super.die(source);
 		
 		Statistics.piranhasKilled++;
 		Badges.validatePiranhasKilled();
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
@@ -123,15 +123,15 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	protected boolean getCloser( int target ) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		
 		if (rooted) {
 			return false;
 		}
 		
-		int step = Dungeon.findStep( this, target, Dungeon.level.water, fieldOfView, true );
+		int step = Dungeon.findStep( this, targetPosition, Dungeon.level.water, fieldOfView, true );
 		if (step != -1) {
-			move( step );
+			moveToPosition( step );
 			return true;
 		} else {
 			return false;
@@ -139,10 +139,10 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	protected boolean getFurther( int target ) {
-		int step = Dungeon.flee( this, target, Dungeon.level.water, fieldOfView, true );
+	protected boolean moveAwayFromTarget(int targetPosition) {
+		int step = Dungeon.flee( this, targetPosition, Dungeon.level.water, fieldOfView, true );
 		if (step != -1) {
-			move( step );
+			moveToPosition( step );
 			return true;
 		} else {
 			return false;
@@ -161,38 +161,38 @@ public class Piranha extends Mob {
 	//if there is not a path to the enemy, piranhas act as if they can't see them
 	private class Sleeping extends Mob.Sleeping{
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (enemyInFOV) {
-				PathFinder.buildDistanceMap(enemy.pos, Dungeon.level.water, viewDistance);
-				enemyInFOV = PathFinder.distance[pos] != Integer.MAX_VALUE;
+				PathFinder.buildDistanceMap(enemy.position, Dungeon.level.water, viewDistance);
+				enemyInFOV = PathFinder.distance[position] != Integer.MAX_VALUE;
 			}
 			
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 	}
 	
 	private class Wandering extends Mob.Wandering{
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (enemyInFOV) {
-				PathFinder.buildDistanceMap(enemy.pos, Dungeon.level.water, viewDistance);
-				enemyInFOV = PathFinder.distance[pos] != Integer.MAX_VALUE;
+				PathFinder.buildDistanceMap(enemy.position, Dungeon.level.water, viewDistance);
+				enemyInFOV = PathFinder.distance[position] != Integer.MAX_VALUE;
 			}
 			
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 	}
 	
 	private class Hunting extends Mob.Hunting{
 		
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (enemyInFOV) {
-				PathFinder.buildDistanceMap(enemy.pos, Dungeon.level.water, viewDistance);
-				enemyInFOV = PathFinder.distance[pos] != Integer.MAX_VALUE;
+				PathFinder.buildDistanceMap(enemy.position, Dungeon.level.water, viewDistance);
+				enemyInFOV = PathFinder.distance[position] != Integer.MAX_VALUE;
 			}
 			
-			return super.act(enemyInFOV, justAlerted);
+			return super.playGameTurn(enemyInFOV, justAlerted);
 		}
 	}
 

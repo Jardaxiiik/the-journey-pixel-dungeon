@@ -206,7 +206,7 @@ public class HallsBossLevel extends Level {
 					pos = randomRespawnCell(null);
 				} while (pos == entrance());
 				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -218,8 +218,8 @@ public class HallsBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -234,7 +234,7 @@ public class HallsBossLevel extends Level {
 	@Override
 	public void occupyCell( Character ch ) {
 		if (map[entrance()] == Terrain.ENTRANCE && map[exit()] != Terrain.EXIT
-				&& ch == Dungeon.hero && Dungeon.level.distance(ch.pos, entrance()) >= 2) {
+				&& ch == Dungeon.hero && Dungeon.level.distance(ch.position, entrance()) >= 2) {
 			seal();
 		}
 
@@ -253,23 +253,23 @@ public class HallsBossLevel extends Level {
 		Dungeon.observe();
 
 		YogDzewa boss = new YogDzewa();
-		boss.pos = exit() + width*3;
+		boss.position = exit() + width*3;
 
 		//push any char that is already here away
-		if (Actor.findChar(boss.pos) != null){
+		if (Actor.getCharacterOnPosition(boss.position) != null){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Actor.findChar(boss.pos + i) == null){
-					candidates.add(boss.pos + i);
+				if (Actor.getCharacterOnPosition(boss.position + i) == null){
+					candidates.add(boss.position + i);
 				}
 			}
-			Character ch = Actor.findChar(boss.pos);
+			Character ch = Actor.getCharacterOnPosition(boss.position);
 			if (!candidates.isEmpty()){
-				ch.pos = Random.element(candidates);
+				ch.position = Random.element(candidates);
 			} else {
-				ch.pos = boss.pos+2*width;
+				ch.position = boss.position +2*width;
 			}
-			Actor.add(new Pushing(ch, boss.pos, ch.pos));
+			Actor.addActor(new Pushing(ch, boss.position, ch.position));
 		}
 
 		GameScene.add( boss );
@@ -327,7 +327,7 @@ public class HallsBossLevel extends Level {
 	public boolean activateTransition(Hero hero, LevelTransition transition) {
 		if (transition.type == LevelTransition.Type.REGULAR_ENTRANCE
 				&& hero.belongings.getItem(Amulet.class) != null
-				&& hero.buff(AscensionChallenge.class) == null) {
+				&& hero.getBuff(AscensionChallenge.class) == null) {
 
 			Game.runOnRenderThread(new Callback() {
 				@Override

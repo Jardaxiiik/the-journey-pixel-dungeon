@@ -65,14 +65,14 @@ public class HeavyBoomerang extends MissileWeapon {
 	protected void rangedHit(Character enemy, int cell) {
 		decrementDurability();
 		if (durability > 0){
-			Buff.append(Dungeon.hero, CircleBack.class).setup(this, cell, Dungeon.hero.pos, Dungeon.depth);
+			Buff.append(Dungeon.hero, CircleBack.class).setup(this, cell, Dungeon.hero.position, Dungeon.depth);
 		}
 	}
 	
 	@Override
 	protected void rangedMiss(int cell) {
 		parent = null;
-		Buff.append(Dungeon.hero, CircleBack.class).setup(this, cell, Dungeon.hero.pos, Dungeon.depth);
+		Buff.append(Dungeon.hero, CircleBack.class).setup(this, cell, Dungeon.hero.position, Dungeon.depth);
 	}
 	
 	public static class CircleBack extends Buff {
@@ -114,7 +114,7 @@ public class HeavyBoomerang extends MissileWeapon {
 			if (returnDepth == Dungeon.depth){
 				left--;
 				if (left <= 0){
-					final Character returnTarget = Actor.findChar(returnPos);
+					final Character returnTarget = Actor.getCharacterOnPosition(returnPos);
 					final Character target = this.target;
 					MissileSprite visual = ((MissileSprite) Dungeon.hero.sprite.parent.recycle(MissileSprite.class));
 					visual.reset( thrownPos,
@@ -126,9 +126,9 @@ public class HeavyBoomerang extends MissileWeapon {
 											if (returnTarget == target){
 												if (target instanceof Hero && boomerang.doPickUp((Hero) target)) {
 													//grabbing the boomerang takes no time
-													((Hero) target).spend(-TIME_TO_PICK_UP);
+													((Hero) target).spendTimeAdjusted(-TIME_TO_PICK_UP);
 												} else {
-													Dungeon.level.drop(boomerang, returnPos).sprite.drop();
+													Dungeon.level.dropItemOnPosition(boomerang, returnPos).sprite.drop();
 												}
 												
 											} else if (returnTarget != null){
@@ -137,11 +137,11 @@ public class HeavyBoomerang extends MissileWeapon {
 													boomerang.decrementDurability();
 												}
 												if (boomerang.durability > 0) {
-													Dungeon.level.drop(boomerang, returnPos).sprite.drop();
+													Dungeon.level.dropItemOnPosition(boomerang, returnPos).sprite.drop();
 												}
 												
 											} else {
-												Dungeon.level.drop(boomerang, returnPos).sprite.drop();
+												Dungeon.level.dropItemOnPosition(boomerang, returnPos).sprite.drop();
 											}
 											CircleBack.this.next();
 										}
@@ -153,7 +153,7 @@ public class HeavyBoomerang extends MissileWeapon {
 					return false;
 				}
 			}
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			return true;
 		}
 		

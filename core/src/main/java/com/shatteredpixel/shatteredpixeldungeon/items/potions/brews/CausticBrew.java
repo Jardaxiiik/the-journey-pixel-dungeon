@@ -53,7 +53,7 @@ public class CausticBrew extends Brew {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				Splash.at( i, 0x000000, 5);
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				
 				if (ch != null){
 					Buff.affect(ch, Ooze.class).set( Ooze.DURATION );

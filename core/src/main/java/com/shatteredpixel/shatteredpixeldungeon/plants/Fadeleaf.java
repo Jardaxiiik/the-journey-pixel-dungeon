@@ -61,7 +61,7 @@ public class Fadeleaf extends Plant {
 				ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);
 			}
 			
-		} else if (ch instanceof Mob && !ch.properties().contains(Character.Property.IMMOVABLE)) {
+		} else if (ch instanceof Mob && !ch.getProperties().contains(Character.Property.IMMOVABLE)) {
 
 			ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);
 

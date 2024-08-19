@@ -44,7 +44,7 @@ public class FeatherFall extends Spell {
 	@Override
 	protected void onCast(Hero hero) {
 		Buff.append(hero, FeatherBuff.class, FeatherBuff.DURATION);
-		hero.sprite.operate(hero.pos);
+		hero.sprite.operate(hero.position);
 		Sample.INSTANCE.play(Assets.Sounds.READ );
 		hero.sprite.emitter().burst( Speck.factory( Speck.JET ), 20);
 		

@@ -114,7 +114,7 @@ public class Item implements Bundlable {
 	}
 
 	public final boolean doPickUp( Hero hero ) {
-		return doPickUp( hero, hero.pos );
+		return doPickUp( hero, hero.position);
 	}
 
 	public boolean doPickUp(Hero hero, int pos) {
@@ -132,8 +132,8 @@ public class Item implements Bundlable {
 	
 	public void doDrop( Hero hero ) {
 		hero.spendAndNext(TIME_TO_DROP);
-		int pos = hero.pos;
-		Dungeon.level.drop(detachAll(hero.belongings.backpack), pos).sprite.drop(pos);
+		int pos = hero.position;
+		Dungeon.level.dropItemOnPosition(detachAll(hero.belongings.backpack), pos).sprite.drop(pos);
 	}
 
 	//resets an item's properties, to ensure consistency between runs
@@ -183,7 +183,7 @@ public class Item implements Bundlable {
 	}
 	
 	protected void onThrow( int cell ) {
-		Heap heap = Dungeon.level.drop( this, cell );
+		Heap heap = Dungeon.level.dropItemOnPosition( this, cell );
 		if (!heap.isEmpty()) {
 			heap.sprite.drop( cell );
 		}
@@ -238,12 +238,12 @@ public class Item implements Bundlable {
 						TippedDart.lostDarts = 0;
 						if (!d.collect()){
 							//have to handle this in an actor as we can't manipulate the heap during pickup
-							Actor.add(new Actor() {
+							Actor.addActor(new Actor() {
 								{ actPriority = VFX_PRIO; }
 								@Override
 								protected boolean playGameTurn() {
-									Dungeon.level.drop(d, Dungeon.hero.pos).sprite.drop();
-									Actor.remove(this);
+									Dungeon.level.dropItemOnPosition(d, Dungeon.hero.position).sprite.drop();
+									Actor.removeActor(this);
 									return true;
 								}
 							});
@@ -362,7 +362,7 @@ public class Item implements Bundlable {
 	//note that not all item properties should care about buffs/debuffs! (e.g. str requirement)
 	public int buffedLvl(){
 		//only the hero can be affected by Degradation
-		if (Dungeon.hero.buff( Degrade.class ) != null
+		if (Dungeon.hero.getBuff( Degrade.class ) != null
 			&& (isEquipped( Dungeon.hero ) || Dungeon.hero.belongings.contains( this ))) {
 			return Degrade.reduceLevel(level());
 		} else {
@@ -589,7 +589,7 @@ public class Item implements Bundlable {
 	}
 
 	public int throwPos( Hero user, int dst){
-		return new Ballistica( user.pos, dst, Ballistica.PROJECTILE ).collisionPos;
+		return new Ballistica( user.position, dst, Ballistica.PROJECTILE ).collisionPos;
 	}
 
 	public void throwSound(){
@@ -604,7 +604,7 @@ public class Item implements Bundlable {
 
 		throwSound();
 
-		Character enemy = Actor.findChar( cell );
+		Character enemy = Actor.getCharacterOnPosition( cell );
 		QuickSlotButton.target(enemy);
 		
 		final float delay = castDelay(user, dst);
@@ -622,15 +622,15 @@ public class Item implements Bundlable {
 							if (i != null) i.onThrow(cell);
 							if (curUser.hasTalent(Talent.IMPROVISED_PROJECTILES)
 									&& !(Item.this instanceof MissileWeapon)
-									&& curUser.buff(Talent.ImprovisedProjectileCooldown.class) == null){
+									&& curUser.getBuff(Talent.ImprovisedProjectileCooldown.class) == null){
 								if (enemy != null && enemy.alignment != curUser.alignment){
 									Sample.INSTANCE.play(Assets.Sounds.HIT);
 									Buff.affect(enemy, Blindness.class, 1f + curUser.pointsInTalent(Talent.IMPROVISED_PROJECTILES));
 									Buff.affect(curUser, Talent.ImprovisedProjectileCooldown.class, 50f);
 								}
 							}
-							if (user.buff(Talent.LethalMomentumTracker.class) != null){
-								user.buff(Talent.LethalMomentumTracker.class).detach();
+							if (user.getBuff(Talent.LethalMomentumTracker.class) != null){
+								user.getBuff(Talent.LethalMomentumTracker.class).detach();
 								user.next();
 							} else {
 								user.spendAndNext(delay);
@@ -647,7 +647,7 @@ public class Item implements Bundlable {
 						public void call() {
 							curUser = user;
 							Item i = Item.this.detach(user.belongings.backpack);
-							user.spend(delay);
+							user.spendTimeAdjusted(delay);
 							if (i != null) i.onThrow(cell);
 							user.next();
 						}

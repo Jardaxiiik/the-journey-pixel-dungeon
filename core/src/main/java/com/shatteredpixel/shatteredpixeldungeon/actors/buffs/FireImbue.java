@@ -64,12 +64,12 @@ public class FireImbue extends Buff {
 
 	@Override
 	public boolean playGameTurn() {
-		if (Dungeon.level.map[target.pos] == Terrain.GRASS) {
-			Dungeon.level.set(target.pos, Terrain.EMBERS);
-			GameScene.updateMap(target.pos);
+		if (Dungeon.level.map[target.position] == Terrain.GRASS) {
+			Dungeon.level.set(target.position, Terrain.EMBERS);
+			GameScene.updateMap(target.position);
 		}
 
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		left -= TICK;
 		if (left <= 0){
 			detach();

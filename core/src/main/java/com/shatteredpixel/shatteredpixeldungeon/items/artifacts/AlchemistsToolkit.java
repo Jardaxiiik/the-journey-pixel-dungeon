@@ -61,7 +61,7 @@ public class AlchemistsToolkit extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && !cursed && hero.getBuff(MagicImmune.class) == null) {
 			actions.add(AC_BREW);
 			if (level() < levelCap) {
 				actions.add(AC_ENERGIZE);
@@ -75,7 +75,7 @@ public class AlchemistsToolkit extends Artifact {
 
 		super.execute(hero, action);
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals(AC_BREW)){
 			if (!isEquipped(hero))              GLog.i( Messages.get(this, "need_to_equip") );
@@ -113,13 +113,13 @@ public class AlchemistsToolkit extends Artifact {
 							Dungeon.energy -= 6;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.hero.sprite.operate(Dungeon.hero.position);
 							upgrade();
 						} else if (index == 1){
 							Dungeon.energy -= 6*maxLevels;
 							Sample.INSTANCE.play(Assets.Sounds.DRINK);
 							Sample.INSTANCE.playDelayed(Assets.Sounds.PUFF, 0.5f);
-							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
+							Dungeon.hero.sprite.operate(Dungeon.hero.position);
 							upgrade(maxLevels);
 						}
 
@@ -157,7 +157,7 @@ public class AlchemistsToolkit extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (target.buff(MagicImmune.class) != null) return;
+		if (target.getBuff(MagicImmune.class) != null) return;
 		partialCharge += 0.25f*amount;
 		if (partialCharge >= 1){
 			partialCharge--;
@@ -224,19 +224,19 @@ public class AlchemistsToolkit extends Artifact {
 					warmUpDelay = 0;
 				} else if (warmUpDelay == 101){
 					warmUpDelay = 100f;
-				} else if (!cursed && target.buff(MagicImmune.class) == null) {
+				} else if (!cursed && target.getBuff(MagicImmune.class) == null) {
 					float turnsToWarmUp = (int) Math.pow(10 - level(), 2);
 					warmUpDelay -= 100 / turnsToWarmUp;
 				}
 				updateQuickslot();
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
 		public void gainCharge(float levelPortion) {
-			if (cursed || target.buff(MagicImmune.class) != null) return;
+			if (cursed || target.getBuff(MagicImmune.class) != null) return;
 
 			//generates 2 energy every hero level, +1 energy per toolkit level
 			//to a max of 12 energy per hero level

@@ -60,7 +60,7 @@ public class DisarmingTrap extends Trap{
 
 			if (cell != -1) {
 				Item item = heap.pickUp();
-				Heap dropped = Dungeon.level.drop( item, cell );
+				Heap dropped = Dungeon.level.dropItemOnPosition( item, cell );
 				dropped.seen = true;
 				if (item instanceof Honeypot.ShatteredPot){
 					((Honeypot.ShatteredPot)item).movePot(pos, cell);
@@ -72,13 +72,13 @@ public class DisarmingTrap extends Trap{
 			}
 		}
 
-		if (Actor.findChar(pos) instanceof Statue){
-			Actor.findChar(pos).die(this);
+		if (Actor.getCharacterOnPosition(pos) instanceof Statue){
+			Actor.getCharacterOnPosition(pos).die(this);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			CellEmitter.get(pos).burst(Speck.factory(Speck.LIGHT), 4);
 		}
 
-		if (Dungeon.hero.pos == pos && !Dungeon.hero.flying){
+		if (Dungeon.hero.position == pos && !Dungeon.hero.flying){
 			Hero hero = Dungeon.hero;
 			KindOfWeapon weapon = hero.belongings.weapon;
 
@@ -98,7 +98,7 @@ public class DisarmingTrap extends Trap{
 				ActionIndicator.refresh();
 				weapon.updateQuickslot();
 
-				Dungeon.level.drop(weapon, cell).seen = true;
+				Dungeon.level.dropItemOnPosition(weapon, cell).seen = true;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS9)
 					Dungeon.level.mapped[cell+i] = true;
 				GameScene.updateFog(cell, 1);

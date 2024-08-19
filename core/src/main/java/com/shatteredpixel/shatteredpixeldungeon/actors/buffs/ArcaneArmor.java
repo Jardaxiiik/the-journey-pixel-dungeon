@@ -41,7 +41,7 @@ public class ArcaneArmor extends Buff {
 	public boolean playGameTurn() {
 		if (target.isAlive()) {
 			
-			spend( interval );
+			spendTimeAdjusted( interval );
 			if (--level <= 0) {
 				detach();
 			}
@@ -64,7 +64,7 @@ public class ArcaneArmor extends Buff {
 		if (Math.sqrt(interval)*level < Math.sqrt(time)*value) {
 			level = value;
 			interval = time;
-			spend(time - cooldown() - 1);
+			spendTimeAdjusted(time - cooldown() - 1);
 		}
 	}
 	

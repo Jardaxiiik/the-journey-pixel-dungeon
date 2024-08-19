@@ -39,7 +39,7 @@ public class Shortsword extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Character target){
-		if (hero.buff(Sword.CleaveTracker.class) != null){
+		if (hero.getBuff(Sword.CleaveTracker.class) != null){
 			return 0;
 		} else {
 			return 1;

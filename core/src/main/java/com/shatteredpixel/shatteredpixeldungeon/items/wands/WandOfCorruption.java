@@ -125,7 +125,7 @@ public class WandOfCorruption extends Wand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Character ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 
 		if (ch != null){
 			
@@ -162,14 +162,14 @@ public class WandOfCorruption extends Wand {
 			enemyResist *= 1 + 4*Math.pow(enemy.healthPoints /(float)enemy.healthMax, 2);
 			
 			//debuffs placed on the enemy reduce their resistance
-			for (Buff buff : enemy.buffs()){
+			for (Buff buff : enemy.getBuffs()){
 				if (MAJOR_DEBUFFS.containsKey(buff.getClass()))         enemyResist *= (1f-MAJOR_DEBUFF_WEAKEN);
 				else if (MINOR_DEBUFFS.containsKey(buff.getClass()))    enemyResist *= (1f-MINOR_DEBUFF_WEAKEN);
 				else if (buff.type == Buff.buffType.NEGATIVE)           enemyResist *= (1f-MINOR_DEBUFF_WEAKEN);
 			}
 			
 			//cannot re-corrupt or doom an enemy, so give them a major debuff instead
-			if(enemy.buff(Corruption.class) != null || enemy.buff(Doom.class) != null){
+			if(enemy.getBuff(Corruption.class) != null || enemy.getBuff(Doom.class) != null){
 				corruptingPower = enemyResist - 0.001f;
 			}
 			
@@ -196,13 +196,13 @@ public class WandOfCorruption extends Wand {
 		
 		//do not consider buffs which are already assigned, or that the enemy is immune to.
 		HashMap<Class<? extends Buff>, Float> debuffs = new HashMap<>(category);
-		for (Buff existing : enemy.buffs()){
+		for (Buff existing : enemy.getBuffs()){
 			if (debuffs.containsKey(existing.getClass())) {
 				debuffs.put(existing.getClass(), 0f);
 			}
 		}
 		for (Class<?extends Buff> toAssign : debuffs.keySet()){
-			 if (debuffs.get(toAssign) > 0 && enemy.isImmune(toAssign)){
+			 if (debuffs.get(toAssign) > 0 && enemy.isImmuneToEffectType(toAssign)){
 			 	debuffs.put(toAssign, 0f);
 			 }
 		}
@@ -221,12 +221,12 @@ public class WandOfCorruption extends Wand {
 	
 	private void corruptEnemy( Mob enemy ){
 		//cannot re-corrupt or doom an enemy, so give them a major debuff instead
-		if(enemy.buff(Corruption.class) != null || enemy.buff(Doom.class) != null){
+		if(enemy.getBuff(Corruption.class) != null || enemy.getBuff(Doom.class) != null){
 			GLog.w( Messages.get(this, "already_corrupted") );
 			return;
 		}
 		
-		if (!enemy.isImmune(Corruption.class)){
+		if (!enemy.isImmuneToEffectType(Corruption.class)){
 			Corruption.corruptionHeal(enemy);
 
 			AllyBuff.affectAndLoot(enemy, curUser, Corruption.class);

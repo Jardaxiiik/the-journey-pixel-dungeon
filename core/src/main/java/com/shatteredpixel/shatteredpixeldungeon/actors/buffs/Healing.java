@@ -66,7 +66,7 @@ public class Healing extends Buff {
 			detach();
 		}
 		
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		
 		return true;
 	}

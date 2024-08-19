@@ -60,7 +60,7 @@ public class DM100Sprite extends MobSprite {
 	
 	public void zap( int pos ) {
 
-		Character enemy = Actor.findChar(pos);
+		Character enemy = Actor.getCharacterOnPosition(pos);
 
 		//shoot lightning from eye, not sprite center.
 		PointF origin = center();
@@ -78,7 +78,7 @@ public class DM100Sprite extends MobSprite {
 		}
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		
-		super.zap( ch.pos );
+		super.zap( ch.position);
 		flash();
 	}
 

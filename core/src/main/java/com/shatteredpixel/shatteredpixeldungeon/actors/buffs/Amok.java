@@ -45,10 +45,10 @@ public class Amok extends FlavourBuff {
 			if (target.alignment == Character.Alignment.ENEMY) {
 				for (Mob m : Dungeon.level.mobs) {
 					if (m.alignment == Character.Alignment.ENEMY && m.isTargeting(target)) {
-						m.aggro(null);
+						m.startHunting(null);
 					}
 					if (target instanceof Mob && ((Mob) target).isTargeting(m)){
-						((Mob) target).aggro(null);
+						((Mob) target).startHunting(null);
 					}
 				}
 			}

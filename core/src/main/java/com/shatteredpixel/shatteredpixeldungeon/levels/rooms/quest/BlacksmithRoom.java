@@ -66,7 +66,7 @@ public class BlacksmithRoom extends StandardRoom {
 			do {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY_SP);
-			level.drop(
+			level.dropItemOnPosition(
 				ItemGenerator.random( Random.oneOf(
 					ItemGenerator.Category.ARMOR,
 					ItemGenerator.Category.WEAPON
@@ -76,14 +76,14 @@ public class BlacksmithRoom extends StandardRoom {
 		
 		Blacksmith npc = new Blacksmith();
 		do {
-			npc.pos = level.pointToCell(random( 2 ));
-		} while (level.heaps.get( npc.pos ) != null);
+			npc.position = level.pointToCell(random( 2 ));
+		} while (level.heaps.get( npc.position) != null);
 		level.mobs.add( npc );
 
 		int entrancePos;
 		do {
 			entrancePos = level.pointToCell(random( 2 ));
-		} while (level.heaps.get( npc.pos ) != null || entrancePos == npc.pos);
+		} while (level.heaps.get( npc.position) != null || entrancePos == npc.position);
 
 		QuestEntrance vis = new QuestEntrance();
 		vis.pos(entrancePos, level);

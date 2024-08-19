@@ -57,7 +57,7 @@ public abstract class Plant implements Bundlable {
 
 	public void trigger(){
 
-		Character ch = Actor.findChar(pos);
+		Character ch = Actor.getCharacterOnPosition(pos);
 
 		if (ch instanceof Hero){
 			((Hero) ch).interrupt();
@@ -82,7 +82,7 @@ public abstract class Plant implements Bundlable {
 		}
 
 		float seedChance = 0f;
-		for (Character c : Actor.chars()){
+		for (Character c : Actor.getCharacters()){
 			if (c instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) c;
 				if (l.inRange(pos)){
@@ -93,7 +93,7 @@ public abstract class Plant implements Bundlable {
 
 		if (Random.Float() < seedChance){
 			if (seedClass != null && seedClass != Rotberry.Seed.class) {
-				Dungeon.level.drop(Reflection.newInstance(seedClass), pos).sprite.drop();
+				Dungeon.level.dropItemOnPosition(Reflection.newInstance(seedClass), pos).sprite.drop();
 			}
 		}
 		
@@ -174,10 +174,10 @@ public abstract class Plant implements Bundlable {
 			if (action.equals( AC_PLANT )) {
 
 				hero.busy();
-				((Seed)detach( hero.belongings.backpack )).onThrow( hero.pos );
-				hero.spend( TIME_TO_PLANT );
+				((Seed)detach( hero.belongings.backpack )).onThrow( hero.position);
+				hero.spendTimeAdjusted( TIME_TO_PLANT );
 
-				hero.sprite.operate( hero.pos );
+				hero.sprite.operate( hero.position);
 				
 			}
 		}

@@ -56,7 +56,7 @@ public class CapeOfThorns extends Artifact {
 			updateQuickslot();
 		}
 		if (charge >= chargeCap){
-			target.buff(Thorns.class).proc(0, null, null);
+			target.getBuff(Thorns.class).proc(0, null, null);
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class CapeOfThorns extends Artifact {
 				}
 				updateQuickslot();
 			}
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
@@ -103,8 +103,8 @@ public class CapeOfThorns extends Artifact {
 				int deflected = Random.NormalIntRange(0, damage);
 				damage -= deflected;
 
-				if (attacker != null && Dungeon.level.adjacent(attacker.pos, defender.pos)) {
-					attacker.damage(deflected, this);
+				if (attacker != null && Dungeon.level.adjacent(attacker.position, defender.position)) {
+					attacker.receiveDamageFromSource(deflected, this);
 				}
 
 				exp+= deflected;

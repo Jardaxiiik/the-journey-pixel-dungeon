@@ -36,7 +36,7 @@ public class Grim extends Weapon.Enchantment {
 	@Override
 	public int proc(Weapon weapon, Character attacker, Character defender, int damage ) {
 
-		if (defender.isImmune(Grim.class)) {
+		if (defender.isImmuneToEffectType(Grim.class)) {
 			return damage;
 		}
 
@@ -50,10 +50,10 @@ public class Grim extends Weapon.Enchantment {
 		//see Character.damage
 		Buff.affect(defender, GrimTracker.class).maxChance = maxChance;
 
-		if (defender.buff(GrimTracker.class) != null
+		if (defender.getBuff(GrimTracker.class) != null
 				&& attacker instanceof Hero
 				&& weapon.hasEnchant(Grim.class, attacker)){
-			defender.buff(GrimTracker.class).qualifiesForBadge = true;
+			defender.getBuff(GrimTracker.class).qualifiesForBadge = true;
 		}
 
 		return damage;

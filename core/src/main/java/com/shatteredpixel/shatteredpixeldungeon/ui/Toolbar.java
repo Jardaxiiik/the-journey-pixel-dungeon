@@ -115,7 +115,7 @@ public class Toolbar extends Component {
 						GameScene.handleCell(cell);
 					} else {
 						//couldn't auto-aim, just target the position and hope for the best.
-						GameScene.handleCell( QuickSlotButton.lastTarget.pos );
+						GameScene.handleCell( QuickSlotButton.lastTarget.position);
 					}
 					return;
 				}
@@ -128,7 +128,7 @@ public class Toolbar extends Component {
 						Item item = Dungeon.quickslot.getItem(i);
 
 						if (item != null && !Dungeon.quickslot.isPlaceholder(i) &&
-								(Dungeon.hero.buff(LostInventory.class) == null || item.keptThroughLostInventory())){
+								(Dungeon.hero.getBuff(LostInventory.class) == null || item.keptThroughLostInventory())){
 							slotNames[i] = Messages.titleCase(item.name());
 							slotIcons[i] = new ItemSprite(item);
 						} else {
@@ -154,7 +154,7 @@ public class Toolbar extends Component {
 							Item item = Dungeon.quickslot.getItem(idx);
 
 							if (item == null || Dungeon.quickslot.isPlaceholder(idx)
-									|| (Dungeon.hero.buff(LostInventory.class) != null && !item.keptThroughLostInventory())
+									|| (Dungeon.hero.getBuff(LostInventory.class) != null && !item.keptThroughLostInventory())
 									|| alt){
 								//TODO would be nice to use a radial menu for this too
 								// Also a bunch of code could be moved out of here into subclasses of RadialMenu
@@ -253,14 +253,14 @@ public class Toolbar extends Component {
 			protected void onClick() {
 				if (Dungeon.hero != null && Dungeon.hero.ready && !GameScene.cancel()) {
 					Dungeon.hero.waitOrPickup = true;
-					if ((Dungeon.level.heaps.get(Dungeon.hero.pos) != null || Dungeon.hero.canSelfTrample())
-						&& Dungeon.hero.chooseHeroActionBasedOnTile(Dungeon.hero.pos)){
+					if ((Dungeon.level.heaps.get(Dungeon.hero.position) != null || Dungeon.hero.canSelfTrample())
+						&& Dungeon.hero.chooseHeroActionBasedOnTile(Dungeon.hero.position)){
 						//trigger hold fast and patient strike here, even if the hero didn't specifically wait
 						if (Dungeon.hero.hasTalent(Talent.HOLD_FAST)){
-							Buff.affect(Dungeon.hero, HoldFast.class).pos = Dungeon.hero.pos;
+							Buff.affect(Dungeon.hero, HoldFast.class).pos = Dungeon.hero.position;
 						}
 						if (Dungeon.hero.hasTalent(Talent.PATIENT_STRIKE)){
-							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.pos;
+							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.position;
 						}
 						Dungeon.hero.next();
 					} else {
@@ -420,7 +420,7 @@ public class Toolbar extends Component {
 
 							for(Item i : bag.items){
 								if (i instanceof Bag) items.remove(i);
-								if (Dungeon.hero.buff(LostInventory.class) != null && !i.keptThroughLostInventory()) items.remove(i);
+								if (Dungeon.hero.getBuff(LostInventory.class) != null && !i.keptThroughLostInventory()) items.remove(i);
 							}
 
 							if (idx == 0){

@@ -90,8 +90,8 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public boolean add(Buff buff) {
-		if (super.add(buff)) {
+	public boolean addBuff(Buff buff) {
+		if (super.addBuff(buff)) {
 			if (buff.type == Buff.buffType.NEGATIVE && alignment == Alignment.NEUTRAL) {
 				alignment = Alignment.ENEMY;
 				stopHiding();
@@ -103,20 +103,20 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public String name() {
+	public String getName() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "chest");
 		} else {
-			return super.name();
+			return super.getName();
 		}
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "chest_desc") + "\n\n" + Messages.get(this, "hidden_hint");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 
@@ -125,9 +125,9 @@ public class Mimic extends Mob {
 		if (alignment == Alignment.NEUTRAL && state != PASSIVE){
 			alignment = Alignment.ENEMY;
 			if (sprite != null) sprite.idle();
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.level.heroFOV[position]) {
 				GLog.w(Messages.get(this, "reveal") );
-				CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
+				CellEmitter.get(position).burst(Speck.factory(Speck.STAR), 10);
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 			}
 		}
@@ -149,11 +149,11 @@ public class Mimic extends Mob {
 		stopHiding();
 
 		Dungeon.hero.busy();
-		Dungeon.hero.sprite.operate(pos);
+		Dungeon.hero.sprite.operate(position);
 		if (Dungeon.hero.invisible <= 0
-				&& Dungeon.hero.buff(Swiftthistle.TimeBubble.class) == null
-				&& Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class) == null){
-			return doAttack(Dungeon.hero);
+				&& Dungeon.hero.getBuff(Swiftthistle.TimeBubble.class) == null
+				&& Dungeon.hero.getBuff(TimekeepersHourglass.timeFreeze.class) == null){
+			return attackCharacter(Dungeon.hero);
 		} else {
 			sprite.idle();
 			alignment = Alignment.ENEMY;
@@ -172,46 +172,46 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
 		}
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
 		}
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(Object source) {
 		if (state == PASSIVE){
 			alignment = Alignment.ENEMY;
 			stopHiding();
 		}
-		super.die(cause);
+		super.die(source);
 	}
 
 	public void stopHiding(){
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
-		if (Actor.chars().contains(this) && Dungeon.level.heroFOV[pos]) {
+		if (Actor.getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
 			enemy = Dungeon.hero;
-			target = Dungeon.hero.pos;
+			target = Dungeon.hero.position;
 			GLog.w(Messages.get(this, "reveal") );
-			CellEmitter.get(pos).burst(Speck.factory(Speck.STAR), 10);
+			CellEmitter.get(position).burst(Speck.factory(Speck.STAR), 10);
 			Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 		}
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		if (alignment == Alignment.NEUTRAL){
 			return Random.NormalIntRange( 2 + 2*level, 2 + 2*level);
 		} else {
@@ -230,7 +230,7 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		if (target != null && alignment == Alignment.NEUTRAL && target.invisible <= 0){
 			return INFINITE_ACCURACY;
 		} else {
@@ -251,19 +251,19 @@ public class Mimic extends Mob {
 	}
 	
 	@Override
-	public void rollToDropLoot(){
+	public void dropLoot(){
 		
 		if (items != null) {
 			for (Item item : items) {
-				Dungeon.level.drop( item, pos ).sprite.drop();
+				Dungeon.level.dropItemOnPosition( item, position).sprite.drop();
 			}
 			items = null;
 		}
-		super.rollToDropLoot();
+		super.dropLoot();
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0f;
 	}
 
@@ -297,7 +297,7 @@ public class Mimic extends Mob {
 
 		m.items = new ArrayList<>( Arrays.asList(items) );
 		m.setLevel( Dungeon.depth );
-		m.pos = pos;
+		m.position = pos;
 
 		//generate an extra reward for killing the mimic
 		m.generatePrize(useDecks);

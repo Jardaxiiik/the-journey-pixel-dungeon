@@ -222,7 +222,7 @@ public class CityBossLevel extends Level {
 	//returns a random pedestal that doesn't already have a summon inbound on it
 	public int getSummoningPos(){
 		Mob king = getKing();
-		HashSet<DwarfKing.Summoning> summons = king.buffs(DwarfKing.Summoning.class);
+		HashSet<DwarfKing.Summoning> summons = king.getBuffs(DwarfKing.Summoning.class);
 		ArrayList<Integer> positions = new ArrayList<>();
 		for (int pedestal : pedestals) {
 			boolean clear = true;
@@ -268,7 +268,7 @@ public class CityBossLevel extends Level {
 					pos = randomRespawnCell(null);
 				} while (pos == entrance());
 				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -280,8 +280,8 @@ public class CityBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}
@@ -296,7 +296,7 @@ public class CityBossLevel extends Level {
 	@Override
 	public void occupyCell( Character ch ) {
 		if (map[bottomDoor] != Terrain.LOCKED_DOOR && map[topDoor] == Terrain.LOCKED_DOOR
-				&& ch.pos < bottomDoor && ch == Dungeon.hero) {
+				&& ch.position < bottomDoor && ch == Dungeon.hero) {
 			seal();
 		}
 
@@ -311,15 +311,15 @@ public class CityBossLevel extends Level {
 		//moves intelligent allies with the hero, preferring closer pos to entrance door
 		int doorPos = pointToCell(new Point(arena.left + arena.width()/2, arena.bottom));
 		Mob.holdAllies(this, doorPos);
-		Mob.restoreAllies(this, Dungeon.hero.pos, doorPos);
+		Mob.restoreAllies(this, Dungeon.hero.position, doorPos);
 
 		DwarfKing boss = new DwarfKing();
 		boss.state = boss.WANDERING;
-		boss.pos = pointToCell(arena.center());
+		boss.position = pointToCell(arena.center());
 		GameScene.add( boss );
-		boss.beckon(Dungeon.hero.pos);
+		boss.beckon(Dungeon.hero.position);
 
-		if (heroFOV[boss.pos]) {
+		if (heroFOV[boss.position]) {
 			boss.notice();
 			boss.sprite.alpha( 0 );
 			boss.sprite.parent.add( new AlphaTweener( boss.sprite, 1, 0.1f ) );

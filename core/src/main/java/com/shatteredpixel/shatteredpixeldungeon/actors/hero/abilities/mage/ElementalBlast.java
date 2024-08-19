@@ -131,20 +131,20 @@ public class ElementalBlast extends ArmorAbility {
 		Ballistica aim;
 		//The direction of the aim only matters if it goes outside the map
 		//So we try to aim in the cardinal direction that has the most space
-		int x = hero.pos % Dungeon.level.width();
-		int y = hero.pos / Dungeon.level.width();
+		int x = hero.position % Dungeon.level.width();
+		int y = hero.position / Dungeon.level.width();
 
 		if (Math.max(x, Dungeon.level.width()-x) >= Math.max(y, Dungeon.level.height()-y)){
 			if (x > Dungeon.level.width()/2){
-				aim = new Ballistica(hero.pos, hero.pos - 1, Ballistica.WONT_STOP);
+				aim = new Ballistica(hero.position, hero.position - 1, Ballistica.WONT_STOP);
 			} else {
-				aim = new Ballistica(hero.pos, hero.pos + 1, Ballistica.WONT_STOP);
+				aim = new Ballistica(hero.position, hero.position + 1, Ballistica.WONT_STOP);
 			}
 		} else {
 			if (y > Dungeon.level.height()/2){
-				aim = new Ballistica(hero.pos, hero.pos - Dungeon.level.width(), Ballistica.WONT_STOP);
+				aim = new Ballistica(hero.position, hero.position - Dungeon.level.width(), Ballistica.WONT_STOP);
 			} else {
-				aim = new Ballistica(hero.pos, hero.pos + Dungeon.level.width(), Ballistica.WONT_STOP);
+				aim = new Ballistica(hero.position, hero.position + Dungeon.level.width(), Ballistica.WONT_STOP);
 			}
 		}
 
@@ -266,13 +266,13 @@ public class ElementalBlast extends ArmorAbility {
 							}
 
 							//### Deal damage ###
-							Character mob = Actor.findChar(cell);
+							Character mob = Actor.getCharacterOnPosition(cell);
 							int damage = Math.round(Random.NormalIntRange(15, 25)
 									* effectMulti
 									* damageFactors.get(finalWandCls));
 
 							if (mob != null && damage > 0 && mob.alignment != Character.Alignment.ALLY){
-								mob.damage(damage, Reflection.newInstance(finalWandCls));
+								mob.receiveDamageFromSource(damage, Reflection.newInstance(finalWandCls));
 								charsHit++;
 							}
 
@@ -300,11 +300,11 @@ public class ElementalBlast extends ArmorAbility {
 								//*** Wand of Blast Wave ***
 								} else if (finalWandCls == WandOfBlastWave.class){
 									if (mob.alignment != Character.Alignment.ALLY) {
-										Ballistica aim = new Ballistica(hero.pos, mob.pos, Ballistica.WONT_STOP);
-										int knockback = aoeSize + 1 - (int)Dungeon.level.trueDistance(hero.pos, mob.pos);
+										Ballistica aim = new Ballistica(hero.position, mob.position, Ballistica.WONT_STOP);
+										int knockback = aoeSize + 1 - (int)Dungeon.level.trueDistance(hero.position, mob.position);
 										knockback *= effectMulti;
 										WandOfBlastWave.throwChar(mob,
-												new Ballistica(mob.pos, aim.collisionPos, Ballistica.MAGIC_BOLT),
+												new Ballistica(mob.position, aim.collisionPos, Ballistica.MAGIC_BOLT),
 												knockback,
 												true,
 												true,
@@ -333,7 +333,7 @@ public class ElementalBlast extends ArmorAbility {
 
 								//*** Wand of Transfusion ***
 								} else if (finalWandCls == WandOfTransfusion.class){
-									if(mob.alignment == Character.Alignment.ALLY || mob.buff(Charm.class) != null){
+									if(mob.alignment == Character.Alignment.ALLY || mob.getBuff(Charm.class) != null){
 										int healing = Math.round(10*effectMulti);
 										int shielding = (mob.healthPoints + healing) - mob.healthMax;
 										if (shielding > 0){
@@ -353,14 +353,14 @@ public class ElementalBlast extends ArmorAbility {
 											mob.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shielding), FloatingText.SHIELDING);
 										}
 									} else {
-										if (!mob.properties().contains(Character.Property.UNDEAD)) {
+										if (!mob.getProperties().contains(Character.Property.UNDEAD)) {
 											Charm charm = Buff.affect(mob, Charm.class, effectMulti*Charm.DURATION/2f);
-											charm.object = hero.id();
+											charm.object = hero.getId();
 											charm.ignoreHeroAllies = true;
 											mob.sprite.centerEmitter().start(Speck.factory(Speck.HEART), 0.2f, 3);
 										} else {
 											damage = Math.round(Random.NormalIntRange(15, 25) * effectMulti);
-											mob.damage(damage, Reflection.newInstance(finalWandCls));
+											mob.receiveDamageFromSource(damage, Reflection.newInstance(finalWandCls));
 											mob.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 										}
 									}
@@ -402,8 +402,8 @@ public class ElementalBlast extends ArmorAbility {
 
 						//*** Wand of Frost ***
 						} else if (finalWandCls == WandOfFrost.class){
-							if ((hero.buff(Burning.class)) != null) {
-								hero.buff(Burning.class).detach();
+							if ((hero.getBuff(Burning.class)) != null) {
+								hero.getBuff(Burning.class).detach();
 							}
 
 						//*** Wand of Prismatic Light ***
@@ -424,7 +424,7 @@ public class ElementalBlast extends ArmorAbility {
 				}
 		);
 
-		hero.sprite.operate( hero.pos );
+		hero.sprite.operate( hero.position);
 		Invisibility.dispel();
 		hero.busy();
 

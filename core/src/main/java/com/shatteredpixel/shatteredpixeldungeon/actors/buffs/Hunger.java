@@ -65,10 +65,10 @@ public class Hunger extends Buff implements Hero.Doom {
 	public boolean playGameTurn() {
 
 		if (Dungeon.level.locked
-				|| target.buff(WellFed.class) != null
+				|| target.getBuff(WellFed.class) != null
 				|| SPDSettings.intro()
-				|| target.buff(ScrollOfChallenge.ChallengeArena.class) != null){
-			spend(STEP);
+				|| target.getBuff(ScrollOfChallenge.ChallengeArena.class) != null){
+			spendTimeAdjusted(STEP);
 			return true;
 		}
 
@@ -81,7 +81,7 @@ public class Hunger extends Buff implements Hero.Doom {
 				partialDamage += STEP * target.healthMax /1000f;
 
 				if (partialDamage > 1){
-					target.damage( (int)partialDamage, this);
+					target.receiveDamageFromSource( (int)partialDamage, this);
 					partialDamage -= (int)partialDamage;
 				}
 				
@@ -91,7 +91,7 @@ public class Hunger extends Buff implements Hero.Doom {
 				if (newLevel >= STARVING) {
 
 					GLog.n( Messages.get(this, "onstarving") );
-					hero.damage( 1, this );
+					hero.receiveDamageFromSource( 1, this );
 
 					hero.interrupt();
 
@@ -109,7 +109,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 			}
 			
-			spend( target.buff( Shadows.class ) == null ? STEP : STEP * 1.5f );
+			spendTimeAdjusted( target.getBuff( Shadows.class ) == null ? STEP : STEP * 1.5f );
 
 		} else {
 
@@ -130,8 +130,8 @@ public class Hunger extends Buff implements Hero.Doom {
 
 	public void affectHunger(float energy, boolean overrideLimits ) {
 
-		if (energy < 0 && target.buff(WellFed.class) != null){
-			target.buff(WellFed.class).left += energy;
+		if (energy < 0 && target.getBuff(WellFed.class) != null){
+			target.getBuff(WellFed.class).left += energy;
 			BuffIndicator.refreshHero();
 			return;
 		}
@@ -146,7 +146,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			level = STARVING;
 			partialDamage += excess * (target.healthMax /1000f);
 			if (partialDamage > 1f){
-				target.damage( (int)partialDamage, this );
+				target.receiveDamageFromSource( (int)partialDamage, this );
 				partialDamage -= (int)partialDamage;
 			}
 		}
@@ -155,7 +155,7 @@ public class Hunger extends Buff implements Hero.Doom {
 			GLog.w( Messages.get(this, "onhungry") );
 		} else if (oldLevel < STARVING && level >= STARVING){
 			GLog.n( Messages.get(this, "onstarving") );
-			target.damage( 1, this );
+			target.receiveDamageFromSource( 1, this );
 		}
 
 		BuffIndicator.refreshHero();

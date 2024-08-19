@@ -40,8 +40,8 @@ public class RotDart extends TippedDart {
 		//when processing charged shot, only corrode enemies
 		if (processingChargedShot && attacker.alignment == defender.alignment) {
 			//do nothing
-		} else if (defender.properties().contains(Character.Property.BOSS)
-				|| defender.properties().contains(Character.Property.MINIBOSS)){
+		} else if (defender.getProperties().contains(Character.Property.BOSS)
+				|| defender.getProperties().contains(Character.Property.MINIBOSS)){
 			Buff.affect(defender, Corrosion.class).set(5f, Dungeon.scalingDepth()/3);
 		} else {
 			Buff.affect(defender, Corrosion.class).set(10f, Dungeon.scalingDepth());

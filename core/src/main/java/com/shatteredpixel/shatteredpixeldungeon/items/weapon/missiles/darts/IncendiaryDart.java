@@ -39,14 +39,14 @@ public class IncendiaryDart extends TippedDart {
 	
 	@Override
 	protected void onThrow( int cell ) {
-		Character enemy = Actor.findChar( cell );
+		Character enemy = Actor.getCharacterOnPosition( cell );
 		if ((enemy == null || enemy == curUser) && Dungeon.level.flamable[cell]) {
 			GameScene.add(Emitter.seed(cell, 4, Fire.class));
 			decrementDurability();
 			if (durability > 0){
 				super.onThrow(cell);
 			} else {
-				Dungeon.level.drop(new Dart(), cell).sprite.drop();
+				Dungeon.level.dropItemOnPosition(new Dart(), cell).sprite.drop();
 			}
 		} else{
 			super.onThrow(cell);

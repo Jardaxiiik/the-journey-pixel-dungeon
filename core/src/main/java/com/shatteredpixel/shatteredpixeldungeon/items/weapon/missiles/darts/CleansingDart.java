@@ -46,7 +46,7 @@ public class CleansingDart extends TippedDart {
 			PotionOfCleansing.cleanse(defender, PotionOfCleansing.Cleanse.DURATION*2f);
 			return 0;
 		} else {
-			for (Buff b : defender.buffs()){
+			for (Buff b : defender.getBuffs()){
 				if (!(b instanceof ChampionEnemy)
 						&& b.type == Buff.buffType.POSITIVE
 						&& !(b instanceof Crossbow.ChargedShot)){

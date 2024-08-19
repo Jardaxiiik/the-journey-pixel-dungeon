@@ -35,15 +35,15 @@ public class Senior extends Monk {
 	}
 	
 	@Override
-	public void move( int step, boolean travelling) {
+	public void moveToPosition(int newPosition, boolean travelling) {
 		// on top of the existing move bonus, senior monks get a further 1.66 cooldown reduction
 		// for a total of 3.33, double the normal 1.67 for regular monks
 		if (travelling) focusCooldown -= 1.66f;
-		super.move( step, travelling);
+		super.moveToPosition(newPosition, travelling);
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 16, 25 );
 	}
 	

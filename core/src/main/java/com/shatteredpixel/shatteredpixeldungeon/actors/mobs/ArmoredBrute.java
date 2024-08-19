@@ -53,15 +53,15 @@ public class ArmoredBrute extends Brute {
 	protected void triggerEnrage () {
 		Buff.affect(this, ArmoredRage.class).setShield(healthMax /2 + 1);
 		sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healthMax /2 + 1), FloatingText.SHIELDING );
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.level.heroFOV[position]) {
 			sprite.showStatus( CharSprite.WARNING, Messages.get(this, "enraged") );
 		}
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		hasRaged = true;
 	}
 	
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		if (Random.Int( 4 ) == 0) {
 			return new PlateArmor().random();
 		}
@@ -85,7 +85,7 @@ public class ArmoredBrute extends Brute {
 				target.die(null);
 			}
 			
-			spend( 3*TICK );
+			spendTimeAdjusted( 3*TICK );
 			
 			return true;
 		}

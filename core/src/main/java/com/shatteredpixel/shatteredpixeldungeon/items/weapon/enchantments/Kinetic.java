@@ -39,9 +39,9 @@ public class Kinetic extends Weapon.Enchantment {
 	public int proc(Weapon weapon, Character attacker, Character defender, int damage) {
 		
 		int conservedDamage = 0;
-		if (attacker.buff(ConservedDamage.class) != null) {
-			conservedDamage = attacker.buff(ConservedDamage.class).damageBonus();
-			attacker.buff(ConservedDamage.class).detach();
+		if (attacker.getBuff(ConservedDamage.class) != null) {
+			conservedDamage = attacker.getBuff(ConservedDamage.class).damageBonus();
+			attacker.getBuff(ConservedDamage.class).detach();
 		}
 
 		//use a tracker so that we can know the true final damage
@@ -112,7 +112,7 @@ public class Kinetic extends Weapon.Enchantment {
 			preservedDamage -= Math.max(preservedDamage*.025f, 0.1f);
 			if (preservedDamage <= 0) detach();
 			
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 		
@@ -136,7 +136,7 @@ public class Kinetic extends Weapon.Enchantment {
 				preservedDamage = bundle.getFloat(PRESERVED_DAMAGE);
 			} else {
 				preservedDamage = cooldown()/10;
-				spend(cooldown());
+				spendTimeAdjusted(cooldown());
 			}
 		}
 	}

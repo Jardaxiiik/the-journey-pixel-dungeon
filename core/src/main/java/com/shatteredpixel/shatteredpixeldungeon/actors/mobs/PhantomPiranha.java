@@ -46,28 +46,28 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		Character dmgSource = null;
-		if (src instanceof Character) dmgSource = (Character)src;
-		if (src instanceof Wand) dmgSource = Dungeon.hero;
+		if (sourceOfDamage instanceof Character) dmgSource = (Character) sourceOfDamage;
+		if (sourceOfDamage instanceof Wand) dmgSource = Dungeon.hero;
 
-		if (dmgSource == null || !Dungeon.level.adjacent(pos, dmgSource.pos)){
+		if (dmgSource == null || !Dungeon.level.adjacent(position, dmgSource.position)){
 			dmg = Math.round(dmg/2f); //halve damage taken if we are going to teleport
 		}
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 
-		if (isAlive() && !(src instanceof Corruption)) {
+		if (isAlive() && !(sourceOfDamage instanceof Corruption)) {
 			if (dmgSource != null) {
-				if (!Dungeon.level.adjacent(pos, dmgSource.pos)) {
+				if (!Dungeon.level.adjacent(position, dmgSource.position)) {
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
-						if (Dungeon.level.water[dmgSource.pos + i] && Actor.findChar(dmgSource.pos + i) == null) {
-							candidates.add(dmgSource.pos + i);
+						if (Dungeon.level.water[dmgSource.position + i] && Actor.getCharacterOnPosition(dmgSource.position + i) == null) {
+							candidates.add(dmgSource.position + i);
 						}
 					}
 					if (!candidates.isEmpty()) {
 						ScrollOfTeleportation.appear(this, Random.element(candidates));
-						aggro(dmgSource);
+						startHunting(dmgSource);
 					} else {
 						teleportAway();
 					}
@@ -79,8 +79,8 @@ public class PhantomPiranha extends Piranha {
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
-		return super.defenseProc(enemy, damage);
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class PhantomPiranha extends Piranha {
 		ArrayList<Integer> inFOVCandidates = new ArrayList<>();
 		ArrayList<Integer> outFOVCandidates = new ArrayList<>();
 		for (int i = 0; i < Dungeon.level.length(); i++){
-			if (Dungeon.level.water[i] && Actor.findChar(i) == null){
+			if (Dungeon.level.water[i] && Actor.getCharacterOnPosition(i) == null){
 				if (Dungeon.level.heroFOV[i]){
 					inFOVCandidates.add(i);
 				} else {
@@ -105,7 +105,7 @@ public class PhantomPiranha extends Piranha {
 		}
 
 		if (!outFOVCandidates.isEmpty()){
-			if (Dungeon.level.heroFOV[pos]) GLog.i(Messages.get(this, "teleport_away"));
+			if (Dungeon.level.heroFOV[position]) GLog.i(Messages.get(this, "teleport_away"));
 			ScrollOfTeleportation.appear(this, Random.element(outFOVCandidates));
 			return true;
 		} else if (!inFOVCandidates.isEmpty()){

@@ -47,10 +47,10 @@ public class Swap extends Actor {
 		this.ch1 = ch1;
 		this.ch2 = ch2;
 
-		delay = Dungeon.level.distance( ch1.pos,  ch2.pos ) * 0.1f;
+		delay = Dungeon.level.distance( ch1.position,  ch2.position) * 0.1f;
 
-		eff1 = new Effect( ch1.sprite, ch1.pos, ch2.pos );
-		eff2 = new Effect( ch2.sprite, ch2.pos, ch1.pos );
+		eff1 = new Effect( ch1.sprite, ch1.position, ch2.position);
+		eff2 = new Effect( ch2.sprite, ch2.position, ch1.position);
 		Sample.INSTANCE.play( Assets.Sounds.TELEPORT );
 	}
 
@@ -68,12 +68,12 @@ public class Swap extends Actor {
 		}
 
 		if (eff1 == null && eff2 == null) {
-			Actor.remove( this );
+			Actor.removeActor( this );
 			next();
 
-			int pos = ch1.pos;
-			ch1.pos = ch2.pos;
-			ch2.pos = pos;
+			int pos = ch1.position;
+			ch1.position = ch2.position;
+			ch2.position = pos;
 
 			Dungeon.level.occupyCell(ch1 );
 			Dungeon.level.occupyCell(ch2 );

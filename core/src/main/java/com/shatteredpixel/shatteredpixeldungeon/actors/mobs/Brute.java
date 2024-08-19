@@ -56,14 +56,14 @@ public class Brute extends Mob {
 	protected boolean hasRaged = false;
 	
 	@Override
-	public int damageRoll() {
-		return buff(BruteRage.class) != null ?
+	public int getDamageRoll() {
+		return getBuff(BruteRage.class) != null ?
 			Random.NormalIntRange( 15, 40 ) :
 			Random.NormalIntRange( 5, 25 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20;
 	}
 	
@@ -73,10 +73,10 @@ public class Brute extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
+	public void die(Object source) {
+		super.die(source);
 
-		if (cause == Chasm.class){
+		if (source == Chasm.class){
 			hasRaged = true; //don't let enrage trigger for chasm deaths
 		}
 	}
@@ -89,17 +89,17 @@ public class Brute extends Mob {
 			if (!hasRaged){
 				triggerEnrage();
 			}
-			return !buffs(BruteRage.class).isEmpty();
+			return !getBuffs(BruteRage.class).isEmpty();
 		}
 	}
 	
 	protected void triggerEnrage(){
 		Buff.affect(this, BruteRage.class).setShield(healthMax /2 + 4);
 		sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healthMax /2 + 4), FloatingText.SHIELDING );
-		if (Dungeon.level.heroFOV[pos]) {
+		if (Dungeon.level.heroFOV[position]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		hasRaged = true;
 	}
 	
@@ -137,7 +137,7 @@ public class Brute extends Mob {
 				target.die(null);
 			}
 			
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			
 			return true;
 		}

@@ -177,7 +177,7 @@ public class Armor extends EquipableItem {
 		super.execute(hero, action);
 
 		if (action.equals(AC_DETACH) && seal != null){
-			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
+			BrokenSeal.WarriorShield sealBuff = hero.getBuff(BrokenSeal.WarriorShield.class);
 			if (sealBuff != null) sealBuff.setArmor(null);
 
 			BrokenSeal detaching = seal;
@@ -192,9 +192,9 @@ public class Armor extends EquipableItem {
 				detaching.setGlyph(null);
 			}
 			GLog.i( Messages.get(Armor.class, "detach_seal") );
-			hero.sprite.operate(hero.pos);
+			hero.sprite.operate(hero.position);
 			if (!detaching.collect()){
-				Dungeon.level.drop(detaching, hero.pos);
+				Dungeon.level.dropItemOnPosition(detaching, hero.position);
 			}
 			updateQuickslot();
 		}
@@ -256,7 +256,7 @@ public class Armor extends EquipableItem {
 
 	@Override
 	protected float time2equip( Hero hero ) {
-		return 2 / hero.speed();
+		return 2 / hero.getSpeed();
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public class Armor extends EquipableItem {
 			hero.belongings.armor = null;
 			((HeroSprite)hero.sprite).updateArmor();
 
-			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
+			BrokenSeal.WarriorShield sealBuff = hero.getBuff(BrokenSeal.WarriorShield.class);
 			if (sealBuff != null) sealBuff.setArmor(null);
 
 			return true;
@@ -327,7 +327,7 @@ public class Armor extends EquipableItem {
 			int aEnc = STRReq() - ((Hero) owner).getAttributeStrength();
 			if (aEnc > 0) evasion /= Math.pow(1.5, aEnc);
 			
-			Momentum momentum = owner.buff(Momentum.class);
+			Momentum momentum = owner.getBuff(Momentum.class);
 			if (momentum != null){
 				evasion += momentum.evasionBonus(((Hero) owner).lvl, Math.max(0, -aEnc));
 			}
@@ -345,21 +345,21 @@ public class Armor extends EquipableItem {
 		
 		if (hasGlyph(Swiftness.class, owner)) {
 			boolean enemyNear = false;
-			PathFinder.buildDistanceMap(owner.pos, Dungeon.level.passable, 2);
-			for (Character ch : Actor.chars()){
-				if ( PathFinder.distance[ch.pos] != Integer.MAX_VALUE && owner.alignment != ch.alignment){
+			PathFinder.buildDistanceMap(owner.position, Dungeon.level.passable, 2);
+			for (Character ch : Actor.getCharacters()){
+				if ( PathFinder.distance[ch.position] != Integer.MAX_VALUE && owner.alignment != ch.alignment){
 					enemyNear = true;
 					break;
 				}
 			}
 			if (!enemyNear) speed *= (1.2f + 0.04f * buffedLvl()) * glyph.procChanceMultiplier(owner);
-		} else if (hasGlyph(Flow.class, owner) && Dungeon.level.water[owner.pos]){
+		} else if (hasGlyph(Flow.class, owner) && Dungeon.level.water[owner.position]){
 			speed *= (2f + 0.5f*buffedLvl()) * glyph.procChanceMultiplier(owner);
 		}
 		
 		if (hasGlyph(Bulk.class, owner) &&
-				(Dungeon.level.map[owner.pos] == Terrain.DOOR
-						|| Dungeon.level.map[owner.pos] == Terrain.OPEN_DOOR )) {
+				(Dungeon.level.map[owner.position] == Terrain.DOOR
+						|| Dungeon.level.map[owner.position] == Terrain.OPEN_DOOR )) {
 			speed /= 3f * RingOfArcana.enchantPowerMultiplier(owner);
 		}
 		
@@ -432,7 +432,7 @@ public class Armor extends EquipableItem {
 	
 	public int proc(Character attacker, Character defender, int damage ) {
 		
-		if (glyph != null && defender.buff(MagicImmune.class) == null) {
+		if (glyph != null && defender.getBuff(MagicImmune.class) == null) {
 			damage = glyph.proc( this, attacker, defender, damage );
 		}
 		
@@ -615,7 +615,7 @@ public class Armor extends EquipableItem {
 	}
 
 	public boolean hasGlyph(Class<?extends Glyph> type, Character owner) {
-		return glyph != null && glyph.getClass() == type && owner.buff(MagicImmune.class) == null;
+		return glyph != null && glyph.getClass() == type && owner.getBuff(MagicImmune.class) == null;
 	}
 
 	//these are not used to process specific glyph effects, so magic immune doesn't affect them

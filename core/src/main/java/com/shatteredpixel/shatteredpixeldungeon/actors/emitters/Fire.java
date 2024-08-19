@@ -97,8 +97,8 @@ public class Fire extends Emitter {
 	}
 	
 	public static void burn( int pos ) {
-		Character ch = Actor.findChar( pos );
-		if (ch != null && !ch.isImmune(Fire.class)) {
+		Character ch = Actor.getCharacterOnPosition( pos );
+		if (ch != null && !ch.isImmuneToEffectType(Fire.class)) {
 			Buff.affect( ch, Burning.class ).reignite( ch );
 		}
 		

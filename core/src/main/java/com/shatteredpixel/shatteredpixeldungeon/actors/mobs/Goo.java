@@ -65,7 +65,7 @@ public class Goo extends Mob {
 	private int healInc = 1;
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		int min = 1;
 		int max = (healthPoints *2 <= healthMax) ? 12 : 8;
 		if (pumpedUp > 0) {
@@ -81,7 +81,7 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		int attack = 10;
 		if (healthPoints *2 <= healthMax) attack = 15;
 		if (pumpedUp > 0) attack *= 2;
@@ -89,8 +89,8 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int defenseSkill(Character enemy) {
-		return (int)(super.defenseSkill(enemy) * ((healthPoints *2 <= healthMax)? 1.5 : 1));
+	public int getEvasionAgainstAttacker(Character enemy) {
+		return (int)(super.getEvasionAgainstAttacker(enemy) * ((healthPoints *2 <= healthMax)? 1.5 : 1));
 	}
 
 	@Override
@@ -106,17 +106,17 @@ public class Goo extends Mob {
 			sprite.idle();
 		}
 
-		if (Dungeon.level.water[pos] && healthPoints < healthMax) {
+		if (Dungeon.level.water[position] && healthPoints < healthMax) {
 			healthPoints += healInc;
 			Statistics.qualifiedForBossChallengeBadge = false;
 
-			LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+			LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
 			if (lock != null){
 				if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.removeTime(healInc);
 				else                                                    lock.removeTime(healInc*1.5f);
 			}
 
-			if (Dungeon.level.heroFOV[pos] ){
+			if (Dungeon.level.heroFOV[position] ){
 				sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(healInc), FloatingText.HEALING );
 			}
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && healInc < 3) {
@@ -139,15 +139,15 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
+	protected boolean canAttackEnemy(Character enemy ) {
 		if (pumpedUp > 0){
 			//we check both from and to in this case as projectile logic isn't always symmetrical.
 			//this helps trim out BS edge-cases
-			return Dungeon.level.distance(enemy.pos, pos) <= 2
-						&& new Ballistica( pos, enemy.pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == enemy.pos
-						&& new Ballistica( enemy.pos, pos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == pos;
+			return Dungeon.level.distance(enemy.position, position) <= 2
+						&& new Ballistica(position, enemy.position, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == enemy.position
+						&& new Ballistica( enemy.position, position, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID | Ballistica.IGNORE_SOFT_SOLID).collisionPos == position;
 		} else {
-			return super.canAttack(enemy);
+			return super.canAttackEnemy(enemy);
 		}
 	}
 
@@ -176,31 +176,31 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	protected boolean doAttack( Character enemy ) {
+	protected boolean attackCharacter(Character targetCharacter) {
 		if (pumpedUp == 1) {
 			pumpedUp++;
 			((GooSprite)sprite).pumpUp( pumpedUp );
 
-			spend( attackDelay() );
+			spendTimeAdjusted( getAttackDelay() );
 
 			return true;
 		} else if (pumpedUp >= 2 || Random.Int( (healthPoints *2 <= healthMax) ? 2 : 5 ) > 0) {
 
-			boolean visible = Dungeon.level.heroFOV[pos];
+			boolean visible = Dungeon.level.heroFOV[position];
 
 			if (visible) {
 				if (pumpedUp >= 2) {
 					((GooSprite) sprite).pumpAttack();
 				} else {
-					sprite.attack(enemy.pos);
+					sprite.attack(targetCharacter.position);
 				}
 			} else {
 				if (pumpedUp >= 2){
 					((GooSprite)sprite).triggerEmitters();
 				}
-				attack( enemy );
+				attack(targetCharacter);
 				Invisibility.dispel(this);
-				spend( attackDelay() );
+				spendTimeAdjusted( getAttackDelay() );
 			}
 
 			return !visible;
@@ -210,15 +210,15 @@ public class Goo extends Mob {
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
 				pumpedUp += 2;
 				//don't want to overly punish players with slow move or attack speed
-				spend(GameMath.gate(attackDelay(), (int)Math.ceil(enemy.cooldown()), 3*attackDelay()));
+				spendTimeAdjusted(GameMath.gate(getAttackDelay(), (int)Math.ceil(targetCharacter.cooldown()), 3* getAttackDelay()));
 			} else {
 				pumpedUp++;
-				spend( attackDelay() );
+				spendTimeAdjusted( getAttackDelay() );
 			}
 
 			((GooSprite)sprite).pumpUp( pumpedUp );
 
-			if (Dungeon.level.heroFOV[pos]) {
+			if (Dungeon.level.heroFOV[position]) {
 				sprite.showStatus( CharSprite.WARNING, Messages.get(this, "!!!") );
 				GLog.n( Messages.get(this, "pumpup") );
 			}
@@ -241,38 +241,38 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser( int target ) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		if (pumpedUp != 0) {
 			pumpedUp = 0;
 			sprite.idle();
 		}
-		return super.getCloser( target );
+		return super.moveCloserToTarget(targetPosition);
 	}
 
 	@Override
-	protected boolean getFurther(int target) {
+	protected boolean moveAwayFromTarget(int targetPosition) {
 		if (pumpedUp != 0) {
 			pumpedUp = 0;
 			sprite.idle();
 		}
-		return super.getFurther( target );
+		return super.moveAwayFromTarget(targetPosition);
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (!BossHealthBar.isAssigned()){
 			BossHealthBar.assignBoss( this );
 			Dungeon.level.seal();
 		}
 		boolean bleeding = (healthPoints *2 <= healthMax);
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 		if ((healthPoints *2 <= healthMax) && !bleeding){
 			BossHealthBar.bleed(true);
 			sprite.showStatus(CharSprite.WARNING, Messages.get(this, "enraged"));
 			((GooSprite)sprite).spray(true);
 			yell(Messages.get(this, "gluuurp"));
 		}
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
+		LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
 		if (lock != null){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg);
 			else                                                    lock.addTime(dmg*1.5f);
@@ -280,14 +280,14 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die( Object source) {
 		
-		super.die( cause );
+		super.die(source);
 		
 		Dungeon.level.unseal();
 		
 		GameScene.bossSlain();
-		Dungeon.level.drop( new SkeletonKey( Dungeon.depth ), pos ).sprite.drop();
+		Dungeon.level.dropItemOnPosition( new SkeletonKey( Dungeon.depth ), position).sprite.drop();
 		
 		//60% chance of 2 blobs, 30% chance of 3, 10% chance for 4. Average of 2.5
 		int blobs = Random.chances(new float[]{0, 0, 6, 3, 1});
@@ -295,8 +295,8 @@ public class Goo extends Mob {
 			int ofs;
 			do {
 				ofs = PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-			} while (!Dungeon.level.passable[pos + ofs]);
-			Dungeon.level.drop( new GooBlob(), pos + ofs ).sprite.drop( pos );
+			} while (!Dungeon.level.passable[position + ofs]);
+			Dungeon.level.dropItemOnPosition( new GooBlob(), position + ofs ).sprite.drop(position);
 		}
 		
 		Badges.validateBossSlain();
@@ -315,7 +315,7 @@ public class Goo extends Mob {
 			BossHealthBar.assignBoss(this);
 			Dungeon.level.seal();
 			yell(Messages.get(this, "notice"));
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}

@@ -38,13 +38,13 @@ public class StoneOfBlink extends Runestone {
 	
 	@Override
 	public int throwPos(Hero user, int dst) {
-		throwPath = new Ballistica( user.pos, dst, Ballistica.PROJECTILE );
+		throwPath = new Ballistica( user.position, dst, Ballistica.PROJECTILE );
 		return throwPath.collisionPos;
 	}
 	
 	@Override
 	protected void onThrow(int cell) {
-		if (Actor.findChar(cell) != null && throwPath.dist >= 1){
+		if (Actor.getCharacterOnPosition(cell) != null && throwPath.dist >= 1){
 			cell = throwPath.path.get(throwPath.dist-1);
 		}
 		throwPath = null;
@@ -54,7 +54,7 @@ public class StoneOfBlink extends Runestone {
 	@Override
 	protected void activate(int cell) {
 		if (!ScrollOfTeleportation.teleportToLocation(curUser, cell)){
-			Dungeon.level.drop(this, cell).sprite.drop();
+			Dungeon.level.dropItemOnPosition(this, cell).sprite.drop();
 		}
 	}
 }

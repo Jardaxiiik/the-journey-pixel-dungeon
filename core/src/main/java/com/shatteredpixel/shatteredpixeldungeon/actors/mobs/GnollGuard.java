@@ -52,7 +52,7 @@ public class GnollGuard extends Mob {
 	private int sapperID = -1;
 
 	public void linkSapper( GnollSapper sapper){
-		this.sapperID = sapper.id();
+		this.sapperID = sapper.getId();
 		if (sprite instanceof GnollGuardSprite){
 			((GnollGuardSprite) sprite).setupArmor();
 		}
@@ -60,8 +60,8 @@ public class GnollGuard extends Mob {
 
 	public boolean hasSapper(){
 		return sapperID != -1
-				&& Actor.findById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper)Actor.findById(sapperID)).isAlive();
+				&& Actor.getById(sapperID) instanceof GnollSapper
+				&& ((GnollSapper)Actor.getById(sapperID)).isAlive();
 	}
 
 	public void loseSapper(){
@@ -74,14 +74,14 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (hasSapper()) dmg /= 4;
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	@Override
-	public int damageRoll() {
-		if (enemy != null && !Dungeon.level.adjacent(pos, enemy.pos)){
+	public int getDamageRoll() {
+		if (enemy != null && !Dungeon.level.adjacent(position, enemy.position)){
 			return Random.NormalIntRange( 16, 22 );
 		} else {
 			return Random.NormalIntRange( 6, 12 );
@@ -91,14 +91,14 @@ public class GnollGuard extends Mob {
 	@Override
 	public int attackProc(Character enemy, int damage) {
 		int dmg = super.attackProc(enemy, damage);
-		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(pos, enemy.pos) && dmg > 12){
+		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(position, enemy.position) && dmg > 12){
 			GLog.n(Messages.get(this, "spear_warn"));
 		}
 		return dmg;
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20;
 	}
 
@@ -108,19 +108,19 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	protected boolean canAttack( Character enemy ) {
+	protected boolean canAttackEnemy(Character enemy ) {
 		//cannot 'curve' spear hits like the hero, requires fairly open space to hit at a distance
-		return Dungeon.level.distance(enemy.pos, pos) <= 2
-				&& new Ballistica( pos, enemy.pos, Ballistica.PROJECTILE).collisionPos == enemy.pos
-				&& new Ballistica( enemy.pos, pos, Ballistica.PROJECTILE).collisionPos == pos;
+		return Dungeon.level.distance(enemy.position, position) <= 2
+				&& new Ballistica(position, enemy.position, Ballistica.PROJECTILE).collisionPos == enemy.position
+				&& new Ballistica( enemy.position, position, Ballistica.PROJECTILE).collisionPos == position;
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (hasSapper()){
-			return super.description() + "\n\n" + Messages.get(this, "desc_armor");
+			return super.getDescription() + "\n\n" + Messages.get(this, "desc_armor");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 
@@ -142,7 +142,7 @@ public class GnollGuard extends Mob {
 		@Override
 		protected int randomDestination() {
 			if (hasSapper()){
-				return ((GnollSapper)Actor.findById(sapperID)).pos;
+				return ((GnollSapper)Actor.getById(sapperID)).position;
 			} else {
 				return super.randomDestination();
 			}

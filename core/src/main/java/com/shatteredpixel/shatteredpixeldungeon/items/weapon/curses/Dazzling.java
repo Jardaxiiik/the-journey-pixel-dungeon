@@ -42,15 +42,15 @@ public class Dazzling extends Weapon.Enchantment {
 
 		float procChance = 1/10f * procChanceMultiplier(attacker);
 		if (Random.Float() < procChance) {
-			for (Character ch : Actor.chars()){
-				if (ch.fieldOfView != null && ch.fieldOfView[defender.pos]){
+			for (Character ch : Actor.getCharacters()){
+				if (ch.fieldOfView != null && ch.fieldOfView[defender.position]){
 					Buff.prolong(ch, Blindness.class, ch == attacker ? Blindness.DURATION : Blindness.DURATION/2f);
 					if (ch == Dungeon.hero){
 						GameScene.flash(0x80FFFFFF);
 					}
 				}
 			}
-			if (Dungeon.level.heroFOV[attacker.pos] || Dungeon.level.heroFOV[defender.pos]){
+			if (Dungeon.level.heroFOV[attacker.position] || Dungeon.level.heroFOV[defender.position]){
 				Sample.INSTANCE.play( Assets.Sounds.BLAST );
 			}
 		}

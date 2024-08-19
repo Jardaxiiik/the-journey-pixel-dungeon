@@ -68,13 +68,13 @@ public class Electricity extends Emitter {
 			for (int j = area.top-1; j <= area.bottom; j++) {
 				cell = i + j*Dungeon.level.width();
 				if (cur[cell] > 0) {
-					Character ch = Actor.findChar( cell );
-					if (ch != null && !ch.isImmune(this.getClass())) {
-						if (ch.buff(Paralysis.class) == null){
+					Character ch = Actor.getCharacterOnPosition( cell );
+					if (ch != null && !ch.isImmuneToEffectType(this.getClass())) {
+						if (ch.getBuff(Paralysis.class) == null){
 							Buff.prolong( ch, Paralysis.class, cur[cell]);
 						}
 						if (cur[cell] % 2 == 1) {
-							ch.damage(Math.round(Random.Float(2 + Dungeon.scalingDepth() / 5f)), this);
+							ch.receiveDamageFromSource(Math.round(Random.Float(2 + Dungeon.scalingDepth() / 5f)), this);
 							if (!ch.isAlive() && ch == Dungeon.hero){
 								Dungeon.fail( this );
 								GLog.n( Messages.get(this, "ondeath") );

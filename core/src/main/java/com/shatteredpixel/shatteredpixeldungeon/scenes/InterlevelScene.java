@@ -451,7 +451,7 @@ public class InterlevelScene extends PixelScene {
 			Dungeon.switchLevel( Dungeon.loadLevel( GamesInProgress.curSlot ), -1 );
 		} else {
 			Level level = Dungeon.loadLevel( GamesInProgress.curSlot );
-			Dungeon.switchLevel( level, Dungeon.hero.pos );
+			Dungeon.switchLevel( level, Dungeon.hero.position);
 		}
 	}
 	
@@ -465,43 +465,43 @@ public class InterlevelScene extends PixelScene {
 
 			Dungeon.hero.resurrect();
 			level = Dungeon.newLevel();
-			Dungeon.hero.pos = level.randomRespawnCell(Dungeon.hero);
-			if (Dungeon.hero.pos == -1) Dungeon.hero.pos = level.entrance();
+			Dungeon.hero.position = level.randomRespawnCell(Dungeon.hero);
+			if (Dungeon.hero.position == -1) Dungeon.hero.position = level.entrance();
 
 			for (Item i : preservedItems){
 				int pos = level.randomRespawnCell(null);
 				if (pos == -1) pos = level.entrance();
-				level.drop(i, pos);
+				level.dropItemOnPosition(i, pos);
 			}
 			int pos = level.randomRespawnCell(null);
 			if (pos == -1) pos = level.entrance();
-			level.drop(new LostBackpack(), pos);
+			level.dropItemOnPosition(new LostBackpack(), pos);
 
 		} else {
 			level = Dungeon.level;
 			BArray.setFalse(level.heroFOV);
 			BArray.setFalse(level.visited);
 			BArray.setFalse(level.mapped);
-			int invPos = Dungeon.hero.pos;
+			int invPos = Dungeon.hero.position;
 			int tries = 0;
 			do {
-				Dungeon.hero.pos = level.randomRespawnCell(Dungeon.hero);
+				Dungeon.hero.position = level.randomRespawnCell(Dungeon.hero);
 				tries++;
 
 			//prevents spawning on traps or plants, prefers farther locations first
-			} while (level.traps.get(Dungeon.hero.pos) != null
-					|| (level.plants.get(Dungeon.hero.pos) != null && tries < 500)
-					|| level.trueDistance(invPos, Dungeon.hero.pos) <= 30 - (tries/10));
+			} while (level.traps.get(Dungeon.hero.position) != null
+					|| (level.plants.get(Dungeon.hero.position) != null && tries < 500)
+					|| level.trueDistance(invPos, Dungeon.hero.position) <= 30 - (tries/10));
 
 			//directly trample grass
-			if (level.map[Dungeon.hero.pos] == Terrain.HIGH_GRASS || level.map[Dungeon.hero.pos] == Terrain.FURROWED_GRASS){
-				level.map[Dungeon.hero.pos] = Terrain.GRASS;
+			if (level.map[Dungeon.hero.position] == Terrain.HIGH_GRASS || level.map[Dungeon.hero.position] == Terrain.FURROWED_GRASS){
+				level.map[Dungeon.hero.position] = Terrain.GRASS;
 			}
 			Dungeon.hero.resurrect();
-			level.drop(new LostBackpack(), invPos);
+			level.dropItemOnPosition(new LostBackpack(), invPos);
 		}
 
-		Dungeon.switchLevel( level, Dungeon.hero.pos );
+		Dungeon.switchLevel( level, Dungeon.hero.position);
 	}
 
 	private void reset() throws IOException {

@@ -49,7 +49,7 @@ public class Sword extends MeleeWeapon {
 
 	@Override
 	protected int baseChargeUse(Hero hero, Character target){
-		if (hero.buff(Sword.CleaveTracker.class) != null){
+		if (hero.getBuff(Sword.CleaveTracker.class) != null){
 			return 0;
 		} else {
 			return 1;
@@ -71,7 +71,7 @@ public class Sword extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.findChar(target);
+		Character enemy = Actor.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
@@ -85,7 +85,7 @@ public class Sword extends MeleeWeapon {
 		}
 		hero.belongings.abilityWeapon = null;
 
-		hero.sprite.attack(enemy.pos, new Callback() {
+		hero.sprite.attack(enemy.position, new Callback() {
 			@Override
 			public void call() {
 				wep.beforeAbilityUsed(hero, enemy);
@@ -100,8 +100,8 @@ public class Sword extends MeleeWeapon {
 					wep.onAbilityKill(hero, enemy);
 					Buff.prolong(hero, CleaveTracker.class, 5f);
 				} else {
-					if (hero.buff(CleaveTracker.class) != null) {
-						hero.buff(CleaveTracker.class).detach();
+					if (hero.getBuff(CleaveTracker.class) != null) {
+						hero.getBuff(CleaveTracker.class).detach();
 					}
 				}
 				wep.afterAbilityUsed(hero);

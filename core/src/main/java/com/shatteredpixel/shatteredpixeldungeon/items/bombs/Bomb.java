@@ -114,15 +114,15 @@ public class Bomb extends Item {
 	@Override
 	protected void onThrow( int cell ) {
 		if (!Dungeon.level.pit[ cell ] && lightingFuse) {
-			Actor.addDelayed(fuse = createFuse().ignite(this), 2);
+			Actor.addActorWithDelay(fuse = createFuse().ignite(this), 2);
 		}
-		if (Actor.findChar( cell ) != null && !(Actor.findChar( cell ) instanceof Hero) ){
+		if (Actor.getCharacterOnPosition( cell ) != null && !(Actor.getCharacterOnPosition( cell ) instanceof Hero) ){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8)
 				if (Dungeon.level.passable[cell + i])
 					candidates.add(cell + i);
 			int newCell = candidates.isEmpty() ? cell : Random.element(candidates);
-			Dungeon.level.drop( this, newCell ).sprite.drop( cell );
+			Dungeon.level.dropItemOnPosition( this, newCell ).sprite.drop( cell );
 		} else
 			super.onThrow( cell );
 	}
@@ -169,7 +169,7 @@ public class Bomb extends Item {
 					if (heap != null)
 						heap.explode();
 					
-					Character ch = Actor.findChar(c);
+					Character ch = Actor.getCharacterOnPosition(c);
 					if (ch != null) {
 						affected.add(ch);
 					}
@@ -186,14 +186,14 @@ public class Bomb extends Item {
 				int dmg = Random.NormalIntRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth()*2);
 
 				//those not at the center of the blast take less damage
-				if (ch.pos != cell){
+				if (ch.position != cell){
 					dmg = Math.round(dmg*0.67f);
 				}
 
 				dmg -= ch.drRoll();
 
 				if (dmg > 0) {
-					ch.damage(dmg, this);
+					ch.receiveDamageFromSource(dmg, this);
 				}
 				
 				if (ch == Dungeon.hero && !ch.isAlive()) {
@@ -261,7 +261,7 @@ public class Bomb extends Item {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		if (bundle.contains( FUSE ))
-			Actor.add( fuse = ((Fuse)bundle.get(FUSE)).ignite(this) );
+			Actor.addActor( fuse = ((Fuse)bundle.get(FUSE)).ignite(this) );
 	}
 
 	//used to track the death from friendly magic badge, if an explosion was conjured by magic
@@ -285,7 +285,7 @@ public class Bomb extends Item {
 
 			//something caused our bomb to explode early, or be defused. Do nothing.
 			if (bomb.fuse != this){
-				Actor.remove( this );
+				Actor.removeActor( this );
 				return true;
 			}
 
@@ -300,19 +300,19 @@ public class Bomb extends Item {
 
 			//can't find our bomb, something must have removed it, do nothing.
 			bomb.fuse = null;
-			Actor.remove( this );
+			Actor.removeActor( this );
 			return true;
 		}
 
 		protected void trigger(Heap heap){
 			heap.remove(bomb);
 			bomb.explode(heap.pos);
-			Actor.remove(this);
+			Actor.removeActor(this);
 		}
 
 		public boolean freeze(){
 			bomb.fuse = null;
-			Actor.remove(this);
+			Actor.removeActor(this);
 			return true;
 		}
 	}

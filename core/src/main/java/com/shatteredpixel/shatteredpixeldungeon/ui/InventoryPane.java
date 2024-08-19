@@ -361,7 +361,7 @@ public class InventoryPane extends Component {
 			}
 		}
 
-		boolean lostInvent = Dungeon.hero.buff(LostInventory.class) != null;
+		boolean lostInvent = Dungeon.hero.getBuff(LostInventory.class) != null;
 		for (InventorySlot b : equipped){
 			b.enable(lastEnabled
 					&& !(b.item() instanceof WndBag.Placeholder)
@@ -412,10 +412,10 @@ public class InventoryPane extends Component {
 				instance.visible &&
 				lastTarget != null &&
 				targetingSlot != null &&
-				Actor.chars().contains( lastTarget ) &&
+				Actor.getCharacters().contains( lastTarget ) &&
 				lastTarget.isAlive() &&
 				lastTarget.alignment != Character.Alignment.ALLY &&
-				Dungeon.level.heroFOV[lastTarget.pos]) {
+				Dungeon.level.heroFOV[lastTarget.position]) {
 
 			targeting = true;
 			CharSprite sprite = lastTarget.sprite;
@@ -451,7 +451,7 @@ public class InventoryPane extends Component {
 		if (lastEnabled != (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
 			lastEnabled = (Dungeon.hero.ready || !Dungeon.hero.isAlive());
 
-			boolean lostInvent = Dungeon.hero.buff(LostInventory.class) != null;
+			boolean lostInvent = Dungeon.hero.getBuff(LostInventory.class) != null;
 			for (InventorySlot b : equipped){
 				b.enable(lastEnabled
 						&& !(b.item() instanceof WndBag.Placeholder)
@@ -511,7 +511,7 @@ public class InventoryPane extends Component {
 						GameScene.handleCell(cell);
 					} else {
 						//couldn't auto-aim, just target the position and hope for the best.
-						GameScene.handleCell( lastTarget.pos );
+						GameScene.handleCell( lastTarget.position);
 					}
 					return;
 				} else {

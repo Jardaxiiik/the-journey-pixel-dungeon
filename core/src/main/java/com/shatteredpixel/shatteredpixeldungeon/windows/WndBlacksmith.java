@@ -64,7 +64,7 @@ public class WndBlacksmith extends Window {
 
 		IconTitle titlebar = new IconTitle();
 		titlebar.icon( troll.sprite() );
-		titlebar.label( Messages.titleCase( troll.name() ) );
+		titlebar.label( Messages.titleCase( troll.getName() ) );
 		titlebar.setRect( 0, 0, width, 0 );
 		add( titlebar );
 
@@ -81,7 +81,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase( troll.getName() ),
 						Messages.get(WndBlacksmith.class, "pickaxe_verify") + (pickaxeCost == 0 ? "\n\n" + Messages.get(WndBlacksmith.class, "pickaxe_free") : ""),
 						Messages.get(WndBlacksmith.class, "pickaxe_yes"),
 						Messages.get(WndBlacksmith.class, "pickaxe_no")
@@ -92,7 +92,7 @@ public class WndBlacksmith extends Window {
 							if (Blacksmith.Quest.pickaxe.doPickUp( Dungeon.hero )) {
 								GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", Blacksmith.Quest.pickaxe.name()) ));
 							} else {
-								Dungeon.level.drop( Blacksmith.Quest.pickaxe, Dungeon.hero.pos ).sprite.drop();
+								Dungeon.level.dropItemOnPosition( Blacksmith.Quest.pickaxe, Dungeon.hero.position).sprite.drop();
 							}
 							Blacksmith.Quest.favor -= pickaxeCost;
 							Blacksmith.Quest.pickaxe = null;
@@ -144,7 +144,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase( troll.getName() ),
 						Messages.get(WndBlacksmith.class, "smith_verify"),
 						Messages.get(WndBlacksmith.class, "smith_yes"),
 						Messages.get(WndBlacksmith.class, "smith_no")
@@ -169,7 +169,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.name() ),
+						Messages.titleCase( troll.getName() ),
 						Messages.get(WndBlacksmith.class, "cashout_verify", Blacksmith.Quest.favor),
 						Messages.get(WndBlacksmith.class, "cashout_yes"),
 						Messages.get(WndBlacksmith.class, "cashout_no")
@@ -177,7 +177,7 @@ public class WndBlacksmith extends Window {
 					@Override
 					protected void onSelect(int index) {
 						if (index == 0){
-							new Gold(Blacksmith.Quest.favor).doPickUp(Dungeon.hero, Dungeon.hero.pos);
+							new Gold(Blacksmith.Quest.favor).doPickUp(Dungeon.hero, Dungeon.hero.position);
 							Blacksmith.Quest.favor = 0;
 							WndBlacksmith.this.hide();
 						}
@@ -223,7 +223,7 @@ public class WndBlacksmith extends Window {
 
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon( troll.sprite() );
-			titlebar.label( Messages.titleCase( troll.name() ) );
+			titlebar.label( Messages.titleCase( troll.getName() ) );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
 			add( titlebar );
 
@@ -277,7 +277,7 @@ public class WndBlacksmith extends Window {
 					if (second instanceof Armor){
 						BrokenSeal seal = ((Armor) second).checkSeal();
 						if (seal != null){
-							Dungeon.level.drop( seal, Dungeon.hero.pos );
+							Dungeon.level.dropItemOnPosition( seal, Dungeon.hero.position);
 						}
 					}
 
@@ -458,7 +458,7 @@ public class WndBlacksmith extends Window {
 
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon(troll.sprite());
-			titlebar.label(Messages.titleCase(troll.name()));
+			titlebar.label(Messages.titleCase(troll.getName()));
 
 			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "prompt"), 6 );
 
@@ -512,7 +512,7 @@ public class WndBlacksmith extends Window {
 						if (item.doPickUp( Dungeon.hero )) {
 							GLog.i( Messages.capitalize(Messages.get(Dungeon.hero, "you_now_have", item.name())) );
 						} else {
-							Dungeon.level.drop( item, Dungeon.hero.pos ).sprite.drop();
+							Dungeon.level.dropItemOnPosition( item, Dungeon.hero.position).sprite.drop();
 						}
 						WndSmith.this.hide();
 						Blacksmith.Quest.smithRewards = null;

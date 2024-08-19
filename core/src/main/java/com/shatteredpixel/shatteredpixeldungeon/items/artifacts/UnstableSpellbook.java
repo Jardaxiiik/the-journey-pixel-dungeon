@@ -96,10 +96,10 @@ public class UnstableSpellbook extends Artifact {
 	@Override
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (isEquipped( hero ) && charge > 0 && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && charge > 0 && !cursed && hero.getBuff(MagicImmune.class) == null) {
 			actions.add(AC_READ);
 		}
-		if (isEquipped( hero ) && level() < levelCap && !cursed && hero.buff(MagicImmune.class) == null) {
+		if (isEquipped( hero ) && level() < levelCap && !cursed && hero.getBuff(MagicImmune.class) == null) {
 			actions.add(AC_ADD);
 		}
 		return actions;
@@ -110,11 +110,11 @@ public class UnstableSpellbook extends Artifact {
 
 		super.execute( hero, action );
 
-		if (hero.buff(MagicImmune.class) != null) return;
+		if (hero.getBuff(MagicImmune.class) != null) return;
 
 		if (action.equals( AC_READ )) {
 
-			if (hero.buff( Blindness.class ) != null) GLog.w( Messages.get(this, "blinded") );
+			if (hero.getBuff( Blindness.class ) != null) GLog.w( Messages.get(this, "blinded") );
 			else if (!isEquipped( hero ))             GLog.i( Messages.get(Artifact.class, "need_to_equip") );
 			else if (charge <= 0)                     GLog.i( Messages.get(this, "no_charge") );
 			else if (cursed)                          GLog.i( Messages.get(this, "cursed") );
@@ -224,7 +224,7 @@ public class UnstableSpellbook extends Artifact {
 	
 	@Override
 	public void charge(Hero target, float amount) {
-		if (charge < chargeCap && !cursed && target.buff(MagicImmune.class) == null){
+		if (charge < chargeCap && !cursed && target.getBuff(MagicImmune.class) == null){
 			partialCharge += 0.1f*amount;
 			if (partialCharge >= 1){
 				partialCharge--;
@@ -291,7 +291,7 @@ public class UnstableSpellbook extends Artifact {
 		public boolean playGameTurn() {
 			if (charge < chargeCap
 					&& !cursed
-					&& target.buff(MagicImmune.class) == null
+					&& target.getBuff(MagicImmune.class) == null
 					&& Regeneration.regenOn()) {
 				//120 turns to charge at full, 80 turns to charge at 0/8
 				float chargeGain = 1 / (120f - (chargeCap - charge)*5f);
@@ -310,7 +310,7 @@ public class UnstableSpellbook extends Artifact {
 
 			updateQuickslot();
 
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 
 			return true;
 		}
@@ -339,9 +339,9 @@ public class UnstableSpellbook extends Artifact {
 				Hero hero = Dungeon.hero;
 				for (int i = 0; ( i <= 1 && i < scrolls.size() ); i++){
 					if (scrolls.get(i).equals(item.getClass())){
-						hero.sprite.operate( hero.pos );
+						hero.sprite.operate( hero.position);
 						hero.busy();
-						hero.spend( 2f );
+						hero.spendTimeAdjusted( 2f );
 						Sample.INSTANCE.play(Assets.Sounds.BURNING);
 						hero.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
 

@@ -61,7 +61,7 @@ public abstract class WellWater extends Emitter {
 		
 		Heap heap;
 		
-		if (pos == Dungeon.hero.pos && affectHero( Dungeon.hero )) {
+		if (pos == Dungeon.hero.position && affectHero( Dungeon.hero )) {
 			
 			cur[pos] = 0;
 			return true;
@@ -95,7 +95,7 @@ public abstract class WellWater extends Emitter {
 				do {
 					newPlace = pos + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int( 8 )];
 				} while (!Dungeon.level.passable[newPlace] && !Dungeon.level.avoid[newPlace]);
-				Dungeon.level.drop( heap.pickUp(), newPlace ).sprite.drop( pos );
+				Dungeon.level.dropItemOnPosition( heap.pickUp(), newPlace ).sprite.drop( pos );
 				
 				return false;
 				

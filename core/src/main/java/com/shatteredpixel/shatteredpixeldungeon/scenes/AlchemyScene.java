@@ -437,7 +437,7 @@ public class AlchemyScene extends PixelScene {
 
 			int resultQuantity = result.quantity();
 			if (!result.collect()){
-				Dungeon.level.drop(result, Dungeon.hero.pos);
+				Dungeon.level.dropItemOnPosition(result, Dungeon.hero.position);
 			}
 
 			Statistics.itemsCrafted++;
@@ -520,7 +520,7 @@ public class AlchemyScene extends PixelScene {
 				if (inputs[i] != null && inputs[i].item() != null) {
 					Item item = inputs[i].item();
 					if (!item.collect()) {
-						Dungeon.level.drop(item, Dungeon.hero.pos);
+						Dungeon.level.dropItemOnPosition(item, Dungeon.hero.position);
 					}
 					inputs[i].item(null);
 				}
@@ -582,7 +582,7 @@ public class AlchemyScene extends PixelScene {
 					Item item = InputButton.this.item;
 					if (item != null) {
 						if (!item.collect()) {
-							Dungeon.level.drop(item, Dungeon.hero.pos);
+							Dungeon.level.dropItemOnPosition(item, Dungeon.hero.position);
 						}
 						InputButton.this.item(null);
 						updateState();

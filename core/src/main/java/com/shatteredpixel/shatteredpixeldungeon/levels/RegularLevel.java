@@ -232,15 +232,15 @@ public abstract class RegularLevel extends Level {
 
 			int tries = 30;
 			do {
-				mob.pos = pointToCell(roomToSpawn.random());
+				mob.position = pointToCell(roomToSpawn.random());
 				tries--;
-			} while (tries >= 0 && (findMob(mob.pos) != null
-					|| !passable[mob.pos]
-					|| solid[mob.pos]
-					|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.pos), this)
-					|| mob.pos == exit()
-					|| traps.get(mob.pos) != null || plants.get(mob.pos) != null
-					|| (!openSpace[mob.pos] && mob.properties().contains(Character.Property.LARGE))));
+			} while (tries >= 0 && (findMob(mob.position) != null
+					|| !passable[mob.position]
+					|| solid[mob.position]
+					|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.position), this)
+					|| mob.position == exit()
+					|| traps.get(mob.position) != null || plants.get(mob.position) != null
+					|| (!openSpace[mob.position] && mob.getProperties().contains(Character.Property.LARGE))));
 
 			if (tries >= 0) {
 				mobsToSpawn--;
@@ -252,15 +252,15 @@ public abstract class RegularLevel extends Level {
 
 					tries = 30;
 					do {
-						mob.pos = pointToCell(roomToSpawn.random());
+						mob.position = pointToCell(roomToSpawn.random());
 						tries--;
-					} while (tries >= 0 && (findMob(mob.pos) != null
-							|| !passable[mob.pos]
-							|| solid[mob.pos]
-							|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.pos), this)
-							|| mob.pos == exit()
-							|| traps.get(mob.pos) != null || plants.get(mob.pos) != null
-							|| (!openSpace[mob.pos] && mob.properties().contains(Character.Property.LARGE))));
+					} while (tries >= 0 && (findMob(mob.position) != null
+							|| !passable[mob.position]
+							|| solid[mob.position]
+							|| !roomToSpawn.canPlaceCharacter(cellToPoint(mob.position), this)
+							|| mob.position == exit()
+							|| traps.get(mob.position) != null || plants.get(mob.position) != null
+							|| (!openSpace[mob.position] && mob.getProperties().contains(Character.Property.LARGE))));
 
 					if (tries >= 0) {
 						mobsToSpawn--;
@@ -271,9 +271,9 @@ public abstract class RegularLevel extends Level {
 		}
 
 		for (Mob m : mobs){
-			if (map[m.pos] == Terrain.HIGH_GRASS || map[m.pos] == Terrain.FURROWED_GRASS) {
-				map[m.pos] = Terrain.GRASS;
-				losBlocking[m.pos] = false;
+			if (map[m.position] == Terrain.HIGH_GRASS || map[m.position] == Terrain.FURROWED_GRASS) {
+				map[m.position] = Terrain.GRASS;
+				losBlocking[m.position] = false;
 			}
 
 		}
@@ -298,10 +298,10 @@ public abstract class RegularLevel extends Level {
 
 			cell = pointToCell(room.random(1));
 			if (!heroFOV[cell]
-					&& Actor.findChar( cell ) == null
+					&& Actor.getCharacterOnPosition( cell ) == null
 					&& passable[cell]
 					&& !solid[cell]
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])
 					&& room.canPlaceCharacter(cellToPoint(cell), this)
 					&& cell != exit()) {
 				return cell;
@@ -330,7 +330,7 @@ public abstract class RegularLevel extends Level {
 			ArrayList<Point> points = room.charPlaceablePoints(this);
 			if (!points.isEmpty()){
 				cell = pointToCell(Random.element(points));
-				if (passable[cell] && (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])) {
+				if (passable[cell] && (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])) {
 					return cell;
 				}
 			}
@@ -388,14 +388,14 @@ public abstract class RegularLevel extends Level {
 				if (Dungeon.depth > 1 && Random.Int(10) == 0 && findMob(cell) == null){
 					mobs.add(Mimic.spawnAt(cell, GoldenMimic.class, toDrop));
 				} else {
-					Heap dropped = drop(toDrop, cell);
+					Heap dropped = dropItemOnPosition(toDrop, cell);
 					if (heaps.get(cell) == dropped) {
 						dropped.type = Heap.Type.LOCKED_CHEST;
 						addItemToSpawn(new GoldenKey(Dungeon.depth));
 					}
 				}
 			} else {
-				Heap dropped = drop( toDrop, cell );
+				Heap dropped = dropItemOnPosition( toDrop, cell );
 				dropped.type = type;
 				if (type == Heap.Type.SKELETON){
 					dropped.setHauntedIfCursed();
@@ -406,7 +406,7 @@ public abstract class RegularLevel extends Level {
 
 		for (Item item : itemsToSpawn) {
 			int cell = randomDropCell();
-			drop( item, cell ).type = Heap.Type.HEAP;
+			dropItemOnPosition( item, cell ).type = Heap.Type.HEAP;
 			if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 				map[cell] = Terrain.GRASS;
 				losBlocking[cell] = false;
@@ -423,7 +423,7 @@ public abstract class RegularLevel extends Level {
 					map[cell] = Terrain.GRASS;
 					losBlocking[cell] = false;
 				}
-				drop( new Torch(), cell );
+				dropItemOnPosition( new Torch(), cell );
 				//add a second torch to help with the larger floor
 				if (feeling == Feeling.LARGE){
 					cell = randomDropCell();
@@ -431,7 +431,7 @@ public abstract class RegularLevel extends Level {
 						map[cell] = Terrain.GRASS;
 						losBlocking[cell] = false;
 					}
-					drop( new Torch(), cell );
+					dropItemOnPosition( new Torch(), cell );
 				}
 			}
 		Random.popGenerator();
@@ -445,7 +445,7 @@ public abstract class RegularLevel extends Level {
 					losBlocking[cell] = false;
 				}
 				for (Item i : bonesItems) {
-					drop(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, cell).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -461,7 +461,7 @@ public abstract class RegularLevel extends Level {
 					if (rose.droppedPetals < 11) {
 						Item item = new DriedRose.Petal();
 						int cell = randomDropCell();
-						drop( item, cell ).type = Heap.Type.HEAP;
+						dropItemOnPosition( item, cell ).type = Heap.Type.HEAP;
 						if (map[cell] == Terrain.HIGH_GRASS || map[cell] == Terrain.FURROWED_GRASS) {
 							map[cell] = Terrain.GRASS;
 							losBlocking[cell] = false;
@@ -493,7 +493,7 @@ public abstract class RegularLevel extends Level {
 							map[cell] = Terrain.GRASS;
 							losBlocking[cell] = false;
 						}
-						drop(new SmallRation(), cell).type = Heap.Type.CHEST;
+						dropItemOnPosition(new SmallRation(), cell).type = Heap.Type.CHEST;
 						dropped.countUp(1);
 					}
 				}
@@ -523,7 +523,7 @@ public abstract class RegularLevel extends Level {
 					map[cell] = Terrain.GRASS;
 					losBlocking[cell] = false;
 				}
-				drop( p, cell );
+				dropItemOnPosition( p, cell );
 			}
 		Random.popGenerator();
 
@@ -578,7 +578,7 @@ public abstract class RegularLevel extends Level {
 								map[cell] = Terrain.GRASS;
 								losBlocking[cell] = false;
 							}
-							drop(page, cell);
+							dropItemOnPosition(page, cell);
 							if (limit != null) limit.drop();
 						}
 

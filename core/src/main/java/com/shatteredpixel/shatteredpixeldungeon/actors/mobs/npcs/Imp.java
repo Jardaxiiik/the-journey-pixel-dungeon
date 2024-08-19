@@ -57,14 +57,14 @@ public class Imp extends NPC {
 	
 	@Override
 	protected boolean playGameTurn() {
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			die(null);
 			return true;
 		}
-		if (!Quest.given && Dungeon.level.visited[pos]) {
+		if (!Quest.given && Dungeon.level.visited[position]) {
 			Notes.add( Notes.Landmark.IMP );
-			if (!seenBefore && Dungeon.level.heroFOV[pos]) {
-				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.name())));
+			if (!seenBefore && Dungeon.level.heroFOV[position]) {
+				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.getName())));
 				seenBefore = true;
 			}
 		} else {
@@ -75,17 +75,17 @@ public class Imp extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return INFINITE_EVASION;
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 	
@@ -97,7 +97,7 @@ public class Imp extends NPC {
 	@Override
 	public boolean interact(Character c) {
 		
-		sprite.turnTo( pos, Dungeon.hero.pos );
+		sprite.turnTo(position, Dungeon.hero.position);
 
 		if (c != Dungeon.hero){
 			return true;
@@ -115,8 +115,8 @@ public class Imp extends NPC {
 				});
 			} else {
 				tell( Quest.alternative ?
-						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.hero.name()))
-						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.hero.name())) );
+						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.hero.getName()))
+						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.hero.getName())) );
 			}
 			
 		} else {
@@ -140,7 +140,7 @@ public class Imp extends NPC {
 	
 	public void flee() {
 		
-		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.hero.name())) );
+		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.hero.getName())) );
 		
 		destroy();
 		sprite.die();
@@ -207,15 +207,15 @@ public class Imp extends NPC {
 				
 				Imp npc = new Imp();
 				do {
-					npc.pos = level.randomRespawnCell( npc );
+					npc.position = level.randomRespawnCell( npc );
 				} while (
-						npc.pos == -1 ||
-						level.heaps.get( npc.pos ) != null ||
-						level.traps.get( npc.pos) != null ||
-						level.findMob( npc.pos ) != null ||
+						npc.position == -1 ||
+						level.heaps.get( npc.position) != null ||
+						level.traps.get( npc.position) != null ||
+						level.findMob( npc.position) != null ||
 						//The imp doesn't move, so he cannot obstruct a passageway
-						!(level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[0]] && level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[2]]) ||
-						!(level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[1]] && level.passable[npc.pos + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[3]]));
+						!(level.passable[npc.position + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[0]] && level.passable[npc.position + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[2]]) ||
+						!(level.passable[npc.position + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[1]] && level.passable[npc.position + PathFinder.OFFSETS_NEIGHBOURS4_CLOCKWISE[3]]));
 				level.mobs.add( npc );
 				
 				spawned = true;
@@ -248,7 +248,7 @@ public class Imp extends NPC {
 				if ((alternative && mob instanceof Monk) ||
 					(!alternative && mob instanceof Golem)) {
 					
-					Dungeon.level.drop( new DwarfToken(), mob.pos ).sprite.drop();
+					Dungeon.level.dropItemOnPosition( new DwarfToken(), mob.position).sprite.drop();
 				}
 			}
 		}

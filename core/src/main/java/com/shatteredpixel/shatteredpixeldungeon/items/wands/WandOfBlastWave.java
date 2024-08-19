@@ -79,14 +79,14 @@ public class WandOfBlastWave extends DamageWand {
 
 		//throws other chars around the center.
 		for (int i  : PathFinder.OFFSETS_NEIGHBOURS8){
-			Character ch = Actor.findChar(bolt.collisionPos + i);
+			Character ch = Actor.getCharacterOnPosition(bolt.collisionPos + i);
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Character.Alignment.ALLY) ch.damage(damageRoll(), this);
+				if (ch.alignment != Character.Alignment.ALLY) ch.receiveDamageFromSource(damageRoll(), this);
 
-				if (ch.pos == bolt.collisionPos + i) {
-					Ballistica trajectory = new Ballistica(ch.pos, ch.pos + i, Ballistica.MAGIC_BOLT);
+				if (ch.position == bolt.collisionPos + i) {
+					Ballistica trajectory = new Ballistica(ch.position, ch.position + i, Ballistica.MAGIC_BOLT);
 					int strength = 1 + Math.round(buffedLvl() / 2f);
 					throwChar(ch, trajectory, strength, false, true, this);
 				}
@@ -95,13 +95,13 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		//throws the char at the center of the blast
-		Character ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
-			ch.damage(damageRoll(), this);
+			ch.receiveDamageFromSource(damageRoll(), this);
 
-			if (bolt.path.size() > bolt.dist+1 && ch.pos == bolt.collisionPos) {
-				Ballistica trajectory = new Ballistica(ch.pos, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
+			if (bolt.path.size() > bolt.dist+1 && ch.position == bolt.collisionPos) {
+				Ballistica trajectory = new Ballistica(ch.position, bolt.path.get(bolt.dist + 1), Ballistica.MAGIC_BOLT);
 				int strength = buffedLvl() + 3;
 				throwChar(ch, trajectory, strength, false, true, this);
 			}
@@ -111,7 +111,7 @@ public class WandOfBlastWave extends DamageWand {
 
 	public static void throwChar(final Character ch, final Ballistica trajectory, int power,
 								 boolean closeDoors, boolean collideDmg, Object cause){
-		if (ch.properties().contains(Character.Property.BOSS)) {
+		if (ch.getProperties().contains(Character.Property.BOSS)) {
 			power = (power+1)/2;
 		}
 
@@ -121,10 +121,10 @@ public class WandOfBlastWave extends DamageWand {
 
 		if (dist <= 0
 				|| ch.rooted
-				|| ch.properties().contains(Character.Property.IMMOVABLE)) return;
+				|| ch.getProperties().contains(Character.Property.IMMOVABLE)) return;
 
 		//large characters cannot be moved into non-open space
-		if (Character.hasProp(ch, Character.Property.LARGE)) {
+		if (Character.hasProperty(ch, Character.Property.LARGE)) {
 			for (int i = 1; i <= dist; i++) {
 				if (!Dungeon.level.openSpace[trajectory.path.get(i)]){
 					dist = i-1;
@@ -134,7 +134,7 @@ public class WandOfBlastWave extends DamageWand {
 			}
 		}
 
-		if (Actor.findChar(trajectory.path.get(dist)) != null){
+		if (Actor.getCharacterOnPosition(trajectory.path.get(dist)) != null){
 			dist--;
 			collided = true;
 		}
@@ -143,23 +143,23 @@ public class WandOfBlastWave extends DamageWand {
 
 		final int newPos = trajectory.path.get(dist);
 
-		if (newPos == ch.pos) return;
+		if (newPos == ch.position) return;
 
 		final int finalDist = dist;
 		final boolean finalCollided = collided && collideDmg;
-		final int initialpos = ch.pos;
+		final int initialpos = ch.position;
 
-		Actor.add(new Pushing(ch, ch.pos, newPos, new Callback() {
+		Actor.addActor(new Pushing(ch, ch.position, newPos, new Callback() {
 			public void call() {
-				if (initialpos != ch.pos || Actor.findChar(newPos) != null) {
+				if (initialpos != ch.position || Actor.getCharacterOnPosition(newPos) != null) {
 					//something caused movement or added chars before pushing resolved, cancel to be safe.
-					ch.sprite.place(ch.pos);
+					ch.sprite.place(ch.position);
 					return;
 				}
-				int oldPos = ch.pos;
-				ch.pos = newPos;
+				int oldPos = ch.position;
+				ch.position = newPos;
 				if (finalCollided && ch.isActive()) {
-					ch.damage(Random.NormalIntRange(finalDist, 2*finalDist), new Knockback());
+					ch.receiveDamageFromSource(Random.NormalIntRange(finalDist, 2*finalDist), new Knockback());
 					if (ch.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
 					} else if (ch == Dungeon.hero){
@@ -188,14 +188,14 @@ public class WandOfBlastWave extends DamageWand {
 		//acts like elastic enchantment
 		//we delay this with an actor to prevent conflicts with regular elastic
 		//so elastic always fully resolves first, then this effect activates
-		Actor.add(new Actor() {
+		Actor.addActor(new Actor() {
 			{
 				actPriority = VFX_PRIO+9; //act after pushing effects
 			}
 
 			@Override
 			protected boolean playGameTurn() {
-				Actor.remove(this);
+				Actor.removeActor(this);
 				if (defender.isAlive()) {
 					new BlastWaveOnHit().proc(staff, attacker, defender, damage);
 				}

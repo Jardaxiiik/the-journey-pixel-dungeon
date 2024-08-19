@@ -62,9 +62,9 @@ public class ToxicImbue extends Buff {
 
 	@Override
 	public boolean playGameTurn() {
-		GameScene.add(Emitter.seed(target.pos, 50, ToxicGas.class));
+		GameScene.add(Emitter.seed(target.position, 50, ToxicGas.class));
 
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		left -= TICK;
 		if (left <= 0){
 			detach();

@@ -163,12 +163,12 @@ public abstract class Scroll extends Item {
 
 		if (action.equals( AC_READ )) {
 			
-			if (hero.buff(MagicImmune.class) != null){
+			if (hero.getBuff(MagicImmune.class) != null){
 				GLog.w( Messages.get(this, "no_magic") );
-			} else if (hero.buff( Blindness.class ) != null) {
+			} else if (hero.getBuff( Blindness.class ) != null) {
 				GLog.w( Messages.get(this, "blinded") );
-			} else if (hero.buff(UnstableSpellbook.bookRecharge.class) != null
-					&& hero.buff(UnstableSpellbook.bookRecharge.class).isCursed()
+			} else if (hero.getBuff(UnstableSpellbook.bookRecharge.class) != null
+					&& hero.getBuff(UnstableSpellbook.bookRecharge.class).isCursed()
 					&& !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic)){
 				GLog.n( Messages.get(this, "cursed") );
 			} else {
@@ -182,12 +182,12 @@ public abstract class Scroll extends Item {
 
 	protected void readAnimation() {
 		Invisibility.dispel();
-		curUser.spend( TIME_TO_READ );
+		curUser.spendTimeAdjusted( TIME_TO_READ );
 		curUser.busy();
 		((HeroSprite)curUser.sprite).read();
 
 		if (!anonymous) {
-			Talent.onScrollUsed(curUser, curUser.pos, talentFactor);
+			Talent.onScrollUsed(curUser, curUser.position, talentFactor);
 		}
 
 	}

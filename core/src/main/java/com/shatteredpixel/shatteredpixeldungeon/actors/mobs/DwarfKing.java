@@ -88,12 +88,12 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 15, 25 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 26;
 	}
 
@@ -149,7 +149,7 @@ public class DwarfKing extends Mob {
 
 	@Override
 	protected boolean playGameTurn() {
-		if (pos == CityBossLevel.throne){
+		if (position == CityBossLevel.throne){
 			throwItems();
 		}
 
@@ -163,7 +163,7 @@ public class DwarfKing extends Mob {
 			}
 
 			if (paralysed > 0){
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return true;
 			}
 
@@ -182,12 +182,12 @@ public class DwarfKing extends Mob {
 
 				if (lastAbility == LINK && lifeLinkSubject()){
 					abilityCooldown += Random.NormalIntRange(MIN_COOLDOWN, MAX_COOLDOWN);
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				} else if (teleportSubject()) {
 					lastAbility = TELE;
 					abilityCooldown += Random.NormalIntRange(MIN_COOLDOWN, MAX_COOLDOWN);
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				}
 
@@ -207,10 +207,10 @@ public class DwarfKing extends Mob {
 					}
 					summonSubject(3, DKGhoul.class);
 					summonSubject(3, DKGhoul.class);
-					spend(3 * TICK);
+					spendTimeAdjusted(3 * TICK);
 					summonsMade += 2;
 					return true;
-				} else if (shielding() <= 300 && summonsMade < 12){
+				} else if (getShielding() <= 300 && summonsMade < 12){
 					if (summonsMade == 6) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -224,9 +224,9 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKWarlock.class);
 					}
 					summonsMade += 3;
-					spend(3*TICK);
+					spendTimeAdjusted(3*TICK);
 					return true;
-				} else if (shielding() <= 150 && summonsMade < 18) {
+				} else if (getShielding() <= 150 && summonsMade < 18) {
 					if (summonsMade == 12) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -236,16 +236,16 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKGhoul.class);
 						summonSubject(3, DKGhoul.class);
 						summonsMade += 4;
-						spend(3*TICK);
+						spendTimeAdjusted(3*TICK);
 					} else {
 						summonSubject(3, DKGolem.class);
 						summonSubject(3, DKGolem.class);
 						summonsMade += 2;
-						spend(TICK);
+						spendTimeAdjusted(TICK);
 					}
 					return true;
 				} else {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				}
 			} else {
@@ -257,10 +257,10 @@ public class DwarfKing extends Mob {
 						yell(Messages.get(this, "wave_1"));
 					}
 					summonSubject(3, DKGhoul.class);
-					spend(3 * TICK);
+					spendTimeAdjusted(3 * TICK);
 					summonsMade++;
 					return true;
-				} else if (shielding() <= 200 && summonsMade < 8) {
+				} else if (getShielding() <= 200 && summonsMade < 8) {
 					if (summonsMade == 4) {
 						sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 						Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
@@ -272,9 +272,9 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKGhoul.class);
 					}
 					summonsMade++;
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
-				} else if (shielding() <= 100 && summonsMade < 12) {
+				} else if (getShielding() <= 100 && summonsMade < 12) {
 					sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
 					Sample.INSTANCE.play(Assets.Sounds.CHALLENGE);
 					yell(Messages.get(this, "wave_3"));
@@ -283,14 +283,14 @@ public class DwarfKing extends Mob {
 					summonSubject(4, DKGhoul.class);
 					summonSubject(4, DKGhoul.class);
 					summonsMade = 12;
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				} else {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				}
 			}
-		} else if (phase == 3 && buffs(Summoning.class).size() < 4){
+		} else if (phase == 3 && getBuffs(Summoning.class).size() < 4){
 			if (summonSubject(Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 3)) summonsMade++;
 		}
 
@@ -346,19 +346,19 @@ public class DwarfKing extends Mob {
 
 		for (Mob m : getSubjects()){
 			boolean alreadyLinked = false;
-			for (LifeLink l : m.buffs(LifeLink.class)){
-				if (l.object == id()) alreadyLinked = true;
+			for (LifeLink l : m.getBuffs(LifeLink.class)){
+				if (l.object == getId()) alreadyLinked = true;
 			}
 			if (!alreadyLinked) {
-				if (furthest == null || Dungeon.level.distance(pos, furthest.pos) < Dungeon.level.distance(pos, m.pos)){
+				if (furthest == null || Dungeon.level.distance(position, furthest.position) < Dungeon.level.distance(position, m.position)){
 					furthest = m;
 				}
 			}
 		}
 
 		if (furthest != null) {
-			Buff.append(furthest, LifeLink.class, 100f).object = id();
-			Buff.append(this, LifeLink.class, 100f).object = furthest.id();
+			Buff.append(furthest, LifeLink.class, 100f).object = getId();
+			Buff.append(this, LifeLink.class, 100f).object = furthest.getId();
 			yell(Messages.get(this, "lifelink_" + Random.IntRange(1, 2)));
 			sprite.parent.add(new Beam.HealthRay(sprite.destinationCenter(), furthest.sprite.destinationCenter()));
 			return true;
@@ -373,7 +373,7 @@ public class DwarfKing extends Mob {
 		Mob furthest = null;
 
 		for (Mob m : getSubjects()){
-			if (furthest == null || Dungeon.level.distance(pos, furthest.pos) < Dungeon.level.distance(pos, m.pos)){
+			if (furthest == null || Dungeon.level.distance(position, furthest.position) < Dungeon.level.distance(position, m.position)){
 				furthest = m;
 			}
 		}
@@ -381,44 +381,44 @@ public class DwarfKing extends Mob {
 		if (furthest != null){
 
 			float bestDist;
-			int bestPos = pos;
+			int bestPos = position;
 
-			Ballistica trajectory = new Ballistica(enemy.pos, pos, Ballistica.STOP_TARGET);
+			Ballistica trajectory = new Ballistica(enemy.position, position, Ballistica.STOP_TARGET);
 			int targetCell = trajectory.path.get(trajectory.dist+1);
 			//if the position opposite the direction of the hero is open, go there
-			if (Actor.findChar(targetCell) == null && !Dungeon.level.solid[targetCell]){
+			if (Actor.getCharacterOnPosition(targetCell) == null && !Dungeon.level.solid[targetCell]){
 				bestPos = targetCell;
 
 			//Otherwise go to the neighbour cell that's open and is furthest
 			} else {
-				bestDist = Dungeon.level.trueDistance(pos, enemy.pos);
+				bestDist = Dungeon.level.trueDistance(position, enemy.position);
 
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (Actor.findChar(pos+i) == null
-							&& !Dungeon.level.solid[pos+i]
-							&& Dungeon.level.trueDistance(pos+i, enemy.pos) > bestDist){
-						bestPos = pos+i;
-						bestDist = Dungeon.level.trueDistance(pos+i, enemy.pos);
+					if (Actor.getCharacterOnPosition(position +i) == null
+							&& !Dungeon.level.solid[position +i]
+							&& Dungeon.level.trueDistance(position +i, enemy.position) > bestDist){
+						bestPos = position +i;
+						bestDist = Dungeon.level.trueDistance(position +i, enemy.position);
 					}
 				}
 			}
 
-			Actor.add(new Pushing(this, pos, bestPos));
-			pos = bestPos;
+			Actor.addActor(new Pushing(this, position, bestPos));
+			position = bestPos;
 
 			//find closest cell that's adjacent to enemy, place subject there
-			bestDist = Dungeon.level.trueDistance(enemy.pos, pos);
-			bestPos = enemy.pos;
+			bestDist = Dungeon.level.trueDistance(enemy.position, position);
+			bestPos = enemy.position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Actor.findChar(enemy.pos+i) == null
-						&& !Dungeon.level.solid[enemy.pos+i]
-						&& Dungeon.level.trueDistance(enemy.pos+i, pos) < bestDist){
-					bestPos = enemy.pos+i;
-					bestDist = Dungeon.level.trueDistance(enemy.pos+i, pos);
+				if (Actor.getCharacterOnPosition(enemy.position +i) == null
+						&& !Dungeon.level.solid[enemy.position +i]
+						&& Dungeon.level.trueDistance(enemy.position +i, position) < bestDist){
+					bestPos = enemy.position +i;
+					bestDist = Dungeon.level.trueDistance(enemy.position +i, position);
 				}
 			}
 
-			if (bestPos != enemy.pos) ScrollOfTeleportation.appear(furthest, bestPos);
+			if (bestPos != enemy.position) ScrollOfTeleportation.appear(furthest, bestPos);
 			yell(Messages.get(this, "teleport_" + Random.IntRange(1, 2)));
 			return true;
 		}
@@ -431,7 +431,7 @@ public class DwarfKing extends Mob {
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
 			yell(Messages.get(this, "notice"));
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -440,30 +440,30 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public boolean isInvulnerable(Class effect) {
+	public boolean isInvulnerableToEffectType(Class effect) {
 		if (effect == KingDamager.class){
 			return false;
 		} else {
-			return phase == 2 || super.isInvulnerable(effect);
+			return phase == 2 || super.isInvulnerableToEffectType(effect);
 		}
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//hero counts as unarmed if they aren't attacking with a weapon and aren't benefiting from force
-		if (src == Dungeon.hero && (!RingOfForce.fightingUnarmed(Dungeon.hero) || Dungeon.hero.buff(RingOfForce.Force.class) != null)){
+		if (sourceOfDamage == Dungeon.hero && (!RingOfForce.fightingUnarmed(Dungeon.hero) || Dungeon.hero.getBuff(RingOfForce.Force.class) != null)){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		//Corrosion, corruption, and regrowth do no direct damage and so have their own custom logic
 		//Transfusion damages DK and so doesn't need custom logic
 		//Lightning has custom logic so that chaining it doesn't DQ for the badge
-		} else if (src instanceof Wand && !(src instanceof WandOfLightning)){
+		} else if (sourceOfDamage instanceof Wand && !(sourceOfDamage instanceof WandOfLightning)){
 			Statistics.qualifiedForBossChallengeBadge = false;
 		}
 
-		if (isInvulnerable(src.getClass())){
-			super.damage(dmg, src);
+		if (isInvulnerableToEffectType(sourceOfDamage.getClass())){
+			super.receiveDamageFromSource(dmg, sourceOfDamage);
 			return;
-		} else if (phase == 3 && !(src instanceof Viscosity.DeferedDamage)){
+		} else if (phase == 3 && !(sourceOfDamage instanceof Viscosity.DeferedDamage)){
 			if (dmg >= 0) {
 				Viscosity.DeferedDamage deferred = Buff.affect( this, Viscosity.DeferedDamage.class );
 				deferred.prolong( dmg );
@@ -473,10 +473,10 @@ public class DwarfKing extends Mob {
 			return;
 		}
 		int preHP = healthPoints;
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 
-		LockedFloor lock = Dungeon.hero.buff(LockedFloor.class);
-		if (lock != null && !isImmune(src.getClass())){
+		LockedFloor lock = Dungeon.hero.getBuff(LockedFloor.class);
+		if (lock != null && !isImmuneToEffectType(sourceOfDamage.getClass())){
 			if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES))   lock.addTime(dmg/5f);
 			else                                                    lock.addTime(dmg/3f);
 		}
@@ -494,7 +494,7 @@ public class DwarfKing extends Mob {
 				summonsMade = 0;
 				sprite.idle();
 				Buff.affect(this, DKBarrior.class).setShield(healthMax);
-				for (Summoning s : buffs(Summoning.class)) {
+				for (Summoning s : getBuffs(Summoning.class)) {
 					s.detach();
 				}
 				for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])) {
@@ -503,13 +503,13 @@ public class DwarfKing extends Mob {
 					}
 				}
 			}
-		} else if (phase == 2 && shielding() == 0) {
+		} else if (phase == 2 && getShielding() == 0) {
 			properties.remove(Property.IMMOVABLE);
 			phase = 3;
 			summonsMade = 1; //monk/warlock on 3rd summon
 			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
-			yell(  Messages.get(this, "enraged", Dungeon.hero.name()) );
+			yell(  Messages.get(this, "enraged", Dungeon.hero.getName()) );
 			BossHealthBar.bleed(true);
 			Game.runOnRenderThread(new Callback() {
 				@Override
@@ -533,24 +533,24 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(Object source) {
 
 		GameScene.bossSlain();
 
-		super.die( cause );
+		super.die(source);
 
 		Heap h = Dungeon.level.heaps.get(CityBossLevel.throne);
 		if (h != null) {
 			for (Item i : h.items) {
-				Dungeon.level.drop(i, CityBossLevel.throne + Dungeon.level.width());
+				Dungeon.level.dropItemOnPosition(i, CityBossLevel.throne + Dungeon.level.width());
 			}
 			h.destroy();
 		}
 
-		if (Dungeon.level.solid[pos]){
-			Dungeon.level.drop(new KingsCrown(), pos + Dungeon.level.width()).sprite.drop(pos);
+		if (Dungeon.level.solid[position]){
+			Dungeon.level.dropItemOnPosition(new KingsCrown(), position + Dungeon.level.width()).sprite.drop(position);
 		} else {
-			Dungeon.level.drop(new KingsCrown(), pos).sprite.drop();
+			Dungeon.level.dropItemOnPosition(new KingsCrown(), position).sprite.drop();
 		}
 
 		Badges.validateBossSlain();
@@ -574,12 +574,12 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public boolean isImmune(Class effect) {
+	public boolean isImmuneToEffectType(Class effect) {
 		//immune to damage amplification from doomed in 2nd phase or later, but it can still be applied
-		if (phase > 1 && effect == Doom.class && buff(Doom.class) != null ){
+		if (phase > 1 && effect == Doom.class && getBuff(Doom.class) != null ){
 			return true;
 		}
-		return super.isImmune(effect);
+		return super.isImmuneToEffectType(effect);
 	}
 
 	public static class DKGhoul extends Ghoul {
@@ -657,10 +657,10 @@ public class DwarfKing extends Mob {
 				}
 				particles = null;
 
-				if (Actor.findChar(pos) != null){
+				if (Actor.getCharacterOnPosition(pos) != null){
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (Dungeon.level.passable[pos+i] && Actor.findChar(pos+i) == null){
+						if (Dungeon.level.passable[pos+i] && Actor.getCharacterOnPosition(pos+i) == null){
 							candidates.add(pos+i);
 						}
 					}
@@ -670,13 +670,13 @@ public class DwarfKing extends Mob {
 				}
 
 				//kill sheep that are right on top of the spawner instead of failing to spawn
-				if (Actor.findChar(pos) instanceof Sheep){
-					Actor.findChar(pos).die(null);
+				if (Actor.getCharacterOnPosition(pos) instanceof Sheep){
+					Actor.getCharacterOnPosition(pos).die(null);
 				}
 
-				if (Actor.findChar(pos) == null) {
+				if (Actor.getCharacterOnPosition(pos) == null) {
 					Mob m = Reflection.newInstance(summon);
-					m.pos = pos;
+					m.position = pos;
 					m.maxLvl = -2;
 					GameScene.add(m);
 					Dungeon.level.occupyCell(m);
@@ -685,13 +685,13 @@ public class DwarfKing extends Mob {
 						Buff.affect(m, KingDamager.class);
 					}
 				} else {
-					Character ch = Actor.findChar(pos);
-					ch.damage(Random.NormalIntRange(20, 40), this);
+					Character ch = Actor.getCharacterOnPosition(pos);
+					ch.receiveDamageFromSource(Random.NormalIntRange(20, 40), this);
 					if (((DwarfKing)target).phase == 2){
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
-							target.damage(target.healthMax /18, new KingDamager());
+							target.receiveDamageFromSource(target.healthMax /18, new KingDamager());
 						} else {
-							target.damage(target.healthMax /12, new KingDamager());
+							target.receiveDamageFromSource(target.healthMax /12, new KingDamager());
 						}
 					}
 					if (!ch.isAlive() && ch == Dungeon.hero) {
@@ -703,7 +703,7 @@ public class DwarfKing extends Mob {
 				detach();
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 
@@ -755,7 +755,7 @@ public class DwarfKing extends Mob {
 			if (target.alignment != Alignment.ENEMY){
 				detach();
 			}
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			return true;
 		}
 
@@ -765,7 +765,7 @@ public class DwarfKing extends Mob {
 			for (Mob m : Dungeon.level.mobs){
 				if (m instanceof DwarfKing){
 					int damage = m.healthMax / (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 18 : 12);
-					m.damage(damage, this);
+					m.receiveDamageFromSource(damage, this);
 				}
 			}
 		}

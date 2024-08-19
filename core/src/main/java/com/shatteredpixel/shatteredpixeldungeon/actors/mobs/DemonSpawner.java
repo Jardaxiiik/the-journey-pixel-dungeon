@@ -91,11 +91,11 @@ public class DemonSpawner extends Mob {
 			spawnRecorded = true;
 		}
 
-		if (Dungeon.level.visited[pos]){
+		if (Dungeon.level.visited[position]){
 			Notes.add( Notes.Landmark.DEMON_SPAWNER );
 		}
 
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null && spawnCooldown > 20){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null && spawnCooldown > 20){
 			spawnCooldown = 20;
 		}
 
@@ -109,22 +109,22 @@ public class DemonSpawner extends Mob {
 
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
-				if (Dungeon.level.passable[pos+n] && Actor.findChar( pos+n ) == null) {
-					candidates.add( pos+n );
+				if (Dungeon.level.passable[position +n] && Actor.getCharacterOnPosition( position +n ) == null) {
+					candidates.add( position +n );
 				}
 			}
 
 			if (!candidates.isEmpty()) {
 				RipperDemon spawn = new RipperDemon();
 
-				spawn.pos = Random.element( candidates );
+				spawn.position = Random.element( candidates );
 				spawn.state = spawn.HUNTING;
 
 				GameScene.add( spawn, 1 );
 				Dungeon.level.occupyCell(spawn);
 
 				if (sprite.visible) {
-					Actor.add(new Pushing(spawn, pos, spawn.pos));
+					Actor.addActor(new Pushing(spawn, position, spawn.position));
 				}
 
 				spawnCooldown += 60;
@@ -139,24 +139,24 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		if (dmg >= 20){
 			//takes 20/21/22/23/24/25/26/27/28/29/30 dmg
 			// at   20/22/25/29/34/40/47/55/64/74/85 incoming dmg
 			dmg = 19 + (int)(Math.sqrt(8*(dmg - 19) + 1) - 1)/2;
 		}
 		spawnCooldown -= dmg;
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	@Override
-	public void die(Object cause) {
+	public void die(Object source) {
 		if (spawnRecorded){
 			Statistics.spawnersAlive--;
 			Notes.remove(Notes.Landmark.DEMON_SPAWNER);
 		}
 		GLog.h(Messages.get(this, "on_death"));
-		super.die(cause);
+		super.die(source);
 	}
 
 	public static final String SPAWN_COOLDOWN = "spawn_cooldown";

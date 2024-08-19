@@ -62,7 +62,7 @@ public class Barrier extends ShieldBuff {
 			detach();
 		}
 		
-		spend( TICK );
+		spendTimeAdjusted( TICK );
 		
 		return true;
 	}
@@ -71,7 +71,7 @@ public class Barrier extends ShieldBuff {
 	public void fx(boolean on) {
 		if (on) {
 			target.sprite.add(CharSprite.State.SHIELDED);
-		} else if (target.buff(Blocking.BlockBuff.class) == null) {
+		} else if (target.getBuff(Blocking.BlockBuff.class) == null) {
 			target.sprite.remove(CharSprite.State.SHIELDED);
 		}
 	}

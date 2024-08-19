@@ -84,31 +84,31 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public boolean isImmune(Class effect) {
+	public boolean isImmuneToEffectType(Class effect) {
 		if (effect == Burning.class
 				&& armor != null
 				&& armor.hasGlyph(Brimstone.class, this)){
 			return true;
 		}
-		return super.isImmune(effect);
+		return super.isImmuneToEffectType(effect);
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
 		damage = armor.proc(enemy, this, damage);
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//TODO improve this when I have proper damage source logic
 		if (armor != null && armor.hasGlyph(AntiMagic.class, this)
-				&& AntiMagic.RESISTS.contains(src.getClass())){
+				&& AntiMagic.RESISTS.contains(sourceOfDamage.getClass())){
 			dmg -= AntiMagic.drRoll(this, armor.buffedLvl());
 			dmg = Math.max(dmg, 0);
 		}
 
-		super.damage( dmg, src );
+		super.receiveDamageFromSource( dmg, sourceOfDamage);
 
 		//for the rose status indicator
 		Item.updateQuickslot();
@@ -122,29 +122,29 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public float speed() {
-		return armor.speedFactor(this, super.speed());
+	public float getSpeed() {
+		return armor.speedFactor(this, super.getSpeed());
 	}
 
 	@Override
-	public float stealth() {
-		return armor.stealthFactor(this, super.stealth());
+	public float getStealth() {
+		return armor.stealthFactor(this, super.getStealth());
 	}
 
 	@Override
-	public int defenseSkill(Character enemy) {
-		return Math.round(armor.evasionFactor(this, super.defenseSkill(enemy)));
+	public int getEvasionAgainstAttacker(Character enemy) {
+		return Math.round(armor.evasionFactor(this, super.getEvasionAgainstAttacker(enemy)));
 	}
 
 	@Override
-	public void die( Object cause ) {
+	public void die( Object source) {
 		armor.identify(false);
-		Dungeon.level.drop( armor, pos ).sprite.drop();
-		super.die( cause );
+		Dungeon.level.dropItemOnPosition( armor, position).sprite.drop();
+		super.die(source);
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		return Messages.get(this, "desc", weapon.name(), armor.name());
 	}
 

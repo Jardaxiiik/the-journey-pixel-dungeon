@@ -72,7 +72,7 @@ public class ArcaneBomb extends Bomb {
 				if (Dungeon.level.heroFOV[i]) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				if (ch != null){
 					affected.add(ch);
 				}
@@ -82,8 +82,8 @@ public class ArcaneBomb extends Bomb {
 		for (Character ch : affected){
 			// 100%/83%/67% bomb damage based on distance, but pierces armor.
 			int damage = Math.round(Random.NormalIntRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
-			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.pos));
-			ch.damage(Math.round(damage*multiplier), this);
+			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.position));
+			ch.receiveDamageFromSource(Math.round(damage*multiplier), this);
 			if (ch == Dungeon.hero && !ch.isAlive()){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);

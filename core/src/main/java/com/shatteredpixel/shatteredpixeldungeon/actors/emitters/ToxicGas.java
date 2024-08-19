@@ -45,10 +45,10 @@ public class ToxicGas extends Emitter implements Hero.Doom {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0 && (ch = Actor.findChar( cell )) != null) {
-					if (!ch.isImmune(this.getClass())) {
+				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
+					if (!ch.isImmuneToEffectType(this.getClass())) {
 
-						ch.damage(damage, this);
+						ch.receiveDamageFromSource(damage, this);
 					}
 				}
 			}

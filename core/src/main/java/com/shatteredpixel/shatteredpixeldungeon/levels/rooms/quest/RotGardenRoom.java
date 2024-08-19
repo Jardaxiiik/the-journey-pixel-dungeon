@@ -162,7 +162,7 @@ public class RotGardenRoom extends SpecialRoom {
 		if (safeHeartcells < 2 && !adjacentLashers.isEmpty()){
 			Character toRemove = Random.element(adjacentLashers);
 			level.mobs.remove(toRemove);
-			Painter.set(level, toRemove.pos, Terrain.HIGH_GRASS);
+			Painter.set(level, toRemove.position, Terrain.HIGH_GRASS);
 		}
 
 	}
@@ -195,7 +195,7 @@ public class RotGardenRoom extends SpecialRoom {
 	}
 
 	private static void placePlant(Level level, int pos, Mob plant){
-		plant.pos = pos;
+		plant.position = pos;
 		level.mobs.add( plant );
 
 		Painter.set(level, pos, Terrain.GRASS);

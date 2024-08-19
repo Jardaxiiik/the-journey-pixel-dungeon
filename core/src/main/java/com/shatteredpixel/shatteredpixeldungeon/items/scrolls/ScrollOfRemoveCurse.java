@@ -53,8 +53,8 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 
 		TormentedSpirit spirit = null;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (Actor.findChar(curUser.pos+i) instanceof TormentedSpirit){
-				spirit = (TormentedSpirit) Actor.findChar(curUser.pos+i);
+			if (Actor.getCharacterOnPosition(curUser.position +i) instanceof TormentedSpirit){
+				spirit = (TormentedSpirit) Actor.getCharacterOnPosition(curUser.position +i);
 			}
 		}
 		if (spirit != null){
@@ -64,7 +64,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 
 			new Flare( 6, 32 ).show( curUser.sprite, 2f );
 
-			if (curUser.buff(Degrade.class) != null) {
+			if (curUser.getBuff(Degrade.class) != null) {
 				Degrade.detach(curUser, Degrade.class);
 			}
 
@@ -81,7 +81,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 	}
 
 	public static boolean uncursable( Item item ){
-		if (item.isEquipped(Dungeon.hero) && Dungeon.hero.buff(Degrade.class) != null) {
+		if (item.isEquipped(Dungeon.hero) && Dungeon.hero.getBuff(Degrade.class) != null) {
 			return true;
 		} if ((item instanceof EquipableItem || item instanceof Wand) && ((!item.isIdentified() && !item.cursedKnown) || item.cursed)){
 			return true;
@@ -100,7 +100,7 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 
 		boolean procced = uncurse( curUser, item );
 
-		if (curUser.buff(Degrade.class) != null) {
+		if (curUser.getBuff(Degrade.class) != null) {
 			Degrade.detach(curUser, Degrade.class);
 			procced = true;
 		}

@@ -156,14 +156,14 @@ public class SentryRoom extends SpecialRoom {
 
 		Painter.set(level, sentryPos, Terrain.PEDESTAL);
 		Sentry sentry = new Sentry();
-		sentry.pos = level.pointToCell(sentryPos);
+		sentry.position = level.pointToCell(sentryPos);
 		sentry.room = new EmptyRoom();
 		sentry.room.set((Rect)this);
 		sentry.initialChargeDelay = sentry.curChargeDelay = dangerDist / 3f + 0.1f;
 		level.mobs.add( sentry );
 
 		Painter.set(level, treasurePos, Terrain.PEDESTAL);
-		level.drop( prize( level ), level.pointToCell(treasurePos) ).type = Heap.Type.CHEST;
+		level.dropItemOnPosition( prize( level ), level.pointToCell(treasurePos) ).type = Heap.Type.CHEST;
 
 		level.addItemToSpawn(new PotionOfHaste());
 
@@ -234,15 +234,15 @@ public class SentryRoom extends SpecialRoom {
 			}
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
 
-			if (properties().contains(Property.IMMOVABLE)){
+			if (getProperties().contains(Property.IMMOVABLE)){
 				throwItems();
 			}
 
 			if (Dungeon.hero != null){
-				if (fieldOfView[Dungeon.hero.pos]
-						&& Dungeon.level.map[Dungeon.hero.pos] == Terrain.EMPTY_SP
-						&& room.inside(Dungeon.level.cellToPoint(Dungeon.hero.pos))
-						&& Dungeon.hero.buff(LostInventory.class) == null){
+				if (fieldOfView[Dungeon.hero.position]
+						&& Dungeon.level.map[Dungeon.hero.position] == Terrain.EMPTY_SP
+						&& room.inside(Dungeon.level.cellToPoint(Dungeon.hero.position))
+						&& Dungeon.hero.getBuff(LostInventory.class) == null){
 
 					if (curChargeDelay > 0.001f){ //helps prevent rounding errors
 						if (curChargeDelay == initialChargeDelay) {
@@ -257,11 +257,11 @@ public class SentryRoom extends SpecialRoom {
 
 					if (curChargeDelay <= .001f){
 						curChargeDelay = 1f;
-						sprite.zap(Dungeon.hero.pos);
+						sprite.zap(Dungeon.hero.position);
 						((SentrySprite) sprite).charge();
 					}
 
-					spend(Dungeon.hero.cooldown());
+					spendTimeAdjusted(Dungeon.hero.cooldown());
 					return true;
 
 				} else {
@@ -269,20 +269,20 @@ public class SentryRoom extends SpecialRoom {
 					sprite.idle();
 				}
 
-				spend(Dungeon.hero.cooldown());
+				spendTimeAdjusted(Dungeon.hero.cooldown());
 			} else {
-				spend(1f);
+				spendTimeAdjusted(1f);
 			}
 			return true;
 		}
 
 		public void onZapComplete(){
-			if (hit(this, Dungeon.hero, true)) {
-				Dungeon.hero.damage(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
+			if (isTargetHitByAttack(this, Dungeon.hero, true)) {
+				Dungeon.hero.receiveDamageFromSource(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
 				if (!Dungeon.hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
-					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", name())));
+					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", getName())));
 				}
 			} else {
 				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.defenseVerb() );
@@ -290,22 +290,22 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		@Override
-		public int attackSkill(Character target) {
+		public int getAccuracyAgainstTarget(Character target) {
 			return 20 + Dungeon.depth * 2;
 		}
 
 		@Override
-		public int defenseSkill( Character enemy ) {
+		public int getEvasionAgainstAttacker(Character enemy ) {
 			return INFINITE_EVASION;
 		}
 
 		@Override
-		public void damage( int dmg, Object src ) {
+		public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 			//do nothing
 		}
 
 		@Override
-		public boolean add( Buff buff ) {
+		public boolean addBuff(Buff buff ) {
 			return false;
 		}
 
@@ -365,8 +365,8 @@ public class SentryRoom extends SpecialRoom {
 			idle();
 			flash();
 			emitter().burst(MagicMissile.WardParticle.UP, 2);
-			if (Actor.findChar(pos) != null){
-				parent.add(new Beam.DeathRay(center(), Actor.findChar(pos).sprite.center()));
+			if (Actor.getCharacterOnPosition(pos) != null){
+				parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(pos).sprite.center()));
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 			}

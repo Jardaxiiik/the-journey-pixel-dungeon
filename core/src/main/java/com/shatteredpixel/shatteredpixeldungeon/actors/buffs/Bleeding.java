@@ -99,7 +99,7 @@ public class Bleeding extends Buff {
 			
 			if (dmg > 0) {
 				
-				target.damage( dmg, this );
+				target.receiveDamageFromSource( dmg, this );
 				if (target.sprite.visible) {
 					Splash.at( target.sprite.center(), -PointF.PI / 2, PointF.PI / 6,
 							target.sprite.blood(), Math.min( 10 * dmg / target.healthMax, 10 ) );
@@ -119,7 +119,7 @@ public class Bleeding extends Buff {
 					MeleeWeapon.onAbilityKill(Dungeon.hero, target);
 				}
 				
-				spend( TICK );
+				spendTimeAdjusted( TICK );
 			} else {
 				detach();
 			}

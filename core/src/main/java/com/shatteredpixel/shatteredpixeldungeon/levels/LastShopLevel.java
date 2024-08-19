@@ -126,7 +126,7 @@ public class LastShopLevel extends RegularLevel {
 					pos = pointToCell(roomEntrance.random());
 				} while (pos == entrance());
 				for (Item i : bonesItems) {
-					drop(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
+					dropItemOnPosition(i, pos).setHauntedIfCursed().type = Heap.Type.REMAINS;
 				}
 			}
 		Random.popGenerator();
@@ -138,8 +138,8 @@ public class LastShopLevel extends RegularLevel {
 		for (Point p : roomEntrance.getPoints()){
 			int cell = pointToCell(p);
 			if (passable[cell]
-					&& Actor.findChar(cell) == null
-					&& (!Character.hasProp(ch, Character.Property.LARGE) || openSpace[cell])){
+					&& Actor.getCharacterOnPosition(cell) == null
+					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
 		}

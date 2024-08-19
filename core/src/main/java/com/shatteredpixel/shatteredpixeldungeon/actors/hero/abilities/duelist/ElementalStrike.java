@@ -153,7 +153,7 @@ public class ElementalStrike extends ArmorAbility {
 		armor.charge -= chargeUse(hero);
 		Item.updateQuickslot();
 
-		Ballistica aim = new Ballistica(hero.pos, target, Ballistica.WONT_STOP);
+		Ballistica aim = new Ballistica(hero.position, target, Ballistica.WONT_STOP);
 
 		int maxDist = 4 + hero.pointsInTalent(Talent.ELEMENTAL_REACH);
 		int dist = Math.min(aim.dist, maxDist);
@@ -188,7 +188,7 @@ public class ElementalStrike extends ArmorAbility {
 			@Override
 			public void call() {
 
-				Character enemy = Actor.findChar(target);
+				Character enemy = Actor.getCharacterOnPosition(target);
 
 				if (enemy != null) {
 					if (hero.isCharmedBy(enemy)) {
@@ -204,7 +204,7 @@ public class ElementalStrike extends ArmorAbility {
 
 				if (enemy != null){
 					AttackIndicator.target(enemy);
-					oldEnemyPos = enemy.pos;
+					oldEnemyPos = enemy.position;
 					if (hero.attack(enemy, 1, 0, Character.INFINITE_ACCURACY)) {
 						Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					}
@@ -228,8 +228,8 @@ public class ElementalStrike extends ArmorAbility {
 	private void preAttackEffect(ConeAOE cone, Hero hero, Weapon.Enchantment ench){
 
 		int targetsHit = 0;
-		for (Character ch : Actor.chars()){
-			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.pos)){
+		for (Character ch : Actor.getCharacters()){
+			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
 		}
@@ -243,8 +243,8 @@ public class ElementalStrike extends ArmorAbility {
 
 		//*** Kinetic ***
 		if (ench instanceof Kinetic){
-			if (hero.buff(Kinetic.ConservedDamage.class) != null) {
-				storedKineticDamage = hero.buff(Kinetic.ConservedDamage.class).damageBonus();
+			if (hero.getBuff(Kinetic.ConservedDamage.class) != null) {
+				storedKineticDamage = hero.getBuff(Kinetic.ConservedDamage.class).damageBonus();
 			}
 
 		//*** Blocking ***
@@ -287,8 +287,8 @@ public class ElementalStrike extends ArmorAbility {
 	private void perCellEffect(ConeAOE cone, Weapon.Enchantment ench){
 
 		int targetsHit = 0;
-		for (Character ch : Actor.chars()){
-			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.pos)){
+		for (Character ch : Actor.getCharacters()){
+			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
 		}
@@ -338,7 +338,7 @@ public class ElementalStrike extends ArmorAbility {
 				if (terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
 						terr == Terrain.GRASS) {
 					if (grassToPlace > 0
-							&& !Character.hasProp(Actor.findChar(cell), Character.Property.IMMOVABLE)
+							&& !Character.hasProperty(Actor.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)
 							&& Dungeon.level.plants.get(cell) == null){
 						Level.set(cell, highGrassType);
 						grassToPlace--;
@@ -361,8 +361,8 @@ public class ElementalStrike extends ArmorAbility {
 
 		ArrayList<Character> affected = new ArrayList<>();
 
-		for (Character ch : Actor.chars()) {
-			if (ch.alignment != Character.Alignment.ALLY && cone.cells.contains(ch.pos)) {
+		for (Character ch : Actor.getCharacters()) {
+			if (ch.alignment != Character.Alignment.ALLY && cone.cells.contains(ch.position)) {
 				affected.add(ch);
 			}
 		}
@@ -370,7 +370,7 @@ public class ElementalStrike extends ArmorAbility {
 		//*** no enchantment ***
 		if (ench == null) {
 			for (Character ch : affected){
-				ch.damage(Math.round(powerMulti*Random.NormalIntRange(6, 12)), ElementalStrike.this);
+				ch.receiveDamageFromSource(Math.round(powerMulti*Random.NormalIntRange(6, 12)), ElementalStrike.this);
 			}
 
 		//*** Kinetic ***
@@ -378,14 +378,14 @@ public class ElementalStrike extends ArmorAbility {
 			if (storedKineticDamage > 0) {
 				for (Character ch : affected) {
 					if (ch != primaryTarget) {
-						ch.damage(Math.round(storedKineticDamage * 0.4f * powerMulti), ench);
+						ch.receiveDamageFromSource(Math.round(storedKineticDamage * 0.4f * powerMulti), ench);
 					}
 				}
 				storedKineticDamage = 0;
 			}
 			//clear stored damage if there was no primary target
-			if (primaryTarget == null && hero.buff(Kinetic.ConservedDamage.class) != null){
-				hero.buff(Kinetic.ConservedDamage.class).detach();
+			if (primaryTarget == null && hero.getBuff(Kinetic.ConservedDamage.class) != null){
+				hero.getBuff(Kinetic.ConservedDamage.class).detach();
 			}
 
 		//*** Blooming ***
@@ -401,17 +401,17 @@ public class ElementalStrike extends ArmorAbility {
 			Collections.sort(affected, new Comparator<Character>() {
 				@Override
 				public int compare(Character a, Character b) {
-					return Dungeon.level.distance(hero.pos, a.pos) - Dungeon.level.distance(hero.pos, b.pos);
+					return Dungeon.level.distance(hero.position, a.position) - Dungeon.level.distance(hero.position, b.position);
 				}
 			});
 
 			for (Character ch : affected){
-				if (ch == primaryTarget && oldEnemyPos != primaryTarget.pos) continue;
+				if (ch == primaryTarget && oldEnemyPos != primaryTarget.position) continue;
 
-				Ballistica aim = new Ballistica(hero.pos, ch.pos, Ballistica.WONT_STOP);
+				Ballistica aim = new Ballistica(hero.position, ch.position, Ballistica.WONT_STOP);
 				int knockback = Math.round(5*powerMulti);
 				WandOfBlastWave.throwChar(ch,
-						new Ballistica(ch.pos, aim.collisionPos, Ballistica.MAGIC_BOLT),
+						new Ballistica(ch.position, aim.collisionPos, Ballistica.MAGIC_BOLT),
 						knockback,
 						true,
 						true,
@@ -423,8 +423,8 @@ public class ElementalStrike extends ArmorAbility {
 			for (Character ch : affected){
 				if (ch.alignment == Character.Alignment.ENEMY
 						&& Random.Float() < 0.125f*powerMulti
-						&& ch.buff(ElementalStrikeLuckyTracker.class) == null) {
-					Dungeon.level.drop(Lucky.genLoot(), ch.pos).sprite.drop();
+						&& ch.getBuff(ElementalStrikeLuckyTracker.class) == null) {
+					Dungeon.level.dropItemOnPosition(Lucky.genLoot(), ch.position).sprite.drop();
 					Lucky.showFlare(ch.sprite);
 					Buff.affect(ch, ElementalStrikeLuckyTracker.class);
 				}
@@ -434,7 +434,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Projecting){
 			for (Character ch : affected){
 				if (ch != primaryTarget) {
-					ch.damage(Math.round(hero.damageRoll() * 0.3f * powerMulti), ench);
+					ch.receiveDamageFromSource(Math.round(hero.getDamageRoll() * 0.3f * powerMulti), ench);
 				}
 			}
 
@@ -453,8 +453,8 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Corrupting){
 			for (Character ch : affected){
 				if (ch != primaryTarget
-						&& !ch.isImmune(Corruption.class)
-						&& ch.buff(Corruption.class) == null
+						&& !ch.isImmuneToEffectType(Corruption.class)
+						&& ch.getBuff(Corruption.class) == null
 						&& ch instanceof Mob
 						&& ch.isAlive()) {
 					float hpMissing = 1f - (ch.healthPoints / (float)ch.healthMax);
@@ -473,7 +473,7 @@ public class ElementalStrike extends ArmorAbility {
 					float hpMissing = 1f - (ch.healthPoints / (float)ch.healthMax);
 					float chance = 0.06f + 0.24f*hpMissing; //6-30%
 					if (Random.Float() < chance*powerMulti){
-						ch.damage( ch.healthPoints, Grim.class );
+						ch.receiveDamageFromSource( ch.healthPoints, Grim.class );
 						ch.sprite.emitter().burst( ShadowParticle.UP, 5 );
 					}
 				}
@@ -492,7 +492,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Displacing){
 			for (Character ch : affected){
 				if (Random.Float() < 0.5f*powerMulti){
-					int oldpos = ch.pos;
+					int oldpos = ch.position;
 					if (ScrollOfTeleportation.teleportChar(ch)){
 						if (Dungeon.level.heroFOV[oldpos]) {
 							CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
@@ -517,7 +517,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Explosive){
 			if (Random.Float() < 0.5f*powerMulti){
 				Character exploding = Random.element(affected);
-				if (exploding != null) new Bomb.ConjuredBomb().explode(exploding.pos);
+				if (exploding != null) new Bomb.ConjuredBomb().explode(exploding.position);
 			}
 
 		//*** Sacrificial ***
@@ -538,7 +538,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Polarized){
 			for (Character ch : affected){
 				if (Random.Float() < 0.5f*powerMulti){
-					ch.damage(Random.NormalIntRange(24, 36), ElementalStrike.this);
+					ch.receiveDamageFromSource(Random.NormalIntRange(24, 36), ElementalStrike.this);
 				}
 			}
 
@@ -546,7 +546,7 @@ public class ElementalStrike extends ArmorAbility {
 		} else if (ench instanceof Friendly){
 			for (Character ch : affected){
 				if (Random.Float() < 0.5f*powerMulti){
-					Buff.affect(ch, Charm.class, 6f).object = hero.id();
+					Buff.affect(ch, Charm.class, 6f).object = hero.getId();
 				}
 			}
 		}

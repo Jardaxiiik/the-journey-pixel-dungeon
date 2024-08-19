@@ -83,10 +83,10 @@ public class Earthroot extends Plant {
 		
 		@Override
 		public boolean playGameTurn() {
-			if (target.pos != pos) {
+			if (target.position != pos) {
 				detach();
 			}
-			spend( STEP );
+			spendTimeAdjusted( STEP );
 			return true;
 		}
 		
@@ -95,7 +95,7 @@ public class Earthroot extends Plant {
 		}
 		
 		public int absorb( int damage ) {
-			if (pos != target.pos){
+			if (pos != target.position){
 				detach();
 				return damage;
 			}
@@ -114,7 +114,7 @@ public class Earthroot extends Plant {
 				if (level < value) {
 					level = value;
 				}
-				pos = target.pos;
+				pos = target.position;
 			}
 		}
 		

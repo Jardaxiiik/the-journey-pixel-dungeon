@@ -42,9 +42,9 @@ public class Flashbang extends Bomb {
 		super.explode(cell);
 
 		Level l = Dungeon.level;
-		for (Character ch : Actor.chars()){
+		for (Character ch : Actor.getCharacters()){
 			if (ch.fieldOfView != null && ch.fieldOfView[cell]){
-				int power = 16 - 4*l.distance(ch.pos, cell);
+				int power = 16 - 4*l.distance(ch.position, cell);
 				if (power > 0){
 					Buff.prolong(ch, Blindness.class, power);
 					Buff.prolong(ch, Cripple.class, power);

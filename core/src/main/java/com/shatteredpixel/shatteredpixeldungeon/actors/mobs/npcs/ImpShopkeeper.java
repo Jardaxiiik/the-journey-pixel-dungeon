@@ -37,11 +37,11 @@ public class ImpShopkeeper extends Shopkeeper {
 	@Override
 	protected boolean playGameTurn() {
 
-		if (!seenBefore && Dungeon.level.heroFOV[pos]) {
-			if (Dungeon.hero.buff(AscensionChallenge.class) == null) {
-				yell(Messages.get(this, "greetings", Messages.titleCase(Dungeon.hero.name())));
+		if (!seenBefore && Dungeon.level.heroFOV[position]) {
+			if (Dungeon.hero.getBuff(AscensionChallenge.class) == null) {
+				yell(Messages.get(this, "greetings", Messages.titleCase(Dungeon.hero.getName())));
 			} else {
-				yell(Messages.get(this, "greetings_ascent", Messages.titleCase(Dungeon.hero.name())));
+				yell(Messages.get(this, "greetings_ascent", Messages.titleCase(Dungeon.hero.getName())));
 			}
 			seenBefore = true;
 		}

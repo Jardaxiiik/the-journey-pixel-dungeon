@@ -124,7 +124,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 				identifiedByUse = false;
 				curUser.busy();
 				Sample.INSTANCE.play( Assets.Sounds.DRINK );
-				curUser.sprite.operate(curUser.pos, new Callback() {
+				curUser.sprite.operate(curUser.position, new Callback() {
 					@Override
 					public void call() {
 
@@ -132,7 +132,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 						curUser.sprite.zap(cell);
 						Sample.INSTANCE.play( Assets.Sounds.BURNING );
 
-						final Ballistica bolt = new Ballistica(curUser.pos, cell, Ballistica.WONT_STOP);
+						final Ballistica bolt = new Ballistica(curUser.position, cell, Ballistica.WONT_STOP);
 
 						int maxDist = 6;
 						int dist = Math.min(bolt.dist, maxDist);
@@ -176,7 +176,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 												GameScene.add( Emitter.seed( cell, 5, Fire.class ) );
 											}
 											
-											Character ch = Actor.findChar( cell );
+											Character ch = Actor.getCharacterOnPosition( cell );
 											if (ch != null) {
 												
 												Buff.affect( ch, Burning.class ).reignite( ch );
@@ -199,7 +199,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 										curUser.spendAndNext(1f);
 
 										if (!anonymous){
-											Talent.onPotionUsed(curUser, curUser.pos, talentFactor);
+											Talent.onPotionUsed(curUser, curUser.position, talentFactor);
 										}
 									}
 								});

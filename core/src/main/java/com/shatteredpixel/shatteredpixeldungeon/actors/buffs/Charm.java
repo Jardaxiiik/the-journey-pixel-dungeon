@@ -78,7 +78,7 @@ public class Charm extends FlavourBuff {
 			ignoreNextHit = false;
 			return;
 		}
-		spend(-5f);
+		spendTimeAdjusted(-5f);
 		if (cooldown() <= 0){
 			detach();
 		}

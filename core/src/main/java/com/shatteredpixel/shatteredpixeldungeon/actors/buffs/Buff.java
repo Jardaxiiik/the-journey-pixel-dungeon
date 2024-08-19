@@ -62,13 +62,13 @@ public class Buff extends Actor {
 	
 	public boolean attachTo( Character target ) {
 
-		if (target.isImmune( getClass() )) {
+		if (target.isImmuneToEffectType( getClass() )) {
 			return false;
 		}
 		
 		this.target = target;
 
-		if (target.add( this )){
+		if (target.addBuff( this )){
 			if (target.sprite != null) fx( true );
 			return true;
 		} else {
@@ -78,7 +78,7 @@ public class Buff extends Actor {
 	}
 	
 	public void detach() {
-		if (target.remove( this ) && target.sprite != null) fx( false );
+		if (target.removeBuff( this ) && target.sprite != null) fx( false );
 	}
 	
 	@Override
@@ -147,13 +147,13 @@ public class Buff extends Actor {
 
 	public static<T extends FlavourBuff> T append(Character target, Class<T> buffClass, float duration ) {
 		T buff = append( target, buffClass );
-		buff.spend( duration * target.resist(buffClass) );
+		buff.spendTimeAdjusted( duration * target.getResistanceMultiplierToEffectType(buffClass) );
 		return buff;
 	}
 
 	//same as append, but prevents duplication.
 	public static<T extends Buff> T affect(Character target, Class<T> buffClass ) {
-		T buff = target.buff( buffClass );
+		T buff = target.getBuff( buffClass );
 		if (buff != null) {
 			return buff;
 		} else {
@@ -163,14 +163,14 @@ public class Buff extends Actor {
 	
 	public static<T extends FlavourBuff> T affect(Character target, Class<T> buffClass, float duration ) {
 		T buff = affect( target, buffClass );
-		buff.spend( duration * target.resist(buffClass) );
+		buff.spendTimeAdjusted( duration * target.getResistanceMultiplierToEffectType(buffClass) );
 		return buff;
 	}
 
 	//postpones an already active buff, or creates & attaches a new buff and delays that.
 	public static<T extends FlavourBuff> T prolong(Character target, Class<T> buffClass, float duration ) {
 		T buff = affect( target, buffClass );
-		buff.postpone( duration * target.resist(buffClass) );
+		buff.postpone( duration * target.getResistanceMultiplierToEffectType(buffClass) );
 		return buff;
 	}
 
@@ -181,7 +181,7 @@ public class Buff extends Actor {
 	}
 	
 	public static void detach(Character target, Class<? extends Buff> cl ) {
-		for ( Buff b : target.buffs( cl )){
+		for ( Buff b : target.getBuffs( cl )){
 			b.detach();
 		}
 	}

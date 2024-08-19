@@ -39,7 +39,7 @@ public abstract class ArmorAbility implements Bundlable {
 
 	public void use( ClassArmor armor, Hero hero ){
 		if (targetingPrompt() == null){
-			activate(armor, hero, hero.pos);
+			activate(armor, hero, hero.position);
 		} else {
 			GameScene.selectCell(new CellSelector.Listener() {
 				@Override
@@ -65,7 +65,7 @@ public abstract class ArmorAbility implements Bundlable {
 	}
 
 	public int targetedPos(Character user, int dst ){
-		return new Ballistica( user.pos, dst, Ballistica.PROJECTILE ).collisionPos;
+		return new Ballistica( user.position, dst, Ballistica.PROJECTILE ).collisionPos;
 	}
 
 	public float chargeUse( Hero hero ){

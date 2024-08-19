@@ -46,7 +46,7 @@ public class TeleportationTrap extends Trap {
 	public void activate() {
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-			Character ch = Actor.findChar(pos + i);
+			Character ch = Actor.getCharacterOnPosition(pos + i);
 			if (ch != null){
 				if (ScrollOfTeleportation.teleportChar(ch)) {
 					if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
@@ -61,7 +61,7 @@ public class TeleportationTrap extends Trap {
 				Item item = heap.pickUp();
 
 				if (cell != -1) {
-					Dungeon.level.drop( item, cell );
+					Dungeon.level.dropItemOnPosition( item, cell );
 					if (item instanceof Honeypot.ShatteredPot){
 						((Honeypot.ShatteredPot)item).movePot(pos, cell);
 					}

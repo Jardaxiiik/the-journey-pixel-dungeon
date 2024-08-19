@@ -73,47 +73,47 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public float speed() {
-		if (item != null) return (5*super.speed())/6;
-		else return super.speed();
+	public float getSpeed() {
+		if (item != null) return (5*super.getSpeed())/6;
+		else return super.getSpeed();
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1, 10 );
 	}
 
 	@Override
-	public float attackDelay() {
-		return super.attackDelay()*0.5f;
+	public float getAttackDelay() {
+		return super.getAttackDelay()*0.5f;
 	}
 
 	@Override
-	public float lootChance() {
+	public float getLootChance() {
 		//each drop makes future drops 1/3 as likely
 		// so loot chance looks like: 1/33, 1/100, 1/300, 1/900, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.THEIF_MISC.count);
+		return super.getLootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.THEIF_MISC.count);
 	}
 
 	@Override
-	public void rollToDropLoot() {
+	public void dropLoot() {
 		if (item != null) {
-			Dungeon.level.drop( item, pos ).sprite.drop();
+			Dungeon.level.dropItemOnPosition( item, position).sprite.drop();
 			//updates position
-			if (item instanceof Honeypot.ShatteredPot) ((Honeypot.ShatteredPot)item).dropPot( this, pos );
+			if (item instanceof Honeypot.ShatteredPot) ((Honeypot.ShatteredPot)item).dropPot( this, position);
 			item = null;
 		}
-		super.rollToDropLoot();
+		super.dropLoot();
 	}
 
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.THEIF_MISC.count++;
-		return super.createLoot();
+		return super.getLootItem();
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 12;
 	}
 
@@ -135,12 +135,12 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
 		if (state == FLEEING) {
-			Dungeon.level.drop( new Gold(), pos ).sprite.drop();
+			Dungeon.level.dropItemOnPosition( new Gold(), position).sprite.drop();
 		}
 
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	protected boolean steal( Hero hero ) {
@@ -157,7 +157,7 @@ public class Thief extends Mob {
 
 			item = toSteal.detach( hero.belongings.backpack );
 			if (item instanceof Honeypot){
-				item = ((Honeypot)item).shatter(this, this.pos);
+				item = ((Honeypot)item).shatter(this, this.position);
 			} else if (item instanceof Honeypot.ShatteredPot) {
 				((Honeypot.ShatteredPot)item).pickupPot(this);
 			}
@@ -169,8 +169,8 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public String description() {
-		String desc = super.description();
+	public String getDescription() {
+		String desc = super.getDescription();
 
 		if (item != null) {
 			desc += Messages.get(this, "carries", item.name() );
@@ -182,8 +182,8 @@ public class Thief extends Mob {
 	private class Wandering extends Mob.Wandering {
 		
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
-			super.act(enemyInFOV, justAlerted);
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
+			super.playGameTurn(enemyInFOV, justAlerted);
 			
 			//if an enemy is just noticed and the thief posses an item, run, don't fight.
 			if (state == HUNTING && item != null){
@@ -198,8 +198,8 @@ public class Thief extends Mob {
 		@Override
 		protected void escaped() {
 			if (item != null
-					&& !Dungeon.level.heroFOV[pos]
-					&& Dungeon.level.distance(Dungeon.hero.pos, pos) >= 6) {
+					&& !Dungeon.level.heroFOV[position]
+					&& Dungeon.level.distance(Dungeon.hero.position, position) >= 6) {
 
 				int count = 32;
 				int newPos;
@@ -208,14 +208,14 @@ public class Thief extends Mob {
 					if (count-- <= 0) {
 						break;
 					}
-				} while (newPos == -1 || Dungeon.level.heroFOV[newPos] || Dungeon.level.distance(newPos, pos) < (count/3));
+				} while (newPos == -1 || Dungeon.level.heroFOV[newPos] || Dungeon.level.distance(newPos, position) < (count/3));
 
 				if (newPos != -1) {
 
-					pos = newPos;
-					sprite.place( pos );
-					sprite.visible = Dungeon.level.heroFOV[pos];
-					if (Dungeon.level.heroFOV[pos]) CellEmitter.get(pos).burst(Speck.factory(Speck.WOOL), 6);
+					position = newPos;
+					sprite.place(position);
+					sprite.visible = Dungeon.level.heroFOV[position];
+					if (Dungeon.level.heroFOV[position]) CellEmitter.get(position).burst(Speck.factory(Speck.WOOL), 6);
 
 				}
 

@@ -120,7 +120,7 @@ public class GnollGeomancer extends Mob {
 			throwingRocksFromPos = null;
 			throwingRockToPos = -1;
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return !attacked;
 		} else {
 			return super.playGameTurn();
@@ -129,19 +129,19 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public boolean isInvulnerable(Class effect) {
-		return super.isInvulnerable(effect)
-				|| (buff(RockArmor.class) != null && effect != Pickaxe.class)
+	public boolean isInvulnerableToEffectType(Class effect) {
+		return super.isInvulnerableToEffectType(effect)
+				|| (getBuff(RockArmor.class) != null && effect != Pickaxe.class)
 				|| hasSapper();
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 3, 6 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 20;
 	}
 
@@ -156,22 +156,22 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
 	@Override
-	public boolean heroShouldInteract() {
-		return super.heroShouldInteract() || buff(RockArmor.class) != null;
+	public boolean shouldHeroInteract() {
+		return super.shouldHeroInteract() || getBuff(RockArmor.class) != null;
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	protected boolean getFurther(int target) {
+	protected boolean moveAwayFromTarget(int targetPosition) {
 		return false;
 	}
 
@@ -179,7 +179,7 @@ public class GnollGeomancer extends Mob {
 
 	@Override
 	public boolean interact(Character c) {
-		if (c != Dungeon.hero || buff(RockArmor.class) == null) {
+		if (c != Dungeon.hero || getBuff(RockArmor.class) == null) {
 			return super.interact(c);
 		} else {
 			final Pickaxe p = Dungeon.hero.belongings.getItem(Pickaxe.class);
@@ -188,7 +188,7 @@ public class GnollGeomancer extends Mob {
 				return true;
 			}
 
-			Dungeon.hero.sprite.attack(pos, new Callback() {
+			Dungeon.hero.sprite.attack(position, new Callback() {
 				@Override
 				public void call() {
 					//does its own special damage calculation that's only influenced by pickaxe level and augment
@@ -200,9 +200,9 @@ public class GnollGeomancer extends Mob {
 					//ensure we don't do enough damage to break the armor at the start
 					if (wasSleeping) dmg = Math.min(dmg, 15);
 
-					dmg = Math.min(dmg, buff(RockArmor.class).shielding());
+					dmg = Math.min(dmg, getBuff(RockArmor.class).shielding());
 
-					damage(dmg, p);
+					GnollGeomancer.this.receiveDamageFromSource(dmg, p);
 					sprite.bloodBurstA(Dungeon.hero.sprite.center(), dmg);
 					sprite.flash();
 
@@ -212,7 +212,7 @@ public class GnollGeomancer extends Mob {
 					} if (hits == 3){
 						GLog.n( Messages.get(GnollGeomancer.this, "alert"));
 						wasSleeping = false;
-						spend(TICK);
+						spendTimeAdjusted(TICK);
 						sprite.idle();
 
 						carveRockAndDash();
@@ -223,12 +223,12 @@ public class GnollGeomancer extends Mob {
 
 						for (Mob m : Dungeon.level.mobs){
 							if (m instanceof GnollGuard){
-								m.aggro(Dungeon.hero);
+								m.startHunting(Dungeon.hero);
 								if (!((GnollGuard) m).hasSapper()){
-									m.beckon(pos);
+									m.beckon(position);
 								}
 							} else if (m instanceof GnollSapper){
-								m.aggro(Dungeon.hero);
+								m.startHunting(Dungeon.hero);
 							}
 						}
 					}
@@ -238,7 +238,7 @@ public class GnollGeomancer extends Mob {
 						alerted = false;
 					}
 
-					if (buff(RockArmor.class) == null){
+					if (getBuff(RockArmor.class) == null){
 						Splash.around(sprite, 0x555555, 30);
 						sprite.idle();
 					}
@@ -254,7 +254,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		int hpBracket = healthMax / 3;
 
 		int curbracket = healthPoints / hpBracket;
@@ -262,7 +262,7 @@ public class GnollGeomancer extends Mob {
 
 		inFinalBracket = curbracket == 0;
 
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 
 		abilityCooldown -= dmg/10f;
 
@@ -291,7 +291,7 @@ public class GnollGeomancer extends Mob {
 	}
 
 	public void linkSapper( GnollSapper sapper ){
-		this.sapperID = sapper.id();
+		this.sapperID = sapper.getId();
 		if (sprite instanceof GnollGeomancerSprite){
 			((GnollGeomancerSprite) sprite).setupArmor();
 		}
@@ -299,8 +299,8 @@ public class GnollGeomancer extends Mob {
 
 	public boolean hasSapper(){
 		return sapperID != -1
-				&& Actor.findById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper)Actor.findById(sapperID)).isAlive();
+				&& Actor.getById(sapperID) instanceof GnollSapper
+				&& ((GnollSapper)Actor.getById(sapperID)).isAlive();
 	}
 
 	public void loseSapper(){
@@ -341,8 +341,8 @@ public class GnollGeomancer extends Mob {
 				}
 			}
 
-			if ((sapperAlive && !closestisAlive && Dungeon.level.distance(pos, sapperSpawns[i]) <= 16)
-					|| Dungeon.level.trueDistance(pos, sapperSpawns[i]) < Dungeon.level.trueDistance(pos, closestSapperPos)) {
+			if ((sapperAlive && !closestisAlive && Dungeon.level.distance(position, sapperSpawns[i]) <= 16)
+					|| Dungeon.level.trueDistance(position, sapperSpawns[i]) < Dungeon.level.trueDistance(position, closestSapperPos)) {
 				closestSapperPos = sapperSpawns[i];
 				closestisAlive = sapperAlive;
 			}
@@ -356,16 +356,16 @@ public class GnollGeomancer extends Mob {
 		}
 
 		//if spawn pos is more than 12 tiles away, get as close as possible
-		Ballistica path = new Ballistica(pos, dashPos, Ballistica.STOP_TARGET);
+		Ballistica path = new Ballistica(position, dashPos, Ballistica.STOP_TARGET);
 
 		if (path.dist > 12){
 			dashPos = path.path.get(12);
 		}
 
-		if (Actor.findChar(dashPos) != null || Dungeon.level.traps.get(dashPos) != null){
+		if (Actor.getCharacterOnPosition(dashPos) != null || Dungeon.level.traps.get(dashPos) != null){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Actor.findChar(dashPos+i) == null && Dungeon.level.traps.get(dashPos+i) == null){
+				if (Actor.getCharacterOnPosition(dashPos+i) == null && Dungeon.level.traps.get(dashPos+i) == null){
 					candidates.add(dashPos+i);
 				}
 			}
@@ -380,7 +380,7 @@ public class GnollGeomancer extends Mob {
 			}
 		}
 
-		path = new Ballistica(pos, dashPos, Ballistica.STOP_TARGET);
+		path = new Ballistica(position, dashPos, Ballistica.STOP_TARGET);
 
 		ArrayList<Integer> cells = new ArrayList<>(path.subPath(0, path.dist));
 		cells.addAll(spreadDiamondAOE(cells));
@@ -391,7 +391,7 @@ public class GnollGeomancer extends Mob {
 
 		for (int i : cells){
 			if (Dungeon.level.map[i] == Terrain.WALL_DECO){
-				Dungeon.level.drop(new DarkGold(), i).sprite.drop();
+				Dungeon.level.dropItemOnPosition(new DarkGold(), i).sprite.drop();
 				Dungeon.level.map[i] = Terrain.EMPTY_DECO;
 			} else if (Dungeon.level.solid[i]){
 				if (Random.Int(3) == 0){
@@ -410,7 +410,7 @@ public class GnollGeomancer extends Mob {
 					&& !Dungeon.level.adjacent(i, Dungeon.level.entrance())
 					&& Dungeon.level.traps.get(i) == null
 					&& Dungeon.level.plants.get(i) == null
-					&& Actor.findChar(i) == null){
+					&& Actor.getCharacterOnPosition(i) == null){
 				Dungeon.level.map[i] = Terrain.MINE_BOULDER;
 			}
 		}
@@ -427,11 +427,11 @@ public class GnollGeomancer extends Mob {
 		PixelScene.shake(3, 0.7f);
 		Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
-		int oldpos = pos;
-		pos = dashPos;
-		spend(TICK);
+		int oldpos = position;
+		position = dashPos;
+		spendTimeAdjusted(TICK);
 		abilityCooldown = 1;
-		Actor.add(new Pushing(this, oldpos, pos));
+		Actor.addActor(new Pushing(this, oldpos, position));
 
 		if (closestisAlive){
 			GnollSapper closest = null;
@@ -445,13 +445,13 @@ public class GnollGeomancer extends Mob {
 				Actor guard = closest.getPartner();
 				closest.linkPartner(this);
 				//moves sapper and its guard toward geomancer if it is too far away
-				if (Dungeon.level.distance(closest.pos, dashPos) > 3){
+				if (Dungeon.level.distance(closest.position, dashPos) > 3){
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (!Dungeon.level.solid[dashPos+i]
 								&& Dungeon.level.traps.get(dashPos+i) == null
 								&& Dungeon.level.plants.get(dashPos+i) == null
-								&& Actor.findChar(dashPos+i) == null){
+								&& Actor.getCharacterOnPosition(dashPos+i) == null){
 							candidates.add(dashPos+i);
 						}
 					}
@@ -485,12 +485,12 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (state == SLEEPING){
 			return Messages.get(this, "desc_sleeping");
 		} else {
-			String desc = super.description();
-			if (buff(RockArmor.class) != null){
+			String desc = super.getDescription();
+			if (getBuff(RockArmor.class) != null){
 				if (hasSapper()){
 					desc += "\n\n" + Messages.get(this, "desc_armor_sapper");
 				} else {
@@ -502,14 +502,14 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
+	public void die(Object source) {
+		super.die(source);
 		Blacksmith.Quest.beatBoss();
 		Sample.INSTANCE.playDelayed(Assets.Sounds.ROCKS, 0.1f);
 		PixelScene.shake( 3, 0.7f );
 
 		for (int i = 0; i < Dungeon.level.length(); i++){
-			if (Dungeon.level.map[i] == Terrain.MINE_BOULDER && Dungeon.level.trueDistance(i, pos) <= 6){
+			if (Dungeon.level.map[i] == Terrain.MINE_BOULDER && Dungeon.level.trueDistance(i, position) <= 6){
 				Level.set(i, Terrain.EMPTY_DECO);
 				GameScene.updateMap(i);
 				Splash.at(i, 0x555555, 15);
@@ -537,31 +537,31 @@ public class GnollGeomancer extends Mob {
 	private class Hunting extends Mob.Hunting {
 
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (!enemyInFOV){
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return true;
 			} else {
 				enemySeen = true;
 
 				//use abilities more frequently on the hero's initial approach or if sapper is alive
 				// but only if hero isn't stunned, to prevent stunlocking
-				if ((Dungeon.level.distance(pos, enemy.pos) > 2 || hasSapper())
-						&& buff(RockArmor.class) != null
-						&& enemy.buff(Paralysis.class) == null){
+				if ((Dungeon.level.distance(position, enemy.position) > 2 || hasSapper())
+						&& getBuff(RockArmor.class) != null
+						&& enemy.getBuff(Paralysis.class) == null){
 					abilityCooldown -= 1f;
 				}
 
 				if (hasSapper()){
-					((GnollSapper)Actor.findById(sapperID)).aggro(enemy);
+					((GnollSapper)Actor.getById(sapperID)).startHunting(enemy);
 				}
 
 				if (abilityCooldown-- <= 0){
 
 					boolean targetNextToBarricade = false;
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (Dungeon.level.map[enemy.pos+i] == Terrain.BARRICADE
-								|| Dungeon.level.map[enemy.pos+i] == Terrain.ENTRANCE){
+						if (Dungeon.level.map[enemy.position +i] == Terrain.BARRICADE
+								|| Dungeon.level.map[enemy.position +i] == Terrain.ENTRANCE){
 							targetNextToBarricade = true;
 							break;
 						}
@@ -598,19 +598,19 @@ public class GnollGeomancer extends Mob {
 
 						Dungeon.hero.interrupt();
 						abilityCooldown = Random.NormalIntRange(3, 5);
-						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollGeomancer.this, 6-2*curbracket, true)) {
 						lastAbilityWasRockfall = true;
 						Dungeon.hero.interrupt();
-						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						return true;
 					}
 				}
 
 				//does not perform regular attacks
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return true;
 			}
 		}
@@ -624,14 +624,14 @@ public class GnollGeomancer extends Mob {
 
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (source.fieldOfView[i] && Dungeon.level.map[i] == Terrain.MINE_BOULDER){
-				if (new Ballistica(i, target.pos, Ballistica.PROJECTILE).collisionPos == target.pos){
+				if (new Ballistica(i, target.position, Ballistica.PROJECTILE).collisionPos == target.position){
 					candidateRocks.add(i);
 				}
 			}
 		}
 
 		//ignore rocks already being thrown
-		for (Character ch : Actor.chars()){
+		for (Character ch : Actor.getCharacters()){
 			if (ch instanceof GnollGeomancer && ((GnollGeomancer) ch).throwingRocksFromPos != null){
 				for (int i : ((GnollGeomancer) ch).throwingRocksFromPos){
 					candidateRocks.remove((Integer)i);
@@ -648,11 +648,11 @@ public class GnollGeomancer extends Mob {
 			//throw closest rock to enemy
 			int throwingFromPos = candidateRocks.get(0);
 			for (int i : candidateRocks){
-				if (Dungeon.level.trueDistance(i, target.pos) < Dungeon.level.trueDistance(throwingFromPos, target.pos)){
+				if (Dungeon.level.trueDistance(i, target.position) < Dungeon.level.trueDistance(throwingFromPos, target.position)){
 					throwingFromPos = i;
 				}
 			}
-			int throwingToPos = target.pos;
+			int throwingToPos = target.position;
 
 			return new Ballistica(throwingFromPos, throwingToPos, Ballistica.PROJECTILE);
 
@@ -684,7 +684,7 @@ public class GnollGeomancer extends Mob {
 						Splash.at(rockPath.collisionPos, 0x555555, 15);
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
-						Character ch = Actor.findChar(rockPath.collisionPos);
+						Character ch = Actor.getCharacterOnPosition(rockPath.collisionPos);
 						if (ch == Dungeon.hero){
 							PixelScene.shake( 3, 0.7f );
 						} else {
@@ -692,7 +692,7 @@ public class GnollGeomancer extends Mob {
 						}
 
 						if (ch != null && !(ch instanceof GnollGeomancer)){
-							ch.damage(Random.NormalIntRange(6, 12), new GnollGeomancer.Boulder());
+							ch.receiveDamageFromSource(Random.NormalIntRange(6, 12), new GnollGeomancer.Boulder());
 
 							if (ch.isAlive()){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
@@ -703,7 +703,7 @@ public class GnollGeomancer extends Mob {
 							}
 
 							if (!knockedCharacters.contains(ch) && rockPath.path.size() > rockPath.dist+1) {
-								Ballistica trajectory = new Ballistica(ch.pos, rockPath.path.get(rockPath.dist + 1), Ballistica.MAGIC_BOLT);
+								Ballistica trajectory = new Ballistica(ch.position, rockPath.path.get(rockPath.dist + 1), Ballistica.MAGIC_BOLT);
 								WandOfBlastWave.throwChar(ch, trajectory, 1, false, false, source);
 								knockedCharacters.add(ch);
 							}
@@ -730,12 +730,12 @@ public class GnollGeomancer extends Mob {
 
 	//similar overall logic as DM-300's rock fall attack, but with more parameters
 	public static boolean prepRockFallAttack(Character target, Character source, int range, boolean avoidBarricades ){
-		final int rockCenter = target.pos;
+		final int rockCenter = target.position;
 
 		int safeCell;
 		do {
 			safeCell = rockCenter + PathFinder.OFFSETS_NEIGHBOURS8[Random.Int(8)];
-		} while (safeCell == source.pos
+		} while (safeCell == source.position
 				|| (Dungeon.level.solid[safeCell] && Random.Int(5) != 0)
 				|| (Dungeon.level.traps.containsKey(safeCell) && Random.Int(5) != 0));
 
@@ -766,8 +766,8 @@ public class GnollGeomancer extends Mob {
 				//add rock cell to pos, if it is not solid, isn't the safecell, and isn't where geomancer is standing
 				if (!Dungeon.level.solid[pos]
 						&& pos != safeCell
-						&& !(Actor.findChar(pos) instanceof GnollGeomancer)
-						&& !(source instanceof GnollGeomancer && Actor.findChar(pos) instanceof GnollSapper)
+						&& !(Actor.getCharacterOnPosition(pos) instanceof GnollGeomancer)
+						&& !(source instanceof GnollGeomancer && Actor.getCharacterOnPosition(pos) instanceof GnollSapper)
 						&& Random.Int(1+Dungeon.level.distance(rockCenter, pos)/2) == 0) {
 					rockCells.add(pos);
 				}
@@ -780,7 +780,7 @@ public class GnollGeomancer extends Mob {
 		//don't want to overly punish players with slow move or attack speed
 		Buff.append(source, GnollRockFall.class, GameMath.gate(TICK, (int)Math.ceil(target.cooldown()), 3*TICK)).setRockPositions(rockCells);
 
-		source.sprite.attack(target.pos, new Callback() {
+		source.sprite.attack(target.position, new Callback() {
 			@Override
 			public void call() {
 				//do nothing
@@ -795,7 +795,7 @@ public class GnollGeomancer extends Mob {
 
 		@Override
 		public void affectChar(Character ch) {
-			ch.damage(Random.NormalIntRange(6, 12), this);
+			ch.receiveDamageFromSource(Random.NormalIntRange(6, 12), this);
 			if (ch.isAlive()) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
 			} else if (ch == Dungeon.hero){

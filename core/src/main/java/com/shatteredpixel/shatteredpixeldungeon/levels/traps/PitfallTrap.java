@@ -64,7 +64,7 @@ public class PitfallTrap extends Trap {
 			}
 		}
 
-		if (pos == Dungeon.hero.pos){
+		if (pos == Dungeon.hero.position){
 			GLog.n(Messages.get(this, "triggered_hero"));
 		} else if (Dungeon.level.heroFOV[pos]){
 			GLog.n(Messages.get(this, "triggered"));
@@ -111,11 +111,11 @@ public class PitfallTrap extends Trap {
 						Dungeon.level.heaps.remove(cell);
 					}
 
-					Character ch = Actor.findChar(cell);
+					Character ch = Actor.getCharacterOnPosition(cell);
 
 					//don't trigger on flying chars, or immovable neutral chars
 					if (ch != null && !ch.flying
-						&& !(ch.alignment == Character.Alignment.NEUTRAL && Character.hasProp(ch, Character.Property.IMMOVABLE))) {
+						&& !(ch.alignment == Character.Alignment.NEUTRAL && Character.hasProperty(ch, Character.Property.IMMOVABLE))) {
 						if (ch == Dungeon.hero) {
 							Chasm.heroFall(cell);
 							herofell = true;

@@ -93,7 +93,7 @@ public class Bee extends Mob {
 		if (potHolder == null)
 			this.potHolder = -1;
 		else
-			this.potHolder = potHolder.id();
+			this.potHolder = potHolder.getId();
 	}
 	
 	public int potPos(){
@@ -105,12 +105,12 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return defenseSkill;
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( healthMax / 10, healthMax / 4 );
 	}
 	
@@ -118,14 +118,14 @@ public class Bee extends Mob {
 	public int attackProc(Character enemy, int damage ) {
 		damage = super.attackProc( enemy, damage );
 		if (enemy instanceof Mob) {
-			((Mob)enemy).aggro( this );
+			((Mob)enemy).startHunting( this );
 		}
 		return damage;
 	}
 
 	@Override
-	public boolean add(Buff buff) {
-		if (super.add(buff)) {
+	public boolean addBuff(Buff buff) {
+		if (super.addBuff(buff)) {
 			//TODO maybe handle honeyed bees with their own ally buff?
 			if (buff instanceof AllyBuff) {
 				intelligentAlly = false;
@@ -143,25 +143,25 @@ public class Bee extends Mob {
 			return super.chooseEnemy();
 		
 		//if something is holding the pot, target that
-		}else if (Actor.findById(potHolder) != null){
-			return (Character) Actor.findById(potHolder);
+		}else if (Actor.getById(potHolder) != null){
+			return (Character) Actor.getById(potHolder);
 			
 		//if the pot is on the ground
 		}else {
 			
 			//try to find a new enemy in these circumstances
-			if (enemy == null || !enemy.isAlive() || !Actor.chars().contains(enemy) || state == WANDERING
-					|| Dungeon.level.distance(enemy.pos, potPos) > 3
+			if (enemy == null || !enemy.isAlive() || !Actor.getCharacters().contains(enemy) || state == WANDERING
+					|| Dungeon.level.distance(enemy.position, potPos) > 3
 					|| (alignment == Alignment.ALLY && enemy.alignment == Alignment.ALLY)
-					|| (buff( Amok.class ) == null && enemy.isInvulnerable(getClass()))){
+					|| (getBuff( Amok.class ) == null && enemy.isInvulnerableToEffectType(getClass()))){
 				
 				//find all mobs near the pot
 				HashSet<Character> enemies = new HashSet<>();
 				for (Mob mob : Dungeon.level.mobs) {
 					if (!(mob == this)
-							&& Dungeon.level.distance(mob.pos, potPos) <= 3
+							&& Dungeon.level.distance(mob.position, potPos) <= 3
 							&& mob.alignment != Alignment.NEUTRAL
-							&& !mob.isInvulnerable(getClass())
+							&& !mob.isInvulnerableToEffectType(getClass())
 							&& !(alignment == Alignment.ALLY && mob.alignment == Alignment.ALLY)) {
 						enemies.add(mob);
 					}
@@ -170,7 +170,7 @@ public class Bee extends Mob {
 				if (!enemies.isEmpty()){
 					return Random.element(enemies);
 				} else {
-					if (alignment != Alignment.ALLY && Dungeon.level.distance(Dungeon.hero.pos, potPos) <= 3){
+					if (alignment != Alignment.ALLY && Dungeon.level.distance(Dungeon.hero.position, potPos) <= 3){
 						return Dungeon.hero;
 					} else {
 						return null;
@@ -186,22 +186,22 @@ public class Bee extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
-		if (alignment == Alignment.ALLY && enemy == null && buffs(AllyBuff.class).isEmpty()){
-			target = Dungeon.hero.pos;
-		} else if (enemy != null && Actor.findById(potHolder) == enemy) {
-			target = enemy.pos;
-		} else if (potPos != -1 && (state == WANDERING || Dungeon.level.distance(target, potPos) > 3))
-			this.target = target = potPos;
-		return super.getCloser( target );
+	protected boolean moveCloserToTarget(int targetPosition) {
+		if (alignment == Alignment.ALLY && enemy == null && getBuffs(AllyBuff.class).isEmpty()){
+			targetPosition = Dungeon.hero.position;
+		} else if (enemy != null && Actor.getById(potHolder) == enemy) {
+			targetPosition = enemy.position;
+		} else if (potPos != -1 && (state == WANDERING || Dungeon.level.distance(targetPosition, potPos) > 3))
+			this.target = targetPosition = potPos;
+		return super.moveCloserToTarget(targetPosition);
 	}
 	
 	@Override
-	public String description() {
-		if (alignment == Alignment.ALLY && buffs(AllyBuff.class).isEmpty()){
+	public String getDescription() {
+		if (alignment == Alignment.ALLY && getBuffs(AllyBuff.class).isEmpty()){
 			return Messages.get(this, "desc_honey");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 }

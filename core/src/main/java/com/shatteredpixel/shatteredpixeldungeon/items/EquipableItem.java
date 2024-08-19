@@ -126,8 +126,8 @@ public abstract class EquipableItem extends Item {
 	public boolean doUnequip( Hero hero, boolean collect, boolean single ) {
 
 		if (cursed
-				&& hero.buff(MagicImmune.class) == null
-				&& (hero.buff(LostInventory.class) == null || keptThroughLostInventory())) {
+				&& hero.getBuff(MagicImmune.class) == null
+				&& (hero.getBuff(LostInventory.class) == null || keptThroughLostInventory())) {
 			GLog.w(Messages.get(EquipableItem.class, "unequip_cursed"));
 			return false;
 		}
@@ -135,7 +135,7 @@ public abstract class EquipableItem extends Item {
 		if (single) {
 			hero.spendAndNext( time2equip( hero ) );
 		} else {
-			hero.spend( time2equip( hero ) );
+			hero.spendTimeAdjusted( time2equip( hero ) );
 		}
 
 		slotOfUnequipped = Dungeon.quickslot.getSlot(this);
@@ -147,7 +147,7 @@ public abstract class EquipableItem extends Item {
 			onDetach();
 			Dungeon.quickslot.clearItem(this);
 			updateQuickslot();
-			if (collect) Dungeon.level.drop( this, hero.pos ).sprite.drop();
+			if (collect) Dungeon.level.dropItemOnPosition( this, hero.position).sprite.drop();
 		}
 		keptThoughLostInvent = wasKept;
 

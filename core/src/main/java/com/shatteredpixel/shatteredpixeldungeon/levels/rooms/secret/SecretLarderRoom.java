@@ -71,7 +71,7 @@ public class SecretLarderRoom extends SecretRoom {
 			do {
 				foodPos = level.pointToCell(random());
 			} while (level.map[foodPos] != Terrain.EMPTY_SP || level.heaps.get(foodPos) != null);
-			level.drop(food, foodPos);
+			level.dropItemOnPosition(food, foodPos);
 		}
 		
 		entrance().set(Door.Type.HIDDEN);

@@ -70,16 +70,16 @@ public abstract class TargetedSpell extends Spell {
 					return;
 				}
 				
-				final Ballistica shot = new Ballistica( curUser.pos, target, curSpell.collisionProperties);
+				final Ballistica shot = new Ballistica( curUser.position, target, curSpell.collisionProperties);
 				int cell = shot.collisionPos;
 				
 				curUser.sprite.zap(cell);
 				
 				//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
-				if (Actor.findChar(target) != null)
-					QuickSlotButton.target(Actor.findChar(target));
+				if (Actor.getCharacterOnPosition(target) != null)
+					QuickSlotButton.target(Actor.getCharacterOnPosition(target));
 				else
-					QuickSlotButton.target(Actor.findChar(cell));
+					QuickSlotButton.target(Actor.getCharacterOnPosition(cell));
 				
 				curUser.busy();
 				

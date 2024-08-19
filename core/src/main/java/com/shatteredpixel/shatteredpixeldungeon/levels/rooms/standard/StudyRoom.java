@@ -81,9 +81,9 @@ public class StudyRoom extends StandardRoom {
 		Item prize = (Random.Int(2) == 0) ? level.findPrizeItem() : null;
 		
 		if (prize != null) {
-			level.drop(prize, (center.x + center.y * level.width()));
+			level.dropItemOnPosition(prize, (center.x + center.y * level.width()));
 		} else {
-			level.drop(ItemGenerator.random( Random.oneOf(
+			level.dropItemOnPosition(ItemGenerator.random( Random.oneOf(
 					ItemGenerator.Category.POTION,
 					ItemGenerator.Category.SCROLL)), (center.x + center.y * level.width()));
 		}

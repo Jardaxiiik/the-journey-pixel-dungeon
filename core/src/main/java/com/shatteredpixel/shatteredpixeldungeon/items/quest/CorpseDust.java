@@ -79,7 +79,7 @@ public class CorpseDust extends Item {
 
 	@Override
 	protected void onDetach() {
-		DustGhostSpawner spawner = Dungeon.hero.buff(DustGhostSpawner.class);
+		DustGhostSpawner spawner = Dungeon.hero.getBuff(DustGhostSpawner.class);
 		if (spawner != null){
 			spawner.dispel();
 		}
@@ -98,7 +98,7 @@ public class CorpseDust extends Item {
 		public boolean playGameTurn() {
 			if (target instanceof Hero && ((Hero) target).belongings.getItem(CorpseDust.class) == null){
 				spawnPower = 0;
-				spend(TICK);
+				spendTimeAdjusted(TICK);
 				return true;
 			}
 
@@ -124,8 +124,8 @@ public class CorpseDust extends Item {
 				for (int i = 0; i < Dungeon.level.length(); i++){
 					if (Dungeon.level.heroFOV[i]
 							&& !Dungeon.level.solid[i]
-							&& Actor.findChar( i ) == null
-							&& Dungeon.level.distance(i, Dungeon.hero.pos) > minDist){
+							&& Actor.getCharacterOnPosition( i ) == null
+							&& Dungeon.level.distance(i, Dungeon.hero.position) > minDist){
 						candidates.add(i);
 					}
 				}
@@ -136,7 +136,7 @@ public class CorpseDust extends Item {
 				}
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 

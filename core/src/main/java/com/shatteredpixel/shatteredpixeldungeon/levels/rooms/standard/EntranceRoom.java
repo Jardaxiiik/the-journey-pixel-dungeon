@@ -93,7 +93,7 @@ public class EntranceRoom extends StandardRoom {
 				pos = level.pointToCell(new Point( Random.IntRange( left + 1, right - 1 ),
 						Random.IntRange( top + 1, bottom - 2 )));
 			} while (pos == level.entrance() || level.findMob(level.entrance()) != null);
-			level.drop( new Guidebook(), pos );
+			level.dropItemOnPosition( new Guidebook(), pos );
 			Document.ADVENTURERS_GUIDE.deletePage(Document.GUIDE_INTRO);
 		}
 
@@ -107,7 +107,7 @@ public class EntranceRoom extends StandardRoom {
 			} while (pos == level.entrance() || level.findMob(level.entrance()) != null);
 			GuidePage p = new GuidePage();
 			p.page(Document.GUIDE_SEARCHING);
-			level.drop( p, pos );
+			level.dropItemOnPosition( p, pos );
 		}
 
 		Random.popGenerator();

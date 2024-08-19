@@ -59,17 +59,17 @@ public class SpectralBlades extends ArmorAbility {
 			return;
 		}
 
-		if (Actor.findChar(target) == hero){
+		if (Actor.getCharacterOnPosition(target) == hero){
 			GLog.w(Messages.get(this, "self_target"));
 			return;
 		}
 
-		Ballistica b = new Ballistica(hero.pos, target, Ballistica.WONT_STOP);
+		Ballistica b = new Ballistica(hero.position, target, Ballistica.WONT_STOP);
 		final HashSet<Character> targets = new HashSet<>();
 
 		Character enemy = findChar(b, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
 
-		if (enemy == null || !hero.fieldOfView[enemy.pos]){
+		if (enemy == null || !hero.fieldOfView[enemy.position]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
 		}
@@ -80,7 +80,7 @@ public class SpectralBlades extends ArmorAbility {
 			ConeAOE cone = new ConeAOE(b, 30*hero.pointsInTalent(Talent.FAN_OF_BLADES));
 			for (Ballistica ray : cone.rays){
 				Character toAdd = findChar(ray, hero, 2*hero.pointsInTalent(Talent.PROJECTING_BLADES), targets);
-				if (toAdd != null && hero.fieldOfView[toAdd.pos]){
+				if (toAdd != null && hero.fieldOfView[toAdd.position]){
 					targets.add(toAdd);
 				}
 			}
@@ -89,8 +89,8 @@ public class SpectralBlades extends ArmorAbility {
 				for (Character ch : targets){
 					if (furthest == null){
 						furthest = ch;
-					} else if (Dungeon.level.trueDistance(enemy.pos, ch.pos) >
-							Dungeon.level.trueDistance(enemy.pos, furthest.pos)){
+					} else if (Dungeon.level.trueDistance(enemy.position, ch.position) >
+							Dungeon.level.trueDistance(enemy.position, furthest.position)){
 						furthest = ch;
 					}
 				}
@@ -124,20 +124,20 @@ public class SpectralBlades extends ArmorAbility {
 			};
 
 			MissileSprite m = ((MissileSprite)hero.sprite.parent.recycle( MissileSprite.class ));
-			m.reset( hero.sprite, ch.pos, proto, callback );
+			m.reset( hero.sprite, ch.position, proto, callback );
 			m.hardlight(0.6f, 1f, 1f);
 			m.alpha(0.8f);
 
 			callbacks.add( callback );
 		}
 
-		hero.sprite.zap( enemy.pos );
+		hero.sprite.zap( enemy.position);
 		hero.busy();
 	}
 
 	private Character findChar(Ballistica path, Hero hero, int wallPenetration, HashSet<Character> existingTargets){
 		for (int cell : path.path){
-			Character ch = Actor.findChar(cell);
+			Character ch = Actor.getCharacterOnPosition(cell);
 			if (ch != null){
 				if (ch == hero || existingTargets.contains(ch) || ch.alignment == Character.Alignment.ALLY){
 					continue;

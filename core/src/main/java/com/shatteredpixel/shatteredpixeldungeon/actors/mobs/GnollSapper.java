@@ -65,7 +65,7 @@ public class GnollSapper extends Mob {
 
 	public void linkPartner(Character c){
 		losePartner();
-		partnerID = c.id();
+		partnerID = c.getId();
 		if (c instanceof GnollGuard) {
 			((GnollGuard) c).linkSapper(this);
 		} else if (c instanceof GnollGeomancer){
@@ -75,38 +75,38 @@ public class GnollSapper extends Mob {
 
 	public void losePartner(){
 		if (partnerID != -1){
-			if (Actor.findById(partnerID) instanceof GnollGuard) {
-				((GnollGuard) Actor.findById(partnerID)).loseSapper();
-			} else if (Actor.findById(partnerID) instanceof GnollGeomancer) {
-				((GnollGeomancer) Actor.findById(partnerID)).loseSapper();
+			if (Actor.getById(partnerID) instanceof GnollGuard) {
+				((GnollGuard) Actor.getById(partnerID)).loseSapper();
+			} else if (Actor.getById(partnerID) instanceof GnollGeomancer) {
+				((GnollGeomancer) Actor.getById(partnerID)).loseSapper();
 			}
 			partnerID = -1;
 		}
 	}
 
 	public Actor getPartner(){
-		return Actor.findById(partnerID);
+		return Actor.getById(partnerID);
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
+	public void die(Object source) {
+		super.die(source);
 		losePartner();
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 1, 6 );
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 18;
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
-		super.damage(dmg, src);
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 		abilityCooldown -= dmg/10f;
 	}
 
@@ -121,7 +121,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public float spawningWeight() {
+	public float getSpawningWeight() {
 		return 0;
 	}
 
@@ -138,7 +138,7 @@ public class GnollSapper extends Mob {
 			throwingRockFromPos = -1;
 			throwingRockToPos = -1;
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return !attacked;
 		} else {
 			return super.playGameTurn();
@@ -148,33 +148,33 @@ public class GnollSapper extends Mob {
 
 	public class Hunting extends Mob.Hunting {
 		@Override
-		public boolean act(boolean enemyInFOV, boolean justAlerted) {
+		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (!enemyInFOV) {
 				if (Dungeon.level.distance(spawnPos, target) > 3){
 					//don't chase something more than a few tiles out of spawning position
-					target = pos;
+					target = position;
 				}
-				return super.act(enemyInFOV, justAlerted);
+				return super.playGameTurn(enemyInFOV, justAlerted);
 			} else {
 				enemySeen = true;
 
-				if (Actor.findById(partnerID) != null
-						&& Dungeon.level.distance(pos, enemy.pos) <= 3){
-					Mob partner = (Mob) Actor.findById(partnerID);
+				if (Actor.getById(partnerID) != null
+						&& Dungeon.level.distance(position, enemy.position) <= 3){
+					Mob partner = (Mob) Actor.getById(partnerID);
 					if (partner.state == partner.SLEEPING){
 						partner.notice();
 					}
 					if (enemy != partner) {
-						partner.target = enemy.pos;
-						partner.aggro(enemy);
+						partner.target = enemy.position;
+						partner.startHunting(enemy);
 					}
 				}
 
 				if (abilityCooldown-- <= 0){
 					boolean targetNextToBarricade = false;
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (Dungeon.level.map[enemy.pos+i] == Terrain.BARRICADE
-							|| Dungeon.level.map[enemy.pos+i] == Terrain.ENTRANCE){
+						if (Dungeon.level.map[enemy.position +i] == Terrain.BARRICADE
+							|| Dungeon.level.map[enemy.position +i] == Terrain.ENTRANCE){
 							targetNextToBarricade = true;
 							break;
 						}
@@ -197,22 +197,22 @@ public class GnollSapper extends Mob {
 
 						Dungeon.hero.interrupt();
 						abilityCooldown = Random.NormalIntRange(4, 6);
-						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollSapper.this, 2, true)) {
 						lastAbilityWasRockfall = true;
 						Dungeon.hero.interrupt();
-						spend(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						return true;
 					}
 				}
 
 				//does not approach an enemy it can see, but does melee if in range
-				if (canAttack(enemy)){
-					return super.act(enemyInFOV, justAlerted);
+				if (canAttackEnemy(enemy)){
+					return super.playGameTurn(enemyInFOV, justAlerted);
 				} else {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 					return true;
 				}
 			}

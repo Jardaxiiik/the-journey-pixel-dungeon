@@ -55,7 +55,7 @@ public class RotLasher extends Mob {
 
 	@Override
 	protected boolean playGameTurn() {
-		if (healthPoints < healthMax && (enemy == null || !Dungeon.level.adjacent(pos, enemy.pos))) {
+		if (healthPoints < healthMax && (enemy == null || !Dungeon.level.adjacent(position, enemy.position))) {
 			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, healthMax - healthPoints)), FloatingText.HEALING);
 			healthPoints = Math.min(healthMax, healthPoints + 5);
 		}
@@ -63,12 +63,12 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
-		if (src instanceof Burning) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
+		if (sourceOfDamage instanceof Burning) {
 			destroy();
 			sprite.die();
 		} else {
-			super.damage(dmg, src);
+			super.receiveDamageFromSource(dmg, sourceOfDamage);
 		}
 	}
 
@@ -85,22 +85,22 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	protected boolean getFurther(int target) {
+	protected boolean moveAwayFromTarget(int targetPosition) {
 		return false;
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange(10, 20);
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 25;
 	}
 
@@ -117,7 +117,7 @@ public class RotLasher extends Mob {
 
 		@Override
 		protected boolean noticeEnemy() {
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return super.noticeEnemy();
 		}
 	}

@@ -40,16 +40,16 @@ public class HoldFast extends Buff {
 
 	@Override
 	public boolean playGameTurn() {
-		if (pos != target.pos) {
+		if (pos != target.position) {
 			detach();
 		} else {
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 		}
 		return true;
 	}
 
 	public int armorBonus(){
-		if (pos == target.pos && target instanceof Hero){
+		if (pos == target.position && target instanceof Hero){
 			return Random.NormalIntRange(0, 2* ((Hero) target).pointsInTalent(Talent.HOLD_FAST));
 		} else {
 			detach();

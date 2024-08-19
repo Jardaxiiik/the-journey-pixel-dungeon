@@ -51,7 +51,7 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 12;
 	}
 
@@ -71,16 +71,16 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage ) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage ) {
 
-		GameScene.add(Emitter.seed(pos, 20, StenchGas.class));
+		GameScene.add(Emitter.seed(position, 20, StenchGas.class));
 
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
-	public void die( Object cause ) {
-		super.die( cause );
+	public void die( Object source) {
+		super.die(source);
 
 		Ghost.Quest.process();
 	}
@@ -91,7 +91,7 @@ public class FetidRat extends Rat {
 			//of two potential wander positions, picks the one closest to the hero
 			int pos1 = super.randomDestination();
 			int pos2 = super.randomDestination();
-			PathFinder.buildDistanceMap(Dungeon.hero.pos, Dungeon.level.passable);
+			PathFinder.buildDistanceMap(Dungeon.hero.position, Dungeon.level.passable);
 			if (PathFinder.distance[pos2] < PathFinder.distance[pos1]){
 				return pos2;
 			} else {

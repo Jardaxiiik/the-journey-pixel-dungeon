@@ -69,7 +69,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 
 			Mob target = null;
 			if (cell != null){
-				Character ch = Actor.findChar(cell);
+				Character ch = Actor.getCharacterOnPosition(cell);
 				if (ch != null && ch.alignment != Character.Alignment.ALLY && ch instanceof Mob){
 					target = (Mob)ch;
 				}
@@ -86,18 +86,18 @@ public class ScrollOfSirensSong extends ExoticScroll {
 				Sample.INSTANCE.playDelayed( Assets.Sounds.LULLABY, 0.1f );
 
 				for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-					if (Dungeon.level.heroFOV[mob.pos] && mob != target && mob.alignment != Character.Alignment.ALLY) {
-						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.id();
+					if (Dungeon.level.heroFOV[mob.position] && mob != target && mob.alignment != Character.Alignment.ALLY) {
+						Buff.affect( mob, Charm.class, Charm.DURATION ).object = curUser.getId();
 						mob.sprite.centerEmitter().start( Speck.factory( Speck.HEART ), 0.2f, 5 );
 					}
 				}
 
 				if (target != null){
-					if (!target.isImmune(Enthralled.class)){
+					if (!target.isImmuneToEffectType(Enthralled.class)){
 						AllyBuff.affectAndLoot(target, curUser, Enthralled.class);
 
 					} else {
-						Buff.affect( target, Charm.class, Charm.DURATION ).object = curUser.id();
+						Buff.affect( target, Charm.class, Charm.DURATION ).object = curUser.getId();
 
 					}
 					target.sprite.centerEmitter().burst( Speck.factory( Speck.HEART ), 10 );

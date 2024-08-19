@@ -106,7 +106,7 @@ public class CursedWand {
 	}
 
 	public static boolean cursedEffect(final Item origin, final Character user, final Character target){
-		return cursedEffect(origin, user, target.pos);
+		return cursedEffect(origin, user, target.position);
 	}
 
 	public static boolean cursedEffect(final Item origin, final Character user, final int targetPos){
@@ -127,7 +127,7 @@ public class CursedWand {
 
 			//anti-entropy
 			case 0: default:
-				Character target = Actor.findChar(targetPos);
+				Character target = Actor.getCharacterOnPosition(targetPos);
 				if (Random.Int(2) == 0) {
 					if (target != null) Buff.affect(target, Burning.class).reignite(target);
 					Buff.affect(user, Frost.class, Frost.DURATION);
@@ -141,20 +141,20 @@ public class CursedWand {
 			//spawns some regrowth
 			case 1:
 				GameScene.add( Emitter.seed(targetPos, 30, Regrowth.class));
-				tryForWandProc(Actor.findChar(targetPos), origin);
+				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				return true;
 
 			//random teleportation
 			case 2:
 				if(Random.Int(2) == 0) {
-					if (user != null && !user.properties().contains(Character.Property.IMMOVABLE)) {
+					if (user != null && !user.getProperties().contains(Character.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(user);
 					} else {
 						return cursedEffect(origin, user, targetPos);
 					}
 				} else {
-					Character ch = Actor.findChar( targetPos );
-					if (ch != null && !ch.properties().contains(Character.Property.IMMOVABLE)) {
+					Character ch = Actor.getCharacterOnPosition( targetPos );
+					if (ch != null && !ch.getProperties().contains(Character.Property.IMMOVABLE)) {
 						ScrollOfTeleportation.teleportChar(ch);
 						tryForWandProc(ch, origin);
 					} else {
@@ -166,7 +166,7 @@ public class CursedWand {
 			//random gas at location
 			case 3:
 				Sample.INSTANCE.play( Assets.Sounds.GAS );
-				tryForWandProc(Actor.findChar(targetPos), origin);
+				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				switch (Random.Int(3)) {
 					case 0: default:
 						GameScene.add( Emitter.seed( targetPos, 800, ConfusionGas.class ) );
@@ -194,7 +194,7 @@ public class CursedWand {
 						&& Dungeon.level.traps.get(pos) == null
 						&& !Dungeon.isChallenged(Challenges.NO_HERBALISM)) {
 					Dungeon.level.plant((Plant.Seed) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.SEED), pos);
-					tryForWandProc(Actor.findChar(pos), origin);
+					tryForWandProc(Actor.getCharacterOnPosition(pos), origin);
 				} else {
 					return cursedEffect(origin, user, targetPos);
 				}
@@ -203,7 +203,7 @@ public class CursedWand {
 
 			//Health transfer
 			case 1:
-				final Character target = Actor.findChar( targetPos );
+				final Character target = Actor.getCharacterOnPosition( targetPos );
 				if (target != null) {
 					int damage = Dungeon.scalingDepth() * 2;
 					Character toHeal, toDamage;
@@ -219,7 +219,7 @@ public class CursedWand {
 					toHeal.sprite.emitter().burst(Speck.factory(Speck.HEALING), 3);
 					toHeal.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(damage), FloatingText.HEALING );
 
-					toDamage.damage(damage, new CursedWand());
+					toDamage.receiveDamageFromSource(damage, new CursedWand());
 					toDamage.sprite.emitter().start(ShadowParticle.UP, 0.05f, 10);
 
 					if (toDamage == Dungeon.hero){
@@ -246,12 +246,12 @@ public class CursedWand {
 			//Bomb explosion
 			case 2:
 				new Bomb.ConjuredBomb().explode(targetPos);
-				tryForWandProc(Actor.findChar(targetPos), origin);
+				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				return true;
 
 			//shock and recharge
 			case 3:
-				new ShockingTrap().set( user.pos ).activate();
+				new ShockingTrap().set( user.position).activate();
 				Buff.prolong(user, Recharging.class, Recharging.DURATION);
 				ScrollOfRecharging.charge(user);
 				SpellSprite.show(user, SpellSprite.CHARGE);
@@ -266,19 +266,19 @@ public class CursedWand {
 			//sheep transformation
 			case 0: default:
 
-				Character ch = Actor.findChar( targetPos );
+				Character ch = Actor.getCharacterOnPosition( targetPos );
 				if (ch != null && !(ch instanceof Hero)
-						&& !ch.properties().contains(Character.Property.BOSS)
-						&& !ch.properties().contains(Character.Property.MINIBOSS)){
+						&& !ch.getProperties().contains(Character.Property.BOSS)
+						&& !ch.getProperties().contains(Character.Property.MINIBOSS)){
 					Sheep sheep = new Sheep();
 					sheep.lifespan = 10;
-					sheep.pos = ch.pos;
+					sheep.position = ch.position;
 					ch.destroy();
 					ch.sprite.killAndErase();
 					Dungeon.level.mobs.remove(ch);
 					TargetHealthIndicator.instance.target(null);
 					GameScene.add(sheep);
-					CellEmitter.get(sheep.pos).burst(Speck.factory(Speck.WOOL), 4);
+					CellEmitter.get(sheep.position).burst(Speck.factory(Speck.WOOL), 4);
 					Sample.INSTANCE.play(Assets.Sounds.PUFF);
 					Sample.INSTANCE.play(Assets.Sounds.SHEEP);
 				} else {
@@ -344,13 +344,13 @@ public class CursedWand {
 			//golden mimic
 			case 1:
 
-				Character ch = Actor.findChar(targetPos);
+				Character ch = Actor.getCharacterOnPosition(targetPos);
 				int spawnCell = targetPos;
 				if (ch != null){
 					ArrayList<Integer> candidates = new ArrayList<Integer>();
 					for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 						int cell = targetPos + n;
-						if (Dungeon.level.passable[cell] && Actor.findChar( cell ) == null) {
+						if (Dungeon.level.passable[cell] && Actor.getCharacterOnPosition( cell ) == null) {
 							candidates.add( cell );
 						}
 					}
@@ -371,7 +371,7 @@ public class CursedWand {
 				} while (reward.level() < 1);
 				//play vfx/sfx manually as mimic isn't in the scene yet
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC, 1, 0.85f);
-				CellEmitter.get(mimic.pos).burst(Speck.factory(Speck.STAR), 10);
+				CellEmitter.get(mimic.position).burst(Speck.factory(Speck.STAR), 10);
 				mimic.items.clear();
 				mimic.items.add(reward);
 				GameScene.add(mimic);
@@ -439,7 +439,7 @@ public class CursedWand {
 				} else {
 					GLog.w( Messages.get(CursedWand.class, "transmogrify_other") );
 				}
-				Dungeon.level.drop(result, user.pos).sprite.drop();
+				Dungeon.level.dropItemOnPosition(result, user.position).sprite.drop();
 				return true;
 		}
 	}

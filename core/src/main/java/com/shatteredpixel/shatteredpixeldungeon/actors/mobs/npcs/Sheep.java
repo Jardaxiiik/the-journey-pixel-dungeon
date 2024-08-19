@@ -54,23 +54,23 @@ public class Sheep extends NPC {
 
 		} else {
 			initialized = true;
-			spend( lifespan + Random.Float(-2, 2) );
+			spendTimeAdjusted( lifespan + Random.Float(-2, 2) );
 		}
 		return true;
 	}
 
 	@Override
-	public int defenseSkill(Character enemy) {
+	public int getEvasionAgainstAttacker(Character enemy) {
 		return INFINITE_EVASION;
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 
@@ -82,7 +82,7 @@ public class Sheep extends NPC {
 			Sample.INSTANCE.play(Assets.Sounds.SHEEP, 1, Random.Float(0.91f, 1.1f));
 			//sheep summoned by woolly bomb can be dispelled by interacting
 			if (lifespan >= 20){
-				spend(-cooldown());
+				spendTimeAdjusted(-cooldown());
 			}
 		}
 		return true;

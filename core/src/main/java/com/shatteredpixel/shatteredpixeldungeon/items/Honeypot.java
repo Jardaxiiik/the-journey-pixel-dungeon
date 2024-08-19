@@ -65,15 +65,15 @@ public class Honeypot extends Item {
 
 		if (action.equals( AC_SHATTER )) {
 			
-			hero.sprite.zap( hero.pos );
+			hero.sprite.zap( hero.position);
 			
 			detach( hero.belongings.backpack );
 
-			Item item = shatter( hero, hero.pos );
+			Item item = shatter( hero, hero.position);
 			if (!item.collect()){
-				Dungeon.level.drop(item, hero.pos);
+				Dungeon.level.dropItemOnPosition(item, hero.position);
 				if (item instanceof ShatteredPot){
-					((ShatteredPot) item).dropPot(hero, hero.pos);
+					((ShatteredPot) item).dropPot(hero, hero.position);
 				}
 			}
 
@@ -87,7 +87,7 @@ public class Honeypot extends Item {
 		if (Dungeon.level.pit[cell]) {
 			super.onThrow( cell );
 		} else {
-			Dungeon.level.drop(shatter( null, cell ), cell);
+			Dungeon.level.dropItemOnPosition(shatter( null, cell ), cell);
 		}
 	}
 	
@@ -99,12 +99,12 @@ public class Honeypot extends Item {
 		}
 		
 		int newPos = pos;
-		if (Actor.findChar( pos ) != null) {
+		if (Actor.getCharacterOnPosition( pos ) != null) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS4) {
 				int c = pos + n;
-				if (!Dungeon.level.solid[c] && Actor.findChar( c ) == null) {
+				if (!Dungeon.level.solid[c] && Actor.getCharacterOnPosition( c ) == null) {
 					candidates.add( c );
 				}
 			}
@@ -117,10 +117,10 @@ public class Honeypot extends Item {
 			bee.spawn( Dungeon.scalingDepth() );
 			bee.setPotInfo( pos, owner );
 			bee.healthPoints = bee.healthMax;
-			bee.pos = newPos;
+			bee.position = newPos;
 			
 			GameScene.add( bee );
-			if (newPos != pos) Actor.add( new Pushing( bee, pos, newPos ) );
+			if (newPos != pos) Actor.addActor( new Pushing( bee, pos, newPos ) );
 
 			bee.sprite.alpha( 0 );
 			bee.sprite.parent.add( new AlphaTweener( bee.sprite, 1, 0.15f ) );
@@ -168,7 +168,7 @@ public class Honeypot extends Item {
 		@Override
 		public void doDrop(Hero hero) {
 			super.doDrop(hero);
-			dropPot(hero, hero.pos);
+			dropPot(hero, hero.position);
 		}
 
 		@Override
@@ -178,7 +178,7 @@ public class Honeypot extends Item {
 		}
 
 		public void pickupPot(Character holder){
-			for (Bee bee : findBees(holder.pos)){
+			for (Bee bee : findBees(holder.position)){
 				updateBee(bee, -1, holder);
 			}
 		}
@@ -209,7 +209,7 @@ public class Honeypot extends Item {
 		//returns up to quantity bees which match the current pot Pos
 		private ArrayList<Bee> findBees( int potPos ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Character c : Actor.chars()){
+			for (Character c : Actor.getCharacters()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {
@@ -224,8 +224,8 @@ public class Honeypot extends Item {
 		//returns up to quantity bees which match the current pot holder
 		private ArrayList<Bee> findBees( Character potHolder ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Character c : Actor.chars()){
-				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.id()){
+			for (Character c : Actor.getCharacters()){
+				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.getId()){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {
 						break;

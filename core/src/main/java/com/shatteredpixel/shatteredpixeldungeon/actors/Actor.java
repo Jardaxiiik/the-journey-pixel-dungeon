@@ -56,7 +56,7 @@ public abstract class Actor implements Bundlable {
 	protected abstract boolean playGameTurn();
 
 	//Always spends exactly the specified amount of time, regardless of time-influencing factors
-	protected void spendConstant( float time ){
+	protected void spendTime(float time ){
 		this.time += time;
 		//if time is very close to a whole number, round to a whole number to fix errors
 		float ex = Math.abs(this.time % 1f);
@@ -66,11 +66,11 @@ public abstract class Actor implements Bundlable {
 	}
 
 	//sends time, but the amount can be influenced
-	protected void spend( float time ) {
-		spendConstant( time );
+	protected void spendTimeAdjusted(float time ) {
+		spendTime( time );
 	}
 
-	public void spendToWhole(){
+	public void spentTimeRoundUp(){
 		time = (float)Math.ceil(time);
 	}
 	
@@ -118,14 +118,14 @@ public abstract class Actor implements Bundlable {
 	public void restoreFromBundle( Bundle bundle ) {
 		time = bundle.getFloat( TIME );
 		int incomingID = bundle.getInt( ID );
-		if (Actor.findById(incomingID) == null){
+		if (Actor.getById(incomingID) == null){
 			id = incomingID;
 		} else {
 			id = nextID++;
 		}
 	}
 
-	public int id() {
+	public int getId() {
 		if (id > 0) {
 			return id;
 		} else {
@@ -186,10 +186,10 @@ public abstract class Actor implements Bundlable {
 	
 	public static void init() {
 		
-		add( Dungeon.hero );
+		addActor( Dungeon.hero );
 		
 		for (Mob mob : Dungeon.level.mobs) {
-			add( mob );
+			addActor( mob );
 		}
 
 		//mobs need to remember their targets after every actor is added
@@ -198,7 +198,7 @@ public abstract class Actor implements Bundlable {
 		}
 		
 		for (Emitter emitter : Dungeon.level.blobs.values()) {
-			add(emitter);
+			addActor(emitter);
 		}
 		
 		current = null;
@@ -228,7 +228,7 @@ public abstract class Actor implements Bundlable {
 		return current != null;
 	}
 
-	public static int curActorPriority() {
+	public static int getCurrentActorPriority() {
 		return current != null ? current.actPriority : DEFAULT;
 	}
 	
@@ -316,21 +316,21 @@ public abstract class Actor implements Bundlable {
 		} while (keepActorThreadAlive);
 	}
 	
-	public static void add( Actor actor ) {
-		add( actor, now );
+	public static void addActor(Actor actor ) {
+		addActor( actor, now );
 	}
 	
-	public static void addDelayed( Actor actor, float delay ) {
-		add( actor, now + Math.max(delay, 0) );
+	public static void addActorWithDelay(Actor actor, float delay ) {
+		addActor( actor, now + Math.max(delay, 0) );
 	}
 	
-	private static synchronized void add( Actor actor, float time ) {
+	private static synchronized void addActor(Actor actor, float time ) {
 		
 		if (all.contains( actor )) {
 			return;
 		}
 
-		ids.put( actor.id(),  actor );
+		ids.put( actor.getId(),  actor );
 
 		all.add( actor );
 		actor.time += time;
@@ -339,13 +339,13 @@ public abstract class Actor implements Bundlable {
 		if (actor instanceof Character) {
 			Character ch = (Character)actor;
 			characters.add( ch );
-			for (Buff buff : ch.buffs()) {
-				add(buff);
+			for (Buff buff : ch.getBuffs()) {
+				addActor(buff);
 			}
 		}
 	}
 	
-	public static synchronized void remove( Actor actor ) {
+	public static synchronized void removeActor(Actor actor ) {
 		
 		if (actor != null) {
 			all.remove( actor );
@@ -360,28 +360,28 @@ public abstract class Actor implements Bundlable {
 
 	//'freezes' a character in time for a specified amount of time
 	//USE CAREFULLY! Manipulating time like this is useful for some gameplay effects but is tricky
-	public static void delayChar(Character ch, float time ){
-		ch.spendConstant(time);
-		for (Buff b : ch.buffs()){
-			b.spendConstant(time);
+	public static void makeCharacterSpendTime(Character ch, float time ){
+		ch.spendTime(time);
+		for (Buff b : ch.getBuffs()){
+			b.spendTime(time);
 		}
 	}
 	
-	public static synchronized Character findChar(int pos ) {
+	public static synchronized Character getCharacterOnPosition(int pos ) {
 		for (Character ch : characters){
-			if (ch.pos == pos)
+			if (ch.position == pos)
 				return ch;
 		}
 		return null;
 	}
 
-	public static synchronized Actor findById( int id ) {
+	public static synchronized Actor getById(int id ) {
 		return ids.get( id );
 	}
 
-	public static synchronized HashSet<Actor> all() {
+	public static synchronized HashSet<Actor> getAll() {
 		return new HashSet<>(all);
 	}
 
-	public static synchronized HashSet<Character> chars() { return new HashSet<>(characters); }
+	public static synchronized HashSet<Character> getCharacters() { return new HashSet<>(characters); }
 }

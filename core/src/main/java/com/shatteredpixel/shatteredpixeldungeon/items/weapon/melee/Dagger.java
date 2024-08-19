@@ -64,7 +64,7 @@ public class Dagger extends MeleeWeapon {
 		if (owner instanceof Hero) {
 			Hero hero = (Hero)owner;
 			Character enemy = hero.enemy();
-			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
+			if (enemy instanceof Mob && ((Mob) enemy).isSurprisedBy(hero)) {
 				//deals 75% toward max to max on surprise, instead of min to max.
 				int diff = max() - min();
 				int damage = augment.damageFactor(Random.NormalIntRange(
@@ -104,13 +104,13 @@ public class Dagger extends MeleeWeapon {
 			return;
 		}
 
-		if (Actor.findChar(target) != null || !Dungeon.level.heroFOV[target] || hero.rooted) {
+		if (Actor.getCharacterOnPosition(target) != null || !Dungeon.level.heroFOV[target] || hero.rooted) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			if (Dungeon.hero.rooted) PixelScene.shake( 1, 1f );
 			return;
 		}
 
-		PathFinder.buildDistanceMap(Dungeon.hero.pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), maxDist);
+		PathFinder.buildDistanceMap(Dungeon.hero.position, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), maxDist);
 		if (PathFinder.distance[target] == Integer.MAX_VALUE) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
 			return;
@@ -120,15 +120,15 @@ public class Dagger extends MeleeWeapon {
 		Buff.affect(hero, Invisibility.class, Actor.TICK);
 		hero.next();
 
-		Dungeon.hero.sprite.turnTo( Dungeon.hero.pos, target);
-		Dungeon.hero.pos = target;
+		Dungeon.hero.sprite.turnTo( Dungeon.hero.position, target);
+		Dungeon.hero.position = target;
 		Dungeon.level.occupyCell(Dungeon.hero);
 		Dungeon.observe();
 		GameScene.updateFog();
 		Dungeon.hero.checkVisibleMobs();
 
-		Dungeon.hero.sprite.place( Dungeon.hero.pos );
-		CellEmitter.get( Dungeon.hero.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
+		Dungeon.hero.sprite.place( Dungeon.hero.position);
+		CellEmitter.get( Dungeon.hero.position).burst( Speck.factory( Speck.WOOL ), 6 );
 		Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
 		wep.afterAbilityUsed(hero);

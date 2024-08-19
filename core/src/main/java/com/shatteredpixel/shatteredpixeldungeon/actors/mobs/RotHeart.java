@@ -62,29 +62,29 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//TODO: when effect properties are done, change this to FIRE
-		if (src instanceof Burning) {
+		if (sourceOfDamage instanceof Burning) {
 			destroy();
 			sprite.die();
 		} else {
-			super.damage(dmg, src);
+			super.receiveDamageFromSource(dmg, sourceOfDamage);
 		}
 	}
 
 	@Override
-	public int defenseProc(Character enemy, int damage) {
+	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage) {
 		//rot heart spreads less gas in enclosed spaces
 		int openNearby = 0;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (!Dungeon.level.solid[pos+i]){
+			if (!Dungeon.level.solid[position +i]){
 				openNearby++;
 			}
 		}
 
-		GameScene.add(Emitter.seed(pos, 5 + 3*openNearby, ToxicGas.class));
+		GameScene.add(Emitter.seed(position, 5 + 3*openNearby, ToxicGas.class));
 
-		return super.defenseProc(enemy, damage);
+		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	protected boolean getCloser(int target) {
+	protected boolean moveCloserToTarget(int targetPosition) {
 		return false;
 	}
 
@@ -108,9 +108,9 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public void die(Object cause) {
-		super.die(cause);
-		Dungeon.level.drop( new Rotberry.Seed(), pos ).sprite.drop();
+	public void die(Object source) {
+		super.die(source);
+		Dungeon.level.dropItemOnPosition( new Rotberry.Seed(), position).sprite.drop();
 		Statistics.questScores[1] = 2000;
 	}
 
@@ -120,12 +120,12 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return 0;
 	}
 
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 0;
 	}
 

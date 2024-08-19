@@ -57,7 +57,7 @@ public class DelayedRockFall extends FlavourBuff {
 		for (int i : rockPositions){
 			CellEmitter.get( i ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 
-			Character ch = Actor.findChar(i);
+			Character ch = Actor.getCharacterOnPosition(i);
 			if (ch != null){
 				affectChar(ch);
 			} else {

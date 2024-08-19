@@ -221,7 +221,7 @@ public class Artifact extends KindofMisc {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 				}
 				return true;
 			}
@@ -233,7 +233,7 @@ public class Artifact extends KindofMisc {
 		}
 
 		public boolean isCursed() {
-			return target.buff(MagicImmune.class) == null && cursed;
+			return target.getBuff(MagicImmune.class) == null && cursed;
 		}
 
 		public void charge(Hero target, float amount){

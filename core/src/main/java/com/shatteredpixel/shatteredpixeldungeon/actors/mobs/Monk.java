@@ -52,18 +52,18 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 12, 25 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 30;
 	}
 	
 	@Override
-	public float attackDelay() {
-		return super.attackDelay()*0.5f;
+	public float getAttackDelay() {
+		return super.getAttackDelay()*0.5f;
 	}
 	
 	@Override
@@ -72,10 +72,10 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public void rollToDropLoot() {
+	public void dropLoot() {
 		Imp.Quest.process( this );
 		
-		super.rollToDropLoot();
+		super.dropLoot();
 	}
 	
 	protected float focusCooldown = 0;
@@ -83,37 +83,37 @@ public class Monk extends Mob {
 	@Override
 	protected boolean playGameTurn() {
 		boolean result = super.playGameTurn();
-		if (buff(Focus.class) == null && state == HUNTING && focusCooldown <= 0) {
+		if (getBuff(Focus.class) == null && state == HUNTING && focusCooldown <= 0) {
 			Buff.affect( this, Focus.class );
 		}
 		return result;
 	}
 	
 	@Override
-	protected void spend( float time ) {
+	protected void spendTimeAdjusted(float time ) {
 		focusCooldown -= time;
-		super.spend( time );
+		super.spendTimeAdjusted( time );
 	}
 	
 	@Override
-	public void move( int step, boolean travelling) {
+	public void moveToPosition(int newPosition, boolean travelling) {
 		// moving reduces cooldown by an additional 0.67, giving a total reduction of 1.67f.
 		// basically monks will become focused notably faster if you kite them.
 		if (travelling) focusCooldown -= 0.67f;
-		super.move( step, travelling);
+		super.moveToPosition(newPosition, travelling);
 	}
 	
 	@Override
-	public int defenseSkill( Character enemy ) {
-		if (buff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
+	public int getEvasionAgainstAttacker(Character enemy ) {
+		if (getBuff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
 			return INFINITE_EVASION;
 		}
-		return super.defenseSkill( enemy );
+		return super.getEvasionAgainstAttacker( enemy );
 	}
 	
 	@Override
 	public String defenseVerb() {
-		Focus f = buff(Focus.class);
+		Focus f = getBuff(Focus.class);
 		if (f == null) {
 			return super.defenseVerb();
 		} else {

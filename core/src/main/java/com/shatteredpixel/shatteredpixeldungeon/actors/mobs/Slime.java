@@ -45,17 +45,17 @@ public class Slime extends Mob {
 	}
 	
 	@Override
-	public int damageRoll() {
+	public int getDamageRoll() {
 		return Random.NormalIntRange( 2, 5 );
 	}
 	
 	@Override
-	public int attackSkill( Character target ) {
+	public int getAccuracyAgainstTarget(Character target ) {
 		return 12;
 	}
 	
 	@Override
-	public void damage(int dmg, Object src) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		float scaleFactor = AscensionChallenge.statModifier(this);
 		int scaledDmg = Math.round(dmg/scaleFactor);
 		if (scaledDmg >= 5){
@@ -63,18 +63,18 @@ public class Slime extends Mob {
 			scaledDmg = 4 + (int)(Math.sqrt(8*(scaledDmg - 4) + 1) - 1)/2;
 		}
 		dmg = (int)(scaledDmg*AscensionChallenge.statModifier(this));
-		super.damage(dmg, src);
+		super.receiveDamageFromSource(dmg, sourceOfDamage);
 	}
 
 	@Override
-	public float lootChance(){
+	public float getLootChance(){
 		//each drop makes future drops 1/3 as likely
 		// so loot chance looks like: 1/5, 1/15, 1/45, 1/135, etc.
-		return super.lootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.SLIME_WEP.count);
+		return super.getLootChance() * (float)Math.pow(1/3f, Dungeon.LimitedDrops.SLIME_WEP.count);
 	}
 	
 	@Override
-	public Item createLoot() {
+	public Item getLootItem() {
 		Dungeon.LimitedDrops.SLIME_WEP.count++;
 		ItemGenerator.Category c = ItemGenerator.Category.WEP_T2;
 		MeleeWeapon w = (MeleeWeapon) ItemGenerator.randomUsingDefaults(ItemGenerator.Category.WEP_T2);

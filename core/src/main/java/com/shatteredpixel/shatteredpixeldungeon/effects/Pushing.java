@@ -64,7 +64,7 @@ public class Pushing extends Actor {
 	
 	@Override
 	protected boolean playGameTurn() {
-		Actor.remove( Pushing.this );
+		Actor.removeActor( Pushing.this );
 
 		if (sprite != null && sprite.parent != null) {
 			if (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to]){
@@ -78,7 +78,7 @@ public class Pushing extends Actor {
 		}
 
 		//so that all pushing effects at the same time go simultaneously
-		for ( Actor actor : Actor.all() ){
+		for ( Actor actor : Actor.getAll() ){
 			if (actor instanceof Pushing && actor.cooldown() == 0)
 				return true;
 		}
@@ -123,7 +123,7 @@ public class Pushing extends Actor {
 				sprite.point(end);
 				
 				killAndErase();
-				Actor.remove(Pushing.this);
+				Actor.removeActor(Pushing.this);
 				if (callback != null) callback.call();
 				GameScene.sortMobSprites();
 

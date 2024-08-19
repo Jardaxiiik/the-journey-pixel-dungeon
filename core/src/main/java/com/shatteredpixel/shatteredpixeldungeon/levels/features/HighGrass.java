@@ -55,7 +55,7 @@ public class HighGrass {
 		
 		if (freezeTrample) return;
 		
-		Character ch = Actor.findChar(pos);
+		Character ch = Actor.getCharacterOnPosition(pos);
 		
 		if (level.map[pos] == Terrain.FURROWED_GRASS){
 			if (ch instanceof Hero && ((Hero) ch).heroClass == HeroClass.HUNTRESS){
@@ -76,7 +76,7 @@ public class HighGrass {
 			int naturalismLevel = 0;
 			
 			if (ch != null) {
-				SandalsOfNature.Naturalism naturalism = ch.buff( SandalsOfNature.Naturalism.class );
+				SandalsOfNature.Naturalism naturalism = ch.getBuff( SandalsOfNature.Naturalism.class );
 				if (naturalism != null) {
 					if (!naturalism.isCursed()) {
 						naturalismLevel = naturalism.itemLevel() + 1;
@@ -106,7 +106,7 @@ public class HighGrass {
 
 						if (droppingBerry) {
 							dropped.countUp(1);
-							level.drop(new Berry(), pos).sprite.drop();
+							level.dropItemOnPosition(new Berry(), pos).sprite.drop();
 						}
 					}
 
@@ -123,12 +123,12 @@ public class HighGrass {
 			if (naturalismLevel >= 0) {
 				// Seed, scales from 1/25 to 1/9
 				if (Random.Int(25 - (naturalismLevel * 4)) == 0) {
-					level.drop(ItemGenerator.random(ItemGenerator.Category.SEED), pos).sprite.drop();
+					level.dropItemOnPosition(ItemGenerator.random(ItemGenerator.Category.SEED), pos).sprite.drop();
 				}
 				
 				// Dew, scales from 1/6 to 1/4
 				if (Random.Int(6 - naturalismLevel/2) == 0) {
-					level.drop(new Dewdrop(), pos).sprite.drop();
+					level.dropItemOnPosition(new Dewdrop(), pos).sprite.drop();
 				}
 			}
 

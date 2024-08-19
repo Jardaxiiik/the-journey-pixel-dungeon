@@ -53,10 +53,10 @@ public class ScrollOfChallenge extends ExoticScroll {
 
 		detach(curUser.belongings.backpack);
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			mob.beckon( curUser.pos );
+			mob.beckon( curUser.position);
 		}
 
-		Buff.affect(curUser, ChallengeArena.class).setup(curUser.pos);
+		Buff.affect(curUser, ChallengeArena.class).setup(curUser.position);
 
 		identify();
 		
@@ -146,7 +146,7 @@ public class ScrollOfChallenge extends ExoticScroll {
 		@Override
 		public boolean playGameTurn() {
 
-			if (!arenaPositions.contains(target.pos)){
+			if (!arenaPositions.contains(target.position)){
 				detach();
 			}
 
@@ -156,7 +156,7 @@ public class ScrollOfChallenge extends ExoticScroll {
 				detach();
 			}
 
-			spend(TICK);
+			spendTimeAdjusted(TICK);
 			return true;
 		}
 

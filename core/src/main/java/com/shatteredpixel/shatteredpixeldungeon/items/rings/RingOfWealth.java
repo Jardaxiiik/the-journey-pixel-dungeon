@@ -103,7 +103,7 @@ public class RingOfWealth extends Ring {
 
 		if (bonus <= 0) return null;
 		
-		HashSet<Wealth> buffs = target.buffs(Wealth.class);
+		HashSet<Wealth> buffs = target.getBuffs(Wealth.class);
 		float triesToDrop = Float.MIN_VALUE;
 		int dropsToEquip = Integer.MIN_VALUE;
 		
@@ -132,7 +132,7 @@ public class RingOfWealth extends Ring {
 				//A second ring of wealth can be at most +1 when calculating wealth bonus for equips
 				//This is to prevent using an upgraded wealth to farm another upgraded wealth and
 				//using the two to get substantially more upgrade value than intended
-				for (Wealth w : target.buffs(Wealth.class)){
+				for (Wealth w : target.getBuffs(Wealth.class)){
 					if (w.buffedLvl() > equipBonus){
 						equipBonus = w.buffedLvl() + Math.min(equipBonus, 2);
 					} else {

@@ -166,7 +166,7 @@ public class BuffIndicator extends Component {
 	protected void layout() {
 
 		ArrayList<Buff> newBuffs = new ArrayList<>();
-		for (Buff buff : ch.buffs()) {
+		for (Buff buff : ch.getBuffs()) {
 			if (buff.icon() != NONE) {
 				newBuffs.add(buff);
 			}

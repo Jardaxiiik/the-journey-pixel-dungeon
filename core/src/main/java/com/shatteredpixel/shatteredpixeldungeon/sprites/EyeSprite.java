@@ -103,7 +103,7 @@ public class EyeSprite extends MobSprite {
 	}
 
 	public void charge( int pos ){
-		turnTo(ch.pos, pos);
+		turnTo(ch.position, pos);
 		play(charging);
 		if (visible) Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
 	}
@@ -126,8 +126,8 @@ public class EyeSprite extends MobSprite {
 		
 		if (anim == zap) {
 			idle();
-			if (Actor.findChar(zapPos) != null){
-				parent.add(new Beam.DeathRay(center(), Actor.findChar(zapPos).sprite.center()));
+			if (Actor.getCharacterOnPosition(zapPos) != null){
+				parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(zapPos).sprite.center()));
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(zapPos)));
 			}

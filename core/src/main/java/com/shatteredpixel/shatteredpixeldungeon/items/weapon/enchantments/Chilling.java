@@ -48,7 +48,7 @@ public class Chilling extends Weapon.Enchantment {
 
 			//adds 3 turns of chill per proc, with a cap of 6 turns
 			float durationToAdd = 3f * powerMulti;
-			Chill existing = defender.buff(Chill.class);
+			Chill existing = defender.getBuff(Chill.class);
 			if (existing != null){
 				durationToAdd = Math.min(durationToAdd, (6f*powerMulti)-existing.cooldown());
 			}

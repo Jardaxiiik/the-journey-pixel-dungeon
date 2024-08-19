@@ -74,7 +74,7 @@ public class MineGiantRoom extends CaveRoom {
 
 			Point p = center();
 			CrystalSpire m = new CrystalSpire();
-			m.pos = level.pointToCell(p);
+			m.position = level.pointToCell(p);
 			level.mobs.add(m);
 			Painter.set(level, p, Terrain.EMPTY);
 
@@ -123,7 +123,7 @@ public class MineGiantRoom extends CaveRoom {
 			Painter.fill(level, centerArea, 2, Terrain.EMPTY_DECO);
 
 			GnollGeomancer g = new GnollGeomancer();
-			g.pos = level.pointToCell(center);
+			g.position = level.pointToCell(center);
 			Buff.affect(g, GnollGeomancer.RockArmor.class).setShield(50);
 			level.mobs.add(g);
 
@@ -137,7 +137,7 @@ public class MineGiantRoom extends CaveRoom {
 
 			Point p = center();
 			FungalCore m = new FungalCore();
-			m.pos = level.pointToCell(p);
+			m.position = level.pointToCell(p);
 			level.mobs.add(m);
 
 		} else {

@@ -111,7 +111,7 @@ public class Dart extends MissileWeapon {
 	}
 
 	public boolean crossbowHasEnchant( Character owner ){
-		return bow != null && bow.enchantment != null && owner.buff(MagicImmune.class) == null;
+		return bow != null && bow.enchantment != null && owner.getBuff(MagicImmune.class) == null;
 	}
 	
 	@Override
@@ -126,7 +126,7 @@ public class Dart extends MissileWeapon {
 	@Override
 	public float accuracyFactor(Character owner, Character target) {
 		//don't update xbow here, as dart is the active weapon atm
-		if (bow != null && owner.buff(Crossbow.ChargedShot.class) != null){
+		if (bow != null && owner.getBuff(Crossbow.ChargedShot.class) != null){
 			return Character.INFINITE_ACCURACY;
 		} else {
 			return super.accuracyFactor(owner, target);
@@ -167,24 +167,24 @@ public class Dart extends MissileWeapon {
 	protected void processChargedShot(Character target, int dmg ){
 		//don't update xbow here, as dart may be the active weapon atm
 		processingChargedShot = true;
-		if (chargedShotPos != -1 && bow != null && Dungeon.hero.buff(Crossbow.ChargedShot.class) != null) {
+		if (chargedShotPos != -1 && bow != null && Dungeon.hero.getBuff(Crossbow.ChargedShot.class) != null) {
 			PathFinder.buildDistanceMap(chargedShotPos, Dungeon.level.passable, 2);
 			//necessary to clone as some on-hit effects use Pathfinder
 			int[] distance = PathFinder.distance.clone();
-			for (Character ch : Actor.chars()){
+			for (Character ch : Actor.getCharacters()){
 				if (ch == target){
-					Actor.add(new Actor() {
+					Actor.addActor(new Actor() {
 						{ actPriority = VFX_PRIO; }
 						@Override
 						protected boolean playGameTurn() {
 							if (!ch.isAlive()){
 								bow.onAbilityKill(Dungeon.hero, ch);
 							}
-							Actor.remove(this);
+							Actor.removeActor(this);
 							return true;
 						}
 					});
-				} else if (distance[ch.pos] != Integer.MAX_VALUE){
+				} else if (distance[ch.position] != Integer.MAX_VALUE){
 					proc(Dungeon.hero, ch, dmg);
 				}
 			}
@@ -196,8 +196,8 @@ public class Dart extends MissileWeapon {
 	@Override
 	protected void decrementDurability() {
 		super.decrementDurability();
-		if (Dungeon.hero.buff(Crossbow.ChargedShot.class) != null) {
-			Dungeon.hero.buff(Crossbow.ChargedShot.class).detach();
+		if (Dungeon.hero.getBuff(Crossbow.ChargedShot.class) != null) {
+			Dungeon.hero.getBuff(Crossbow.ChargedShot.class).detach();
 		}
 	}
 
@@ -309,11 +309,11 @@ public class Dart extends MissileWeapon {
 						}
 						
 						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, maxToTip);
-						if (!newDart.collect()) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
+						if (!newDart.collect()) Dungeon.level.dropItemOnPosition(newDart, curUser.position).sprite.drop();
 						
-						curUser.spend( 1f );
+						curUser.spendTimeAdjusted( 1f );
 						curUser.busy();
-						curUser.sprite.operate(curUser.pos);
+						curUser.sprite.operate(curUser.position);
 						
 					} else if ((index == 1 && options.length == 3) || (index == 0 && options.length == 2)){
 						item.detach( curUser.belongings.backpack );
@@ -325,11 +325,11 @@ public class Dart extends MissileWeapon {
 						}
 						
 						TippedDart newDart = TippedDart.getTipped((Plant.Seed) item, singleSeedDarts);
-						if (!newDart.collect()) Dungeon.level.drop(newDart, curUser.pos).sprite.drop();
+						if (!newDart.collect()) Dungeon.level.dropItemOnPosition(newDart, curUser.position).sprite.drop();
 						
-						curUser.spend( 1f );
+						curUser.spendTimeAdjusted( 1f );
 						curUser.busy();
-						curUser.sprite.operate(curUser.pos);
+						curUser.sprite.operate(curUser.position);
 					}
 				}
 			});

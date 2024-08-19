@@ -62,7 +62,7 @@ public class WildMagic extends ArmorAbility {
 			return;
 		}
 
-		if (target == hero.pos){
+		if (target == hero.position){
 			GLog.w(Messages.get(this, "self_target"));
 			return;
 		}
@@ -132,7 +132,7 @@ public class WildMagic extends ArmorAbility {
 	private void zapWand( ArrayList<Wand> wands, Hero hero, int cell){
 		Wand cur = wands.remove(0);
 
-		Ballistica aim = new Ballistica(hero.pos, cell, cur.collisionProperties(cell));
+		Ballistica aim = new Ballistica(hero.position, cell, cur.collisionProperties(cell));
 
 		hero.sprite.zap(cell);
 
@@ -158,7 +158,7 @@ public class WildMagic extends ArmorAbility {
 			} else {
 				CursedWand.cursedZap(cur,
 						hero,
-						new Ballistica(hero.pos, cell, Ballistica.MAGIC_BOLT),
+						new Ballistica(hero.position, cell, Ballistica.MAGIC_BOLT),
 						new Callback() {
 							@Override
 							public void call() {
@@ -191,9 +191,9 @@ public class WildMagic extends ArmorAbility {
 			wildMagicActor = null;
 		}
 
-		Character ch = Actor.findChar(target);
+		Character ch = Actor.getCharacterOnPosition(target);
 		if (!wands.isEmpty() && hero.isAlive()) {
-			Actor.add(new Actor() {
+			Actor.addActor(new Actor() {
 				{
 					actPriority = VFX_PRIO-1;
 				}
@@ -201,15 +201,15 @@ public class WildMagic extends ArmorAbility {
 				@Override
 				protected boolean playGameTurn() {
 					wildMagicActor = this;
-					zapWand(wands, hero, ch == null ? target : ch.pos);
-					Actor.remove(this);
+					zapWand(wands, hero, ch == null ? target : ch.position);
+					Actor.removeActor(this);
 					return false;
 				}
 			});
 			hero.next();
 		} else {
-			if (hero.buff(WildMagicTracker.class) != null) {
-				hero.buff(WildMagicTracker.class).detach();
+			if (hero.getBuff(WildMagicTracker.class) != null) {
+				hero.getBuff(WildMagicTracker.class).detach();
 			}
 			Item.updateQuickslot();
 			Invisibility.dispel();

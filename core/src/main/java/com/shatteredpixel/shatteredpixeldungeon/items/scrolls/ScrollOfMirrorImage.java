@@ -65,8 +65,8 @@ public class ScrollOfMirrorImage extends Scroll {
 		ArrayList<Integer> respawnPoints = new ArrayList<>();
 		
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-			int p = hero.pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.findChar( p ) == null && Dungeon.level.passable[p]) {
+			int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
+			if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 				respawnPoints.add( p );
 			}
 		}

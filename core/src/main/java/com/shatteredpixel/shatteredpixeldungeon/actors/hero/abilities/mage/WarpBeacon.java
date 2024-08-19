@@ -62,7 +62,7 @@ public class WarpBeacon extends ArmorAbility {
 
 	@Override
 	public String targetingPrompt() {
-		if (Dungeon.hero.buff(WarpBeaconTracker.class) == null
+		if (Dungeon.hero.getBuff(WarpBeaconTracker.class) == null
 				&& Dungeon.hero.hasTalent(Talent.REMOTE_BEACON)){
 			return Messages.get(this, "prompt");
 		}
@@ -80,8 +80,8 @@ public class WarpBeacon extends ArmorAbility {
 			return;
 		}
 
-		if (hero.buff(WarpBeaconTracker.class) != null){
-			final WarpBeaconTracker tracker = hero.buff(WarpBeaconTracker.class);
+		if (hero.getBuff(WarpBeaconTracker.class) != null){
+			final WarpBeaconTracker tracker = hero.getBuff(WarpBeaconTracker.class);
 
 			GameScene.show( new WndOptions(
 					new Image(hero.sprite),
@@ -115,31 +115,31 @@ public class WarpBeacon extends ArmorAbility {
 						armor.updateQuickslot();
 
 						if (tracker.depth == Dungeon.depth && tracker.branch == Dungeon.branch){
-							Character existing = Actor.findChar(tracker.pos);
+							Character existing = Actor.getCharacterOnPosition(tracker.pos);
 
 							if (existing != null && existing != hero){
 								if (hero.hasTalent(Talent.TELEFRAG)){
-									int heroHP = hero.healthPoints + hero.shielding();
+									int heroHP = hero.healthPoints + hero.getShielding();
 									int heroDmg = 5 * hero.pointsInTalent(Talent.TELEFRAG);
-									hero.damage(Math.min(heroDmg, heroHP-1), WarpBeacon.this);
+									hero.receiveDamageFromSource(Math.min(heroDmg, heroHP-1), WarpBeacon.this);
 
 									int damage = Random.NormalIntRange(10*hero.pointsInTalent(Talent.TELEFRAG), 15*hero.pointsInTalent(Talent.TELEFRAG));
 									existing.sprite.flash();
 									existing.sprite.bloodBurstA(existing.sprite.center(), damage);
-									existing.damage(damage, WarpBeacon.this);
+									existing.receiveDamageFromSource(damage, WarpBeacon.this);
 
 									Sample.INSTANCE.play(Assets.Sounds.HIT_CRUSH);
 									Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								}
 
 								if (existing.isAlive()){
-									Character toPush = Character.hasProp(existing, Character.Property.IMMOVABLE) ? hero : existing;
+									Character toPush = Character.hasProperty(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 									ArrayList<Integer> candidates = new ArrayList<>();
 									for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 										int cell = tracker.pos + n;
-										if (!Dungeon.level.solid[cell] && Actor.findChar( cell ) == null
-												&& (!Character.hasProp(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
+										if (!Dungeon.level.solid[cell] && Actor.getCharacterOnPosition( cell ) == null
+												&& (!Character.hasProperty(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 											candidates.add( cell );
 										}
 									}
@@ -147,9 +147,9 @@ public class WarpBeacon extends ArmorAbility {
 
 									if (!candidates.isEmpty()){
 										ScrollOfTeleportation.appear(hero, tracker.pos);
-										Actor.add( new Pushing( toPush, toPush.pos, candidates.get(0) ));
+										Actor.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ));
 
-										toPush.pos = candidates.get(0);
+										toPush.position = candidates.get(0);
 										Dungeon.level.occupyCell(toPush);
 										hero.next();
 									} else {
@@ -186,7 +186,7 @@ public class WarpBeacon extends ArmorAbility {
 						}
 
 					} else if (index == 1){
-						hero.buff(WarpBeaconTracker.class).detach();
+						hero.getBuff(WarpBeaconTracker.class).detach();
 					}
 				}
 			} );
@@ -196,7 +196,7 @@ public class WarpBeacon extends ArmorAbility {
 				return;
 			}
 
-			if (Dungeon.level.distance(hero.pos, target) > 4*hero.pointsInTalent(Talent.REMOTE_BEACON)){
+			if (Dungeon.level.distance(hero.position, target) > 4*hero.pointsInTalent(Talent.REMOTE_BEACON)){
 				GLog.w( Messages.get(WarpBeacon.class, "too_far") );
 				return;
 			}
@@ -205,7 +205,7 @@ public class WarpBeacon extends ArmorAbility {
 			if (Dungeon.level.pit[target] ||
 					(Dungeon.level.solid[target] && !Dungeon.level.passable[target]) ||
 					!(Dungeon.level.passable[target] || Dungeon.level.avoid[target]) ||
-					PathFinder.distance[hero.pos] == Integer.MAX_VALUE){
+					PathFinder.distance[hero.position] == Integer.MAX_VALUE){
 				GLog.w( Messages.get(WarpBeacon.class, "invalid_beacon") );
 				return;
 			}

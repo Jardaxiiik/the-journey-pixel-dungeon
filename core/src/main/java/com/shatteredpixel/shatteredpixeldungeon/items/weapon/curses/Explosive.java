@@ -66,14 +66,14 @@ public class Explosive extends Weapon.Enchantment {
 			// this will be the attacker's position if they are adjacent
 			int explosionPos = -1;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (!Dungeon.level.solid[defender.pos+i] &&
+				if (!Dungeon.level.solid[defender.position +i] &&
 						(explosionPos == -1 ||
-						Dungeon.level.trueDistance(attacker.pos, defender.pos+i) < Dungeon.level.trueDistance(attacker.pos, explosionPos))){
-					explosionPos = defender.pos+i;
+						Dungeon.level.trueDistance(attacker.position, defender.position +i) < Dungeon.level.trueDistance(attacker.position, explosionPos))){
+					explosionPos = defender.position +i;
 				}
 			}
 			if (explosionPos == -1) {
-				explosionPos = defender.pos;
+				explosionPos = defender.position;
 			}
 
 			new Bomb.ConjuredBomb().explode(explosionPos);

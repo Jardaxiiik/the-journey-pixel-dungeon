@@ -55,7 +55,7 @@ public class HolyBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Character ch = Actor.findChar(i);
+				Character ch = Actor.getCharacterOnPosition(i);
 				if (ch != null) {
 					affected.add(ch);
 					
@@ -64,12 +64,12 @@ public class HolyBomb extends Bomb {
 		}
 		
 		for (Character ch : affected){
-			if (ch.properties().contains(Character.Property.UNDEAD) || ch.properties().contains(Character.Property.DEMONIC)){
+			if (ch.getProperties().contains(Character.Property.UNDEAD) || ch.getProperties().contains(Character.Property.DEMONIC)){
 				ch.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 				
 				//bomb deals an additional 50% damage to unholy enemies in a 5x5 range
 				int damage = Math.round(Random.NormalIntRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ) * 0.5f);
-				ch.damage(damage, new HolyDamage());
+				ch.receiveDamageFromSource(damage, new HolyDamage());
 			}
 		}
 		

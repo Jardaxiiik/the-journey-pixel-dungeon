@@ -59,8 +59,8 @@ public class Dread extends Buff {
 	@Override
 	public boolean playGameTurn() {
 
-		if (!Dungeon.level.heroFOV[target.pos]
-				&& Dungeon.level.distance(target.pos, Dungeon.hero.pos) >= 6) {
+		if (!Dungeon.level.heroFOV[target.position]
+				&& Dungeon.level.distance(target.position, Dungeon.hero.position) >= 6) {
 			if (target instanceof Mob){
 				((Mob) target).EXP /= 2;
 			}
@@ -74,7 +74,7 @@ public class Dread extends Buff {
 			}
 		}
 
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		return true;
 	}
 

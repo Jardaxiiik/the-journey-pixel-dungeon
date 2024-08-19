@@ -104,7 +104,7 @@ public class DM300Sprite extends MobSprite {
 	}
 
 	public void slam( int cell ){
-		turnTo( ch.pos , cell );
+		turnTo( ch.position, cell );
 		play( slam );
 		Sample.INSTANCE.play( Assets.Sounds.ROCKS );
 		PixelScene.shake( 3, 0.7f );

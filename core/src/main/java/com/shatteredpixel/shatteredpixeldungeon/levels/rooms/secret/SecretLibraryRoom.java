@@ -93,7 +93,7 @@ public class SecretLibraryRoom extends SecretRoom {
 			
 			Class<?extends Scroll> scrollCls = Random.chances(chances);
 			chances.put(scrollCls, 0f);
-			level.drop( Reflection.newInstance(scrollCls), pos );
+			level.dropItemOnPosition( Reflection.newInstance(scrollCls), pos );
 		}
 	}
 	

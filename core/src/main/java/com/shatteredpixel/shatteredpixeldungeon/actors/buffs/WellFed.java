@@ -57,7 +57,7 @@ public class WellFed extends Buff {
 			}
 		}
 		
-		spend(TICK);
+		spendTimeAdjusted(TICK);
 		return true;
 	}
 	

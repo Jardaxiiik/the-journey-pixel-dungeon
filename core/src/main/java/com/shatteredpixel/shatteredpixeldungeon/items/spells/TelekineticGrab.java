@@ -57,28 +57,28 @@ public class TelekineticGrab extends TargetedSpell {
 
 	@Override
 	protected void affectTarget(Ballistica bolt, Hero hero) {
-		Character ch = Actor.findChar(bolt.collisionPos);
+		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 
 		//special logic for DK when he is on his throne
 		if (ch == null && bolt.path.size() > bolt.dist+1){
-			ch = Actor.findChar(bolt.path.get(bolt.dist+1));
-			if (!(ch instanceof DwarfKing && Dungeon.level.solid[ch.pos])){
+			ch = Actor.getCharacterOnPosition(bolt.path.get(bolt.dist+1));
+			if (!(ch instanceof DwarfKing && Dungeon.level.solid[ch.position])){
 				ch = null;
 			}
 		}
 
-		if (ch != null && ch.buff(PinCushion.class) != null){
+		if (ch != null && ch.getBuff(PinCushion.class) != null){
 
-			while (ch.buff(PinCushion.class) != null) {
-				Item item = ch.buff(PinCushion.class).grabOne();
+			while (ch.getBuff(PinCushion.class) != null) {
+				Item item = ch.getBuff(PinCushion.class).grabOne();
 
-				if (item.doPickUp(hero, ch.pos)) {
-					hero.spend(-Item.TIME_TO_PICK_UP); //casting the spell already takes a turn
+				if (item.doPickUp(hero, ch.position)) {
+					hero.spendTimeAdjusted(-Item.TIME_TO_PICK_UP); //casting the spell already takes a turn
 					GLog.i( Messages.capitalize(Messages.get(hero, "you_now_have", item.name())) );
 
 				} else {
 					GLog.w(Messages.get(this, "cant_grab"));
-					Dungeon.level.drop(item, ch.pos).sprite.drop();
+					Dungeon.level.dropItemOnPosition(item, ch.position).sprite.drop();
 					return;
 				}
 
@@ -98,7 +98,7 @@ public class TelekineticGrab extends TargetedSpell {
 				Item item = h.peek();
 				if (item.doPickUp(hero, h.pos)) {
 					h.pickUp();
-					hero.spend(-Item.TIME_TO_PICK_UP); //casting the spell already takes a turn
+					hero.spendTimeAdjusted(-Item.TIME_TO_PICK_UP); //casting the spell already takes a turn
 					GLog.i( Messages.capitalize(Messages.get(hero, "you_now_have", item.name())) );
 
 				} else {

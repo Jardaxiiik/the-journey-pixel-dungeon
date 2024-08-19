@@ -297,25 +297,25 @@ public class Ring extends KindofMisc {
 	@Override
 	public int buffedLvl() {
 		int lvl = super.buffedLvl();
-		if (Dungeon.hero.buff(EnhancedRings.class) != null){
+		if (Dungeon.hero.getBuff(EnhancedRings.class) != null){
 			lvl++;
 		}
 		return lvl;
 	}
 
 	public static int getBonus(Character target, Class<?extends RingBuff> type){
-		if (target.buff(MagicImmune.class) != null) return 0;
+		if (target.getBuff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
-		for (RingBuff buff : target.buffs(type)) {
+		for (RingBuff buff : target.getBuffs(type)) {
 			bonus += buff.level();
 		}
 		return bonus;
 	}
 
 	public static int getBuffedBonus(Character target, Class<?extends RingBuff> type){
-		if (target.buff(MagicImmune.class) != null) return 0;
+		if (target.getBuff(MagicImmune.class) != null) return 0;
 		int bonus = 0;
-		for (RingBuff buff : target.buffs(type)) {
+		for (RingBuff buff : target.getBuffs(type)) {
 			bonus += buff.buffedLvl();
 		}
 		return bonus;
@@ -370,7 +370,7 @@ public class Ring extends KindofMisc {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spend(TICK);
+					spendTimeAdjusted(TICK);
 				}
 				return true;
 			}
@@ -379,7 +379,7 @@ public class Ring extends KindofMisc {
 
 		@Override
 		public boolean playGameTurn() {
-			spend( TICK );
+			spendTimeAdjusted( TICK );
 			return true;
 		}
 

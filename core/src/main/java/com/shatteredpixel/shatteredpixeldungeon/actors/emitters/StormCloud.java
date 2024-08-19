@@ -47,11 +47,11 @@ public class StormCloud extends Emitter {
 					}
 
 					//fiery enemies take damage as if they are in toxic gas
-					Character ch = Actor.findChar(cell);
+					Character ch = Actor.getCharacterOnPosition(cell);
 					if (ch != null
-							&& !ch.isImmune(getClass())
-							&& Character.hasProp(ch, Character.Property.FIERY)){
-						ch.damage(1 + Dungeon.scalingDepth()/5, this);
+							&& !ch.isImmuneToEffectType(getClass())
+							&& Character.hasProperty(ch, Character.Property.FIERY)){
+						ch.receiveDamageFromSource(1 + Dungeon.scalingDepth()/5, this);
 					}
 				}
 			}

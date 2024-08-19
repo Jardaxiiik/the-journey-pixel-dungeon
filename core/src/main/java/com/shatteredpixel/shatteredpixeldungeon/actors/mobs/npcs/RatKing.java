@@ -45,12 +45,12 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-	public int defenseSkill( Character enemy ) {
+	public int getEvasionAgainstAttacker(Character enemy ) {
 		return INFINITE_EVASION;
 	}
 	
 	@Override
-	public float speed() {
+	public float getSpeed() {
 		return 2f;
 	}
 	
@@ -60,12 +60,12 @@ public class RatKing extends NPC {
 	}
 
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		//do nothing
 	}
 
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		return false;
 	}
 	
@@ -87,14 +87,14 @@ public class RatKing extends NPC {
 	@Override
 	protected boolean playGameTurn() {
 		if (Dungeon.depth < 5){
-			if (pos == Dungeon.level.exit()){
+			if (position == Dungeon.level.exit()){
 				destroy();
 				sprite.killAndErase();
 			} else {
 				target = Dungeon.level.exit();
 			}
 		} else if (Dungeon.depth > 5){
-			if (pos == Dungeon.level.entrance()){
+			if (position == Dungeon.level.entrance()){
 				destroy();
 				sprite.killAndErase();
 			} else {
@@ -108,7 +108,7 @@ public class RatKing extends NPC {
 
 	@Override
 	public boolean interact(Character c) {
-		sprite.turnTo( pos, c.pos );
+		sprite.turnTo(position, c.position);
 
 		if (c != Dungeon.hero){
 			return super.interact(c);
@@ -129,7 +129,7 @@ public class RatKing extends NPC {
 					public void call() {
 						GameScene.show(new WndOptions(
 								sprite(),
-								Messages.titleCase(name()),
+								Messages.titleCase(getName()),
 								Messages.get(RatKing.class, "crown_desc"),
 								Messages.get(RatKing.class, "crown_yes"),
 								Messages.get(RatKing.class, "crown_info"),
@@ -160,11 +160,11 @@ public class RatKing extends NPC {
 	}
 	
 	@Override
-	public String description() {
+	public String getDescription() {
 		if (Holiday.getCurrentHoliday() == Holiday.WINTER_HOLIDAYS){
 			return Messages.get(this, "desc_festive");
 		} else {
-			return super.description();
+			return super.getDescription();
 		}
 	}
 }

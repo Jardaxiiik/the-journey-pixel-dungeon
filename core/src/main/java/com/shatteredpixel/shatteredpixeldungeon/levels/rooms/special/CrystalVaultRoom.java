@@ -69,11 +69,11 @@ public class CrystalVaultRoom extends SpecialRoom {
 			i2Pos = c + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[(neighbourIdx+4)%8];
 		} while (level.adjacent(i1Pos, doorPos) || level.adjacent(i2Pos, doorPos));
 
-		level.drop( i1, i1Pos ).type = Heap.Type.CRYSTAL_CHEST;
+		level.dropItemOnPosition( i1, i1Pos ).type = Heap.Type.CRYSTAL_CHEST;
 		if (Random.Int(10) == 0){
 			level.mobs.add(Mimic.spawnAt(i2Pos, CrystalMimic.class, i2));
 		} else {
-			level.drop(i2, i2Pos).type = Heap.Type.CRYSTAL_CHEST;
+			level.dropItemOnPosition(i2, i2Pos).type = Heap.Type.CRYSTAL_CHEST;
 		}
 		Painter.set(level, i1Pos, Terrain.PEDESTAL);
 		Painter.set(level, i2Pos, Terrain.PEDESTAL);

@@ -71,7 +71,7 @@ public class Shopkeeper extends NPC {
 	@Override
 	protected boolean playGameTurn() {
 
-		if (Dungeon.level.visited[pos]){
+		if (Dungeon.level.visited[position]){
 			Notes.add(Notes.Landmark.SHOP);
 		}
 
@@ -79,18 +79,18 @@ public class Shopkeeper extends NPC {
 			turnsSinceHarmed ++;
 		}
 
-		sprite.turnTo( pos, Dungeon.hero.pos );
-		spend( TICK );
+		sprite.turnTo(position, Dungeon.hero.position);
+		spendTimeAdjusted( TICK );
 		return super.playGameTurn();
 	}
 	
 	@Override
-	public void damage( int dmg, Object src ) {
+	public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 		processHarm();
 	}
 	
 	@Override
-	public boolean add( Buff buff ) {
+	public boolean addBuff(Buff buff ) {
 		if (buff.type == Buff.buffType.NEGATIVE){
 			processHarm();
 		}
@@ -100,7 +100,7 @@ public class Shopkeeper extends NPC {
 	public void processHarm(){
 
 		//do nothing if the shopkeeper is out of the hero's FOV
-		if (!Dungeon.level.heroFOV[pos]){
+		if (!Dungeon.level.heroFOV[position]){
 			return;
 		}
 
@@ -117,7 +117,7 @@ public class Shopkeeper extends NPC {
 				}
 			}
 
-			PathFinder.buildDistanceMap( pos, BArray.not( Dungeon.level.solid, null ), 4 );
+			PathFinder.buildDistanceMap(position, BArray.not( Dungeon.level.solid, null ), 4 );
 
 			for (int i=0; i < Dungeon.level.length(); i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE) {
@@ -151,7 +151,7 @@ public class Shopkeeper extends NPC {
 
 		if (sprite != null) {
 			sprite.killAndErase();
-			CellEmitter.get(pos).burst(ElmoParticle.FACTORY, 6);
+			CellEmitter.get(position).burst(ElmoParticle.FACTORY, 6);
 		}
 	}
 	
@@ -232,21 +232,21 @@ public class Shopkeeper extends NPC {
 					if (options[i].length() > 26) options[i] = options[i].substring(0, 23) + "...";
 					i++;
 				}
-				GameScene.show(new WndOptions(sprite(), Messages.titleCase(name()), description(), options){
+				GameScene.show(new WndOptions(sprite(), Messages.titleCase(getName()), getDescription(), options){
 					@Override
 					protected void onSelect(int index) {
 						super.onSelect(index);
 						if (index == 0){
 							sell();
 						} else if (index == 1){
-							GameScene.show(new WndTitledMessage(sprite(), Messages.titleCase(name()), chatText()));
+							GameScene.show(new WndTitledMessage(sprite(), Messages.titleCase(getName()), chatText()));
 						} else if (index > 1){
 							GLog.i(Messages.get(Shopkeeper.this, "buyback"));
 							Item returned = buybackItems.remove(index-2);
 							Dungeon.gold -= returned.value();
 							Statistics.goldCollected -= returned.value();
 							if (!returned.doPickUp(Dungeon.hero)){
-								Dungeon.level.drop(returned, Dungeon.hero.pos);
+								Dungeon.level.dropItemOnPosition(returned, Dungeon.hero.position);
 							}
 						}
 					}
@@ -279,7 +279,7 @@ public class Shopkeeper extends NPC {
 	}
 
 	public String chatText(){
-		if (Dungeon.hero.buff(AscensionChallenge.class) != null){
+		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			return Messages.get(this, "talk_ascent");
 		}
 		switch (Dungeon.depth){

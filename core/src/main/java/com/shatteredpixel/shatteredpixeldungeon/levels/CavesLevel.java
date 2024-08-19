@@ -119,7 +119,7 @@ public class CavesLevel extends RegularLevel {
 				&& (!Blacksmith.Quest.given() || Blacksmith.Quest.oldQuestMineBlocked() || Blacksmith.Quest.completed() || !Blacksmith.Quest.started())) {
 
 			Blacksmith smith = null;
-			for (Character c : Actor.chars()){
+			for (Character c : Actor.getCharacters()){
 				if (c instanceof Blacksmith){
 					smith = (Blacksmith) c;
 					break;

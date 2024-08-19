@@ -42,8 +42,8 @@ public class ConfusionGas extends Emitter {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0 && (ch = Actor.findChar( cell )) != null) {
-					if (!ch.isImmune(this.getClass())) {
+				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
+					if (!ch.isImmuneToEffectType(this.getClass())) {
 						Buff.prolong(ch, Vertigo.class, 2);
 					}
 				}
