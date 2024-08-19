@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Freezing extends actorLoop {
+public class Freezing extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

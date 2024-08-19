@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
@@ -209,7 +209,7 @@ public class ElementalBlast extends ArmorAbility {
 							//*** Wand of Lightning ***
 							if (finalWandCls == WandOfLightning.class){
 								if (Dungeon.level.water[cell]){
-									GameScene.add( actorLoop.seed( cell, 4, Electricity.class ) );
+									GameScene.add( ActorLoop.seed( cell, 4, Electricity.class ) );
 								}
 
 							//*** Wand of Fireblast ***
@@ -222,7 +222,7 @@ public class ElementalBlast extends ArmorAbility {
 									freeze.clear(cell);
 								}
 								if (Dungeon.level.flamable[cell]){
-									GameScene.add( actorLoop.seed( cell, 4, Fire.class ) );
+									GameScene.add( ActorLoop.seed( cell, 4, Fire.class ) );
 								}
 
 							//*** Wand of Frost ***

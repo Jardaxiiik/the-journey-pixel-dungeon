@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 
-public class Alchemy extends actorLoop {
+public class Alchemy extends ActorLoop {
 
 	protected int pos;
 	

@@ -22,16 +22,16 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
 
 public class BlobEmitter extends com.watabou.noosa.particles.Emitter {
 	
-	private actorLoop actorLoop;
+	private ActorLoop actorLoop;
 	
-	public BlobEmitter( actorLoop actorLoop) {
+	public BlobEmitter( ActorLoop actorLoop) {
 		
 		super();
 		

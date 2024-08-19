@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.watabou.utils.Bundlable;
@@ -197,7 +197,7 @@ public abstract class Actor implements Bundlable {
 			mob.restoreEnemy();
 		}
 		
-		for (actorLoop actorLoop : Dungeon.level.blobs.values()) {
+		for (ActorLoop actorLoop : Dungeon.level.blobs.values()) {
 			addActor(actorLoop);
 		}
 		

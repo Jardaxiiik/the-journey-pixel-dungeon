@@ -24,8 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Blizzard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -68,7 +68,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		if (door.x == left || door.x == right){
 			firePos.y = top+1;
 			while (firePos.y != bottom){
-				actorLoop.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
+				ActorLoop.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
 				Painter.set(level, firePos, Terrain.EMPTY_SP);
 				firePos.y++;
 			}
@@ -80,7 +80,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		} else {
 			firePos.x = left+1;
 			while (firePos.x != right){
-				actorLoop.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
+				ActorLoop.seed(level.pointToCell(firePos), 1, EternalFire.class, level);
 				Painter.set(level, firePos, Terrain.EMPTY_SP);
 				firePos.x++;
 			}
@@ -136,7 +136,7 @@ public class MagicalFireRoom extends SpecialRoom {
 
 	@Override
 	public boolean canPlaceCharacter(Point p, Level l) {
-		actorLoop fire = l.blobs.get(EternalFire.class);
+		ActorLoop fire = l.blobs.get(EternalFire.class);
 
 		//disallow placing on special tiles or next to fire if fire is present.
 		//note that this is slightly brittle, assumes the fire is either all there or totally gone
@@ -153,7 +153,7 @@ public class MagicalFireRoom extends SpecialRoom {
 		return super.canPlaceCharacter(p, l);
 	}
 
-	public static class EternalFire extends actorLoop {
+	public static class EternalFire extends ActorLoop {
 
 		@Override
 		protected void evolve() {
@@ -211,7 +211,7 @@ public class MagicalFireRoom extends SpecialRoom {
 
 						//spread fire to nearby flammable cells
 						if (Dungeon.level.flamable[cell] && (fire == null || fire.volume == 0 || fire.cur[cell] == 0)){
-							GameScene.add(actorLoop.seed(cell, 4, Fire.class));
+							GameScene.add(ActorLoop.seed(cell, 4, Fire.class));
 						}
 
 						//ignite adjacent chars

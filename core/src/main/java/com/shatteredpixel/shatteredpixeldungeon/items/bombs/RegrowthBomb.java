@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
@@ -78,7 +78,7 @@ public class RegrowthBomb extends Bomb {
 						&& Dungeon.level.plants.get(i) == null){
 					plantCandidates.add(i);
 				}
-				GameScene.add( actorLoop.seed( i, 10, Regrowth.class ) );
+				GameScene.add( ActorLoop.seed( i, 10, Regrowth.class ) );
 			}
 		}
 

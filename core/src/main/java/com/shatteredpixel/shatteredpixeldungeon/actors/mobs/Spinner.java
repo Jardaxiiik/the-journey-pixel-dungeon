@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -205,7 +205,7 @@ public class Spinner extends Mob {
 	}
 
 	protected void applyWebToCell(int cell){
-		GameScene.add(actorLoop.seed(cell, 20, Web.class));
+		GameScene.add(ActorLoop.seed(cell, 20, Web.class));
 	}
 	
 	private int left(int direction){

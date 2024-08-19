@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Regrowth extends actorLoop {
+public class Regrowth extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

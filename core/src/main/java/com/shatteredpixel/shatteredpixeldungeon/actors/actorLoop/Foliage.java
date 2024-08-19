@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Foliage extends actorLoop {
+public class Foliage extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

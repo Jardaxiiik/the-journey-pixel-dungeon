@@ -29,7 +29,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Rect;
 import com.watabou.utils.Reflection;
 
-public class actorLoop extends Actor {
+public class ActorLoop extends Actor {
 
 	{
 		actPriority = BLOB_PRIO;
@@ -227,12 +227,12 @@ public class actorLoop extends Actor {
 		return null;
 	}
 	
-	public static<T extends actorLoop> T seed(int cell, int amount, Class<T> type ) {
+	public static<T extends ActorLoop> T seed(int cell, int amount, Class<T> type ) {
 		return seed(cell, amount, type, Dungeon.level);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static<T extends actorLoop> T seed(int cell, int amount, Class<T> type, Level level ) {
+	public static<T extends ActorLoop> T seed(int cell, int amount, Class<T> type, Level level ) {
 		
 		T gas = (T)level.blobs.get( type );
 		
@@ -252,8 +252,8 @@ public class actorLoop extends Actor {
 		return gas;
 	}
 
-	public static int volumeAt( int cell, Class<? extends actorLoop> type){
-		actorLoop gas = Dungeon.level.blobs.get( type );
+	public static int volumeAt( int cell, Class<? extends ActorLoop> type){
+		ActorLoop gas = Dungeon.level.blobs.get( type );
 		if (gas == null || gas.volume == 0) {
 			return 0;
 		} else {

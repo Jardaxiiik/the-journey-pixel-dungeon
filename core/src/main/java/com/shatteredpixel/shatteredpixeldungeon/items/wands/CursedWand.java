@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ConfusionGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ParalyticGas;
@@ -140,7 +140,7 @@ public class CursedWand {
 
 			//spawns some regrowth
 			case 1:
-				GameScene.add( actorLoop.seed(targetPos, 30, Regrowth.class));
+				GameScene.add( ActorLoop.seed(targetPos, 30, Regrowth.class));
 				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				return true;
 
@@ -169,13 +169,13 @@ public class CursedWand {
 				tryForWandProc(Actor.getCharacterOnPosition(targetPos), origin);
 				switch (Random.Int(3)) {
 					case 0: default:
-						GameScene.add( actorLoop.seed( targetPos, 800, ConfusionGas.class ) );
+						GameScene.add( ActorLoop.seed( targetPos, 800, ConfusionGas.class ) );
 						return true;
 					case 1:
-						GameScene.add( actorLoop.seed( targetPos, 500, ToxicGas.class ) );
+						GameScene.add( ActorLoop.seed( targetPos, 500, ToxicGas.class ) );
 						return true;
 					case 2:
-						GameScene.add( actorLoop.seed( targetPos, 200, ParalyticGas.class ) );
+						GameScene.add( ActorLoop.seed( targetPos, 200, ParalyticGas.class ) );
 						return true;
 				}
 		}
@@ -330,10 +330,10 @@ public class CursedWand {
 			//great forest fire!
 			case 0: default:
 				for (int i = 0; i < Dungeon.level.length(); i++){
-					GameScene.add( actorLoop.seed(i, 15, Regrowth.class));
+					GameScene.add( ActorLoop.seed(i, 15, Regrowth.class));
 				}
 				do {
-					GameScene.add(actorLoop.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
+					GameScene.add(ActorLoop.seed(Dungeon.level.randomDestination(null), 10, Fire.class));
 				} while (Random.Int(5) != 0);
 				new Flare(8, 32).color(0xFFFF66, true).show(user.sprite, 2f);
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);

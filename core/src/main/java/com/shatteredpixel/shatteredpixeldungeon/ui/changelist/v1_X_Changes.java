@@ -626,7 +626,7 @@ public class v1_X_Changes {
 				"v1.2.0 is mostly about alchemy buffs, but a few alchemy items have had their power reduced as well:\n\n" +
 				"_- Magical Infusion_ energy cost up to 4 from 3\n" +
 				"_- Holy Bomb_ bonus damage reduced to 50% from 67%\n" +
-				"_- Goo actorLoop and Metal Shard_ energy value reduced to 3\n" +
+				"_- Goo ActorLoop and Metal Shard_ energy value reduced to 3\n" +
 				"_- Alchemize_ quantity in shops reduced by 1\n\n" +
 				"While not a direct alchemy item nerf, I've also made some of the final bosses' fists less susceptible to certain mechanics:\n" +
 				"_- Soiled Fist_ is now immune to burning, but the grass it generates still burns\n" +

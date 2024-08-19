@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class ConfusionGas extends actorLoop {
+public class ConfusionGas extends ActorLoop {
 
 	@Override
 	protected void evolve() {

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -49,7 +49,7 @@ public class PotionOfFrost extends Potion {
 		for (int offset : PathFinder.OFFSETS_NEIGHBOURS9){
 			if (!Dungeon.level.solid[cell+offset]) {
 				
-				GameScene.add(actorLoop.seed(cell + offset, 10, Freezing.class));
+				GameScene.add(ActorLoop.seed(cell + offset, 10, Freezing.class));
 				
 			}
 		}

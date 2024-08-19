@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM300;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
@@ -379,7 +379,7 @@ public class CavesBossLevel extends Level {
 
 		for( int i = (mainArena.top-1)*width; i <length; i++){
 			if (map[i] == Terrain.INACTIVE_TRAP || map[i] == Terrain.WATER || map[i] == Terrain.CUSTOM_DECO){
-				GameScene.add(actorLoop.seed(i, 1, PylonEnergy.class));
+				GameScene.add(ActorLoop.seed(i, 1, PylonEnergy.class));
 			}
 		}
 
@@ -806,7 +806,7 @@ public class CavesBossLevel extends Level {
 		}
 	}
 
-	public static class PylonEnergy extends actorLoop {
+	public static class PylonEnergy extends ActorLoop {
 
 		@Override
 		protected void evolve() {

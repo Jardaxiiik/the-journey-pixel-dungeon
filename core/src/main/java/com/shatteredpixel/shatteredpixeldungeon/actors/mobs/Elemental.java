@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -338,9 +338,9 @@ public abstract class Elemental extends Mob {
 					if (!Dungeon.level.solid[targetingPos + i]) {
 						CellEmitter.get(targetingPos + i).burst(ElmoParticle.FACTORY, 5);
 						if (Dungeon.level.water[targetingPos + i]) {
-							GameScene.add(actorLoop.seed(targetingPos + i, 2, Fire.class));
+							GameScene.add(ActorLoop.seed(targetingPos + i, 2, Fire.class));
 						} else {
-							GameScene.add(actorLoop.seed(targetingPos + i, 8, Fire.class));
+							GameScene.add(ActorLoop.seed(targetingPos + i, 8, Fire.class));
 						}
 
 						Character target = Actor.getCharacterOnPosition(targetingPos + i);

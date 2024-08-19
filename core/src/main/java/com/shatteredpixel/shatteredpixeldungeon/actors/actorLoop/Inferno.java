@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
-public class Inferno extends actorLoop {
+public class Inferno extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

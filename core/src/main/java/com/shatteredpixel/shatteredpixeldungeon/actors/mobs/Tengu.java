@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -789,7 +789,7 @@ public class Tengu extends Mob {
 				curCells = new int[toCells.size()];
 				int i = 0;
 				for (Integer c : toCells){
-					GameScene.add(actorLoop.seed(c, 2, FireActorLoop.class));
+					GameScene.add(ActorLoop.seed(c, 2, FireActorLoop.class));
 					curCells[i] = c;
 					i++;
 				}
@@ -836,7 +836,7 @@ public class Tengu extends Mob {
 			if (bundle.contains( CUR_CELLS )) curCells = bundle.getIntArray( CUR_CELLS );
 		}
 		
-		public static class FireActorLoop extends actorLoop {
+		public static class FireActorLoop extends ActorLoop {
 			
 			{
 				actPriority = BUFF_PRIO - 1;
@@ -1006,10 +1006,10 @@ public class Tengu extends Mob {
 		}
 		
 		private void spreadblob(){
-			GameScene.add(actorLoop.seed(shockerPos, 1, ShockerActorLoop.class));
+			GameScene.add(ActorLoop.seed(shockerPos, 1, ShockerActorLoop.class));
 			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i += 2){
 				if (!Dungeon.level.solid[shockerPos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]]) {
-					GameScene.add(actorLoop.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerActorLoop.class));
+					GameScene.add(ActorLoop.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerActorLoop.class));
 				}
 			}
 		}
@@ -1031,7 +1031,7 @@ public class Tengu extends Mob {
 			if (bundle.contains(SHOCKING_ORDINALS)) shockingOrdinals = bundle.getBoolean( SHOCKING_ORDINALS );
 		}
 		
-		public static class ShockerActorLoop extends actorLoop {
+		public static class ShockerActorLoop extends ActorLoop {
 			
 			{
 				actPriority = BUFF_PRIO - 1;

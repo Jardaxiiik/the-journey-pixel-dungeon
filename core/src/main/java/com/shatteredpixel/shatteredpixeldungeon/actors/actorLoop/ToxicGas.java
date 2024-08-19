@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
-public class ToxicGas extends actorLoop implements Hero.Doom {
+public class ToxicGas extends ActorLoop implements Hero.Doom {
 
 	@Override
 	protected void evolve() {

@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
 
-public class CorrosiveGas extends actorLoop {
+public class CorrosiveGas extends ActorLoop {
 
 	//FIXME should have strength per-cell
 	private int strength = 0;

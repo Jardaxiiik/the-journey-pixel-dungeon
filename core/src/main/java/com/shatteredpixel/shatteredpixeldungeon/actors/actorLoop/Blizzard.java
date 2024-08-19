@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Blizzard extends actorLoop {
+public class Blizzard extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

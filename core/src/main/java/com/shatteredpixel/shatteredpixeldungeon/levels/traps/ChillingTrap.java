@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Freezing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -46,7 +46,7 @@ public class ChillingTrap extends Trap{
 		
 		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
-				GameScene.add(actorLoop.seed(pos + i, 10, Freezing.class));
+				GameScene.add(ActorLoop.seed(pos + i, 10, Freezing.class));
 			}
 		}
 	}

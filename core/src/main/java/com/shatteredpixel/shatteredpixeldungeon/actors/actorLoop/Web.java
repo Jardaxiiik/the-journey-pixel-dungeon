@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class Web extends actorLoop {
+public class Web extends ActorLoop {
 
 	{
 		//acts before the hero, to ensure terrain is adjusted correctly

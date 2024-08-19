@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfParalyticGas;
@@ -49,7 +49,7 @@ public class ShockingBrew extends Brew {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 3 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				GameScene.add(actorLoop.seed(i, 20, Electricity.class));
+				GameScene.add(ActorLoop.seed(i, 20, Electricity.class));
 			}
 		}
 	}

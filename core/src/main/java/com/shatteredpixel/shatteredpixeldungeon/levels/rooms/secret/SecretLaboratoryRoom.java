@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Alchemy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.items.EnergyCrystal;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
@@ -72,7 +72,7 @@ public class SecretLaboratoryRoom extends SecretRoom {
 		Point pot = center();
 		Painter.set( level, pot, Terrain.ALCHEMY );
 
-		actorLoop.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
+		ActorLoop.seed( pot.x + level.width() * pot.y, 1, Alchemy.class, level );
 
 		int pos;
 		do {

@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -82,7 +82,7 @@ public class RotHeart extends Mob {
 			}
 		}
 
-		GameScene.add(actorLoop.seed(position, 5 + 3*openNearby, ToxicGas.class));
+		GameScene.add(ActorLoop.seed(position, 5 + 3*openNearby, ToxicGas.class));
 
 		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}

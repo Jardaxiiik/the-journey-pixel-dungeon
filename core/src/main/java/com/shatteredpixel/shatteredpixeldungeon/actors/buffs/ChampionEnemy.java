@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -127,7 +127,7 @@ public abstract class ChampionEnemy extends Buff {
 			if (target.flying || !Dungeon.level.pit[target.position]) {
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 					if (!Dungeon.level.solid[target.position + i] && !Dungeon.level.water[target.position + i]) {
-						GameScene.add(actorLoop.seed(target.position + i, 2, Fire.class));
+						GameScene.add(ActorLoop.seed(target.position + i, 2, Fire.class));
 					}
 				}
 			}

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -173,7 +173,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 											if (Dungeon.level.adjacent(bolt.sourcePos, cell) && !Dungeon.level.flamable[cell]){
 												adjacentCells.add(cell);
 											} else {
-												GameScene.add( actorLoop.seed( cell, 5, Fire.class ) );
+												GameScene.add( ActorLoop.seed( cell, 5, Fire.class ) );
 											}
 											
 											Character ch = Actor.getCharacterOnPosition( cell );
@@ -191,7 +191,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 												if (Dungeon.level.trueDistance(cell+i, bolt.sourcePos) > Dungeon.level.trueDistance(cell, bolt.sourcePos)
 														&& Dungeon.level.flamable[cell+i]
 														&& Fire.volumeAt(cell+i, Fire.class) == 0){
-													GameScene.add( actorLoop.seed( cell+i, 5, Fire.class ) );
+													GameScene.add( ActorLoop.seed( cell+i, 5, Fire.class ) );
 												}
 											}
 										}

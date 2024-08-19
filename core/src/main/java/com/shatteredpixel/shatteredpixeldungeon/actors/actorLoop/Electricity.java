@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-public class Electricity extends actorLoop {
+public class Electricity extends ActorLoop {
 	
 	{
 		//acts after mobs, to give them a chance to resist paralysis

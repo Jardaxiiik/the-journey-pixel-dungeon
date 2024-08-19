@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -39,7 +39,7 @@ public class Stench extends Armor.Glyph {
 		float procChance = 1/8f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance ) {
 
-			GameScene.add( actorLoop.seed( defender.position, 250, ToxicGas.class ) );
+			GameScene.add( ActorLoop.seed( defender.position, 250, ToxicGas.class ) );
 
 		}
 

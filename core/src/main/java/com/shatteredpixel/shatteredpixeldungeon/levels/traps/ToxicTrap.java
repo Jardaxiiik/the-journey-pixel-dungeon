@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
@@ -37,7 +37,7 @@ public class ToxicTrap extends Trap{
 	@Override
 	public void activate() {
 
-		GameScene.add( actorLoop.seed( pos, 300 + 20 * scalingDepth(), ToxicGas.class ) );
+		GameScene.add( ActorLoop.seed( pos, 300 + 20 * scalingDepth(), ToxicGas.class ) );
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 	}

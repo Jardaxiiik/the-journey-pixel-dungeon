@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -46,7 +46,7 @@ public class PotionOfToxicGas extends Potion {
 			Sample.INSTANCE.play( Assets.Sounds.GAS );
 		}
 
-		GameScene.add( actorLoop.seed( cell, 1000, ToxicGas.class ) );
+		GameScene.add( ActorLoop.seed( cell, 1000, ToxicGas.class ) );
 	}
 	
 	@Override

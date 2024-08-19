@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class SmokeScreen extends actorLoop {
+public class SmokeScreen extends ActorLoop {
 	
 	@Override
 	public void use( BlobEmitter emitter ) {

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -68,10 +68,10 @@ public class DM201 extends DM200 {
 		threatened = false;
 		spendTimeAdjusted(TICK);
 
-		GameScene.add(actorLoop.seed(enemy.position, 15, CorrosiveGas.class).setStrength(8));
+		GameScene.add(ActorLoop.seed(enemy.position, 15, CorrosiveGas.class).setStrength(8));
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[enemy.position +i]) {
-				GameScene.add(actorLoop.seed(enemy.position + i, 5, CorrosiveGas.class).setStrength(8));
+				GameScene.add(ActorLoop.seed(enemy.position + i, 5, CorrosiveGas.class).setStrength(8));
 			}
 		}
 

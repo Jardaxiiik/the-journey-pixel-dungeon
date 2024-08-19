@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.SmokeScreen;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.WellWater;
@@ -157,7 +157,7 @@ public abstract class Level implements Bundlable {
 
     public HashSet<Mob> mobs;
     public SparseArray<Heap> heaps;
-    public HashMap<Class<? extends actorLoop>, actorLoop> blobs;
+    public HashMap<Class<? extends ActorLoop>, ActorLoop> blobs;
     public SparseArray<Plant> plants;
     public SparseArray<Trap> traps;
     public HashSet<CustomTilemap> customTiles;
@@ -465,7 +465,7 @@ public abstract class Level implements Bundlable {
 
         collection = bundle.getCollection(BLOBS);
         for (Bundlable b : collection) {
-            actorLoop actorLoop = (actorLoop) b;
+            ActorLoop actorLoop = (ActorLoop) b;
             blobs.put(actorLoop.getClass(), actorLoop);
         }
 
@@ -873,7 +873,7 @@ public abstract class Level implements Bundlable {
             pit[i] = (flags & Terrain.PIT) != 0;
         }
 
-        for (actorLoop b : blobs.values()) {
+        for (ActorLoop b : blobs.values()) {
             b.onBuildFlagMaps(this);
         }
 
@@ -918,7 +918,7 @@ public abstract class Level implements Bundlable {
                 || (Terrain.flags[map[pos]] & Terrain.FLAMABLE) != 0) {
             set(pos, Terrain.EMBERS);
         }
-        actorLoop web = blobs.get(Web.class);
+        ActorLoop web = blobs.get(Web.class);
         if (web != null) {
             web.clear(pos);
         }
@@ -1144,7 +1144,7 @@ public abstract class Level implements Bundlable {
     }
 
     public void occupyCell(Character ch) {
-        if (!ch.isImmuneToEffectType(Web.class) && actorLoop.volumeAt(ch.position, Web.class) > 0) {
+        if (!ch.isImmuneToEffectType(Web.class) && ActorLoop.volumeAt(ch.position, Web.class) > 0) {
             blobs.get(Web.class).clear(ch.position);
             Web.affectChar(ch);
         }
@@ -1269,7 +1269,7 @@ public abstract class Level implements Bundlable {
             }
         }
 
-        if (hard && actorLoop.volumeAt(cell, Web.class) > 0) {
+        if (hard && ActorLoop.volumeAt(cell, Web.class) > 0) {
             blobs.get(Web.class).clear(cell);
         }
     }
@@ -1316,7 +1316,7 @@ public abstract class Level implements Bundlable {
                     System.arraycopy(Dungeon.level.losBlocking, 0, modifiableBlocking, 0, modifiableBlocking.length);
                     blocking = modifiableBlocking;
                 }
-                actorLoop s = Dungeon.level.blobs.get(SmokeScreen.class);
+                ActorLoop s = Dungeon.level.blobs.get(SmokeScreen.class);
                 for (int i = 0; i < blocking.length; i++) {
                     if (!blocking[i] && s.cur[i] > 0) {
                         blocking[i] = true;

@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.GooSprite;
 
-public class GooWarn extends actorLoop {
+public class GooWarn extends ActorLoop {
 
 	//cosmetic blob, previously used for Goo's pump up attack (that's now handled by Goo's sprite)
 	// but is still used as a visual indicator for Arcane bombs

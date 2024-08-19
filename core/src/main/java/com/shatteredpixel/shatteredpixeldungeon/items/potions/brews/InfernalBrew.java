@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions.brews;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.actorLoop;
+import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Inferno;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
@@ -50,13 +50,13 @@ public class InfernalBrew extends Brew {
 		int centerVolume = 120;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[cell+i]){
-				GameScene.add( actorLoop.seed( cell+i, 120, Inferno.class ) );
+				GameScene.add( ActorLoop.seed( cell+i, 120, Inferno.class ) );
 			} else {
 				centerVolume += 120;
 			}
 		}
 		
-		GameScene.add( actorLoop.seed( cell, centerVolume, Inferno.class ) );
+		GameScene.add( ActorLoop.seed( cell, centerVolume, Inferno.class ) );
 	}
 	
 	@Override

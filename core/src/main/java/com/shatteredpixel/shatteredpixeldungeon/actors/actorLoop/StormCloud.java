@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class StormCloud extends actorLoop {
+public class StormCloud extends ActorLoop {
 	
 	@Override
 	protected void evolve() {

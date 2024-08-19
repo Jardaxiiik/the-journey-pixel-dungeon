@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public class ParalyticGas extends actorLoop {
+public class ParalyticGas extends ActorLoop {
 	
 	{
 		//acts after mobs, to give them a chance to resist paralysis
