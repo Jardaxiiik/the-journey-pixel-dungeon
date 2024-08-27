@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StenchGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Tengu;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 

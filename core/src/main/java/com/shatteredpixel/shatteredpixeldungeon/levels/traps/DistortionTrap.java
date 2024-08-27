@@ -23,23 +23,23 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Character;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Acidic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Albino;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.ArmoredBrute;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bandit;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bestiary;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.CausticSlime;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.DM201;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Elemental;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Piranha;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Senior;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.RatKing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Acidic;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Albino;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.ArmoredBrute;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Bandit;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.MobSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.CausticSlime;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DM201;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Elemental;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mimic;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Piranha;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Senior;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Statue;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Wraith;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.RatKing;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PathFinder;
@@ -111,7 +111,7 @@ public class DistortionTrap extends Trap{
 					do {
 						floor = Random.Int(25);
 					} while( Dungeon.bossLevel(floor));
-					mob = Reflection.newInstance(Bestiary.getMobRotation(floor).get(0));
+					mob = Reflection.newInstance(MobSpawner.getMobRotation(floor).get(0));
 					break;
 				case 2:
 					switch (2){

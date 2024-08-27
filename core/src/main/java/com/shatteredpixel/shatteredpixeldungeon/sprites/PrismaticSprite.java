@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.PrismaticImage;
 import com.watabou.noosa.Game;
 
 public class PrismaticSprite extends MirrorSprite {
