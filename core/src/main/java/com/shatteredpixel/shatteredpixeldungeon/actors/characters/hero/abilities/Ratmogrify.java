@@ -171,7 +171,7 @@ public class Ratmogrify extends ArmorAbility {
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
 		Invisibility.dispel();
-		hero.spendAndNext(Actor.TICK);
+		hero.spendTimeAdjustedAndNext(Actor.TICK);
 
 	}
 
@@ -263,8 +263,8 @@ public class Ratmogrify extends ArmorAbility {
 			return original.getAccuracyAgainstTarget(target);
 		}
 
-		public int drRoll() {
-			return original.drRoll();
+		public int getArmorPointsRolled() {
+			return original.getArmorPointsRolled();
 		}
 
 		@Override

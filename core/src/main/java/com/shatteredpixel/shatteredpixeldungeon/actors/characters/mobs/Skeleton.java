@@ -72,7 +72,7 @@ public class Skeleton extends Mob {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
 				//armor is 2x effective against bone explosion
-				damage = Math.max( 0,  damage - (ch.drRoll() + ch.drRoll()) );
+				damage = Math.max( 0,  damage - (ch.getArmorPointsRolled() + ch.getArmorPointsRolled()) );
 				ch.receiveDamageFromSource( damage, this );
 				if (ch == Dungeon.hero && !ch.isAlive()) {
 					heroKilled = true;
@@ -109,8 +109,8 @@ public class Skeleton extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 5);
 	}
 
 }

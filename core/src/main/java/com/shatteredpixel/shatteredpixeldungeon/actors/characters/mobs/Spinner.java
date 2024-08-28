@@ -67,8 +67,8 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 6);
 	}
 
 	private int webCoolDown = 0;
@@ -198,7 +198,7 @@ public class Spinner extends Mob {
 			webCoolDown = 10;
 
 			if (Dungeon.level.heroFOV[enemy.position]){
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 			}
 		}
 		next();

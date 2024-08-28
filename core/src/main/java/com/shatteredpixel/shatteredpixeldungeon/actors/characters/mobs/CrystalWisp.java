@@ -84,8 +84,8 @@ public class CrystalWisp extends Mob{
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 5);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class CrystalWisp extends Mob{
 				GLog.n( Messages.get(this, "beam_kill") );
 			}
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 		}
 	}
 

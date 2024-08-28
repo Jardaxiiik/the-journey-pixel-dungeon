@@ -238,7 +238,7 @@ public class v0_4_X_Changes {
 				"\n" +
 				"Enemy Balance:\n" +
 				"_-_ Tengu damage increased\n" +
-				"_-_ Prison Guard health and DR increased\n" +
+				"_-_ Prison Guard health and armorPoints increased\n" +
 				"\n" +
 				"Misc:\n" +
 				"_-_ Scrolls of upgrade no longer burn\n" +

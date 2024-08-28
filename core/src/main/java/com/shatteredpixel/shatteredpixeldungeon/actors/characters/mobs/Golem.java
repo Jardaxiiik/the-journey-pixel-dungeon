@@ -68,8 +68,8 @@ public class Golem extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 12);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 12);
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class Golem extends Mob {
 		if (bestPos != enemy.position){
 			ScrollOfTeleportation.appear(enemy, bestPos);
 			if (enemy instanceof Hero){
-				((Hero) enemy).interrupt();
+				((Hero) enemy).interruptHeroPlannedAction();
 				Dungeon.observe();
 				GameScene.updateFog();
 			}

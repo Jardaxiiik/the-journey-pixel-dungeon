@@ -77,8 +77,8 @@ public class Eye extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 10);
 	}
 	
 	private Ballistica beam;
@@ -198,7 +198,7 @@ public class Eye extends Mob {
 					GLog.n( Messages.get(this, "deathgaze_kill") );
 				}
 			} else {
-				ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
+				ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.getDefenseVerb() );
 			}
 		}
 

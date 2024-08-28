@@ -251,7 +251,7 @@ public class SentryRoom extends SpecialRoom {
 						curChargeDelay -= Dungeon.hero.cooldown();
 						//pity mechanic so mistaps don't get people instakilled
 						if (Dungeon.hero.cooldown() >= 0.34f){
-							Dungeon.hero.interrupt();
+							Dungeon.hero.interruptHeroPlannedAction();
 						}
 					}
 
@@ -285,7 +285,7 @@ public class SentryRoom extends SpecialRoom {
 					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", getName())));
 				}
 			} else {
-				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.defenseVerb() );
+				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.getDefenseVerb() );
 			}
 		}
 

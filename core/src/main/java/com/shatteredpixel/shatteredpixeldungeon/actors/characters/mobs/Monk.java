@@ -67,8 +67,8 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 2);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 2);
 	}
 	
 	@Override
@@ -112,10 +112,10 @@ public class Monk extends Mob {
 	}
 	
 	@Override
-	public String defenseVerb() {
+	public String getDefenseVerb() {
 		Focus f = getBuff(Focus.class);
 		if (f == null) {
-			return super.defenseVerb();
+			return super.getDefenseVerb();
 		} else {
 			f.detach();
 			if (sprite != null && sprite.visible) {

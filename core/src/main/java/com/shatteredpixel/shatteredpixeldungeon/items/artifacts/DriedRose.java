@@ -489,7 +489,7 @@ public class DriedRose extends Artifact {
 				return false;
 			} if ( rose.level() >= rose.levelCap ){
 				GLog.i( Messages.get(this, "no_room") );
-				hero.spendAndNext(TIME_TO_PICK_UP);
+				hero.spendTimeAdjustedAndNext(TIME_TO_PICK_UP);
 				return true;
 			} else {
 
@@ -501,7 +501,7 @@ public class DriedRose extends Artifact {
 
 				Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 				GameScene.pickUp(this, pos);
-				hero.spendAndNext(TIME_TO_PICK_UP);
+				hero.spendTimeAdjustedAndNext(TIME_TO_PICK_UP);
 				return true;
 
 			}
@@ -707,15 +707,15 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int drRoll() {
-			int dr = super.drRoll();
+		public int getArmorPointsRolled() {
+			int armorPoints = super.getArmorPointsRolled();
 			if (rose != null && rose.armor != null){
-				dr += Random.NormalIntRange( rose.armor.DRMin(), rose.armor.DRMax());
+				armorPoints += Random.NormalIntRange( rose.armor.DRMin(), rose.armor.DRMax());
 			}
 			if (rose != null && rose.weapon != null){
-				dr += Random.NormalIntRange( 0, rose.weapon.defenseFactor( this ));
+				armorPoints += Random.NormalIntRange( 0, rose.weapon.defenseFactor( this ));
 			}
-			return dr;
+			return armorPoints;
 		}
 
 		//used in some glyph calculations

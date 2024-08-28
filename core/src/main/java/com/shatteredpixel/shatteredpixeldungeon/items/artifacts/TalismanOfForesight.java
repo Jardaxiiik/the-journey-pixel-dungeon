@@ -228,7 +228,7 @@ public class TalismanOfForesight extends Artifact {
 				GameScene.updateFog();
 
 				curUser.sprite.zap(target);
-				curUser.spendAndNext(Actor.TICK);
+				curUser.spendTimeAdjustedAndNext(Actor.TICK);
 				Sample.INSTANCE.play(Assets.Sounds.SCAN);
 				if (noticed) Sample.INSTANCE.play(Assets.Sounds.SECRET);
 
@@ -331,7 +331,7 @@ public class TalismanOfForesight extends Artifact {
 				if (!warn){
 					GLog.w( Messages.get(this, "uneasy") );
 					if (target instanceof Hero){
-						((Hero)target).interrupt();
+						((Hero)target).interruptHeroPlannedAction();
 					}
 					warn = true;
 				}

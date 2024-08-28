@@ -449,7 +449,7 @@ public class PrisonBossLevel extends Level {
 
 			case FIGHT_PAUSE:
 				
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 				
 				clearEntities( pauseSafeArea );
 				
@@ -472,7 +472,7 @@ public class PrisonBossLevel extends Level {
 				
 				unseal();
 				
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 				Dungeon.hero.position = tenguCell.left+4 + (tenguCell.top+2)*width();
 				Dungeon.hero.sprite.interruptMotion();
 				Dungeon.hero.sprite.place(Dungeon.hero.position);

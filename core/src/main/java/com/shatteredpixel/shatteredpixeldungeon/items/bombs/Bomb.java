@@ -190,7 +190,7 @@ public class Bomb extends Item {
 					dmg = Math.round(dmg*0.67f);
 				}
 
-				dmg -= ch.drRoll();
+				dmg -= ch.getArmorPointsRolled();
 
 				if (dmg > 0) {
 					ch.receiveDamageFromSource(dmg, this);

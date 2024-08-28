@@ -301,12 +301,12 @@ public class WandOfWarding extends Wand {
 		}
 
 		@Override
-		public int drRoll() {
-			int dr = super.drRoll();
+		public int getArmorPointsRolled() {
+			int armorPoints = super.getArmorPointsRolled();
 			if (tier > 3){
-				return dr + Math.round(Random.NormalIntRange(0, 3 + Dungeon.scalingDepth()/2) / (7f - tier));
+				return armorPoints + Math.round(Random.NormalIntRange(0, 3 + Dungeon.scalingDepth()/2) / (7f - tier));
 			} else {
-				return dr;
+				return armorPoints;
 			}
 		}
 

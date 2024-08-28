@@ -103,7 +103,7 @@ public class Spear extends MeleeWeapon {
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				}
 				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
+				hero.spendTimeAdjustedAndNext(hero.attackDelay());
 				wep.afterAbilityUsed(hero);
 			}
 		});

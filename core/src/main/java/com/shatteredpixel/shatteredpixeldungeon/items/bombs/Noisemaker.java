@@ -96,7 +96,7 @@ public class Noisemaker extends Bomb {
 								Sample.INSTANCE.play( Assets.Sounds.ALERT );
 
 								for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-									mob.beckon( heap.pos );
+									mob.travelToPosition( heap.pos );
 								}
 								left = 6;
 							}

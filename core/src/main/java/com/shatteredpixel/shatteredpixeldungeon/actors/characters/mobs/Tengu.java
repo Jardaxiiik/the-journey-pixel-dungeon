@@ -113,8 +113,8 @@ public class Tengu extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 5);
 	}
 
 	boolean loading = false;
@@ -626,7 +626,7 @@ public class Tengu extends Mob {
 						Character ch = Actor.getCharacterOnPosition(cell);
 						if (ch != null && !(ch instanceof Tengu)) {
 							int dmg = Random.NormalIntRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth() * 2);
-							dmg -= ch.drRoll();
+							dmg -= ch.getArmorPointsRolled();
 
 							if (dmg > 0) {
 								ch.receiveDamageFromSource(dmg, Bomb.class);

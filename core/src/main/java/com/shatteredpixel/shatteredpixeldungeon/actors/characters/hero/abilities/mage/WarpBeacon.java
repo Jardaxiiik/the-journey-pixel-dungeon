@@ -219,7 +219,7 @@ public class WarpBeacon extends ArmorAbility {
 			hero.sprite.operate(target);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			Invisibility.dispel();
-			hero.spendAndNext(Actor.TICK);
+			hero.spendTimeAdjustedAndNext(Actor.TICK);
 		}
 	}
 

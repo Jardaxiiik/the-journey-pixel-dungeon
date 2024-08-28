@@ -65,12 +65,12 @@ public class DemonSpawner extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 12);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 12);
 	}
 
 	@Override
-	public void beckon(int cell) {
+	public void travelToPosition(int cell) {
 		//do nothing
 	}
 

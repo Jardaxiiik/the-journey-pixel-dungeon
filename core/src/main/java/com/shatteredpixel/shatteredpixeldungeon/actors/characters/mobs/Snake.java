@@ -60,7 +60,7 @@ public class Snake extends Mob {
 	private static int dodges = 0;
 
 	@Override
-	public String defenseVerb() {
+	public String getDefenseVerb() {
 		dodges++;
 		if ((dodges >= 2 && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS))
 				|| (dodges >= 4 && !Badges.isUnlocked(Badges.Badge.BOSS_SLAIN_1))){
@@ -68,6 +68,6 @@ public class Snake extends Mob {
 			GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_SURPRISE_ATKS);
 			dodges = 0;
 		}
-		return super.defenseVerb();
+		return super.getDefenseVerb();
 	}
 }

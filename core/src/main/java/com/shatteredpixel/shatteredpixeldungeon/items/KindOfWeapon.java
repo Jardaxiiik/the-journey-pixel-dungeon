@@ -120,19 +120,19 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 			if (wasInInv && hero.hasTalent(Talent.SWIFT_EQUIP)) {
 				if (hero.getBuff(Talent.SwiftEquipCooldown.class) == null){
-					hero.spendAndNext(-hero.cooldown());
+					hero.spendTimeAdjustedAndNext(-hero.cooldown());
 					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else if (hero.getBuff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
-					hero.spendAndNext(-hero.cooldown());
+					hero.spendTimeAdjustedAndNext(-hero.cooldown());
 					hero.getBuff(Talent.SwiftEquipCooldown.class).secondUse = false;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else {
-					hero.spendAndNext(TIME_TO_EQUIP);
+					hero.spendTimeAdjustedAndNext(TIME_TO_EQUIP);
 				}
 			} else {
-				hero.spendAndNext(TIME_TO_EQUIP);
+				hero.spendTimeAdjustedAndNext(TIME_TO_EQUIP);
 			}
 			return true;
 			
@@ -164,19 +164,19 @@ abstract public class KindOfWeapon extends EquipableItem {
 
 			if (wasInInv && hero.hasTalent(Talent.SWIFT_EQUIP)) {
 				if (hero.getBuff(Talent.SwiftEquipCooldown.class) == null){
-					hero.spendAndNext(-hero.cooldown());
+					hero.spendTimeAdjustedAndNext(-hero.cooldown());
 					Buff.affect(hero, Talent.SwiftEquipCooldown.class, 19f)
 							.secondUse = hero.pointsInTalent(Talent.SWIFT_EQUIP) == 2;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else if (hero.getBuff(Talent.SwiftEquipCooldown.class).hasSecondUse()) {
-					hero.spendAndNext(-hero.cooldown());
+					hero.spendTimeAdjustedAndNext(-hero.cooldown());
 					hero.getBuff(Talent.SwiftEquipCooldown.class).secondUse = false;
 					GLog.i(Messages.get(this, "swift_equip"));
 				} else {
-					hero.spendAndNext(TIME_TO_EQUIP);
+					hero.spendTimeAdjustedAndNext(TIME_TO_EQUIP);
 				}
 			} else {
-				hero.spendAndNext(TIME_TO_EQUIP);
+				hero.spendTimeAdjustedAndNext(TIME_TO_EQUIP);
 			}
 			return true;
 

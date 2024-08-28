@@ -105,8 +105,8 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 10);
 	}
 
 	@Override
@@ -214,11 +214,11 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public void beckon(int cell) {
+	public void travelToPosition(int cell) {
 		if (state == SLEEPING){
 			//do nothing
 		} else {
-			super.beckon(cell);
+			super.travelToPosition(cell);
 		}
 	}
 

@@ -111,8 +111,8 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 6);
 	}
 
 	@Override
@@ -195,13 +195,13 @@ public class GnollSapper extends Mob {
 							sprite.parent.add(new TargetedCell(i, 0xFF0000));
 						}
 
-						Dungeon.hero.interrupt();
+						Dungeon.hero.interruptHeroPlannedAction();
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollSapper.this, 2, true)) {
 						lastAbilityWasRockfall = true;
-						Dungeon.hero.interrupt();
+						Dungeon.hero.interruptHeroPlannedAction();
 						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						return true;

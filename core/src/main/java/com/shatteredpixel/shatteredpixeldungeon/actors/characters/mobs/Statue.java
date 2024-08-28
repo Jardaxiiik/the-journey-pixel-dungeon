@@ -112,8 +112,8 @@ public class Statue extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, Dungeon.depth + weapon.defenseFactor(this));
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, Dungeon.depth + weapon.defenseFactor(this));
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public void beckon( int cell ) {
+	public void travelToPosition(int cell ) {
 		// Do nothing
 	}
 	

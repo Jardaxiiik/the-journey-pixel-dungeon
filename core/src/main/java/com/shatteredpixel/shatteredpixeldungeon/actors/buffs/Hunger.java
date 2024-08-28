@@ -93,7 +93,7 @@ public class Hunger extends Buff implements Hero.Doom {
 					GLog.n( Messages.get(this, "onstarving") );
 					hero.receiveDamageFromSource( 1, this );
 
-					hero.interrupt();
+					hero.interruptHeroPlannedAction();
 
 				} else if (newLevel >= HUNGRY && level < HUNGRY) {
 

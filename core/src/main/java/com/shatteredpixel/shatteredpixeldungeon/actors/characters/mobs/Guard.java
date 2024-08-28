@@ -123,7 +123,7 @@ public class Guard extends Mob {
 		Dungeon.level.occupyCell(enemy);
 		Cripple.prolong(enemy, Cripple.class, 4f);
 		if (enemy == Dungeon.hero) {
-			Dungeon.hero.interrupt();
+			Dungeon.hero.interruptHeroPlannedAction();
 			Dungeon.observe();
 			GameScene.updateFog();
 		}
@@ -135,8 +135,8 @@ public class Guard extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 7);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 7);
 	}
 
 	@Override

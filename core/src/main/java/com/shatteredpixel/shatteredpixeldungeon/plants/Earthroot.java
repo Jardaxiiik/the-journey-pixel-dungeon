@@ -94,7 +94,7 @@ public class Earthroot extends Plant {
 			return (Dungeon.scalingDepth() + 5)/2;
 		}
 		
-		public int absorb( int damage ) {
+		public int getDamageReducedByEarthroot(int damage ) {
 			if (pos != target.position){
 				detach();
 				return damage;

@@ -114,7 +114,7 @@ public class ShadowClone extends ArmorAbility {
 				ShadowAlly.appear(ally, ally.position);
 
 				Invisibility.dispel();
-				hero.spendAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(Actor.TICK);
 
 			} else {
 				GLog.w(Messages.get(SpiritHawk.class, "no_space"));
@@ -227,14 +227,14 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public int drRoll() {
-			int dr = super.drRoll();
-			int heroRoll = Dungeon.hero.drRoll();
+		public int getArmorPointsRolled() {
+			int armorPoints = super.getArmorPointsRolled();
+			int heroRoll = Dungeon.hero.getArmorPointsRolled();
 			heroRoll = Math.round(0.12f * Dungeon.hero.pointsInTalent(Talent.CLONED_ARMOR) * heroRoll);
 			if (heroRoll > 0){
-				dr += heroRoll;
+				armorPoints += heroRoll;
 			}
-			return dr;
+			return armorPoints;
 		}
 
 		@Override

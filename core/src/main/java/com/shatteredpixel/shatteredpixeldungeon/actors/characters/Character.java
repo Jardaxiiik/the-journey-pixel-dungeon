@@ -368,18 +368,18 @@ public abstract class Character extends Actor {
 
 		} else if (isTargetHitByAttack( this, enemy, accMulti, false )) {
 			
-			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
+			int armorPoints = Math.round(enemy.getArmorPointsRolled() * AscensionChallenge.statModifier(enemy));
 			
 			if (this instanceof Hero){
 				Hero h = (Hero)this;
 				if (h.belongings.attackingWeapon() instanceof MissileWeapon
 						&& h.subClass == HeroSubClass.SNIPER
 						&& !Dungeon.level.adjacent(h.position, enemy.position)){
-					dr = 0;
+					armorPoints = 0;
 				}
 
 				if (h.getBuff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
-					dr = 0;
+					armorPoints = 0;
 				} else if (h.subClass == HeroSubClass.MONK) {
 					//3 turns with standard attack delay
 					Buff.prolong(h, MonkEnergy.MonkAbility.JustHitTracker.class, 4f);
@@ -439,25 +439,25 @@ public abstract class Character extends Actor {
 				dmg *= 0.67f;
 			}
 			
-			int effectiveDamage = enemy.getDamageReceivedFromEnemyReducedByDefense( this, Math.round(dmg) );
+			int finalDamage = enemy.getDamageReceivedFromEnemyReducedByDefense( this, Math.round(dmg) );
 			//do not trigger on-hit logic if defenseProc returned a negative value
-			if (effectiveDamage >= 0) {
-				effectiveDamage = Math.max(effectiveDamage - dr, 0);
+			if (finalDamage >= 0) {
+				finalDamage = Math.max(finalDamage - armorPoints, 0);
 
 				if (enemy.getBuff(Viscosity.ViscosityTracker.class) != null) {
-					effectiveDamage = enemy.getBuff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
+					finalDamage = enemy.getBuff(Viscosity.ViscosityTracker.class).deferDamage(finalDamage);
 					enemy.getBuff(Viscosity.ViscosityTracker.class).detach();
 				}
 
 				//vulnerable specifically applies after armor reductions
 				if (enemy.getBuff(Vulnerable.class) != null) {
-					effectiveDamage *= 1.33f;
+					finalDamage *= 1.33f;
 				}
 
-				effectiveDamage = attackProc(enemy, effectiveDamage);
+				finalDamage = attackProc(enemy, finalDamage);
 			}
 			if (visibleFight) {
-				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
+				if (finalDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
 					playHitSound(Random.Float(0.87f, 1.15f));
 				}
 			}
@@ -468,7 +468,7 @@ public abstract class Character extends Actor {
 				return true;
 			}
 
-			enemy.receiveDamageFromSource( effectiveDamage, this );
+			enemy.receiveDamageFromSource( finalDamage, this );
 
 			if (getBuff(FireImbue.class) != null)  getBuff(FireImbue.class).proc(enemy);
 			if (getBuff(FrostImbue.class) != null) getBuff(FrostImbue.class).proc(enemy);
@@ -508,7 +508,7 @@ public abstract class Character extends Actor {
 			}
 
 			if (enemy.sprite != null) {
-				enemy.sprite.bloodBurstA(sprite.center(), effectiveDamage);
+				enemy.sprite.bloodBurstA(sprite.center(), finalDamage);
 				enemy.sprite.flash();
 			}
 
@@ -535,7 +535,7 @@ public abstract class Character extends Actor {
 			
 		} else {
 
-			enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.getDefenseVerb() );
 			if (visibleFight) {
 				//TODO enemy.defenseSound? currently miss plays for monks/crab even when they parry
 				Sample.INSTANCE.play(Assets.Sounds.MISS);
@@ -557,8 +557,8 @@ public abstract class Character extends Actor {
 		float acuStat = attacker.getAccuracyAgainstTarget( defender );
 		float defStat = defender.getEvasionAgainstAttacker( attacker );
 
-		if (defender instanceof Hero && ((Hero) defender).damageInterrupt){
-			((Hero) defender).interrupt();
+		if (defender instanceof Hero && ((Hero) defender).isHeroPlannedActionInterruptable){
+			((Hero) defender).interruptHeroPlannedAction();
 		}
 
 		//invisible chars always hit (for the hero this is surprise attacking)
@@ -609,16 +609,16 @@ public abstract class Character extends Actor {
 		return 0;
 	}
 	
-	public String defenseVerb() {
+	public String getDefenseVerb() {
 		return Messages.get(this, "def_verb");
 	}
 	
-	public int drRoll() {
-		int dr = 0;
+	public int getArmorPointsRolled() {
+		int armorPoints = 0;
 
-		dr += Random.NormalIntRange( 0 , Barkskin.currentLevel(this) );
+		armorPoints += Random.NormalIntRange( 0 , Barkskin.currentLevel(this) );
 
-		return dr;
+		return armorPoints;
 	}
 	
 	public int getDamageRoll() {
@@ -639,7 +639,7 @@ public abstract class Character extends Actor {
 
 		Earthroot.Armor armor = getBuff( Earthroot.Armor.class );
 		if (armor != null) {
-			damage = armor.absorb( damage );
+			damage = armor.getDamageReducedByEarthroot( damage );
 		}
 
 		return damage;

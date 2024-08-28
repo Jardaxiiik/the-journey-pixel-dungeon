@@ -51,7 +51,7 @@ public class PhaseShift extends TargetedSpell {
 
 				if (ch instanceof Mob) {
 					if (((Mob) ch).state == ((Mob) ch).HUNTING) ((Mob) ch).state = ((Mob) ch).WANDERING;
-					((Mob) ch).beckon(Dungeon.level.randomDestination( ch ));
+					((Mob) ch).travelToPosition(Dungeon.level.randomDestination( ch ));
 				}
 				if (!Character.hasProperty(ch, Character.Property.BOSS) && !Character.hasProperty(ch, Character.Property.MINIBOSS)) {
 					Buff.affect(ch, Paralysis.class, Paralysis.DURATION);

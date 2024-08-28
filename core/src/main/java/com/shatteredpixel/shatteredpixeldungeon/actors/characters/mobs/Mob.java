@@ -941,7 +941,7 @@ public abstract class Mob extends Character {
 		return false;
 	}
 	
-	public void beckon( int cell ) {
+	public void travelToPosition(int cell ) {
 		
 		notice();
 		
@@ -1039,7 +1039,7 @@ public abstract class Mob extends Character {
 					if (mob.paralysed <= 0
 							&& Dungeon.level.distance(position, mob.position) <= 8
 							&& mob.state != mob.HUNTING) {
-						mob.beckon(target);
+						mob.travelToPosition(target);
 					}
 				}
 			}
@@ -1077,7 +1077,7 @@ public abstract class Mob extends Character {
 					if (mob.paralysed <= 0
 							&& Dungeon.level.distance(position, mob.position) <= 8
 							&& mob.state != mob.HUNTING) {
-						mob.beckon( target );
+						mob.travelToPosition( target );
 					}
 				}
 			}

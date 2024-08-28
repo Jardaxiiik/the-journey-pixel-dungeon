@@ -74,8 +74,8 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange( armor.DRMin(), armor.DRMax());
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange( armor.DRMin(), armor.DRMax());
 	}
 
 	//used in some glyph calculations

@@ -59,7 +59,7 @@ public abstract class InventoryScroll extends Scroll {
 			protected void onSelect( int index ) {
 				switch (index) {
 				case 0:
-					curUser.spendAndNext( TIME_TO_READ );
+					curUser.spendTimeAdjustedAndNext( TIME_TO_READ );
 					identifiedByUse = false;
 					break;
 				case 1:
@@ -125,7 +125,7 @@ public abstract class InventoryScroll extends Scroll {
 				
 			} else if (((Scroll)curItem).anonymous) {
 
-				curUser.spendAndNext( TIME_TO_READ );
+				curUser.spendTimeAdjustedAndNext( TIME_TO_READ );
 
 			}
 		}

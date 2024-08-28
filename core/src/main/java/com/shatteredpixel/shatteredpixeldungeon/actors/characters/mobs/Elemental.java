@@ -105,8 +105,8 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 5);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 5);
 	}
 	
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -167,7 +167,7 @@ public abstract class Elemental extends Mob {
 			rangedProc( enemy );
 			
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 		}
 
 		rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -312,7 +312,7 @@ public abstract class Elemental extends Mob {
 
 					GLog.n(Messages.get(this, "charging"));
 					spendTimeAdjusted(GameMath.gate(getAttackDelay(), (int)Math.ceil(Dungeon.hero.cooldown()), 3* getAttackDelay()));
-					Dungeon.hero.interrupt();
+					Dungeon.hero.interruptHeroPlannedAction();
 					return true;
 				} else {
 					rangedCooldown = 1;

@@ -89,7 +89,7 @@ public class Whip extends MeleeWeapon {
 					}
 				}
 				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
+				hero.spendTimeAdjustedAndNext(hero.attackDelay());
 				afterAbilityUsed(hero);
 			}
 		});

@@ -56,8 +56,8 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 2);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 2);
 	}
 
 	@Override

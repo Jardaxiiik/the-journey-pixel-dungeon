@@ -101,7 +101,7 @@ public class SummonElemental extends Spell {
 				if (ch instanceof Elemental && ch.getBuff(InvisAlly.class) != null){
 					ScrollOfTeleportation.appear( ch, Random.element(spawnPoints) );
 					((Elemental) ch).state = ((Elemental) ch).HUNTING;
-					curUser.spendAndNext(Actor.TICK);
+					curUser.spendTimeAdjustedAndNext(Actor.TICK);
 					return;
 				}
 			}
@@ -114,7 +114,7 @@ public class SummonElemental extends Spell {
 			ScrollOfTeleportation.appear( elemental, Random.element(spawnPoints) );
 			Invisibility.dispel(curUser);
 			curUser.sprite.operate(curUser.position);
-			curUser.spendAndNext(Actor.TICK);
+			curUser.spendTimeAdjustedAndNext(Actor.TICK);
 
 			summonClass = Elemental.AllyNewBornElemental.class;
 

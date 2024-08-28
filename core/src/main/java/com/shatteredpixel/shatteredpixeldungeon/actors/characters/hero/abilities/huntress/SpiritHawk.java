@@ -112,7 +112,7 @@ public class SpiritHawk extends ArmorAbility {
 				Dungeon.observe();
 
 				Invisibility.dispel();
-				hero.spendAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(Actor.TICK);
 
 			} else {
 				GLog.w(Messages.get(this, "no_space"));
@@ -209,7 +209,7 @@ public class SpiritHawk extends ArmorAbility {
 		protected boolean playGameTurn() {
 			if (timeRemaining <= 0){
 				die(null);
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 				return true;
 			}
 			viewDistance = 6+Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE);

@@ -214,7 +214,7 @@ public class WildMagic extends ArmorAbility {
 			Item.updateQuickslot();
 			Invisibility.dispel();
 			if (Random.Int(4) >= hero.pointsInTalent(Talent.CONSERVED_MAGIC)) {
-				hero.spendAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(Actor.TICK);
 			} else {
 				hero.next();
 			}

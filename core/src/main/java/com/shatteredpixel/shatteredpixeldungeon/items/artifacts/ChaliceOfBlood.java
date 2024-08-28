@@ -101,7 +101,7 @@ public class ChaliceOfBlood extends Artifact {
 
 		Earthroot.Armor armor = hero.getBuff(Earthroot.Armor.class);
 		if (armor != null) {
-			damage = armor.absorb(damage);
+			damage = armor.getDamageReducedByEarthroot(damage);
 		}
 
 		WandOfLivingEarth.RockArmor rockArmor = hero.getBuff(WandOfLivingEarth.RockArmor.class);
@@ -109,7 +109,7 @@ public class ChaliceOfBlood extends Artifact {
 			damage = rockArmor.absorb(damage);
 		}
 
-		damage -= hero.drRoll();
+		damage -= hero.getArmorPointsRolled();
 
 		hero.sprite.operate( hero.position);
 		hero.busy();

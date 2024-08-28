@@ -81,7 +81,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			protected void onSelect( int index ) {
 				switch (index) {
 					case 0:
-						curUser.spendAndNext( TIME_TO_READ );
+						curUser.spendTimeAdjustedAndNext( TIME_TO_READ );
 						identifiedByUse = false;
 						break;
 					case 1:

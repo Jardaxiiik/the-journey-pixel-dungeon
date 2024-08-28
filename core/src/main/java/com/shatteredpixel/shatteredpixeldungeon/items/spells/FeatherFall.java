@@ -53,7 +53,7 @@ public class FeatherFall extends Spell {
 		detach( curUser.belongings.backpack );
 		updateQuickslot();
 		Invisibility.dispel();
-		hero.spendAndNext( 1f );
+		hero.spendTimeAdjustedAndNext( 1f );
 	}
 	
 	public static class FeatherBuff extends FlavourBuff {

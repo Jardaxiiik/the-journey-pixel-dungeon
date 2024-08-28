@@ -166,7 +166,7 @@ public class Pylon extends Mob {
 	}
 
 	@Override
-	public void beckon(int cell) {
+	public void travelToPosition(int cell) {
 		//do nothing
 	}
 

@@ -100,8 +100,8 @@ public class HeroicLeap extends ArmorAbility {
 						if (mob != null && mob != hero && mob.alignment != Character.Alignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
 								int damage = Random.NormalIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
-								damage += Math.round(hero.drRoll()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));
-								damage -= mob.drRoll();
+								damage += Math.round(hero.getArmorPointsRolled()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));
+								damage -= mob.getArmorPointsRolled();
 								mob.receiveDamageFromSource(damage, hero);
 							}
 							if (mob.position == hero.position + i && hero.hasTalent(Talent.IMPACT_WAVE)){
@@ -119,7 +119,7 @@ public class HeroicLeap extends ArmorAbility {
 					PixelScene.shake(2, 0.5f);
 
 					Invisibility.dispel();
-					hero.spendAndNext(Actor.TICK);
+					hero.spendTimeAdjustedAndNext(Actor.TICK);
 
 					if (hero.getBuff(DoubleJumpTracker.class) != null){
 						hero.getBuff(DoubleJumpTracker.class).detach();

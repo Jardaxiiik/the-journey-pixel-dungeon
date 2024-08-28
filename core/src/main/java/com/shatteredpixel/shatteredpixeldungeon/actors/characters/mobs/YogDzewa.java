@@ -258,7 +258,7 @@ public class YogDzewa extends Mob {
 							GLog.n(Messages.get(Character.class, "kill", getName()));
 						}
 					} else {
-						ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.defenseVerb() );
+						ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.getDefenseVerb() );
 					}
 				}
 				targetedCells.clear();
@@ -303,7 +303,7 @@ public class YogDzewa extends Mob {
 
 				//don't want to overly punish players with slow move or attack speed
 				spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 
 				abilityCooldown += Random.NormalFloat(MIN_ABILITY_CD, MAX_ABILITY_CD);
 				abilityCooldown -= (phase - 1);
@@ -345,7 +345,7 @@ public class YogDzewa extends Mob {
 					summon.position = spawnPos;
 					GameScene.add( summon );
 					addActor( new Pushing( summon, position, summon.position) );
-					summon.beckon(Dungeon.hero.position);
+					summon.travelToPosition(Dungeon.hero.position);
 					Dungeon.level.occupyCell(summon);
 
 					summonCooldown += Random.NormalFloat(MIN_SUMMON_CD, MAX_SUMMON_CD);
@@ -491,7 +491,7 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public void beckon( int cell ) {
+	public void travelToPosition(int cell ) {
 	}
 
 	@Override
@@ -663,8 +663,8 @@ public class YogDzewa extends Mob {
 		}
 
 		@Override
-		public int drRoll() {
-			return super.drRoll() + Random.NormalIntRange(0, 4);
+		public int getArmorPointsRolled() {
+			return super.getArmorPointsRolled() + Random.NormalIntRange(0, 4);
 		}
 
 	}

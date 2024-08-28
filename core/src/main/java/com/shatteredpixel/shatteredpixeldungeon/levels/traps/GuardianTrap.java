@@ -46,7 +46,7 @@ public class GuardianTrap extends Trap {
 	public void activate() {
 
 		for (Mob mob : Dungeon.level.mobs) {
-			mob.beckon( pos );
+			mob.travelToPosition( pos );
 		}
 
 		if (Dungeon.level.heroFOV[pos]) {
@@ -63,7 +63,7 @@ public class GuardianTrap extends Trap {
 			guardian.position = Dungeon.level.randomRespawnCell( guardian );
 			if (guardian.position != -1) {
 				GameScene.add(guardian);
-				guardian.beckon(Dungeon.hero.position);
+				guardian.travelToPosition(Dungeon.hero.position);
 			}
 		}
 
@@ -89,7 +89,7 @@ public class GuardianTrap extends Trap {
 		}
 
 		@Override
-		public void beckon(int cell) {
+		public void travelToPosition(int cell) {
 			//Beckon works on these ones, unlike their superclass.
 			notice();
 

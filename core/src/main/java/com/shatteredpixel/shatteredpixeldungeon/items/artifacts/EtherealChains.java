@@ -190,7 +190,7 @@ public class EtherealChains extends Artifact {
 						Dungeon.level.occupyCell(enemy);
 						Dungeon.observe();
 						GameScene.updateFog();
-						hero.spendAndNext(1f);
+						hero.spendTimeAdjustedAndNext(1f);
 
 						charge -= chargeUse;
 						Invisibility.dispel(hero);
@@ -253,7 +253,7 @@ public class EtherealChains extends Artifact {
 					public void call() {
 						hero.position = newHeroPos;
 						Dungeon.level.occupyCell(hero);
-						hero.spendAndNext(1f);
+						hero.spendTimeAdjustedAndNext(1f);
 						Dungeon.observe();
 						GameScene.updateFog();
 

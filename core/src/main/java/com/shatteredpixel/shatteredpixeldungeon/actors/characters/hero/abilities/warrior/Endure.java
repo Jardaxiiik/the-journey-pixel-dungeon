@@ -65,7 +65,7 @@ public class Endure extends ArmorAbility {
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
 		Invisibility.dispel();
-		hero.spendAndNext(3f);
+		hero.spendTimeAdjustedAndNext(3f);
 	}
 
 	public static class EndureTracker extends FlavourBuff {

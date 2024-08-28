@@ -99,8 +99,8 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 10);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 10);
 	}
 
 	public int pylonsActivated = 0;
@@ -189,7 +189,7 @@ public class DM300 extends Mob {
 
 			if (state != HUNTING){
 				if (Dungeon.hero.invisible <= 0 && canReach){
-					beckon(Dungeon.hero.position);
+					travelToPosition(Dungeon.hero.position);
 				}
 			} else {
 
@@ -285,7 +285,7 @@ public class DM300 extends Mob {
 			}
 
 			if (Dungeon.hero.invisible <= 0){
-				beckon(Dungeon.hero.position);
+				travelToPosition(Dungeon.hero.position);
 				state = HUNTING;
 				enemy = Dungeon.hero;
 			}
@@ -365,7 +365,7 @@ public class DM300 extends Mob {
 	}
 
 	public void ventGas( Character target ){
-		Dungeon.hero.interrupt();
+		Dungeon.hero.interruptHeroPlannedAction();
 
 		int gasVented = 0;
 
@@ -397,7 +397,7 @@ public class DM300 extends Mob {
 
 	public void dropRocks( Character target ) {
 
-		Dungeon.hero.interrupt();
+		Dungeon.hero.interruptHeroPlannedAction();
 		final int rockCenter;
 
 		//knock back 2 tiles if adjacent
@@ -406,7 +406,7 @@ public class DM300 extends Mob {
 			Ballistica trajectory = new Ballistica(target.position, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 2, false, false, this);
 			if (target == Dungeon.hero){
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 2));
 
@@ -416,7 +416,7 @@ public class DM300 extends Mob {
 			Ballistica trajectory = new Ballistica(target.position, oppositeAdjacent, Ballistica.MAGIC_BOLT);
 			WandOfBlastWave.throwChar(target, trajectory, 1, false, false, this);
 			if (target == Dungeon.hero){
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 			}
 			rockCenter = trajectory.path.get(Math.min(trajectory.dist, 1));
 

@@ -380,7 +380,7 @@ public class SpiritBow extends Weapon {
 						user.getBuff(Talent.LethalMomentumTracker.class).detach();
 						user.next();
 					} else {
-						user.spendAndNext(castDelay(user, dst));
+						user.spendTimeAdjustedAndNext(castDelay(user, dst));
 					}
 					sniperSpecial = false;
 					flurryCount = -1;
@@ -435,7 +435,7 @@ public class SpiritBow extends Weapon {
 												user.getBuff(Talent.LethalMomentumTracker.class).detach();
 												user.next();
 											} else {
-												user.spendAndNext(castDelay(user, dst));
+												user.spendTimeAdjustedAndNext(castDelay(user, dst));
 											}
 											sniperSpecial = false;
 											flurryCount = -1;

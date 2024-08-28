@@ -89,7 +89,7 @@ public abstract class TargetedSpell extends Spell {
 						curSpell.detach( curUser.belongings.backpack );
 						Invisibility.dispel();
 						curSpell.updateQuickslot();
-						curUser.spendAndNext( 1f );
+						curUser.spendTimeAdjustedAndNext( 1f );
 					}
 				});
 				

@@ -139,14 +139,14 @@ public class Rapier extends MeleeWeapon {
 								}
 							}
 							Invisibility.dispel();
-							hero.spendAndNext(hero.attackDelay());
+							hero.spendTimeAdjustedAndNext(hero.attackDelay());
 							wep.afterAbilityUsed(hero);
 						}
 					});
 				} else {
 					wep.beforeAbilityUsed(hero, null);
 					GLog.w(Messages.get(Rapier.class, "ability_no_target"));
-					hero.spendAndNext(1/hero.getSpeed());
+					hero.spendTimeAdjustedAndNext(1/hero.getSpeed());
 					wep.afterAbilityUsed(hero);
 				}
 			}

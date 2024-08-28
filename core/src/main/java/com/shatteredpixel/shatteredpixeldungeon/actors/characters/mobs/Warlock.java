@@ -71,8 +71,8 @@ public class Warlock extends Mob implements Callback {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 8);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 8);
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class Warlock extends Mob implements Callback {
 				GLog.n( Messages.get(this, "bolt_kill") );
 			}
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 		}
 	}
 	

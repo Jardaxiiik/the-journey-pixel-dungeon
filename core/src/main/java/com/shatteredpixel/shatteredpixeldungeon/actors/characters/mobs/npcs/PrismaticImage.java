@@ -186,12 +186,12 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int drRoll() {
-		int dr = super.drRoll();
+	public int getArmorPointsRolled() {
+		int armorPoints = super.getArmorPointsRolled();
 		if (hero != null){
-			return dr + hero.drRoll();
+			return armorPoints + hero.getArmorPointsRolled();
 		} else {
-			return dr;
+			return armorPoints;
 		}
 	}
 	

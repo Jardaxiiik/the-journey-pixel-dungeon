@@ -419,7 +419,7 @@ public class ElementalBlast extends ArmorAbility {
 							Buff.affect(hero, Barrier.class).setShield(shielding);
 						}
 
-						hero.spendAndNext(Actor.TICK);
+						hero.spendTimeAdjustedAndNext(Actor.TICK);
 					}
 				}
 		);

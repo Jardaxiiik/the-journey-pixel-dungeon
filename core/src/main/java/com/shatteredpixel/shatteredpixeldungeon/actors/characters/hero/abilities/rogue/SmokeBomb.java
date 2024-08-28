@@ -145,7 +145,7 @@ public class SmokeBomb extends ArmorAbility {
 			GameScene.updateFog();
 
 			if (!shadowStepping) {
-				hero.spendAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(Actor.TICK);
 			} else {
 				hero.next();
 			}
@@ -176,13 +176,13 @@ public class SmokeBomb extends ArmorAbility {
 		}
 
 		@Override
-		public int drRoll() {
-			int dr = super.drRoll();
+		public int getArmorPointsRolled() {
+			int armorPoints = super.getArmorPointsRolled();
 
-			dr += Random.NormalIntRange(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT),
+			armorPoints += Random.NormalIntRange(Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT),
 					3*Dungeon.hero.pointsInTalent(Talent.BODY_REPLACEMENT));
 
-			return dr;
+			return armorPoints;
 		}
 
 		{

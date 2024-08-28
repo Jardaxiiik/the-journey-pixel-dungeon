@@ -146,8 +146,8 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 6);
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class GnollGeomancer extends Mob {
 							if (m instanceof GnollGuard){
 								m.startHunting(Dungeon.hero);
 								if (!((GnollGuard) m).hasSapper()){
-									m.beckon(position);
+									m.travelToPosition(position);
 								}
 							} else if (m instanceof GnollSapper){
 								m.startHunting(Dungeon.hero);
@@ -245,7 +245,7 @@ public class GnollGeomancer extends Mob {
 
 					Sample.INSTANCE.play(Assets.Sounds.MINE, 1f, Random.Float(0.85f, 1.15f));
 					Invisibility.dispel(Dungeon.hero);
-					Dungeon.hero.spendAndNext(p.delayFactor(GnollGeomancer.this));
+					Dungeon.hero.spendTimeAdjustedAndNext(p.delayFactor(GnollGeomancer.this));
 				}
 			});
 
@@ -518,11 +518,11 @@ public class GnollGeomancer extends Mob {
 	}
 
 	@Override
-	public void beckon(int cell) {
+	public void travelToPosition(int cell) {
 		if (state == SLEEPING){
 			//do nothing
 		} else {
-			super.beckon(cell);
+			super.travelToPosition(cell);
 		}
 	}
 
@@ -596,13 +596,13 @@ public class GnollGeomancer extends Mob {
 							aim = GnollGeomancer.prepRockThrowAttack(enemy, GnollGeomancer.this);
 						}
 
-						Dungeon.hero.interrupt();
+						Dungeon.hero.interruptHeroPlannedAction();
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollGeomancer.this, 6-2*curbracket, true)) {
 						lastAbilityWasRockfall = true;
-						Dungeon.hero.interrupt();
+						Dungeon.hero.interruptHeroPlannedAction();
 						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						return true;

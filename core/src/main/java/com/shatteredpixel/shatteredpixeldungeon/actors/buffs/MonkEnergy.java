@@ -411,7 +411,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
 					hero.next();
 				} else {
-					hero.spendAndNext(1f);
+					hero.spendTimeAdjustedAndNext(1f);
 				}
 				Buff.affect(hero, MonkEnergy.class).abilityUsed(this);
 			}
@@ -584,7 +584,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 							}
 						}
 						Invisibility.dispel();
-						hero.spendAndNext(hero.attackDelay());
+						hero.spendTimeAdjustedAndNext(hero.attackDelay());
 						tracker.detach();
 						Buff.affect(hero, MonkEnergy.class).abilityUsed(DragonKick.this);
 

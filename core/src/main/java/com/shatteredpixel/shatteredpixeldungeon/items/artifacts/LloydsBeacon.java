@@ -200,14 +200,14 @@ public class LloydsBeacon extends Artifact {
 
 			if (Actor.getCharacterOnPosition(target) == curUser){
 				ScrollOfTeleportation.teleportChar(curUser);
-				curUser.spendAndNext(1f);
+				curUser.spendTimeAdjustedAndNext(1f);
 			} else {
 				final Ballistica bolt = new Ballistica( curUser.position, target, Ballistica.MAGIC_BOLT );
 				final Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
 
 				if (ch == curUser){
 					ScrollOfTeleportation.teleportChar(curUser);
-					curUser.spendAndNext( 1f );
+					curUser.spendTimeAdjustedAndNext( 1f );
 				} else {
 					Sample.INSTANCE.play( Assets.Sounds.ZAP );
 					curUser.sprite.zap(bolt.collisionPos);
@@ -250,7 +250,7 @@ public class LloydsBeacon extends Artifact {
 
 										}
 									}
-									curUser.spendAndNext(1f);
+									curUser.spendTimeAdjustedAndNext(1f);
 								}
 							});
 

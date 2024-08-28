@@ -450,7 +450,7 @@ public abstract class Wand extends Item {
 		Invisibility.dispel();
 		updateQuickslot();
 
-		curUser.spendAndNext( TIME_TO_ZAP );
+		curUser.spendTimeAdjustedAndNext( TIME_TO_ZAP );
 	}
 	
 	@Override
@@ -611,7 +611,7 @@ public abstract class Wand extends Item {
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
 						updateQuickslot();
-						curUser.spendAndNext(Actor.TICK);
+						curUser.spendTimeAdjustedAndNext(Actor.TICK);
 						return;
 					}
 					GLog.i( Messages.get(Wand.class, "self_target") );

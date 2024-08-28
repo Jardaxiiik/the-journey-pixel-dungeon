@@ -138,7 +138,7 @@ public class ArcaneResin extends Item {
 					Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 					curUser.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
 
-					curUser.spendAndNext(Actor.TICK);
+					curUser.spendTimeAdjustedAndNext(Actor.TICK);
 					GLog.p(Messages.get(ArcaneResin.class, "apply"));
 				}
 			}

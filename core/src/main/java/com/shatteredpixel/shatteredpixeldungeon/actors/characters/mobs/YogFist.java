@@ -92,7 +92,7 @@ public abstract class YogFist extends Mob {
 		if (paralysed <= 0 && rangedCooldown > 0) rangedCooldown--;
 
 		if (Dungeon.hero.invisible <= 0 && state == WANDERING){
-			beckon(Dungeon.hero.position);
+			travelToPosition(Dungeon.hero.position);
 			state = HUNTING;
 			enemy = Dungeon.hero;
 		}
@@ -176,8 +176,8 @@ public abstract class YogFist extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 15);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 15);
 	}
 
 	{
@@ -343,7 +343,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 			}
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
@@ -510,7 +510,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 			}
 
 		}
@@ -580,7 +580,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 			}
 
 		}

@@ -156,7 +156,7 @@ public class Mimic extends Mob {
 		} else {
 			sprite.idle();
 			alignment = Alignment.ENEMY;
-			Dungeon.hero.spendAndNext(1f);
+			Dungeon.hero.spendTimeAdjustedAndNext(1f);
 			return true;
 		}
 	}
@@ -166,7 +166,7 @@ public class Mimic extends Mob {
 		super.onAttackComplete();
 		if (alignment == Alignment.NEUTRAL){
 			alignment = Alignment.ENEMY;
-			Dungeon.hero.spendAndNext(1f);
+			Dungeon.hero.spendTimeAdjustedAndNext(1f);
 		}
 	}
 
@@ -219,12 +219,12 @@ public class Mimic extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 1 + level/2);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 1 + level/2);
 	}
 
 	@Override
-	public void beckon( int cell ) {
+	public void travelToPosition(int cell ) {
 		// Do nothing
 	}
 

@@ -68,8 +68,8 @@ public class DM100 extends Mob implements Callback {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 4);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class DM100 extends Mob implements Callback {
 					}
 				}
 			} else {
-				targetCharacter.sprite.showStatus( CharSprite.NEUTRAL,  targetCharacter.defenseVerb() );
+				targetCharacter.sprite.showStatus( CharSprite.NEUTRAL,  targetCharacter.getDefenseVerb() );
 			}
 			
 			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {

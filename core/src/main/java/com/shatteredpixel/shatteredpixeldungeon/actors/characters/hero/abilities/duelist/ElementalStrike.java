@@ -215,7 +215,7 @@ public class ElementalStrike extends ArmorAbility {
 				perCharEffect(cone, hero, enemy, finalEnchantment);
 
 				Invisibility.dispel();
-				hero.spendAndNext(hero.attackDelay());
+				hero.spendTimeAdjustedAndNext(hero.attackDelay());
 			}
 		});
 

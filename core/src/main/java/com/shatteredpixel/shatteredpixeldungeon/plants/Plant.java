@@ -60,7 +60,7 @@ public abstract class Plant implements Bundlable {
 		Character ch = Actor.getCharacterOnPosition(pos);
 
 		if (ch instanceof Hero){
-			((Hero) ch).interrupt();
+			((Hero) ch).interruptHeroPlannedAction();
 		}
 
 		if (Dungeon.level.heroFOV[pos] && Dungeon.hero.hasTalent(Talent.NATURES_AID)){

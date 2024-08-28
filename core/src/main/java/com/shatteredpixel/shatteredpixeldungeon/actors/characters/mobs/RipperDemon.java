@@ -82,8 +82,8 @@ public class RipperDemon extends Mob {
 	}
 
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 4);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 4);
 	}
 
 	private static final String LAST_ENEMY_POS = "last_enemy_pos";
@@ -184,7 +184,7 @@ public class RipperDemon extends Mob {
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
 							} else {
-								enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
+								enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.getDefenseVerb() );
 								Sample.INSTANCE.play(Assets.Sounds.MISS);
 							}
 						}
@@ -248,7 +248,7 @@ public class RipperDemon extends Mob {
 							GLog.w(Messages.get(RipperDemon.this, "leap"));
 							sprite.parent.addToBack(new TargetedCell(leapPos, 0xFF0000));
 							((RipperSprite)sprite).leapPrep( leapPos );
-							Dungeon.hero.interrupt();
+							Dungeon.hero.interruptHeroPlannedAction();
 						}
 						return true;
 					}

@@ -111,7 +111,7 @@ public class PotionOfDivineInspiration extends ExoticPotion {
 					curUser.busy();
 					curUser.sprite.operate(curUser.position);
 
-					curUser.spendAndNext(1f);
+					curUser.spendTimeAdjustedAndNext(1f);
 
 					boolean unspentTalents = false;
 					for (int i = 1; i <= Dungeon.hero.talents.size(); i++){

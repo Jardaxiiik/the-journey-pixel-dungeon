@@ -118,7 +118,7 @@ public class SpectralBlades extends ArmorAbility {
 					callbacks.remove( this );
 					if (callbacks.isEmpty()) {
 						Invisibility.dispel();
-						hero.spendAndNext( hero.attackDelay() );
+						hero.spendTimeAdjustedAndNext( hero.attackDelay() );
 					}
 				}
 			};

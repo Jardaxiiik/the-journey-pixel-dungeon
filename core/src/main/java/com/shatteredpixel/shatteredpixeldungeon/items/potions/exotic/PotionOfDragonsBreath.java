@@ -104,7 +104,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 								showingWindow = false;
 								switch (index) {
 									case 0:
-										curUser.spendAndNext(1f);
+										curUser.spendTimeAdjustedAndNext(1f);
 										identifiedByUse = false;
 										break;
 									case 1:
@@ -196,7 +196,7 @@ public class PotionOfDragonsBreath extends ExoticPotion {
 											}
 										}
 
-										curUser.spendAndNext(1f);
+										curUser.spendTimeAdjustedAndNext(1f);
 
 										if (!anonymous){
 											Talent.onPotionUsed(curUser, curUser.position, talentFactor);

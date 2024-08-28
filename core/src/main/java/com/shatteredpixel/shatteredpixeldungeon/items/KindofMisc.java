@@ -153,7 +153,7 @@ public abstract class KindofMisc extends EquipableItem {
 				GLog.n( Messages.get(this, "equip_cursed", this) );
 			}
 
-			hero.spendAndNext( TIME_TO_EQUIP );
+			hero.spendTimeAdjustedAndNext( TIME_TO_EQUIP );
 			return true;
 
 		}

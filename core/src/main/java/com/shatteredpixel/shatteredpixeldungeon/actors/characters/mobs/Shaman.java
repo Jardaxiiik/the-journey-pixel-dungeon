@@ -65,8 +65,8 @@ public abstract class Shaman extends Mob {
 	}
 	
 	@Override
-	public int drRoll() {
-		return super.drRoll() + Random.NormalIntRange(0, 6);
+	public int getArmorPointsRolled() {
+		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 6);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public abstract class Shaman extends Mob {
 				GLog.n( Messages.get(this, "bolt_kill") );
 			}
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
 		}
 	}
 	

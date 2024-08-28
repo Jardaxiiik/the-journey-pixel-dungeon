@@ -91,7 +91,7 @@ public class PotionOfMastery extends ExoticPotion {
 					protected void onSelect( int index ) {
 						switch (index) {
 							case 0:
-								curUser.spendAndNext(1f);
+								curUser.spendTimeAdjustedAndNext(1f);
 								identifiedByUse = false;
 								break;
 							case 1:

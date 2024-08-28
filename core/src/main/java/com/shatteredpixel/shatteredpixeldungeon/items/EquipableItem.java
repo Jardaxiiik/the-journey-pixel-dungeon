@@ -133,7 +133,7 @@ public abstract class EquipableItem extends Item {
 		}
 
 		if (single) {
-			hero.spendAndNext( time2equip( hero ) );
+			hero.spendTimeAdjustedAndNext( time2equip( hero ) );
 		} else {
 			hero.spendTimeAdjusted( time2equip( hero ) );
 		}

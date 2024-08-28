@@ -196,7 +196,7 @@ public class CrystalSpire extends Mob {
 				abilityCooldown += ABILITY_CD;
 
 				spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
-				Dungeon.hero.interrupt();
+				Dungeon.hero.interruptHeroPlannedAction();
 			} else {
 				abilityCooldown -= 1;
 				spendTimeAdjusted(TICK);
@@ -278,7 +278,7 @@ public class CrystalSpire extends Mob {
 	}
 
 	@Override
-	public void beckon(int cell) {
+	public void travelToPosition(int cell) {
 		//do nothing
 	}
 
@@ -386,7 +386,7 @@ public class CrystalSpire extends Mob {
 						for (Character ch : getCharacters()) {
 							if (ch instanceof CrystalWisp) {
 								if (((CrystalWisp) ch).state != ((CrystalWisp)ch).HUNTING && ((CrystalWisp) ch).target != position) {
-									((CrystalWisp) ch).beckon(position);
+									((CrystalWisp) ch).travelToPosition(position);
 								}
 							} else if (ch instanceof CrystalGuardian) {
 								if (((CrystalGuardian) ch).state != ((CrystalGuardian)ch).HUNTING && ((CrystalGuardian) ch).target != position) {
@@ -412,7 +412,7 @@ public class CrystalSpire extends Mob {
 									if (((CrystalGuardian) ch).state == ((CrystalGuardian) ch).SLEEPING) {
 
 										((CrystalGuardian) ch).startHunting(Dungeon.hero);
-										((CrystalGuardian) ch).beckon(position);
+										((CrystalGuardian) ch).travelToPosition(position);
 
 										//delays sleeping guardians that happen to be near to the crystal
 										if (PathFinder.distance[ch.position] < 20){
@@ -420,7 +420,7 @@ public class CrystalSpire extends Mob {
 										}
 
 									} else if (((CrystalGuardian) ch).state != ((CrystalGuardian) ch).HUNTING && ((CrystalGuardian) ch).target != position){
-										((CrystalGuardian) ch).beckon(position);
+										((CrystalGuardian) ch).travelToPosition(position);
 										if (((CrystalGuardian) ch).state != HUNTING) {
 											((CrystalGuardian) ch).startHunting(Dungeon.hero);
 										}
@@ -436,7 +436,7 @@ public class CrystalSpire extends Mob {
 					}
 
 					Invisibility.dispel(Dungeon.hero);
-					Dungeon.hero.spendAndNext(p.delayFactor(CrystalSpire.this));
+					Dungeon.hero.spendTimeAdjustedAndNext(p.delayFactor(CrystalSpire.this));
 				}
 			});
 			return false;

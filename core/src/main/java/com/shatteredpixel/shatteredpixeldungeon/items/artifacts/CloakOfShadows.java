@@ -321,7 +321,7 @@ public class CloakOfShadows extends Artifact {
 					charge = 0;
 					detach();
 					GLog.w(Messages.get(this, "no_charge"));
-					((Hero) target).interrupt();
+					((Hero) target).interruptHeroPlannedAction();
 				} else {
 					//target hero level is 1 + 2*cloak level
 					int lvlDiffFromTarget = ((Hero) target).lvl - (1+level()*2);

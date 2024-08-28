@@ -195,7 +195,7 @@ public class Hero extends Character {
 	private int defenseSkill = 5;
 
 	public boolean ready = false;
-	public boolean damageInterrupt = true;
+	public boolean isHeroPlannedActionInterruptable = true;
 	public HeroAction curAction = null;
 	public HeroAction lastAction = null;
 
@@ -530,7 +530,7 @@ public class Hero extends Character {
 	}
 
 	@Override
-	public String defenseVerb() {
+	public String getDefenseVerb() {
 		Combo.ParryTracker parry = getBuff(Combo.ParryTracker.class);
 		if (parry != null){
 			parry.parried = true;
@@ -554,33 +554,33 @@ public class Hero extends Character {
 			return Messages.get(Monk.class, "parried");
 		}
 
-		return super.defenseVerb();
+		return super.getDefenseVerb();
 	}
 
 	@Override
-	public int drRoll() {
-		int dr = super.drRoll();
+	public int getArmorPointsRolled() {
+		int armorPoints = super.getArmorPointsRolled();
 
 		if (belongings.armor() != null) {
-			int armDr = Random.NormalIntRange( belongings.armor().DRMin(), belongings.armor().DRMax());
+			int armorArmorPoints = Random.NormalIntRange( belongings.armor().DRMin(), belongings.armor().DRMax());
 			if (getAttributeStrength() < belongings.armor().STRReq()){
-				armDr -= 2*(belongings.armor().STRReq() - getAttributeStrength());
+				armorArmorPoints -= 2*(belongings.armor().STRReq() - getAttributeStrength());
 			}
-			if (armDr > 0) dr += armDr;
+			if (armorArmorPoints > 0) armorPoints += armorArmorPoints;
 		}
 		if (belongings.weapon() != null && !RingOfForce.fightingUnarmed(this))  {
-			int wepDr = Random.NormalIntRange( 0 , belongings.weapon().defenseFactor( this ) );
+			int weaponArmorPoints = Random.NormalIntRange( 0 , belongings.weapon().defenseFactor( this ) );
 			if (getAttributeStrength() < ((Weapon)belongings.weapon()).STRReq()){
-				wepDr -= 2*(((Weapon)belongings.weapon()).STRReq() - getAttributeStrength());
+				weaponArmorPoints -= 2*(((Weapon)belongings.weapon()).STRReq() - getAttributeStrength());
 			}
-			if (wepDr > 0) dr += wepDr;
+			if (weaponArmorPoints > 0) armorPoints += weaponArmorPoints;
 		}
 
 		if (getBuff(HoldFast.class) != null){
-			dr += getBuff(HoldFast.class).armorBonus();
+			armorPoints += getBuff(HoldFast.class).armorBonus();
 		}
 		
-		return dr;
+		return armorPoints;
 	}
 	
 	@Override
@@ -722,13 +722,13 @@ public class Hero extends Character {
 		super.spendTime(time);
 	}
 
-	public void spendAndNextConstant(float time ) {
+	public void spendTimeAndNext(float time ) {
 		busy();
 		spendTime( time );
 		next();
 	}
 
-	public void spendAndNext( float time ) {
+	public void spendTimeAdjustedAndNext(float time ) {
 		busy();
 		spendTimeAdjusted( time );
 		next();
@@ -762,7 +762,7 @@ public class Hero extends Character {
 			
 			curAction = null;
 			
-			spendAndNext( TICK );
+			spendTimeAdjustedAndNext( TICK );
 			return false;
 		}
 		
@@ -842,7 +842,7 @@ public class Hero extends Character {
 	private void ready() {
 		if (sprite.looping()) sprite.idle();
 		curAction = null;
-		damageInterrupt = true;
+		isHeroPlannedActionInterruptable = true;
 		waitOrPickup = false;
 		ready = true;
 		canSelfTrample = true;
@@ -852,7 +852,7 @@ public class Hero extends Character {
 		GameScene.ready();
 	}
 	
-	public void interrupt() {
+	public void interruptHeroPlannedAction() {
 		if (isAlive() && curAction != null &&
 			((curAction instanceof HeroAction.Move && curAction.dst != position) ||
 			(curAction instanceof HeroAction.LvlTransition))) {
@@ -866,7 +866,7 @@ public class Hero extends Character {
 	public void resume() {
 		curAction = lastAction;
 		lastAction = null;
-		damageInterrupt = false;
+		isHeroPlannedActionInterruptable = false;
 		next();
 	}
 
@@ -883,7 +883,7 @@ public class Hero extends Character {
 	
 	private boolean actMove( HeroAction.Move action ) {
 
-		if (getCloser( action.dst )) {
+		if (moveOneStepTowardsPosition( action.dst )) {
 			canSelfTrample = false;
 			return true;
 
@@ -891,7 +891,7 @@ public class Hero extends Character {
 		} else if (position == action.dst && canSelfTrample()){
 			canSelfTrample = false;
 			Dungeon.level.pressCell(position);
-			spendAndNext( 1 / getSpeed() );
+			spendTimeAdjustedAndNext( 1 / getSpeed() );
 			return false;
 		} else {
 			ready();
@@ -911,7 +911,7 @@ public class Hero extends Character {
 			
 		} else {
 			
-			if (fieldOfView[ch.position] && getCloser( ch.position)) {
+			if (fieldOfView[ch.position] && moveOneStepTowardsPosition( ch.position)) {
 
 				return true;
 
@@ -941,7 +941,7 @@ public class Hero extends Character {
 
 			return false;
 
-		} else if (getCloser( dst )) {
+		} else if (moveOneStepTowardsPosition( dst )) {
 
 			return true;
 
@@ -967,7 +967,7 @@ public class Hero extends Character {
 			JourneyPixelDungeon.switchScene(AlchemyScene.class);
 			return false;
 
-		} else if (getCloser( dst )) {
+		} else if (moveOneStepTowardsPosition( dst )) {
 
 			return true;
 
@@ -1022,7 +1022,7 @@ public class Hero extends Character {
 				} else {
 
 					if (waitOrPickup) {
-						spendAndNextConstant(TIME_TO_REST);
+						spendTimeAndNext(TIME_TO_REST);
 					}
 
 					//allow the hero to move between levels even if they can't collect the item
@@ -1050,7 +1050,7 @@ public class Hero extends Character {
 
 			return false;
 
-		} else if (getCloser( dst )) {
+		} else if (moveOneStepTowardsPosition( dst )) {
 
 			return true;
 
@@ -1097,7 +1097,7 @@ public class Hero extends Character {
 
 			return false;
 
-		} else if (getCloser( dst )) {
+		} else if (moveOneStepTowardsPosition( dst )) {
 
 			return true;
 
@@ -1145,7 +1145,7 @@ public class Hero extends Character {
 
 			return false;
 
-		} else if (getCloser( doorCell )) {
+		} else if (moveOneStepTowardsPosition( doorCell )) {
 
 			return true;
 
@@ -1246,12 +1246,12 @@ public class Hero extends Character {
 									for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 										GameScene.updateMap( action.dst+i );
 									}
-									spendAndNext(TICK);
+									spendTimeAdjustedAndNext(TICK);
 									ready();
 								}
 							});
 						} else {
-							spendAndNext(TICK);
+							spendTimeAdjustedAndNext(TICK);
 							ready();
 						}
 
@@ -1262,7 +1262,7 @@ public class Hero extends Character {
 				ready();
 			}
 			return false;
-		} else if (getCloser( action.dst )) {
+		} else if (moveOneStepTowardsPosition( action.dst )) {
 
 			return true;
 
@@ -1291,7 +1291,7 @@ public class Hero extends Character {
 
 			return false;
 
-		} else if (getCloser( stairs )) {
+		} else if (moveOneStepTowardsPosition( stairs )) {
 
 			return true;
 
@@ -1322,7 +1322,7 @@ public class Hero extends Character {
 
 		} else {
 
-			if (fieldOfView[enemy.position] && getCloser( enemy.position)) {
+			if (fieldOfView[enemy.position] && moveOneStepTowardsPosition( enemy.position)) {
 
 				return true;
 
@@ -1339,7 +1339,7 @@ public class Hero extends Character {
 	}
 	
 	public void rest( boolean fullRest ) {
-		spendAndNextConstant( TIME_TO_REST );
+		spendTimeAndNext( TIME_TO_REST );
 		if (hasTalent(Talent.HOLD_FAST)){
 			Buff.affect(this, HoldFast.class).pos = position;
 		}
@@ -1423,8 +1423,8 @@ public class Hero extends Character {
 
 		//regular damage interrupt, triggers on any damage except specific mild DOT effects
 		// unless the player recently hit 'continue moving', in which case this is ignored
-		if (!(sourceOfDamage instanceof Hunger || sourceOfDamage instanceof Viscosity.DeferedDamage) && damageInterrupt) {
-			interrupt();
+		if (!(sourceOfDamage instanceof Hunger || sourceOfDamage instanceof Viscosity.DeferedDamage) && isHeroPlannedActionInterruptable) {
+			interruptHeroPlannedAction();
 		}
 
 		if (this.getBuff(Drowsy.class) != null){
@@ -1455,7 +1455,7 @@ public class Hero extends Character {
 
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
 
-		//TODO improve this when I have proper damage source logic
+		//TODO: improve this when I have proper damage source logic
 		if (belongings.armor() != null && belongings.armor().hasGlyph(AntiMagic.class, this)
 				&& AntiMagic.RESISTS.contains(sourceOfDamage.getClass())){
 			dmg -= AntiMagic.drRoll(this, belongings.armor().buffedLvl());
@@ -1472,16 +1472,19 @@ public class Hero extends Character {
 		super.receiveDamageFromSource( dmg, sourceOfDamage);
 		int postHP = healthPoints + getShielding();
 		if (sourceOfDamage instanceof Hunger) postHP -= getShielding();
-		int effectiveDamage = preHP - postHP;
+		int damageReceived = preHP - postHP;
 
-		if (effectiveDamage <= 0) return;
+		if (damageReceived <= 0) return;
 
 		if (getBuff(Challenge.DuelParticipant.class) != null){
-			getBuff(Challenge.DuelParticipant.class).addDamage(effectiveDamage);
+			getBuff(Challenge.DuelParticipant.class).addDamage(damageReceived);
 		}
+		createDamageScreenEffect(damageReceived,preHP,postHP);
+	}
 
+	private void createDamageScreenEffect(int damageReceived, float preHP, float postHP) {
 		//flash red when hit for serious damage.
-		float percentDMG = effectiveDamage / (float)preHP; //percent of current HP that was taken
+		float percentDMG = damageReceived / (float)preHP; //percent of current HP that was taken
 		float percentHP = 1 - ((healthMax - postHP) / (float) healthMax); //percent health after damage was taken
 		// The flash intensity increases primarily based on damage taken and secondarily on missing HP.
 		float flashIntensity = 0.25f * (percentDMG * percentDMG) / percentHP;
@@ -1496,10 +1499,11 @@ public class Hero extends Character {
 					Sample.INSTANCE.play(Assets.Sounds.HEALTH_WARN, 1/3f + flashIntensity * 4f);
 				}
 				//hero gets interrupted on taking serious damage, regardless of any other factor
-				interrupt();
-				damageInterrupt = true;
+				interruptHeroPlannedAction();
+				isHeroPlannedActionInterruptable = true;
 			}
 		}
+
 	}
 	
 	public void checkVisibleMobs() {
@@ -1544,7 +1548,7 @@ public class Hero extends Character {
 			if (resting){
 				Dungeon.observe();
 			}
-			interrupt();
+			interruptHeroPlannedAction();
 		}
 
 		visibleEnemies = visible;
@@ -1568,7 +1572,7 @@ public class Hero extends Character {
 	//history of hero actions
 	public boolean justMoved = false;
 	
-	private boolean getCloser( final int target ) {
+	private boolean moveOneStepTowardsPosition(final int target ) {
 
 		if (target == position)
 			return false;
@@ -1640,7 +1644,7 @@ public class Hero extends Character {
 					&& (!flying || getBuff(Levitation.class) != null && getBuff(Levitation.class).detachesWithinDelay(delay))){
 				if (!Chasm.jumpConfirmed){
 					Chasm.heroJump(this);
-					interrupt();
+					interruptHeroPlannedAction();
 				} else {
 					flying = false;
 					removeBuff(getBuff(Levitation.class)); //directly remove to prevent cell pressing
@@ -1873,7 +1877,7 @@ public class Hero extends Character {
 			}
 
 			if (buff instanceof Paralysis || buff instanceof Vertigo) {
-				interrupt();
+				interruptHeroPlannedAction();
 			}
 
 		}
@@ -1918,7 +1922,7 @@ public class Hero extends Character {
 		}
 
 		if (ankh != null) {
-			interrupt();
+			interruptHeroPlannedAction();
 
 			if (ankh.isBlessed()) {
 				this.healthPoints = healthMax / 4;
@@ -2336,14 +2340,14 @@ public class Hero extends Character {
 					Buff.affect(this, Hunger.class).affectHunger(TIME_TO_SEARCH - HUNGER_FOR_SEARCH);
 				}
 			}
-			spendAndNext(TIME_TO_SEARCH);
+			spendTimeAdjustedAndNext(TIME_TO_SEARCH);
 			
 		}
 		
 		if (smthFound) {
 			GLog.w( Messages.get(this, "noticed_smth") );
 			Sample.INSTANCE.play( Assets.Sounds.SECRET );
-			interrupt();
+			interruptHeroPlannedAction();
 		}
 
 		if (foresight){

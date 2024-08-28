@@ -128,7 +128,7 @@ public class AscensionChallenge extends Buff {
 				&& Dungeon.hero.getBuff(AscensionChallenge.class).stacks >= 2f){
 			for (Mob m : Dungeon.level.mobs){
 				if (m.alignment == Character.Alignment.ENEMY && m.getDistanceToOtherCharacter(Dungeon.hero) > 8) {
-					m.beckon(Dungeon.hero.position);
+					m.travelToPosition(Dungeon.hero.position);
 				}
 			}
 		}

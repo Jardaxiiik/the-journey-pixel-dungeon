@@ -268,7 +268,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			comboTime = 5f;
 			Invisibility.dispel();
 			Buff.affect(target, ParryTracker.class, Actor.TICK);
-			((Hero)target).spendAndNext(Actor.TICK);
+			((Hero)target).spendTimeAdjustedAndNext(Actor.TICK);
 			Dungeon.hero.busy();
 		} else {
 			moveBeingUsed = move;
@@ -331,7 +331,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				dmgMulti = 0;
 				break;
 			case SLAM:
-				dmgBonus = Math.round(target.drRoll() * count / 5f);
+				dmgBonus = Math.round(target.getArmorPointsRolled() * count / 5f);
 				break;
 			case CRUSH:
 				dmgMulti = 0.25f * count;
@@ -377,7 +377,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 								&& PathFinder.distance[ch.position] < Integer.MAX_VALUE) {
 							int aoeHit = Math.round(target.getDamageRoll() * 0.25f * count);
 							aoeHit /= 2;
-							aoeHit -= ch.drRoll();
+							aoeHit -= ch.getArmorPointsRolled();
 							if (ch.getBuff(Vulnerable.class) != null) aoeHit *= 1.33f;
 							if (ch instanceof DwarfKing){
 								//change damage type for DK so that crush AOE doesn't count for DK's challenge badge
@@ -412,7 +412,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			case CLOBBER:
 				clobberUsed = true;
 				if (getHighestMove() == null) ActionIndicator.clearAction(Combo.this);
-				hero.spendAndNext(hero.attackDelay());
+				hero.spendTimeAdjustedAndNext(hero.attackDelay());
 				break;
 
 			case PARRY:
@@ -434,14 +434,14 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					detach();
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 					ActionIndicator.clearAction(Combo.this);
-					hero.spendAndNext(hero.attackDelay());
+					hero.spendTimeAdjustedAndNext(hero.attackDelay());
 				}
 				break;
 
 			default:
 				detach();
 				ActionIndicator.clearAction(Combo.this);
-				hero.spendAndNext(hero.attackDelay());
+				hero.spendTimeAdjustedAndNext(hero.attackDelay());
 				break;
 		}
 

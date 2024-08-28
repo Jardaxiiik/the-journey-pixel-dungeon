@@ -61,7 +61,7 @@ public class WaterOfHealth extends WellWater {
 		
 		CellEmitter.get( hero.position).start( ShaftParticle.FACTORY, 0.2f, 3 );
 
-		Dungeon.hero.interrupt();
+		Dungeon.hero.interruptHeroPlannedAction();
 	
 		GLog.p( Messages.get(this, "procced") );
 		

@@ -1246,7 +1246,7 @@ public abstract class Level implements Bundlable {
 
             } else {
                 if (Dungeon.hero.position == cell) {
-                    Dungeon.hero.interrupt();
+                    Dungeon.hero.interruptHeroPlannedAction();
                 }
                 trap.trigger();
 

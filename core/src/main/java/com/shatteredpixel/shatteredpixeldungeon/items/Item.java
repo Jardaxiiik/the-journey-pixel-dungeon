@@ -122,7 +122,7 @@ public class Item implements Bundlable {
 			
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
-			hero.spendAndNext( TIME_TO_PICK_UP );
+			hero.spendTimeAdjustedAndNext( TIME_TO_PICK_UP );
 			return true;
 			
 		} else {
@@ -131,7 +131,7 @@ public class Item implements Bundlable {
 	}
 	
 	public void doDrop( Hero hero ) {
-		hero.spendAndNext(TIME_TO_DROP);
+		hero.spendTimeAdjustedAndNext(TIME_TO_DROP);
 		int pos = hero.position;
 		Dungeon.level.dropItemOnPosition(detachAll(hero.belongings.backpack), pos).sprite.drop(pos);
 	}
@@ -633,7 +633,7 @@ public class Item implements Bundlable {
 								user.getBuff(Talent.LethalMomentumTracker.class).detach();
 								user.next();
 							} else {
-								user.spendAndNext(delay);
+								user.spendTimeAdjustedAndNext(delay);
 							}
 						}
 					});
