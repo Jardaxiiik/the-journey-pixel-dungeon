@@ -35,8 +35,8 @@ public class Roots extends FlavourBuff {
 	
 	@Override
 	public boolean attachTo( Character target ) {
-		if (!target.flying && super.attachTo( target )) {
-			target.rooted = true;
+		if (!target.getCharacterMovement().isFlying() && super.attachTo( target )) {
+			target.getCharacterMovement().setRooted(true);
 			return true;
 		} else {
 			return false;
@@ -45,7 +45,7 @@ public class Roots extends FlavourBuff {
 	
 	@Override
 	public void detach() {
-		target.rooted = false;
+		target.getCharacterMovement().setRooted(false);
 		super.detach();
 	}
 	

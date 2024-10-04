@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.DarkBlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
@@ -222,7 +222,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 		isMoving = true;
 		
-		if (visible && Dungeon.level.water[from] && !ch.flying) {
+		if (visible && Dungeon.level.water[from] && !ch.getCharacterMovement().isFlying()) {
 			GameScene.ripple( from );
 		}
 
@@ -712,7 +712,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public void onComplete( Tweener tweener ) {
 		if (tweener == jumpTweener) {
 
-			if (visible && Dungeon.level.water[ch.position] && !ch.flying) {
+			if (visible && Dungeon.level.water[ch.position] && !ch.getCharacterMovement().isFlying()) {
 				GameScene.ripple( ch.position);
 			}
 			if (jumpCallback != null) {

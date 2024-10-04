@@ -38,7 +38,7 @@ public class Fury extends Buff {
 			detach();
 		}
 		
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		
 		return true;
 	}

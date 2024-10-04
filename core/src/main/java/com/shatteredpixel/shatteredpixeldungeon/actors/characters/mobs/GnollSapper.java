@@ -21,9 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -75,17 +77,17 @@ public class GnollSapper extends Mob {
 
 	public void losePartner(){
 		if (partnerID != -1){
-			if (getById(partnerID) instanceof GnollGuard) {
-				((GnollGuard) getById(partnerID)).loseSapper();
-			} else if (getById(partnerID) instanceof GnollGeomancer) {
-				((GnollGeomancer) getById(partnerID)).loseSapper();
+			if (DungeonActorsHandler.getById(partnerID) instanceof GnollGuard) {
+				((GnollGuard) DungeonActorsHandler.getById(partnerID)).loseSapper();
+			} else if (DungeonActorsHandler.getById(partnerID) instanceof GnollGeomancer) {
+				((GnollGeomancer) DungeonActorsHandler.getById(partnerID)).loseSapper();
 			}
 			partnerID = -1;
 		}
 	}
 
 	public Actor getPartner(){
-		return getById(partnerID);
+		return DungeonActorsHandler.getById(partnerID);
 	}
 
 	@Override
@@ -126,7 +128,7 @@ public class GnollSapper extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (throwingRockFromPos != -1){
 
 			boolean attacked = Dungeon.level.map[throwingRockFromPos] == Terrain.MINE_BOULDER;
@@ -138,7 +140,7 @@ public class GnollSapper extends Mob {
 			throwingRockFromPos = -1;
 			throwingRockToPos = -1;
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return !attacked;
 		} else {
 			return super.playGameTurn();
@@ -158,9 +160,9 @@ public class GnollSapper extends Mob {
 			} else {
 				enemySeen = true;
 
-				if (getById(partnerID) != null
+				if (DungeonActorsHandler.getById(partnerID) != null
 						&& Dungeon.level.distance(position, enemy.position) <= 3){
-					Mob partner = (Mob) getById(partnerID);
+					Mob partner = (Mob) DungeonActorsHandler.getById(partnerID);
 					if (partner.state == partner.SLEEPING){
 						partner.notice();
 					}
@@ -197,12 +199,12 @@ public class GnollSapper extends Mob {
 
 						Dungeon.hero.interruptHeroPlannedAction();
 						abilityCooldown = Random.NormalIntRange(4, 6);
-						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(enemy.cooldown()), 3*DungeonTurnsHandler.TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollSapper.this, 2, true)) {
 						lastAbilityWasRockfall = true;
 						Dungeon.hero.interruptHeroPlannedAction();
-						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(enemy.cooldown()), 3*DungeonTurnsHandler.TICK));
 						abilityCooldown = Random.NormalIntRange(4, 6);
 						return true;
 					}
@@ -212,7 +214,7 @@ public class GnollSapper extends Mob {
 				if (canAttackEnemy(enemy)){
 					return super.playGameTurn(enemyInFOV, justAlerted);
 				} else {
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				}
 			}

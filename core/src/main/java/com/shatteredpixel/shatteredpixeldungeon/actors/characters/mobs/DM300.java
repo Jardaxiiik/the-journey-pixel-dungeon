@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
@@ -155,7 +155,7 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 
 		if (paralysed > 0){
 			return super.playGameTurn();
@@ -249,7 +249,7 @@ public class DM300 extends Mob {
 
 						//doesn't spend a turn if enemy is at a distance
 						if (Dungeon.level.adjacent(position, enemy.position)){
-							spendTimeAdjusted(TICK);
+							spendTimeAdjusted(DungeonActors.TICK);
 						}
 
 						turnsSinceLastAbility = 0;
@@ -351,7 +351,7 @@ public class DM300 extends Mob {
 			BossHealthBar.assignBoss(this);
 			turnsSinceLastAbility = 0;
 			yell(Messages.get(this, "notice"));
-			for (Character ch : getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -361,7 +361,7 @@ public class DM300 extends Mob {
 
 	public void onZapComplete(){
 		ventGas(enemy);
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public void ventGas( Character target ){
@@ -374,16 +374,16 @@ public class DM300 extends Mob {
 		int gasMulti = Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 2 : 1;
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(ActorLoop.seed(i, 20*gasMulti, ToxicGas.class));
+			GameScene.addMob(ActorLoop.seed(i, 20*gasMulti, ToxicGas.class));
 			gasVented += 20*gasMulti;
 		}
 
-		GameScene.add(ActorLoop.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
+		GameScene.addMob(ActorLoop.seed(trajectory.collisionPos, 100*gasMulti, ToxicGas.class));
 
 		if (gasVented < 250*gasMulti){
 			int toVentAround = (int)Math.ceil(((250*gasMulti) - gasVented)/8f);
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				GameScene.add(ActorLoop.seed(position +i, toVentAround, ToxicGas.class));
+				GameScene.addMob(ActorLoop.seed(position +i, toVentAround, ToxicGas.class));
 			}
 
 		}
@@ -392,7 +392,7 @@ public class DM300 extends Mob {
 
 	public void onSlamComplete(){
 		dropRocks(enemy);
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public void dropRocks( Character target ) {
@@ -454,7 +454,7 @@ public class DM300 extends Mob {
 			sprite.parent.add(new TargetedCell(i, 0xFF0000));
 		}
 		//don't want to overly punish players with slow move or attack speed
-		Buff.append(this, FallingRockBuff.class, GameMath.gate(TICK, (int)Math.ceil(target.cooldown()), 3*TICK)).setRockPositions(rockCells);
+		Buff.append(this, FallingRockBuff.class, GameMath.gate(DungeonActors.TICK, (int)Math.ceil(target.cooldown()), 3*DungeonActors.TICK)).setRockPositions(rockCells);
 
 	}
 
@@ -592,13 +592,13 @@ public class DM300 extends Mob {
 			return true;
 		} else {
 
-			if (!supercharged || state != HUNTING || rooted || targetPosition == position || Dungeon.level.adjacent(position, targetPosition)) {
+			if (!supercharged || state != HUNTING || getCharacterMovement().isRooted() || targetPosition == position || Dungeon.level.adjacent(position, targetPosition)) {
 				return false;
 			}
 
 			int bestpos = position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (getCharacterOnPosition(position +i) == null &&
+				if (DungeonCharactersHandler.getCharacterOnPosition(position +i) == null &&
 						Dungeon.level.trueDistance(bestpos, targetPosition) > Dungeon.level.trueDistance(position +i, targetPosition)){
 					bestpos = position +i;
 				}
@@ -626,7 +626,7 @@ public class DM300 extends Mob {
 
 				bestpos = position;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (getCharacterOnPosition(position +i) == null && Dungeon.level.openSpace[position +i] &&
+					if (DungeonCharactersHandler.getCharacterOnPosition(position +i) == null && Dungeon.level.openSpace[position +i] &&
 							Dungeon.level.trueDistance(bestpos, targetPosition) > Dungeon.level.trueDistance(position +i, targetPosition)){
 						bestpos = position +i;
 					}

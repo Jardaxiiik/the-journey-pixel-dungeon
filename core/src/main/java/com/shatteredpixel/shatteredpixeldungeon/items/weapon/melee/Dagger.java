@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -104,9 +103,9 @@ public class Dagger extends MeleeWeapon {
 			return;
 		}
 
-		if (Actor.getCharacterOnPosition(target) != null || !Dungeon.level.heroFOV[target] || hero.rooted) {
+		if (DungeonCharactersHandler.getCharacterOnPosition(target) != null || !Dungeon.level.heroFOV[target] || hero.getCharacterMovement().isRooted()) {
 			GLog.w(Messages.get(wep, "ability_bad_position"));
-			if (Dungeon.hero.rooted) PixelScene.shake( 1, 1f );
+			if (Dungeon.hero.getCharacterMovement().isRooted()) PixelScene.shake( 1, 1f );
 			return;
 		}
 
@@ -117,8 +116,8 @@ public class Dagger extends MeleeWeapon {
 		}
 
 		wep.beforeAbilityUsed(hero, null);
-		Buff.affect(hero, Invisibility.class, Actor.TICK);
-		hero.next();
+		Buff.affect(hero, Invisibility.class, DungeonActors.TICK);
+		DungeonTurnsHandler.nextActorToPlayHero(hero);();
 
 		Dungeon.hero.sprite.turnTo( Dungeon.hero.position, target);
 		Dungeon.hero.position = target;

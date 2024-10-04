@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.PhantomMeat;
@@ -60,7 +60,7 @@ public class PhantomPiranha extends Piranha {
 				if (!Dungeon.level.adjacent(position, dmgSource.position)) {
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
-						if (Dungeon.level.water[dmgSource.position + i] && getCharacterOnPosition(dmgSource.position + i) == null) {
+						if (Dungeon.level.water[dmgSource.position + i] && DungeonCharactersHandler.getCharacterOnPosition(dmgSource.position + i) == null) {
 							candidates.add(dmgSource.position + i);
 						}
 					}
@@ -94,7 +94,7 @@ public class PhantomPiranha extends Piranha {
 		ArrayList<Integer> inFOVCandidates = new ArrayList<>();
 		ArrayList<Integer> outFOVCandidates = new ArrayList<>();
 		for (int i = 0; i < Dungeon.level.length(); i++){
-			if (Dungeon.level.water[i] && getCharacterOnPosition(i) == null){
+			if (Dungeon.level.water[i] && DungeonCharactersHandler.getCharacterOnPosition(i) == null){
 				if (Dungeon.level.heroFOV[i]){
 					inFOVCandidates.add(i);
 				} else {

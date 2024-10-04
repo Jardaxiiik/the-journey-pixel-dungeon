@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Eye;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -126,13 +125,13 @@ public class EyeSprite extends MobSprite {
 		
 		if (anim == zap) {
 			idle();
-			if (Actor.getCharacterOnPosition(zapPos) != null){
-				parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(zapPos).sprite.center()));
+			if (DungeonCharactersHandler.getCharacterOnPosition(zapPos) != null){
+				parent.add(new Beam.DeathRay(center(), DungeonCharactersHandler.getCharacterOnPosition(zapPos).sprite.center()));
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(zapPos)));
 			}
 			((Eye)ch).deathGaze();
-			ch.next();
+			ch.DungeonTurnsHandler.nextActorToPlay(this);();
 		} else if (anim == die){
 			chargeParticles.killAndErase();
 		}

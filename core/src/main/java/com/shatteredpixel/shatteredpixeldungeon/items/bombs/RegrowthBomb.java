@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
@@ -65,7 +64,7 @@ public class RegrowthBomb extends Bomb {
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
-				Character ch = Actor.getCharacterOnPosition(i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 				int t = Dungeon.level.map[i];
 				if (ch != null){
 					if (ch.alignment == Dungeon.hero.alignment) {
@@ -78,7 +77,7 @@ public class RegrowthBomb extends Bomb {
 						&& Dungeon.level.plants.get(i) == null){
 					plantCandidates.add(i);
 				}
-				GameScene.add( ActorLoop.seed( i, 10, Regrowth.class ) );
+				GameScene.addMob( ActorLoop.seed( i, 10, Regrowth.class ) );
 			}
 		}
 

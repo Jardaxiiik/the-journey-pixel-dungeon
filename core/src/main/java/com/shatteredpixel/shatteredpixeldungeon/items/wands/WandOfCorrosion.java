@@ -22,9 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.CorrosiveGas;
@@ -59,11 +58,11 @@ public class WandOfCorrosion extends Wand {
 		CorrosiveGas gas = ActorLoop.seed(bolt.collisionPos, 50 + 10 * buffedLvl(), CorrosiveGas.class);
 		CellEmitter.get(bolt.collisionPos).burst(Speck.factory(Speck.CORROSION), 10 );
 		gas.setStrength(2 + buffedLvl(), getClass());
-		GameScene.add(gas);
+		GameScene.addMob(gas);
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
-			Character ch = Actor.getCharacterOnPosition(bolt.collisionPos + i);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos + i);
 			if (ch != null) {
 				wandProc(ch, chargesPerCast());
 
@@ -73,7 +72,7 @@ public class WandOfCorrosion extends Wand {
 			}
 		}
 		
-		if (Actor.getCharacterOnPosition(bolt.collisionPos) == null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos) == null){
 			Dungeon.level.pressCell(bolt.collisionPos);
 		}
 	}

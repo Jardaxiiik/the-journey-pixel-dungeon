@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -102,13 +102,13 @@ public class SpiritBow extends Weapon {
 
 		if (attacker.getBuff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
 
-			Actor.addActor(new Actor() {
+			DungeonActors.addActor(new Actor() {
 				{
-					actPriority = VFX_PRIO;
+					actPriority = VFX_PRIORITY;
 				}
 
 				@Override
-				protected boolean playGameTurn() {
+                public boolean playGameTurn() {
 
 					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
 						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
@@ -123,7 +123,7 @@ public class SpiritBow extends Weapon {
 						}
 					}
 
-					Actor.removeActor(this);
+					DungeonActors.removeActor(this);
 					return true;
 				}
 			});
@@ -346,7 +346,7 @@ public class SpiritBow extends Weapon {
 
 		@Override
 		protected void onThrow( int cell ) {
-			Character enemy = Actor.getCharacterOnPosition( cell );
+			Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 			if (enemy == null || enemy == curUser) {
 				parent = null;
 				Splash.at( cell, 0xCC99FFFF, 1 );
@@ -373,12 +373,12 @@ public class SpiritBow extends Weapon {
 			if (sniperSpecial && SpiritBow.this.augment == Augment.SPEED){
 				if (flurryCount == -1) flurryCount = 3;
 				
-				final Character enemy = Actor.getCharacterOnPosition( cell );
+				final Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 				
 				if (enemy == null){
 					if (user.getBuff(Talent.LethalMomentumTracker.class) != null){
 						user.getBuff(Talent.LethalMomentumTracker.class).detach();
-						user.next();
+						user.DungeonTurnsHandler.nextActorToPlay(this);();
 					} else {
 						user.spendTimeAdjustedAndNext(castDelay(user, dst));
 					}
@@ -386,7 +386,7 @@ public class SpiritBow extends Weapon {
 					flurryCount = -1;
 
 					if (flurryActor != null){
-						flurryActor.next();
+						flurryActor.DungeonTurnsHandler.nextActorToPlay(this);();
 						flurryActor = null;
 					}
 					return;
@@ -413,27 +413,27 @@ public class SpiritBow extends Weapon {
 
 										flurryCount--;
 										if (flurryCount > 0){
-											Actor.addActor(new Actor() {
+											DungeonActors.addActor(new Actor() {
 
 												{
-													actPriority = VFX_PRIO-1;
+													actPriority = VFX_PRIORITY -1;
 												}
 
 												@Override
-												protected boolean playGameTurn() {
+                                                public boolean playGameTurn() {
 													flurryActor = this;
 													int target = QuickSlotButton.autoAim(enemy, SpiritArrow.this);
 													if (target == -1) target = cell;
 													cast(user, target);
-													Actor.removeActor(this);
+													DungeonActors.removeActor(this);
 													return false;
 												}
 											});
-											curUser.next();
+											curUser.DungeonTurnsHandler.nextActorToPlay(this);();
 										} else {
 											if (user.getBuff(Talent.LethalMomentumTracker.class) != null){
 												user.getBuff(Talent.LethalMomentumTracker.class).detach();
-												user.next();
+												user.DungeonTurnsHandler.nextActorToPlay(this);();
 											} else {
 												user.spendTimeAdjustedAndNext(castDelay(user, dst));
 											}
@@ -442,7 +442,7 @@ public class SpiritBow extends Weapon {
 										}
 
 										if (flurryActor != null){
-											flurryActor.next();
+											flurryActor.DungeonTurnsHandler.nextActorToPlay(this);();
 											flurryActor = null;
 										}
 									}
@@ -453,7 +453,7 @@ public class SpiritBow extends Weapon {
 				if (user.hasTalent(Talent.SEER_SHOT)
 						&& user.getBuff(Talent.SeerShotCooldown.class) == null){
 					int shotPos = throwPos(user, dst);
-					if (Actor.getCharacterOnPosition(shotPos) == null) {
+					if (DungeonCharactersHandler.getCharacterOnPosition(shotPos) == null) {
 						RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SEER_SHOT));
 						a.depth = Dungeon.depth;
 						a.pos = shotPos;

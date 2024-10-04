@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
@@ -45,7 +45,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		type = buffType.POSITIVE;
 
 		//acts before the hero
-		actPriority = HERO_PRIO+1;
+		actPriority = HERO_PRIORITY +1;
 	}
 	
 	private int momentumStacks = 0;
@@ -88,7 +88,7 @@ public class Momentum extends Buff implements ActionIndicator.Action {
 		}
 		movedLastTurn = false;
 
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonActors.TICK);
 		return true;
 	}
 	

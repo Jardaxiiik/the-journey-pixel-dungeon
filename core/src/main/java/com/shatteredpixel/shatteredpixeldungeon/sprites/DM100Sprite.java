@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DM100;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
@@ -60,7 +59,7 @@ public class DM100Sprite extends MobSprite {
 	
 	public void zap( int pos ) {
 
-		Character enemy = Actor.getCharacterOnPosition(pos);
+		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(pos);
 
 		//shoot lightning from eye, not sprite center.
 		PointF origin = center();

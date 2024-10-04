@@ -19,8 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon;
+package com.shatteredpixel.shatteredpixeldungeon.dungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
+import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
+import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
+import com.shatteredpixel.shatteredpixeldungeon.Rankings;
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.Statistics;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionPassable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -232,8 +242,10 @@ public class Dungeon {
 			seed = DungeonSeed.randomSeed();
 		}
 
-		Actor.clear();
+		DungeonActorsHandler.clear();
 		Actor.resetNextID();
+
+		DungeonCharactersHandler.clear();
 
 		//offset seed slightly to avoid output patterns
 		Random.pushGenerator( seed+1 );
@@ -293,7 +305,8 @@ public class Dungeon {
 	public static Level newLevel() {
 		
 		Dungeon.level = null;
-		Actor.clear();
+		DungeonActorsHandler.clear();
+		DungeonCharactersHandler.clear();
 		
 		Level level;
 		if (branch == 0) {
@@ -395,7 +408,8 @@ public class Dungeon {
 	
 	public static void resetLevel() {
 		
-		Actor.clear();
+		DungeonActorsHandler.clear();
+		DungeonCharactersHandler.clear();
 		
 		level.reset();
 		switchLevel( level, level.entrance() );
@@ -477,7 +491,8 @@ public class Dungeon {
 
 		Mob.restoreAllies( level, pos );
 
-		Actor.init();
+		DungeonActorsHandler.init();
+		DungeonTurnsHandler.init();
 
 		level.addRespawner();
 		
@@ -485,7 +500,7 @@ public class Dungeon {
 			if (m.position == hero.position && !Character.hasProperty(m, Character.Property.IMMOVABLE)){
 				//displace mob
 				for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (Actor.getCharacterOnPosition(m.position +i) == null && level.passable[m.position + i]){
+					if (DungeonCharactersHandler.getCharacterOnPosition(m.position +i) == null && level.passable[m.position + i]){
 						m.position += i;
 						break;
 					}
@@ -660,7 +675,7 @@ public class Dungeon {
 	public static void saveAll() throws IOException {
 		if (hero != null && (hero.isAlive() || WndResurrect.instance != null)) {
 			
-			Actor.fixTime();
+			DungeonTurnsHandler.fixTime();
 			updateLevelExplored();
 			saveGame( GamesInProgress.curSlot );
 			saveLevel( GamesInProgress.curSlot );
@@ -692,8 +707,10 @@ public class Dungeon {
 		daily = bundle.getBoolean( DAILY );
 		dailyReplay = bundle.getBoolean( DAILY_REPLAY );
 
-		Actor.clear();
+		DungeonActorsHandler.clear();
 		Actor.restoreNextID( bundle );
+
+		DungeonCharactersHandler.clear();
 
 		quickslot.reset();
 		QuickSlotButton.reset();
@@ -792,7 +809,8 @@ public class Dungeon {
 	public static Level loadLevel( int save ) throws IOException {
 		
 		Dungeon.level = null;
-		Actor.clear();
+		DungeonActorsHandler.clear();
+		DungeonCharactersHandler.clear();
 
 		Bundle bundle = FileUtils.bundleFromFile( GamesInProgress.depthFile( save, depth, branch ));
 
@@ -919,7 +937,7 @@ public class Dungeon {
 		}
 
 		for (TalismanOfForesight.CharAwareness c : hero.getBuffs(TalismanOfForesight.CharAwareness.class)){
-			Character ch = (Character) Actor.getById(c.charID);
+			Character ch = (Character) DungeonActorsHandler.getById(c.charID);
 			if (ch == null || !ch.isAlive()) continue;
 			BArray.or( level.visited, level.heroFOV, ch.position - 1 - level.width(), 3, level.visited );
 			BArray.or( level.visited, level.heroFOV, ch.position - 1, 3, level.visited );
@@ -943,7 +961,7 @@ public class Dungeon {
 			GameScene.updateFog(a.pos, 2);
 		}
 
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof WandOfWarding.Ward
 					|| ch instanceof WandOfRegrowth.Lotus
 					|| ch instanceof SpiritHawk.HawkAlly){
@@ -989,7 +1007,7 @@ public class Dungeon {
 
 	public static boolean[] findPassable(Character ch, boolean[] pass, boolean[] vis, boolean chars, boolean considerLarge){
 		setupPassable();
-		if (ch.flying || ch.getBuff( Amok.class ) != null) {
+		if (ch.getCharacterMovement().isFlying() || ch.getBuff( Amok.class ) != null) {
 			BArray.or( pass, Dungeon.level.avoid, passable );
 		} else {
 			System.arraycopy( pass, 0, passable, 0, Dungeon.level.length() );
@@ -999,10 +1017,10 @@ public class Dungeon {
 			BArray.and( passable, Dungeon.level.openSpace, passable );
 		}
 
-		ch.modifyPassable(passable);
+		ActionPassable.modifyPassable(ch, passable);
 
 		if (chars) {
-			for (Character c : Actor.getCharacters()) {
+			for (Character c : DungeonCharactersHandler.getCharacters()) {
 				if (vis[c.position]) {
 					passable[c.position] = false;
 				}
@@ -1021,7 +1039,7 @@ public class Dungeon {
 	public static int findStep(Character ch, int to, boolean[] pass, boolean[] visible, boolean chars ) {
 
 		if (Dungeon.level.adjacent( ch.position, to )) {
-			return Actor.getCharacterOnPosition( to ) == null && pass[to] ? to : -1;
+			return DungeonCharactersHandler.getCharacterOnPosition( to ) == null && pass[to] ? to : -1;
 		}
 
 		return PathFinder.getStep( ch.position, to, findPassable(ch, pass, visible, chars) );
@@ -1034,7 +1052,7 @@ public class Dungeon {
 
 		//only consider other chars impassable if our retreat step may collide with them
 		if (chars) {
-			for (Character c : Actor.getCharacters()) {
+			for (Character c : DungeonCharactersHandler.getCharacters()) {
 				if (c.position == from || Dungeon.level.adjacent(c.position, ch.position)) {
 					passable[c.position] = false;
 				}

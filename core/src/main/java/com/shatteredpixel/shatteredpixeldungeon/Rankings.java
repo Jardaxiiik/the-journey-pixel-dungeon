@@ -21,11 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
@@ -312,7 +315,8 @@ public enum Rankings {
 	public void loadGameData(Record rec){
 		Bundle data = rec.gameData;
 
-		Actor.clear();
+		DungeonActorsHandler.clear();
+		DungeonCharactersHandler.clear();
 		Dungeon.hero = null;
 		Dungeon.level = null;
 		ItemGenerator.fullReset();
@@ -482,7 +486,6 @@ public enum Rankings {
 
 		public String date;
 		public String version;
-
 		public String desc(){
 			if (win){
 				if (ascending){

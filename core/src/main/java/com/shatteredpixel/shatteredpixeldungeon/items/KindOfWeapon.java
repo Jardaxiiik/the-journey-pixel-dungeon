@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -246,7 +245,7 @@ abstract public class KindOfWeapon extends EquipableItem {
 			return false;
 		} else {
 			boolean[] passable = BArray.not(Dungeon.level.solid, null);
-			for (Character ch : Actor.getCharacters()) {
+			for (Character ch : DungeonCharactersHandler.getCharacters()) {
 				if (ch != owner) passable[ch.position] = false;
 			}
 			

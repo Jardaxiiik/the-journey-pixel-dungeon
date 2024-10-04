@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.huntress;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -59,7 +58,7 @@ public class SpectralBlades extends ArmorAbility {
 			return;
 		}
 
-		if (Actor.getCharacterOnPosition(target) == hero){
+		if (DungeonCharactersHandler.getCharacterOnPosition(target) == hero){
 			GLog.w(Messages.get(this, "self_target"));
 			return;
 		}
@@ -137,7 +136,7 @@ public class SpectralBlades extends ArmorAbility {
 
 	private Character findChar(Ballistica path, Hero hero, int wallPenetration, HashSet<Character> existingTargets){
 		for (int cell : path.path){
-			Character ch = Actor.getCharacterOnPosition(cell);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 			if (ch != null){
 				if (ch == hero || existingTargets.contains(ch) || ch.alignment == Character.Alignment.ALLY){
 					continue;

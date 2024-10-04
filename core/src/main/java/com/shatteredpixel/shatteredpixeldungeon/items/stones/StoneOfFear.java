@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
@@ -41,7 +40,7 @@ public class StoneOfFear extends Runestone {
 	@Override
 	protected void activate(int cell) {
 
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 
 		if (ch != null){
 			Buff.affect( ch, Terror.class, Terror.DURATION ).object = curUser.getId();

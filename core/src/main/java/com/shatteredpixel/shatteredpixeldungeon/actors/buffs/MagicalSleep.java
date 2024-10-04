@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.HeroAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -64,10 +65,10 @@ public class MagicalSleep extends Buff {
 			detach();
 			return true;
 		}
-		if (target.alignment == Character.Alignment.ALLY) {
-			target.healthPoints = Math.min(target.healthPoints +1, target.healthMax);
+		if (target.alignment == HeroAlignment.ALLY) {
+			target.getCharacterHealth().setHealthPoints(Math.min(target.getCharacterHealth().getHealthPoints() +1, target.getCharacterHealth().getHealthMax()));
 			if (target instanceof  Hero) ((Hero) target).resting = true;
-			if (target.healthPoints == target.healthMax) {
+			if (target.getCharacterHealth().getHealthPoints() == target.getCharacterHealth().getHealthMax()) {
 				if (target instanceof  Hero) GLog.p(Messages.get(this, "wakeup"));
 				detach();
 			}

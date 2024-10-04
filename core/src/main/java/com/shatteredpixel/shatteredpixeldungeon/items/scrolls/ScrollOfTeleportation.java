@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
@@ -71,7 +70,7 @@ public class ScrollOfTeleportation extends Scroll {
 		PathFinder.buildDistanceMap(pos, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null));
 		if (PathFinder.distance[ch.position] == Integer.MAX_VALUE
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
-				|| Actor.getCharacterOnPosition(pos) != null){
+				|| DungeonCharactersHandler.getCharacterOnPosition(pos) != null){
 			if (ch == Dungeon.hero){
 				GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );
 			}
@@ -164,7 +163,7 @@ public class ScrollOfTeleportation extends Scroll {
 			int cell;
 			for (Point p : r.charPlaceablePoints(level)){
 				cell = level.pointToCell(p);
-				if (level.passable[cell] && !level.visited[cell] && !level.secret[cell] && Actor.getCharacterOnPosition(cell) == null){
+				if (level.passable[cell] && !level.visited[cell] && !level.secret[cell] && DungeonCharactersHandler.getCharacterOnPosition(cell) == null){
 					candidates.add(cell);
 				}
 			}
@@ -183,7 +182,7 @@ public class ScrollOfTeleportation extends Scroll {
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if (!room.inside(level.cellToPoint(doorPos + i))
 								&& level.passable[doorPos + i]
-								&& Actor.getCharacterOnPosition(doorPos + i) == null){
+								&& DungeonCharactersHandler.getCharacterOnPosition(doorPos + i) == null){
 							secretDoor = room instanceof SecretRoom;
 							pos = doorPos + i;
 							break;
@@ -233,7 +232,7 @@ public class ScrollOfTeleportation extends Scroll {
 		for (int i = 0; i < Dungeon.level.length(); i++){
 			if (PathFinder.distance[i] < Integer.MAX_VALUE
 					&& !Dungeon.level.secret[i]
-					&& Actor.getCharacterOnPosition(i) == null){
+					&& DungeonCharactersHandler.getCharacterOnPosition(i) == null){
 				if (preferNotSeen && !Dungeon.level.visited[i]){
 					notSeenValid.add(i);
 				} else if (Dungeon.level.heroFOV[i]){

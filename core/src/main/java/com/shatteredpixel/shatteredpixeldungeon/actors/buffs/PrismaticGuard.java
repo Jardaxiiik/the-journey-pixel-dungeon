@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.PrismaticImage;
@@ -63,7 +62,7 @@ public class PrismaticGuard extends Buff {
 			int bestPos = -1;
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
+				if (Character.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 					if (bestPos == -1 || Dungeon.level.trueDistance(p, closest.position) < Dungeon.level.trueDistance(bestPos, closest.position)){
 						bestPos = p;
 					}
@@ -73,17 +72,17 @@ public class PrismaticGuard extends Buff {
 				PrismaticImage pris = new PrismaticImage();
 				pris.duplicate(hero, (int)Math.floor(HP) );
 				pris.state = pris.HUNTING;
-				GameScene.add(pris, 1);
+				GameScene.addMob(pris, 1);
 				ScrollOfTeleportation.appear(pris, bestPos);
 				
 				detach();
 			} else {
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonActors.TICK );
 			}
 			
 			
 		} else {
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 		}
 		
 		LockedFloor lock = target.getBuff(LockedFloor.class);

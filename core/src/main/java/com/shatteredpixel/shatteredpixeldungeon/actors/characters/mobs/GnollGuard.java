@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Spear;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -59,8 +59,8 @@ public class GnollGuard extends Mob {
 
 	public boolean hasSapper(){
 		return sapperID != -1
-				&& getById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper) getById(sapperID)).isAlive();
+				&& DungeonActors.getById(sapperID) instanceof GnollSapper
+				&& ((GnollSapper) DungeonActors.getById(sapperID)).isAlive();
 	}
 
 	public void loseSapper(){
@@ -88,8 +88,8 @@ public class GnollGuard extends Mob {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage) {
-		int dmg = super.attackProc(enemy, damage);
+	public int attackProc_1(Character enemy, int damage) {
+		int dmg = ActionAttack.attackProc(this,enemy, damage);
 		if (enemy == Dungeon.hero && !Dungeon.level.adjacent(position, enemy.position) && dmg > 12){
 			GLog.n(Messages.get(this, "spear_warn"));
 		}
@@ -141,7 +141,7 @@ public class GnollGuard extends Mob {
 		@Override
 		protected int randomDestination() {
 			if (hasSapper()){
-				return ((GnollSapper) getById(sapperID)).position;
+				return ((GnollSapper) DungeonActors.getById(sapperID)).position;
 			} else {
 				return super.randomDestination();
 			}

@@ -23,8 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -71,7 +71,7 @@ public class WandOfWarding extends Wand {
 	public boolean tryToZap(Hero owner, int target) {
 		
 		int currentWardEnergy = 0;
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof Ward){
 				currentWardEnergy += ((Ward) ch).tier;
 			}
@@ -88,7 +88,7 @@ public class WandOfWarding extends Wand {
 		
 		wardAvailable = (currentWardEnergy < maxWardEnergy);
 		
-		Character ch = Actor.getCharacterOnPosition(target);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 		if (ch instanceof Ward){
 			if (!wardAvailable && ((Ward) ch).tier <= 3){
 				GLog.w( Messages.get(this, "no_more_wards"));
@@ -108,11 +108,11 @@ public class WandOfWarding extends Wand {
 	public void onZap(Ballistica bolt) {
 
 		int target = bolt.collisionPos;
-		Character ch = Actor.getCharacterOnPosition(target);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 		if (ch != null && !(ch instanceof Ward)){
 			if (bolt.dist > 1) target = bolt.path.get(bolt.dist-1);
 
-			ch = Actor.getCharacterOnPosition(target);
+			ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 			if (ch != null && !(ch instanceof Ward)){
 				GLog.w( Messages.get(this, "bad_location"));
 				Dungeon.level.pressCell(bolt.collisionPos);
@@ -141,7 +141,7 @@ public class WandOfWarding extends Wand {
 			Ward ward = new Ward();
 			ward.position = target;
 			ward.wandLevel = buffedLvl();
-			GameScene.add(ward, 1f);
+			GameScene.addMob(ward, 1f);
 			Dungeon.level.occupyCell(ward);
 			ward.sprite.emitter().burst(MagicMissile.WardParticle.UP, ward.tier);
 			Dungeon.level.pressCell(target);
@@ -175,7 +175,7 @@ public class WandOfWarding extends Wand {
 
 			float powerMulti = Math.max(1f, procChance);
 
-			for (Character ch : Actor.getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof Ward){
 					((Ward) ch).wandHeal(staff.buffedLvl(), powerMulti);
 					ch.sprite.emitter().burst(MagicMissile.WardParticle.UP, ((Ward) ch).tier);
@@ -297,7 +297,7 @@ public class WandOfWarding extends Wand {
 			if (tier > 3){
 				evasionSkill = 4 + Dungeon.scalingDepth();
 			}
-			return super.getEvasionAgainstAttacker(enemy);
+			return ActionHit.getEvasionAgainstAttacker(this,enemy);
 		}
 
 		@Override
@@ -365,7 +365,7 @@ public class WandOfWarding extends Wand {
 
 		public void onZapComplete() {
 			zap();
-			next();
+			DungeonTurnsHandler.nextActorToPlay(this);();
 		}
 
 		@Override

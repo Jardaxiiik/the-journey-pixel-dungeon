@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.duelist;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
@@ -188,7 +187,7 @@ public class ElementalStrike extends ArmorAbility {
 			@Override
 			public void call() {
 
-				Character enemy = Actor.getCharacterOnPosition(target);
+				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 
 				if (enemy != null) {
 					if (hero.isCharmedBy(enemy)) {
@@ -228,7 +227,7 @@ public class ElementalStrike extends ArmorAbility {
 	private void preAttackEffect(ConeAOE cone, Hero hero, Weapon.Enchantment ench){
 
 		int targetsHit = 0;
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
@@ -287,7 +286,7 @@ public class ElementalStrike extends ArmorAbility {
 	private void perCellEffect(ConeAOE cone, Weapon.Enchantment ench){
 
 		int targetsHit = 0;
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
@@ -298,19 +297,19 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Blazing ***
 		if (ench instanceof Blazing){
 			for (int cell : cone.cells) {
-				GameScene.add(ActorLoop.seed(cell, Math.round(8 * powerMulti), Fire.class));
+				GameScene.addMob(ActorLoop.seed(cell, Math.round(8 * powerMulti), Fire.class));
 			}
 
 		//*** Chilling ***
 		} else if (ench instanceof Chilling){
 			for (int cell : cone.cells) {
-				GameScene.add(ActorLoop.seed(cell, Math.round(8 * powerMulti), Freezing.class));
+				GameScene.addMob(ActorLoop.seed(cell, Math.round(8 * powerMulti), Freezing.class));
 			}
 
 		//*** Shocking ***
 		} else if (ench instanceof Shocking){
 			for (int cell : cone.cells) {
-				GameScene.add(ActorLoop.seed(cell, Math.round(8 * powerMulti), Electricity.class));
+				GameScene.addMob(ActorLoop.seed(cell, Math.round(8 * powerMulti), Electricity.class));
 			}
 
 		//*** Blooming ***
@@ -338,7 +337,7 @@ public class ElementalStrike extends ArmorAbility {
 				if (terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
 						terr == Terrain.GRASS) {
 					if (grassToPlace > 0
-							&& !Character.hasProperty(Actor.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)
+							&& !Character.hasProperty(DungeonCharactersHandler.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)
 							&& Dungeon.level.plants.get(cell) == null){
 						Level.set(cell, highGrassType);
 						grassToPlace--;
@@ -361,7 +360,7 @@ public class ElementalStrike extends ArmorAbility {
 
 		ArrayList<Character> affected = new ArrayList<>();
 
-		for (Character ch : Actor.getCharacters()) {
+		for (Character ch : DungeonCharactersHandler.getCharacters()) {
 			if (ch.alignment != Character.Alignment.ALLY && cone.cells.contains(ch.position)) {
 				affected.add(ch);
 			}

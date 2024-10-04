@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -97,7 +96,7 @@ public class Fire extends ActorLoop {
 	}
 	
 	public static void burn( int pos ) {
-		Character ch = Actor.getCharacterOnPosition( pos );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( pos );
 		if (ch != null && !ch.isImmuneToEffectType(Fire.class)) {
 			Buff.affect( ch, Burning.class ).reignite( ch );
 		}

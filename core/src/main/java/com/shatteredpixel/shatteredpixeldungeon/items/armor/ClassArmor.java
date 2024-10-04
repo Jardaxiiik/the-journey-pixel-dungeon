@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.armor;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -270,7 +270,7 @@ abstract public class ClassArmor extends Armor {
 								hero.sprite.operate(hero.position);
 								hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
 								Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-								hero.spendTimeAdjusted(Actor.TICK);
+								hero.spendTimeAdjusted(DungeonActors.TICK);
 								hero.busy();
 
 							}
@@ -317,7 +317,7 @@ abstract public class ClassArmor extends Armor {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonActors.TICK);
 				}
 				return true;
 			}
@@ -335,7 +335,7 @@ abstract public class ClassArmor extends Armor {
 					charge = 100;
 				}
 			}
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 	}

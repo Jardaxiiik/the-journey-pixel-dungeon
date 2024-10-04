@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -36,6 +37,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Blacksmith;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
@@ -85,14 +89,14 @@ public class CrystalSpire extends Mob {
 	private ArrayList<ArrayList<Integer>> targetedCells = new ArrayList<>();
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
 		}
 		Dungeon.level.updateFieldOfView( this, fieldOfView );
 
-		throwItems();
+		ActionThrowItems.throwItems(this);
 
 		sprite.hideAlert();
 		sprite.hideLost();
@@ -110,7 +114,7 @@ public class CrystalSpire extends Mob {
 
 			for (int i : cellsToAttack){
 
-				Character ch = getCharacterOnPosition(i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 				if (ch instanceof CrystalSpire){
 					continue; //don't spawn crystals on itself
 				}
@@ -122,7 +126,7 @@ public class CrystalSpire extends Mob {
 			}
 
 			for (int i : cellsToAttack){
-				Character ch = getCharacterOnPosition(i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 
 				if (ch != null && !(ch instanceof CrystalWisp || ch instanceof CrystalSpire)){
 					int dmg = Random.NormalIntRange(6, 15);
@@ -138,14 +142,14 @@ public class CrystalSpire extends Mob {
 					//crystal guardians get knocked away from the hero, others get knocked away from the spire
 					if (ch instanceof CrystalGuardian){
 						for (int j : PathFinder.OFFSETS_NEIGHBOURS8){
-							if (!Dungeon.level.solid[i+j] && getCharacterOnPosition(i+j) == null &&
+							if (!Dungeon.level.solid[i+j] && DungeonCharactersHandler.getCharacterOnPosition(i+j) == null &&
 									Dungeon.level.trueDistance(i+j, Dungeon.hero.position) > Dungeon.level.trueDistance(movePos, Dungeon.hero.position)){
 								movePos = i+j;
 							}
 						}
 					} else if (!hasProperty(ch, Property.IMMOVABLE)) {
 						for (int j : PathFinder.OFFSETS_NEIGHBOURS8){
-							if (!Dungeon.level.solid[i+j] && getCharacterOnPosition(i+j) == null &&
+							if (!Dungeon.level.solid[i+j] && DungeonCharactersHandler.getCharacterOnPosition(i+j) == null &&
 									Dungeon.level.trueDistance(i+j, position) > Dungeon.level.trueDistance(movePos, position)){
 								movePos = i+j;
 							}
@@ -154,7 +158,7 @@ public class CrystalSpire extends Mob {
 
 					if (ch.isAlive()){
 						if (movePos != i){
-							addActor(new Pushing(ch, i, movePos));
+							DungeonActorsHandler.addActor(new Pushing(ch, i, movePos));
 							ch.position = movePos;
 							Dungeon.level.occupyCell(ch);
 						}
@@ -177,7 +181,7 @@ public class CrystalSpire extends Mob {
 		}
 
 		if (hits < 3 || !enemySeen){
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		} else {
 
@@ -195,11 +199,11 @@ public class CrystalSpire extends Mob {
 
 				abilityCooldown += ABILITY_CD;
 
-				spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
+				spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*DungeonTurnsHandler.TICK));
 				Dungeon.hero.interruptHeroPlannedAction();
 			} else {
 				abilityCooldown -= 1;
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			}
 
 		}
@@ -352,7 +356,7 @@ public class CrystalSpire extends Mob {
 							}
 						}
 
-						for (Character ch : getCharacters()){
+						for (Character ch : DungeonCharactersHandler.getCharacters()){
 							if (fieldOfView[ch.position]) {
 								if (ch instanceof CrystalGuardian) {
 									ch.receiveDamageFromSource(ch.healthMax, new SpireSpike());
@@ -383,7 +387,7 @@ public class CrystalSpire extends Mob {
 						}
 
 						boolean affectingGuardians = false;
-						for (Character ch : getCharacters()) {
+						for (Character ch : DungeonCharactersHandler.getCharacters()) {
 							if (ch instanceof CrystalWisp) {
 								if (((CrystalWisp) ch).state != ((CrystalWisp)ch).HUNTING && ((CrystalWisp) ch).target != position) {
 									((CrystalWisp) ch).travelToPosition(position);
@@ -407,7 +411,7 @@ public class CrystalSpire extends Mob {
 							}
 							PathFinder.buildDistanceMap(position, passable);
 
-							for (Character ch : getCharacters()) {
+							for (Character ch : DungeonCharactersHandler.getCharacters()) {
 								if (ch instanceof CrystalGuardian){
 									if (((CrystalGuardian) ch).state == ((CrystalGuardian) ch).SLEEPING) {
 

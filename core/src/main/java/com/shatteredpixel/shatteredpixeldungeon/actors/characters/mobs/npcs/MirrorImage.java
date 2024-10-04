@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
@@ -62,10 +62,10 @@ public class MirrorImage extends NPC {
 	public int armTier;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		
 		if ( hero == null ){
-			hero = (Hero)Actor.getById(heroID);
+			hero = (Hero)DungeonActors.getById(heroID);
 			if ( hero == null ){
 				die(null);
 				sprite.killAndErase();
@@ -131,7 +131,7 @@ public class MirrorImage extends NPC {
 			
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion boost
-			return super.getEvasionAgainstAttacker(enemy) * (baseEvasion + heroEvasion) / 2;
+			return ActionHit.getEvasionAgainstAttacker(this,enemy) * (baseEvasion + heroEvasion) / 2;
 		} else {
 			return 0;
 		}
@@ -158,8 +158,8 @@ public class MirrorImage extends NPC {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		
 		MirrorInvis buff = getBuff(MirrorInvis.class);
 		if (buff != null){
@@ -185,7 +185,7 @@ public class MirrorImage extends NPC {
 	public CharSprite sprite() {
 		CharSprite s = super.sprite();
 		
-		hero = (Hero)Actor.getById(heroID);
+		hero = (Hero)DungeonActors.getById(heroID);
 		if (hero != null) {
 			armTier = hero.tier();
 		}

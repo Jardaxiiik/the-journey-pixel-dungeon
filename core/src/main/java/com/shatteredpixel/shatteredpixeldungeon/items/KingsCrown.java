@@ -91,7 +91,7 @@ public class KingsCrown extends Item {
 		detach(hero.belongings.backpack);
 
 		hero.sprite.emitter().burst( Speck.factory( Speck.CROWN), 12 );
-		hero.spendTimeAdjusted(Actor.TICK);
+		hero.spendTimeAdjusted(DungeonActors.TICK);
 		hero.busy();
 
 		if (armor != null){

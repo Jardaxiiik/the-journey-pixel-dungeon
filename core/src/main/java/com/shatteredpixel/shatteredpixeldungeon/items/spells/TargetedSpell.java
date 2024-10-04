@@ -76,10 +76,10 @@ public abstract class TargetedSpell extends Spell {
 				curUser.sprite.zap(cell);
 				
 				//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
-				if (Actor.getCharacterOnPosition(target) != null)
-					QuickSlotButton.target(Actor.getCharacterOnPosition(target));
+				if (Character.getCharacterOnPosition(target) != null)
+					QuickSlotButton.target(Character.getCharacterOnPosition(target));
 				else
-					QuickSlotButton.target(Actor.getCharacterOnPosition(cell));
+					QuickSlotButton.target(Character.getCharacterOnPosition(cell));
 				
 				curUser.busy();
 				

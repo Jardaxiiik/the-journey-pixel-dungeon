@@ -22,11 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
@@ -171,16 +173,16 @@ public class Dart extends MissileWeapon {
 			PathFinder.buildDistanceMap(chargedShotPos, Dungeon.level.passable, 2);
 			//necessary to clone as some on-hit effects use Pathfinder
 			int[] distance = PathFinder.distance.clone();
-			for (Character ch : Actor.getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch == target){
-					Actor.addActor(new Actor() {
-						{ actPriority = VFX_PRIO; }
+					DungeonActorsHandler.addActor(new Actor() {
+						{ actPriority = VFX_PRIORITY; }
 						@Override
-						protected boolean playGameTurn() {
+                        public boolean playGameTurn() {
 							if (!ch.isAlive()){
 								bow.onAbilityKill(Dungeon.hero, ch);
 							}
-							Actor.removeActor(this);
+							DungeonActorsHandler.removeActor(this);
 							return true;
 						}
 					});

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -50,7 +50,7 @@ public class LootIndicator extends Tag {
 			protected void onClick() {
 				LootIndicator.this.onClick();
 				if (Dungeon.hero.ready && Dungeon.hero.chooseHeroActionBasedOnTile(Dungeon.hero.position)){
-					Dungeon.hero.next();
+					DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 				}
 
 			}

@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -34,6 +33,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.NPC;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -58,7 +59,7 @@ public class Multiplicity extends Armor.Glyph {
 
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				int p = defender.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+				if (DungeonCharactersHandler.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 					spawnPoints.add( p );
 				}
 			}
@@ -83,7 +84,7 @@ public class Multiplicity extends Armor.Glyph {
 							|| toDuplicate instanceof Mimic || toDuplicate instanceof Statue || toDuplicate instanceof NPC) {
 						m = Dungeon.level.createMob();
 					} else {
-						Actor.fixTime();
+						DungeonTurnsHandler.fixTime();
 
 						m = (Mob)Reflection.newInstance(toDuplicate.getClass());
 						
@@ -121,7 +122,7 @@ public class Multiplicity extends Armor.Glyph {
 
 					if (!spawnPoints.isEmpty()) {
 						m.position = Random.element(spawnPoints);
-						GameScene.add(m);
+						GameScene.addMob(m);
 						ScrollOfTeleportation.appear(m, m.position);
 					}
 				}

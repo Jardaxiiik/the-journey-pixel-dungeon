@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;

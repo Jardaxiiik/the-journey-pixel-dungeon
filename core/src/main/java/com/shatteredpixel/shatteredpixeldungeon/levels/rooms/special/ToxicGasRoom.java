@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
@@ -131,9 +131,9 @@ public class ToxicGasRoom extends SpecialRoom {
 						volume += off[cell];
 
 						if (gas == null || gas.volume == 0){
-							GameScene.add(ActorLoop.seed(cell, off[cell], ToxicGas.class));
+							GameScene.addMob(ActorLoop.seed(cell, off[cell], ToxicGas.class));
 						} else if (gas.cur[cell] <= 9*off[cell]){
-							GameScene.add(ActorLoop.seed(cell, off[cell], ToxicGas.class));
+							GameScene.addMob(ActorLoop.seed(cell, off[cell], ToxicGas.class));
 						}
 					}
 				}

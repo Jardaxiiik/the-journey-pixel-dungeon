@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
@@ -35,7 +35,7 @@ public class Web extends ActorLoop {
 
 	{
 		//acts before the hero, to ensure terrain is adjusted correctly
-		actPriority = HERO_PRIO+1;
+		actPriority = HERO_PRIORITY +1;
 	}
 	
 	@Override

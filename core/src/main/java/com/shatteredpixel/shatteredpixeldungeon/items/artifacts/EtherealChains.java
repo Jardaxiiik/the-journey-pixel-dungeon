@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -128,8 +127,8 @@ public class EtherealChains extends Artifact {
 				
 				final Ballistica chain = new Ballistica(curUser.position, target, Ballistica.STOP_TARGET);
 				
-				if (Actor.getCharacterOnPosition( chain.collisionPos ) != null){
-					chainEnemy( chain, curUser, Actor.getCharacterOnPosition( chain.collisionPos ));
+				if (DungeonCharactersHandler.getCharacterOnPosition( chain.collisionPos ) != null){
+					chainEnemy( chain, curUser, DungeonCharactersHandler.getCharacterOnPosition( chain.collisionPos ));
 				} else {
 					chainLocation( chain, curUser );
 				}
@@ -156,7 +155,7 @@ public class EtherealChains extends Artifact {
 		for (int i : chain.subPath(1, chain.dist)){
 			//prefer to the earliest point on the path
 			if (!Dungeon.level.solid[i]
-					&& Actor.getCharacterOnPosition(i) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(i) == null
 					&& (!Character.hasProperty(enemy, Character.Property.LARGE) || Dungeon.level.openSpace[i])){
 				bestPos = i;
 				break;
@@ -184,7 +183,7 @@ public class EtherealChains extends Artifact {
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {
 			public void call() {
-				Actor.addActor(new Pushing(enemy, enemy.position, pulledPos, new Callback() {
+				DungeonActors.addActor(new Pushing(enemy, enemy.position, pulledPos, new Callback() {
 					public void call() {
 						enemy.position = pulledPos;
 						Dungeon.level.occupyCell(enemy);
@@ -198,7 +197,7 @@ public class EtherealChains extends Artifact {
 						updateQuickslot();
 					}
 				}));
-				hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(hero);();
 			}
 		}));
 	}
@@ -207,7 +206,7 @@ public class EtherealChains extends Artifact {
 	private void chainLocation( Ballistica chain, final Hero hero ){
 
 		//don't pull if rooted
-		if (hero.rooted){
+		if (hero.getCharacterMovement().isRooted()){
 			PixelScene.shake( 1, 1f );
 			GLog.w( Messages.get(EtherealChains.class, "rooted") );
 			return;
@@ -249,7 +248,7 @@ public class EtherealChains extends Artifact {
 				Effects.Type.ETHEREAL_CHAIN,
 				new Callback() {
 			public void call() {
-				Actor.addActor(new Pushing(hero, hero.position, newHeroPos, new Callback() {
+				DungeonActors.addActor(new Pushing(hero, hero.position, newHeroPos, new Callback() {
 					public void call() {
 						hero.position = newHeroPos;
 						Dungeon.level.occupyCell(hero);
@@ -263,7 +262,7 @@ public class EtherealChains extends Artifact {
 						updateQuickslot();
 					}
 				}));
-				hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(hero);();
 			}
 		}));
 	}
@@ -325,7 +324,7 @@ public class EtherealChains extends Artifact {
 
 			updateQuickslot();
 
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 
 			return true;
 		}

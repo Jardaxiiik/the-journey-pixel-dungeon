@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.mage;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -187,26 +187,26 @@ public class WildMagic extends ArmorAbility {
 			cur.curCharges--;
 		}
 		if (wildMagicActor != null){
-			wildMagicActor.next();
+			wildMagicActor.DungeonTurnsHandler.nextActorToPlay(this);();
 			wildMagicActor = null;
 		}
 
-		Character ch = Actor.getCharacterOnPosition(target);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 		if (!wands.isEmpty() && hero.isAlive()) {
-			Actor.addActor(new Actor() {
+			DungeonActors.addActor(new Actor() {
 				{
-					actPriority = VFX_PRIO-1;
+					actPriority = VFX_PRIORITY -1;
 				}
 
 				@Override
-				protected boolean playGameTurn() {
+                public boolean playGameTurn() {
 					wildMagicActor = this;
 					zapWand(wands, hero, ch == null ? target : ch.position);
-					Actor.removeActor(this);
+					DungeonActors.removeActor(this);
 					return false;
 				}
 			});
-			hero.next();
+			DungeonTurnsHandler.nextActorToPlayHero(hero);();
 		} else {
 			if (hero.getBuff(WildMagicTracker.class) != null) {
 				hero.getBuff(WildMagicTracker.class).detach();
@@ -214,9 +214,9 @@ public class WildMagic extends ArmorAbility {
 			Item.updateQuickslot();
 			Invisibility.dispel();
 			if (Random.Int(4) >= hero.pointsInTalent(Talent.CONSERVED_MAGIC)) {
-				hero.spendTimeAdjustedAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 			} else {
-				hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(hero);();
 			}
 		}
 	}

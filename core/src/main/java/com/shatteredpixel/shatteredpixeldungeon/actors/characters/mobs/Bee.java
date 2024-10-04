@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -42,8 +42,8 @@ public class Bee extends Mob {
 		viewDistance = 4;
 
 		EXP = 0;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 		state = WANDERING;
 		
 		//only applicable when the bee is charmed with elixir of honeyed healing
@@ -114,8 +114,8 @@ public class Bee extends Mob {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		if (enemy instanceof Mob) {
 			((Mob)enemy).startHunting( this );
 		}
@@ -142,14 +142,14 @@ public class Bee extends Mob {
 			return super.chooseEnemy();
 		
 		//if something is holding the pot, target that
-		}else if (getById(potHolder) != null){
-			return (Character) getById(potHolder);
+		}else if (DungeonActors.getById(potHolder) != null){
+			return (Character) DungeonActors.getById(potHolder);
 			
 		//if the pot is on the ground
 		}else {
 			
 			//try to find a new enemy in these circumstances
-			if (enemy == null || !enemy.isAlive() || !getCharacters().contains(enemy) || state == WANDERING
+			if (enemy == null || !enemy.isAlive() || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING
 					|| Dungeon.level.distance(enemy.position, potPos) > 3
 					|| (alignment == Alignment.ALLY && enemy.alignment == Alignment.ALLY)
 					|| (getBuff( Amok.class ) == null && enemy.isInvulnerableToEffectType(getClass()))){
@@ -188,7 +188,7 @@ public class Bee extends Mob {
 	protected boolean moveCloserToTarget(int targetPosition) {
 		if (alignment == Alignment.ALLY && enemy == null && getBuffs(AllyBuff.class).isEmpty()){
 			targetPosition = Dungeon.hero.position;
-		} else if (enemy != null && getById(potHolder) == enemy) {
+		} else if (enemy != null && DungeonActors.getById(potHolder) == enemy) {
 			targetPosition = enemy.position;
 		} else if (potPos != -1 && (state == WANDERING || Dungeon.level.distance(targetPosition, potPos) > 3))
 			this.target = targetPosition = potPos;

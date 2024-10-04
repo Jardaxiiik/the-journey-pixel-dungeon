@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -100,7 +100,7 @@ public class Paralysis extends FlavourBuff {
 				damage -= Math.ceil(damage / 10f);
 				if (damage >= 0) detach();
 			}
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 		

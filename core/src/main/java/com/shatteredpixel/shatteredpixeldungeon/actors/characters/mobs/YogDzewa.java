@@ -24,7 +24,10 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDeath;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -39,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Sheep;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -162,14 +166,14 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
 		}
 		Dungeon.level.updateFieldOfView( this, fieldOfView );
 
-		throwItems();
+		ActionThrowItems.throwItems(this);
 
 		sprite.hideAlert();
 		sprite.hideLost();
@@ -208,20 +212,20 @@ public class YogDzewa extends Mob {
 		}
 
 		if (phase == 0){
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		} else {
 
 			boolean terrainAffected = false;
 			HashSet<Character> affected = new HashSet<>();
 			//delay fire on a rooted hero
-			if (!Dungeon.hero.rooted) {
+			if (!Dungeon.hero.getCharacterMovement().isRooted()) {
 				for (int i : targetedCells) {
 					Ballistica b = new Ballistica(position, i, Ballistica.WONT_STOP);
 					//shoot beams
 					sprite.parent.add(new Beam.DeathRay(sprite.center(), DungeonTilemap.raisedTileCenterToWorld(b.collisionPos)));
 					for (int p : b.path) {
-						Character ch = getCharacterOnPosition(p);
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition(p);
 						if (ch != null && (ch.alignment != alignment || ch instanceof Bee)) {
 							affected.add(ch);
 						}
@@ -242,7 +246,7 @@ public class YogDzewa extends Mob {
 						Statistics.bossScores[4] -= 500;
 					}
 
-					if (isTargetHitByAttack( this, ch, true )) {
+					if (ActionHit.isTargetHitByAttack( this, ch, true )) {
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)) {
 							ch.receiveDamageFromSource(Random.NormalIntRange(30, 50), new Eye.DeathGaze());
 						} else {
@@ -302,14 +306,14 @@ public class YogDzewa extends Mob {
 				}
 
 				//don't want to overly punish players with slow move or attack speed
-				spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*TICK));
+				spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(Dungeon.hero.cooldown()), 3*DungeonTurnsHandler.TICK));
 				Dungeon.hero.interruptHeroPlannedAction();
 
 				abilityCooldown += Random.NormalFloat(MIN_ABILITY_CD, MAX_ABILITY_CD);
 				abilityCooldown -= (phase - 1);
 
 			} else {
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			}
 
 			while (summonCooldown <= 0){
@@ -320,7 +324,7 @@ public class YogDzewa extends Mob {
 
 				int spawnPos = -1;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (getCharacterOnPosition(position +i) == null){
+					if (DungeonCharactersHandler.getCharacterOnPosition(position +i) == null){
 						if (spawnPos == -1 || Dungeon.level.trueDistance(Dungeon.hero.position, spawnPos) > Dungeon.level.trueDistance(Dungeon.hero.position, position +i)){
 							spawnPos = position + i;
 						}
@@ -330,21 +334,21 @@ public class YogDzewa extends Mob {
 				//if no other valid spawn spots exist, try to kill an adjacent sheep to spawn anyway
 				if (spawnPos == -1){
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (getCharacterOnPosition(position +i) instanceof Sheep){
+						if (DungeonCharactersHandler.getCharacterOnPosition(position +i) instanceof Sheep){
 							if (spawnPos == -1 || Dungeon.level.trueDistance(Dungeon.hero.position, spawnPos) > Dungeon.level.trueDistance(Dungeon.hero.position, position +i)){
 								spawnPos = position + i;
 							}
 						}
 					}
 					if (spawnPos != -1){
-						getCharacterOnPosition(spawnPos).die(null);
+						DungeonCharactersHandler.getCharacterOnPosition(spawnPos).die(null);
 					}
 				}
 
 				if (spawnPos != -1) {
 					summon.position = spawnPos;
-					GameScene.add( summon );
-					addActor( new Pushing( summon, position, summon.position) );
+					GameScene.addMob( summon );
+					DungeonActorsHandler.addActor( new Pushing( summon, position, summon.position) );
 					summon.travelToPosition(Dungeon.hero.position);
 					Dungeon.level.occupyCell(summon);
 
@@ -448,22 +452,22 @@ public class YogDzewa extends Mob {
 		int targetPos = Dungeon.level.exit() + Dungeon.level.width();
 
 		if (!Dungeon.isChallenged(Challenges.STRONGER_BOSSES)
-				&& (getCharacterOnPosition(targetPos) == null || getCharacterOnPosition(targetPos) instanceof Sheep)){
+				&& (DungeonCharactersHandler.getCharacterOnPosition(targetPos) == null || DungeonCharactersHandler.getCharacterOnPosition(targetPos) instanceof Sheep)){
 			fist.position = targetPos;
-		} else if (getCharacterOnPosition(targetPos-1) == null || getCharacterOnPosition(targetPos-1) instanceof Sheep){
+		} else if (DungeonCharactersHandler.getCharacterOnPosition(targetPos-1) == null || DungeonCharactersHandler.getCharacterOnPosition(targetPos-1) instanceof Sheep){
 			fist.position = targetPos-1;
-		} else if (getCharacterOnPosition(targetPos+1) == null || getCharacterOnPosition(targetPos+1) instanceof Sheep){
+		} else if (DungeonCharactersHandler.getCharacterOnPosition(targetPos+1) == null || DungeonCharactersHandler.getCharacterOnPosition(targetPos+1) instanceof Sheep){
 			fist.position = targetPos+1;
-		} else if (getCharacterOnPosition(targetPos) == null || getCharacterOnPosition(targetPos) instanceof Sheep){
+		} else if (DungeonCharactersHandler.getCharacterOnPosition(targetPos) == null || DungeonCharactersHandler.getCharacterOnPosition(targetPos) instanceof Sheep){
 			fist.position = targetPos;
 		}
 
-		if (getCharacterOnPosition(fist.position) instanceof Sheep){
-			getCharacterOnPosition(fist.position).die(null);
+		if (DungeonCharactersHandler.getCharacterOnPosition(fist.position) instanceof Sheep){
+			DungeonCharactersHandler.getCharacterOnPosition(fist.position).die(null);
 		}
 
-		GameScene.add(fist, 4);
-		addActor( new Pushing( fist, Dungeon.level.exit(), fist.position) );
+		GameScene.addMob(fist, 4);
+		DungeonActorsHandler.addActor( new Pushing( fist, Dungeon.level.exit(), fist.position) );
 		Dungeon.level.occupyCell(fist);
 	}
 
@@ -482,7 +486,7 @@ public class YogDzewa extends Mob {
 	}
 
 	private YogFist findFist(){
-		for ( Character c : getCharacters() ){
+		for ( Character c : DungeonCharactersHandler.getCharacters() ){
 			if (c instanceof YogFist){
 				return (YogFist) c;
 			}
@@ -515,7 +519,7 @@ public class YogDzewa extends Mob {
 
 		for (Mob mob : (Iterable<Mob>)Dungeon.level.mobs.clone()) {
 			if (mob instanceof Larva || mob instanceof YogRipper || mob instanceof YogEye || mob instanceof YogScorpio) {
-				mob.die(source);
+				ActionDeath.die(mob, source);
 			}
 		}
 
@@ -541,7 +545,7 @@ public class YogDzewa extends Mob {
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
 			yell(Messages.get(this, "notice"));
-			for (Character ch : getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}

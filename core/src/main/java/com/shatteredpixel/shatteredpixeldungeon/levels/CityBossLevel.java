@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -280,7 +280,7 @@ public class CityBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
@@ -316,7 +316,7 @@ public class CityBossLevel extends Level {
 		DwarfKing boss = new DwarfKing();
 		boss.state = boss.WANDERING;
 		boss.position = pointToCell(arena.center());
-		GameScene.add( boss );
+		GameScene.addMob( boss );
 		boss.travelToPosition(Dungeon.hero.position);
 
 		if (heroFOV[boss.position]) {

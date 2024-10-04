@@ -23,9 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.SacrificialFire;
@@ -298,7 +297,7 @@ public abstract class RegularLevel extends Level {
 
 			cell = pointToCell(room.random(1));
 			if (!heroFOV[cell]
-					&& Actor.getCharacterOnPosition( cell ) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition( cell ) == null
 					&& passable[cell]
 					&& !solid[cell]
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])

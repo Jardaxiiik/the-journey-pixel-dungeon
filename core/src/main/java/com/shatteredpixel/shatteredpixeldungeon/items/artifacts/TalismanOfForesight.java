@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -181,7 +180,7 @@ public class TalismanOfForesight extends Artifact {
 						}
 					}
 
-					Character ch = Actor.getCharacterOnPosition(cell);
+					Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 					if (ch != null && ch.alignment != Character.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
 						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.getId();
 
@@ -228,7 +227,7 @@ public class TalismanOfForesight extends Artifact {
 				GameScene.updateFog();
 
 				curUser.sprite.zap(target);
-				curUser.spendTimeAdjustedAndNext(Actor.TICK);
+				curUser.spendTimeAdjustedAndNext(DungeonActors.TICK);
 				Sample.INSTANCE.play(Assets.Sounds.SCAN);
 				if (noticed) Sample.INSTANCE.play(Assets.Sounds.SECRET);
 
@@ -262,7 +261,7 @@ public class TalismanOfForesight extends Artifact {
 
 		@Override
 		public boolean playGameTurn() {
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 
 			checkAwareness();
 

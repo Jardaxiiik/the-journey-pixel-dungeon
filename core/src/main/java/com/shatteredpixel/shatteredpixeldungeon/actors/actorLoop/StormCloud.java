@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -47,7 +46,7 @@ public class StormCloud extends ActorLoop {
 					}
 
 					//fiery enemies take damage as if they are in toxic gas
-					Character ch = Actor.getCharacterOnPosition(cell);
+					Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 					if (ch != null
 							&& !ch.isImmuneToEffectType(getClass())
 							&& Character.hasProperty(ch, Character.Property.FIERY)){

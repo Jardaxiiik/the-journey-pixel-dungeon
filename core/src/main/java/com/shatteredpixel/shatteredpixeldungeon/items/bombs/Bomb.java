@@ -23,11 +23,13 @@ package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
@@ -114,9 +116,9 @@ public class Bomb extends Item {
 	@Override
 	protected void onThrow( int cell ) {
 		if (!Dungeon.level.pit[ cell ] && lightingFuse) {
-			Actor.addActorWithDelay(fuse = createFuse().ignite(this), 2);
+			DungeonActorsHandler.addActorWithDelay(fuse = createFuse().ignite(this), 2);
 		}
-		if (Actor.getCharacterOnPosition( cell ) != null && !(Actor.getCharacterOnPosition( cell ) instanceof Hero) ){
+		if (DungeonCharactersHandler.getCharacterOnPosition( cell ) != null && !(DungeonCharactersHandler.getCharacterOnPosition( cell ) instanceof Hero) ){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8)
 				if (Dungeon.level.passable[cell + i])
@@ -169,7 +171,7 @@ public class Bomb extends Item {
 					if (heap != null)
 						heap.explode();
 					
-					Character ch = Actor.getCharacterOnPosition(c);
+					Character ch = DungeonCharactersHandler.getCharacterOnPosition(c);
 					if (ch != null) {
 						affected.add(ch);
 					}
@@ -261,7 +263,7 @@ public class Bomb extends Item {
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
 		if (bundle.contains( FUSE ))
-			Actor.addActor( fuse = ((Fuse)bundle.get(FUSE)).ignite(this) );
+			DungeonActorsHandler.addActor( fuse = ((Fuse)bundle.get(FUSE)).ignite(this) );
 	}
 
 	//used to track the death from friendly magic badge, if an explosion was conjured by magic
@@ -281,11 +283,11 @@ public class Bomb extends Item {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 
 			//something caused our bomb to explode early, or be defused. Do nothing.
 			if (bomb.fuse != this){
-				Actor.removeActor( this );
+				DungeonActorsHandler.removeActor( this );
 				return true;
 			}
 
@@ -300,19 +302,19 @@ public class Bomb extends Item {
 
 			//can't find our bomb, something must have removed it, do nothing.
 			bomb.fuse = null;
-			Actor.removeActor( this );
+			DungeonActorsHandler.removeActor( this );
 			return true;
 		}
 
 		protected void trigger(Heap heap){
 			heap.remove(bomb);
 			bomb.explode(heap.pos);
-			Actor.removeActor(this);
+			DungeonActorsHandler.removeActor(this);
 		}
 
 		public boolean freeze(){
 			bomb.fuse = null;
-			Actor.removeActor(this);
+			DungeonActorsHandler.removeActor(this);
 			return true;
 		}
 	}

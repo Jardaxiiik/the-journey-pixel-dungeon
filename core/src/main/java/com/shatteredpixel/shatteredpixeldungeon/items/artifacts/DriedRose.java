@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -159,7 +160,7 @@ public class DriedRose extends Artifact {
 				ArrayList<Integer> spawnPoints = new ArrayList<>();
 				for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 					int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-					if (Actor.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+					if (DungeonCharactersHandler.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 						spawnPoints.add(p);
 					}
 				}
@@ -169,7 +170,7 @@ public class DriedRose extends Artifact {
 					ghostID = ghost.getId();
 					ghost.position = Random.element(spawnPoints);
 
-					GameScene.add(ghost, 1f);
+					GameScene.addMob(ghost, 1f);
 					Dungeon.level.occupyCell(ghost);
 					
 					CellEmitter.get(ghost.position).start( ShaftParticle.FACTORY, 0.3f, 4 );
@@ -204,7 +205,7 @@ public class DriedRose extends Artifact {
 
 		} else if (action.equals(AC_DIRECT)){
 			if (ghost == null && ghostID != 0){
-				Actor a = Actor.getById(ghostID);
+				Actor a = DungeonActors.getById(ghostID);
 				if (a != null){
 					ghost = (GhostHero)a;
 				} else {
@@ -272,7 +273,7 @@ public class DriedRose extends Artifact {
 	public String status() {
 		if (ghost == null && ghostID != 0){
 			try {
-				Actor a = Actor.getById(ghostID);
+				Actor a = DungeonActors.getById(ghostID);
 				if (a != null) {
 					ghost = (GhostHero) a;
 				} else {
@@ -381,10 +382,10 @@ public class DriedRose extends Artifact {
 		@Override
 		public boolean playGameTurn() {
 			
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			
 			if (ghost == null && ghostID != 0){
-				Actor a = Actor.getById(ghostID);
+				Actor a = DungeonActors.getById(ghostID);
 				if (a != null){
 					ghost = (GhostHero)a;
 				} else {
@@ -435,7 +436,7 @@ public class DriedRose extends Artifact {
 
 				for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 					int p = target.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-					if (Actor.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+					if (DungeonCharactersHandler.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 						spawnPoints.add(p);
 					}
 				}
@@ -524,7 +525,7 @@ public class DriedRose extends Artifact {
 		{
 			spriteClass = GhostSprite.class;
 
-			flying = true;
+			getCharacterMovement().setFlying(true);
 			
 			state = HUNTING;
 			
@@ -575,7 +576,7 @@ public class DriedRose extends Artifact {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			updateRose();
 			if (rose == null
 					|| !rose.isEquipped(Dungeon.hero)
@@ -631,8 +632,8 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public int attackProc(Character enemy, int damage) {
-			damage = super.attackProc(enemy, damage);
+		public int attackProc_1(Character enemy, int damage) {
+			damage = ActionAttack.attackProc(this,enemy, damage);
 			if (rose != null && rose.weapon != null) {
 				damage = rose.weapon.proc( this, enemy, damage );
 				if (!enemy.isAlive() && enemy == Dungeon.hero){
@@ -686,7 +687,7 @@ public class DriedRose extends Artifact {
 		
 		@Override
 		public int getEvasionAgainstAttacker(Character enemy) {
-			int defense = super.getEvasionAgainstAttacker(enemy);
+			int defense = ActionHit.getEvasionAgainstAttacker(this,enemy);
 
 			if (defense != 0 && rose != null && rose.armor != null ){
 				defense = Math.round(rose.armor.evasionFactor( this, defense ));

@@ -22,7 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
@@ -33,6 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Lightning;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -70,8 +74,8 @@ public abstract class Elemental extends Mob {
 		
 		EXP = 10;
 		maxLvl = 20;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 	}
 
 	protected boolean summonedALly;
@@ -112,7 +116,7 @@ public abstract class Elemental extends Mob {
 	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (state == HUNTING){
 			rangedCooldown--;
 		}
@@ -150,8 +154,8 @@ public abstract class Elemental extends Mob {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		meleeProc( enemy, damage );
 		
 		return damage;
@@ -162,7 +166,7 @@ public abstract class Elemental extends Mob {
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (isTargetHitByAttack( this, enemy, true )) {
+		if (ActionHit.isTargetHitByAttack( this, enemy, true )) {
 			
 			rangedProc( enemy );
 			
@@ -175,7 +179,7 @@ public abstract class Elemental extends Mob {
 	
 	public void onZapComplete() {
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);
 	}
 	
 	@Override
@@ -261,7 +265,7 @@ public abstract class Elemental extends Mob {
 		private int targetingPos = -1;
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			if (targetingPos != -1){
 				if (sprite != null && (sprite.visible || Dungeon.level.heroFOV[targetingPos])) {
 					sprite.zap( targetingPos );
@@ -337,12 +341,12 @@ public abstract class Elemental extends Mob {
 					if (!Dungeon.level.solid[targetingPos + i]) {
 						CellEmitter.get(targetingPos + i).burst(ElmoParticle.FACTORY, 5);
 						if (Dungeon.level.water[targetingPos + i]) {
-							GameScene.add(ActorLoop.seed(targetingPos + i, 2, Fire.class));
+							GameScene.addMob(ActorLoop.seed(targetingPos + i, 2, Fire.class));
 						} else {
-							GameScene.add(ActorLoop.seed(targetingPos + i, 8, Fire.class));
+							GameScene.addMob(ActorLoop.seed(targetingPos + i, 8, Fire.class));
 						}
 
-						Character target = getCharacterOnPosition(targetingPos + i);
+						Character target = DungeonCharactersHandler.getCharacterOnPosition(targetingPos + i);
 						if (target != null && target != this) {
 							Buff.affect(target, Burning.class).reignite(target);
 						}
@@ -360,7 +364,7 @@ public abstract class Elemental extends Mob {
 			if (!summonedALly) {
 				return 15;
 			} else {
-				return super.getAccuracyAgainstTarget(target);
+				return ActionHit.getAccuracyAgainstTarget(this,target);
 			}
 		}
 
@@ -497,7 +501,7 @@ public abstract class Elemental extends Mob {
 			}
 			
 			for (Character ch : affected) {
-				ch.receiveDamageFromSource( Math.round( damage * 0.4f ), Shocking.class );
+				ActionHealth.receiveDamageFromSource(ch, Math.round( damage * 0.4f ), Shocking.class );
 				if (ch == Dungeon.hero && !ch.isAlive()){
 					Dungeon.fail(this);
 					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );

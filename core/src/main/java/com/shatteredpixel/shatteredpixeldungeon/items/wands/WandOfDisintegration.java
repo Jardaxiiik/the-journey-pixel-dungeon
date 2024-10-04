@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
@@ -80,7 +79,7 @@ public class WandOfDisintegration extends DamageWand {
 		for (int c : beam.subPath(1, maxDistance)) {
 			
 			Character ch;
-			if ((ch = Actor.getCharacterOnPosition( c )) != null) {
+			if ((ch = DungeonCharactersHandler.getCharacterOnPosition( c )) != null) {
 
 				//we don't want to count passed terrain after the last enemy hit. That would be a lot of bonus levels.
 				//terrainPassed starts at 2, equivalent of rounding up when /3 for integer arithmetic.

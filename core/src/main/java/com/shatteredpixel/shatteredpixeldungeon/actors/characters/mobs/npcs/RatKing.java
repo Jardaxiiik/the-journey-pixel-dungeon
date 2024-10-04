@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.Ratmogrify;
@@ -77,7 +77,7 @@ public class RatKing extends NPC {
 	//***This functionality is for when rat king may be summoned by a distortion trap
 
 	@Override
-	protected void onAdd() {
+    public void onAdd() {
 		super.onAdd();
 		if (firstAdded && Dungeon.depth != 5){
 			yell(Messages.get(this, "confused"));
@@ -85,7 +85,7 @@ public class RatKing extends NPC {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+	public boolean playGameTurn() {
 		if (Dungeon.depth < 5){
 			if (position == Dungeon.level.exit()){
 				destroy();

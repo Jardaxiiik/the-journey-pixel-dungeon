@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -45,7 +45,7 @@ public class Sheep extends NPC {
 	private boolean initialized = false;
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (initialized) {
 			healthPoints = 0;
 

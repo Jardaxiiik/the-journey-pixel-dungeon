@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -611,7 +610,7 @@ public abstract class Wand extends Item {
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
 						ScrollOfRecharging.charge(curUser);
 						updateQuickslot();
-						curUser.spendTimeAdjustedAndNext(Actor.TICK);
+						curUser.spendTimeAdjustedAndNext(DungeonActors.TICK);
 						return;
 					}
 					GLog.i( Messages.get(Wand.class, "self_target") );
@@ -621,10 +620,10 @@ public abstract class Wand extends Item {
 				curUser.sprite.zap(cell);
 
 				//attempts to target the cell aimed at if something is there, otherwise targets the collision pos.
-				if (Actor.getCharacterOnPosition(target) != null)
-					QuickSlotButton.target(Actor.getCharacterOnPosition(target));
+				if (DungeonCharactersHandler.getCharacterOnPosition(target) != null)
+					QuickSlotButton.target(DungeonCharactersHandler.getCharacterOnPosition(target));
 				else
-					QuickSlotButton.target(Actor.getCharacterOnPosition(cell));
+					QuickSlotButton.target(DungeonCharactersHandler.getCharacterOnPosition(cell));
 				
 				if (curWand.tryToZap(curUser, target)) {
 					
@@ -709,7 +708,7 @@ public abstract class Wand extends Item {
 			if (super.attachTo( target )) {
 				//if we're loading in and the hero has partially spent a turn, delay for 1 turn
 				if (target instanceof Hero && Dungeon.hero == null && cooldown() == 0 && target.cooldown() > 0) {
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonActors.TICK);
 				}
 				return true;
 			}
@@ -731,7 +730,7 @@ public abstract class Wand extends Item {
 				partialCharge = 0;
 			}
 			
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			
 			return true;
 		}

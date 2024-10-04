@@ -22,9 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Belongings;
@@ -412,7 +411,7 @@ public class InventoryPane extends Component {
 				instance.visible &&
 				lastTarget != null &&
 				targetingSlot != null &&
-				Actor.getCharacters().contains( lastTarget ) &&
+				DungeonCharactersHandler.getCharacters().contains( lastTarget ) &&
 				lastTarget.isAlive() &&
 				lastTarget.alignment != Character.Alignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.position]) {

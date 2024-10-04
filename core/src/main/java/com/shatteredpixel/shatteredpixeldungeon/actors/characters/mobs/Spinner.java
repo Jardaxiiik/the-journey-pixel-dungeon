@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Web;
@@ -92,7 +92,7 @@ public class Spinner extends Mob {
 	}
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (state == HUNTING || state == FLEEING){
 			webCoolDown--;
 		}
@@ -117,8 +117,8 @@ public class Spinner extends Mob {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		if (Random.Int(2) == 0) {
 			int duration = Random.IntRange(7, 8);
 			//we only use half the ascension modifier here as total poison dmg doesn't scale linearly
@@ -201,11 +201,11 @@ public class Spinner extends Mob {
 				Dungeon.hero.interruptHeroPlannedAction();
 			}
 		}
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	protected void applyWebToCell(int cell){
-		GameScene.add(ActorLoop.seed(cell, 20, Web.class));
+		GameScene.addMob(ActorLoop.seed(cell, 20, Web.class));
 	}
 	
 	private int left(int direction){

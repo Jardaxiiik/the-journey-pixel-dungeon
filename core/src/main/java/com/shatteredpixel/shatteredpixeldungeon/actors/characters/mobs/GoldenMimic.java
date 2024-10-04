@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
@@ -66,7 +66,7 @@ public class GoldenMimic extends Mimic {
 	public void stopHiding(){
 		state = HUNTING;
 		if (sprite != null) sprite.idle();
-		if (getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
+		if (DungeonCharactersHandler.getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
 			enemy = Dungeon.hero;
 			target = Dungeon.hero.position;
 			GLog.w(Messages.get(this, "reveal") );

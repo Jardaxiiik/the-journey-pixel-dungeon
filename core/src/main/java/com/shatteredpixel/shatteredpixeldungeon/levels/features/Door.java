@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.features;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -45,7 +44,7 @@ public class Door {
 	public static void leave( int pos ) {
 		int chars = 0;
 		
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch.position == pos) chars++;
 		}
 		

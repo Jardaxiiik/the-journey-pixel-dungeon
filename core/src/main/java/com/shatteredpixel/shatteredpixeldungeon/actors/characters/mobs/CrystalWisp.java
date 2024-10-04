@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -45,7 +46,7 @@ public class CrystalWisp extends Mob{
 		EXP = 7;
 		maxLvl = -2;
 
-		flying = true;
+		getCharacterMovement().setFlying(true);
 
 		properties.add(Property.INORGANIC);
 	}
@@ -121,7 +122,7 @@ public class CrystalWisp extends Mob{
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (isTargetHitByAttack( this, enemy, true )) {
+		if (ActionHit.isTargetHitByAttack( this, enemy, true )) {
 
 			int dmg = Random.NormalIntRange( 5, 10 );
 			enemy.receiveDamageFromSource( dmg, new LightBeam() );
@@ -138,7 +139,7 @@ public class CrystalWisp extends Mob{
 
 	public void onZapComplete() {
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public static final String SPRITE = "sprite";

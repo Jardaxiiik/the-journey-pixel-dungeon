@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfCorrosion;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -104,8 +104,8 @@ public class Corrosion extends Buff implements Hero.Doom {
 				damage += 0.5f;
 			}
 			
-			spendTimeAdjusted( TICK );
-			if ((left -= TICK) <= 0) {
+			spendTimeAdjusted( DungeonActors.TICK );
+			if ((left -= DungeonActors.TICK) <= 0) {
 				detach();
 			}
 		} else {

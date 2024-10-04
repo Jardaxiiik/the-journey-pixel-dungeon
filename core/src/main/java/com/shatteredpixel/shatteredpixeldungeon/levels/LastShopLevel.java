@@ -138,7 +138,7 @@ public class LastShopLevel extends RegularLevel {
 		for (Point p : roomEntrance.getPoints()){
 			int cell = pointToCell(p);
 			if (passable[cell]
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}

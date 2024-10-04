@@ -23,7 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -108,7 +109,7 @@ public class Warlock extends Mob implements Callback {
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (isTargetHitByAttack( this, enemy, true )) {
+		if (ActionHit.isTargetHitByAttack( this, enemy, true )) {
 			//TODO would be nice for this to work on ghost/statues too
 			if (enemy == Dungeon.hero && Random.Int( 2 ) == 0) {
 				Buff.prolong( enemy, Degrade.class, Degrade.DURATION );
@@ -131,12 +132,12 @@ public class Warlock extends Mob implements Callback {
 	
 	public void onZapComplete() {
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 	
 	@Override
 	public void call() {
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	@Override

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -62,7 +62,7 @@ public class GuardianTrap extends Trap {
 			guardian.state = guardian.WANDERING;
 			guardian.position = Dungeon.level.randomRespawnCell( guardian );
 			if (guardian.position != -1) {
-				GameScene.add(guardian);
+				GameScene.addMob(guardian);
 				guardian.travelToPosition(Dungeon.hero.position);
 			}
 		}

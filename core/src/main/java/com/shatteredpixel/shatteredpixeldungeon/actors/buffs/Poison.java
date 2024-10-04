@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -98,9 +98,9 @@ public class Poison extends Buff implements Hero.Doom {
 		if (target.isAlive()) {
 			
 			target.receiveDamageFromSource( (int)(left / 3) + 1, this );
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			
-			if ((left -= TICK) <= 0) {
+			if ((left -= DungeonActors.TICK) <= 0) {
 				detach();
 			}
 			

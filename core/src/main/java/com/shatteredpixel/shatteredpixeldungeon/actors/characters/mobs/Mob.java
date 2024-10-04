@@ -24,9 +24,11 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -52,6 +54,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.duelist.Feint;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
@@ -119,7 +124,7 @@ public abstract class Mob extends Character {
 	protected static final float TIME_TO_WAKE_UP = 1f;
 
 	protected boolean firstAdded = true;
-	protected void onAdd(){
+	public void onAdd(){
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
 			float percent = healthPoints / (float) healthMax;
@@ -195,7 +200,7 @@ public abstract class Mob extends Character {
 
 	//mobs need to remember their targets after every actor is added
 	public void restoreEnemy(){
-		if (enemyID != -1 && enemy == null) enemy = (Character)Actor.getById(enemyID);
+		if (enemyID != -1 && enemy == null) enemy = (Character)DungeonActorsHandler.getById(enemyID);
 	}
 	
 	public CharSprite sprite() {
@@ -203,7 +208,7 @@ public abstract class Mob extends Character {
 	}
 	
 	@Override
-	protected boolean playGameTurn() {
+	public boolean playGameTurn() {
 		
 		super.playGameTurn();
 		
@@ -219,7 +224,7 @@ public abstract class Mob extends Character {
 		
 		if (paralysed > 0) {
 			enemySeen = false;
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK );
 			return true;
 		}
 
@@ -234,7 +239,7 @@ public abstract class Mob extends Character {
 		//prevents action, but still updates enemy seen status
 		if (getBuff(Feint.AfterImage.FeintConfusion.class) != null){
 			enemySeen = enemyInFOV;
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK );
 			return true;
 		}
 
@@ -248,7 +253,7 @@ public abstract class Mob extends Character {
 
 		Dread dread = getBuff( Dread.class );
 		if (dread != null) {
-			Character source = (Character)Actor.getById( dread.object );
+			Character source = (Character)DungeonActorsHandler.getById( dread.object );
 			if (source != null) {
 				return source;
 			}
@@ -256,7 +261,7 @@ public abstract class Mob extends Character {
 
 		Terror terror = getBuff( Terror.class );
 		if (terror != null) {
-			Character source = (Character)Actor.getById( terror.object );
+			Character source = (Character)DungeonActorsHandler.getById( terror.object );
 			if (source != null) {
 				return source;
 			}
@@ -268,7 +273,7 @@ public abstract class Mob extends Character {
 				state = HUNTING;
 				return enemy;
 			}
-			for (Character ch : Actor.getCharacters()) {
+			for (Character ch : DungeonCharactersHandler.getCharacters()) {
 				if (ch != this && fieldOfView[ch.position] &&
 						ch.getBuff(StoneOfAggression.Aggression.class) != null) {
 					state = HUNTING;
@@ -280,7 +285,7 @@ public abstract class Mob extends Character {
 		//find a new enemy if..
 		boolean newEnemy = false;
 		//we have no enemy, or the current one is dead/missing
-		if ( enemy == null || !enemy.isAlive() || !Actor.getCharacters().contains(enemy) || state == WANDERING) {
+		if ( enemy == null || !enemy.isAlive() || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING) {
 			newEnemy = true;
 		//We are amoked and current enemy is the hero
 		} else if (getBuff( Amok.class ) != null && enemy == Dungeon.hero) {
@@ -360,7 +365,7 @@ public abstract class Mob extends Character {
 			//do not target anything that's charming us
 			Charm charm = getBuff( Charm.class );
 			if (charm != null){
-				Character source = (Character)Actor.getById( charm.object );
+				Character source = (Character) DungeonActorsHandler.getById( charm.object );
 				if (source != null && enemies.contains(source) && enemies.size() > 1){
 					enemies.remove(source);
 				}
@@ -451,7 +456,7 @@ public abstract class Mob extends Character {
 
 	private boolean canStepOnCell(int cell ){
 		if (!Dungeon.level.passable[cell]){
-			if (flying || getBuff(Amok.class) != null){
+			if (getCharacterMovement().isFlying() || getBuff(Amok.class) != null){
 				if (!Dungeon.level.avoid[cell]){
 					return false;
 				}
@@ -462,7 +467,7 @@ public abstract class Mob extends Character {
 		if (Character.hasProperty(this, Character.Property.LARGE) && !Dungeon.level.openSpace[cell]){
 			return false;
 		}
-		if (Actor.getCharacterOnPosition(cell) != null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(cell) != null){
 			return false;
 		}
 
@@ -471,7 +476,7 @@ public abstract class Mob extends Character {
 
 	protected boolean moveCloserToTarget(int targetPosition ) {
 		
-		if (rooted || targetPosition == position) {
+		if (getCharacterMovement().isRooted() || targetPosition == position) {
 			return false;
 		}
 
@@ -584,7 +589,7 @@ public abstract class Mob extends Character {
 			}
 		}
 		if (step != -1) {
-			moveToPosition( step );
+			ActionMove.moveToPosition( this,step );
 			return true;
 		} else {
 			return false;
@@ -592,13 +597,13 @@ public abstract class Mob extends Character {
 	}
 	
 	protected boolean moveAwayFromTarget(int targetPosition ) {
-		if (rooted || targetPosition == position) {
+		if (getCharacterMovement().isRooted() || targetPosition == position) {
 			return false;
 		}
 		
 		int step = Dungeon.flee( this, targetPosition, Dungeon.level.passable, fieldOfView, true );
 		if (step != -1) {
-			moveToPosition( step );
+			ActionMove.moveToPosition( this, step );
 			return true;
 		} else {
 			return false;
@@ -626,7 +631,7 @@ public abstract class Mob extends Character {
 			return false;
 			
 		} else {
-			attack( targetCharacter );
+			ActionAttack.attack( this, targetCharacter, 1f, 0f, 1f);
 			Invisibility.dispel(this);
 			spendTimeAdjusted( getAttackDelay() );
 			return true;
@@ -635,7 +640,7 @@ public abstract class Mob extends Character {
 	
 	@Override
 	public void onAttackComplete() {
-		attack( enemy );
+		ActionAttack.attack( this, enemy, 1f, 0f, 1f);
 		Invisibility.dispel(this);
 		spendTimeAdjusted( getAttackDelay() );
 		super.onAttackComplete();
@@ -704,7 +709,7 @@ public abstract class Mob extends Character {
 			}
 		}
 
-		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
+		return ActionDefense.getDamageReceivedFromEnemyReducedByDefense(enemy,this, damage);
 	}
 
 	@Override
@@ -990,7 +995,7 @@ public abstract class Mob extends Character {
 				if (b.type == Buff.buffType.NEGATIVE){
 					awaken(enemyInFOV);
 					if (state == SLEEPING){
-						spendTimeAdjusted(TICK); //wait if we can't wake up for some reason
+						spendTimeAdjusted(DungeonTurnsHandler.TICK ); //wait if we can't wake up for some reason
 					}
 					return true;
 				}
@@ -1009,7 +1014,7 @@ public abstract class Mob extends Character {
 				if (Random.Float( getDistanceToOtherCharacter( enemy ) + enemyStealth ) < 1) {
 					awaken(enemyInFOV);
 					if (state == SLEEPING){
-						spendTimeAdjusted(TICK); //wait if we can't wake up for some reason
+						spendTimeAdjusted(DungeonTurnsHandler.TICK ); //wait if we can't wake up for some reason
 					}
 					return true;
 				}
@@ -1017,7 +1022,7 @@ public abstract class Mob extends Character {
 			}
 
 			enemySeen = false;
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 
 			return true;
 		}
@@ -1053,7 +1058,7 @@ public abstract class Mob extends Character {
 
 		@Override
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
-			if (enemyInFOV && (justAlerted || Random.Float( getDistanceToOtherCharacter( enemy ) / 2f + enemy.getStealth() ) < 1)) {
+			if (enemyInFOV && (justAlerted || Random.Float( DungeonCharactersHandler.getDistanceToOtherCharacter((Character) this, enemy ) / 2f + enemy.getStealth() ) < 1)) {
 
 				return noticeEnemy();
 
@@ -1094,7 +1099,7 @@ public abstract class Mob extends Character {
 				return moveSprite( oldPos, position);
 			} else {
 				target = randomDestination();
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 			}
 			
 			return true;
@@ -1129,7 +1134,7 @@ public abstract class Mob extends Character {
 					sprite.showLost();
 					state = WANDERING;
 					target = ((Mob.Wandering)WANDERING).randomDestination();
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 					return true;
 				}
 				
@@ -1155,7 +1160,7 @@ public abstract class Mob extends Character {
 						}
 					}
 
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 					if (!enemyInFOV) {
 						sprite.showLost();
 						state = WANDERING;
@@ -1178,7 +1183,7 @@ public abstract class Mob extends Character {
 			if (enemy == null || !enemyInFOV && 1 + Random.Int(Dungeon.level.distance(position, target)) >= 6){
 				escaped();
 				if (state != FLEEING){
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 					return true;
 				}
 			
@@ -1195,7 +1200,7 @@ public abstract class Mob extends Character {
 
 			} else {
 
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 				nowhereToRun();
 
 				return true;
@@ -1228,7 +1233,7 @@ public abstract class Mob extends Character {
 		@Override
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 			enemySeen = enemyInFOV;
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK  );
 			return true;
 		}
 	}

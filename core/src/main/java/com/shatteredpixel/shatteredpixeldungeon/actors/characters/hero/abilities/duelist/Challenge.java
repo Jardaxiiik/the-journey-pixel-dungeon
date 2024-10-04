@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.duelist;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionSpendTime;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -35,6 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.NPC;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -88,7 +90,7 @@ public class Challenge extends ArmorAbility {
 			return;
 		}
 
-		Character targetCh = Actor.getCharacterOnPosition(target);
+		Character targetCh = DungeonCharactersHandler.getCharacterOnPosition(target);
 		if (targetCh == null || !Dungeon.level.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
@@ -105,14 +107,14 @@ public class Challenge extends ArmorAbility {
 		}
 
 		boolean[] passable = BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null);
-		for (Character c : Actor.getCharacters()) {
+		for (Character c : DungeonCharactersHandler.getCharacters()) {
 			if (c != hero) passable[c.position] = false;
 		}
 		PathFinder.buildDistanceMap(targetCh.position, passable);
 		int[] reachable = PathFinder.distance.clone();
 
 		int blinkpos = hero.position;
-		if (hero.hasTalent(Talent.CLOSE_THE_GAP) && !hero.rooted){
+		if (hero.hasTalent(Talent.CLOSE_THE_GAP) && !hero.getCharacterMovement().isRooted()){
 
 			int blinkrange = 1 + hero.pointsInTalent(Talent.CLOSE_THE_GAP);
 			PathFinder.buildDistanceMap(hero.position, BArray.or(Dungeon.level.passable, Dungeon.level.avoid, null), blinkrange);
@@ -120,7 +122,7 @@ public class Challenge extends ArmorAbility {
 			for (int i = 0; i < PathFinder.distance.length; i++){
 				if (PathFinder.distance[i] == Integer.MAX_VALUE
 						|| reachable[i] == Integer.MAX_VALUE
-						|| (!Dungeon.level.passable[i] && !(hero.flying && Dungeon.level.avoid[i]))
+						|| (!Dungeon.level.passable[i] && !(hero.getCharacterMovement().isFlying() && Dungeon.level.avoid[i]))
 						|| i == targetCh.position){
 					continue;
 				}
@@ -137,13 +139,13 @@ public class Challenge extends ArmorAbility {
 
 		if (reachable[blinkpos] == Integer.MAX_VALUE){
 			GLog.w(Messages.get(this, "unreachable_target"));
-			if (hero.rooted) PixelScene.shake( 1, 1f );
+			if (hero.getCharacterMovement().isRooted()) PixelScene.shake( 1, 1f );
 			return;
 		}
 
 		if (Dungeon.level.distance(blinkpos, targetCh.position) > 5){
 			GLog.w(Messages.get(this, "distant_target"));
-			if (hero.rooted) PixelScene.shake( 1, 1f );
+			if (hero.getCharacterMovement().isRooted()) PixelScene.shake( 1, 1f );
 			return;
 		}
 
@@ -161,11 +163,11 @@ public class Challenge extends ArmorAbility {
 		}
 
 		boolean bossTarget = Character.hasProperty(targetCh, Character.Property.BOSS);
-		for (Character toFreeze : Actor.getCharacters()){
-			if (toFreeze != targetCh && toFreeze.alignment != Character.Alignment.ALLY && !(toFreeze instanceof NPC)
+		for (Character characterToFreeze : DungeonCharactersHandler.getCharacters()){
+			if (characterToFreeze != targetCh && characterToFreeze.alignment != Character.Alignment.ALLY && !(characterToFreeze instanceof NPC)
 				&& (!bossTarget || !(Character.hasProperty(targetCh, Character.Property.BOSS) || Character.hasProperty(targetCh, Character.Property.BOSS_MINION)))) {
-				Actor.makeCharacterSpendTime(toFreeze, DuelParticipant.DURATION);
-				Buff.affect(toFreeze, SpectatorFreeze.class, DuelParticipant.DURATION);
+				ActionSpendTime.makeCharacterSpendTime(characterToFreeze,DuelParticipant.DURATION);
+				Buff.affect(characterToFreeze, SpectatorFreeze.class, DuelParticipant.DURATION);
 			}
 		}
 
@@ -183,7 +185,7 @@ public class Challenge extends ArmorAbility {
 		Invisibility.dispel();
 		hero.sprite.zap(target);
 
-		hero.next();
+		DungeonTurnsHandler.nextActorToPlayHero(hero);();
 
 		if (hero.getBuff(EliminationMatchTracker.class) != null){
 			hero.getBuff(EliminationMatchTracker.class).detach();
@@ -231,7 +233,7 @@ public class Challenge extends ArmorAbility {
 				detach();
 			} else {
 				Character other = null;
-				for (Character ch : Actor.getCharacters()){
+				for (Character ch : DungeonCharactersHandler.getCharacters()){
 					if (ch != target && ch.getBuff(DuelParticipant.class) != null){
 						other = ch;
 					}
@@ -244,7 +246,7 @@ public class Challenge extends ArmorAbility {
 				}
 			}
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		}
 
@@ -275,7 +277,7 @@ public class Challenge extends ArmorAbility {
 					}
 				}
 
-				for (Character ch : Actor.getCharacters()) {
+				for (Character ch : DungeonCharactersHandler.getCharacters()) {
 					if (ch.getBuff(SpectatorFreeze.class) != null) {
 						ch.getBuff(SpectatorFreeze.class).detach();
 					}
@@ -335,7 +337,7 @@ public class Challenge extends ArmorAbility {
 		public void detach(){
 			super.detach();
 			if (cooldown() > 0) {
-				Actor.makeCharacterSpendTime(target, -cooldown());
+				ActionSpendTime.makeCharacterSpendTime(target,-cooldown());
 			}
 		}
 

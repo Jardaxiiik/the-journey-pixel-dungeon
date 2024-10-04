@@ -25,14 +25,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -43,6 +42,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DemonSpaw
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Ghoul;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Snake;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BannerSprites;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
@@ -458,7 +460,7 @@ public class GameScene extends PixelScene {
 			Dungeon.droppedItemsToChasm.remove( Dungeon.depth );
 		}
 
-		Dungeon.hero.next();
+		DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 
 		switch (InterlevelScene.mode){
 			case FALL: case DESCEND: case CONTINUE:
@@ -478,7 +480,7 @@ public class GameScene extends PixelScene {
 				GLog.h(Messages.get(this, "descend"), Dungeon.depth);
 				Sample.INSTANCE.play(Assets.Sounds.DESCEND);
 				
-				for (Character ch : Actor.getCharacters()){
+				for (Character ch : DungeonCharactersHandler.getCharacters()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayAppeared();
 					}
@@ -629,7 +631,7 @@ public class GameScene extends PixelScene {
 	
 	public static void endActorThread(){
 		if (actorThread != null && actorThread.isAlive()){
-			Actor.keepActorThreadAlive = false;
+			DungeonTurnsHandler.keepActorThreadAlive = false;
 			actorThread.interrupt();
 		}
 	}
@@ -645,7 +647,7 @@ public class GameScene extends PixelScene {
 			} catch (InterruptedException e) {
 				JourneyPixelDungeon.reportException(e);
 			}
-			return !Actor.processing();
+			return !DungeonTurnsHandler.processing();
 		}
 	}
 	
@@ -695,13 +697,13 @@ public class GameScene extends PixelScene {
 
 		if (!com.watabou.noosa.particles.Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
-		if (!Actor.processing() && Dungeon.hero.isAlive()) {
+		if (!DungeonTurnsHandler.processing() && Dungeon.hero.isAlive()) {
 			if (actorThread == null || !actorThread.isAlive()) {
 				
 				actorThread = new Thread() {
 					@Override
 					public void run() {
-						Actor.process();
+						DungeonTurnsHandler.processActors();
 					}
 				};
 				
@@ -711,7 +713,7 @@ public class GameScene extends PixelScene {
 				}
 				actorThread.setName("SHPD Actor Thread");
 				Thread.currentThread().setName("SHPD Render Thread");
-				Actor.keepActorThreadAlive = true;
+				DungeonTurnsHandler.keepActorThreadAlive = true;
 				actorThread.start();
 			} else if (notifyDelay <= 0f) {
 				notifyDelay += 1/60f;
@@ -960,26 +962,26 @@ public class GameScene extends PixelScene {
 	
 	// -------------------------------------------------------
 
-	public static void add( Plant plant ) {
+	public static void addMob(Plant plant ) {
 		if (scene != null) {
 			scene.addPlantSprite( plant );
 		}
 	}
 
-	public static void add( Trap trap ) {
+	public static void addMob(Trap trap ) {
 		if (scene != null) {
 			scene.addTrapSprite( trap );
 		}
 	}
 	
-	public static void add( ActorLoop gas ) {
-		Actor.addActor( gas );
+	public static void addMob(ActorLoop gas ) {
+		DungeonActorsHandler.addActor( gas );
 		if (scene != null) {
 			scene.addBlobSprite( gas );
 		}
 	}
 	
-	public static void add( Heap heap ) {
+	public static void addMob(Heap heap ) {
 		if (scene != null) {
 			//heaps that aren't added as part of levelgen don't count for exploration bonus
 			heap.autoExplored = true;
@@ -993,11 +995,11 @@ public class GameScene extends PixelScene {
 		}
 	}
 	
-	public static void add( Mob mob ) {
+	public static void addMob(Mob mob ) {
 		Dungeon.level.mobs.add( mob );
 		if (scene != null) {
 			scene.addMobSprite(mob);
-			Actor.addActor(mob);
+			DungeonCharactersHandler.addCharacter(mob, DungeonTurnsHandler.getNow());
 		}
 	}
 
@@ -1005,21 +1007,21 @@ public class GameScene extends PixelScene {
 		scene.addMobSprite( mob );
 	}
 	
-	public static void add( Mob mob, float delay ) {
+	public static void addMob(Mob mob, float delay ) {
 		Dungeon.level.mobs.add( mob );
 		scene.addMobSprite( mob );
-		Actor.addActorWithDelay( mob, delay );
+		DungeonActorsHandler.addActorWithDelay( mob, delay );
 	}
 	
-	public static void add( EmoIcon icon ) {
+	public static void addMob(EmoIcon icon ) {
 		scene.emoicons.add( icon );
 	}
 	
-	public static void add( CharHealthIndicator indicator ){
+	public static void addMob(CharHealthIndicator indicator ){
 		if (scene != null) scene.healthIndicators.add(indicator);
 	}
 	
-	public static void add( CustomTilemap t, boolean wall ){
+	public static void addMob(CustomTilemap t, boolean wall ){
 		if (scene == null) return;
 		if (wall){
 			scene.addCustomWall(t);
@@ -1479,7 +1481,7 @@ public class GameScene extends PixelScene {
 			objects.add(Dungeon.hero);
 
 		} else if (Dungeon.level.heroFOV[cell]) {
-			Mob mob = (Mob) Actor.getCharacterOnPosition(cell);
+			Mob mob = (Mob) DungeonCharactersHandler.getCharacterOnPosition(cell);
 			if (mob != null) objects.add(mob);
 		}
 
@@ -1532,7 +1534,7 @@ public class GameScene extends PixelScene {
 		@Override
 		public void onSelect( Integer cell ) {
 			if (Dungeon.hero.chooseHeroActionBasedOnTile( cell )) {
-				Dungeon.hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 			}
 		}
 

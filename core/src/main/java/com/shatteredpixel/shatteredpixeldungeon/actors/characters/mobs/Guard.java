@@ -22,9 +22,10 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Chains;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -79,7 +80,7 @@ public class Guard extends Mob {
 		else {
 			int newPos = -1;
 			for (int i : chain.subPath(1, chain.dist)){
-				if (!Dungeon.level.solid[i] && getCharacterOnPosition(i) == null){
+				if (!Dungeon.level.solid[i] && DungeonCharactersHandler.getCharacterOnPosition(i) == null){
 					newPos = i;
 					break;
 				}
@@ -100,12 +101,12 @@ public class Guard extends Mob {
 							Effects.Type.CHAIN,
 							new Callback() {
 						public void call() {
-							addActor(new Pushing(enemy, enemy.position, newPosFinal, new Callback() {
+							DungeonActorsHandler.addActor(new Pushing(enemy, enemy.position, newPosFinal, new Callback() {
 								public void call() {
 									pullEnemy(enemy, newPosFinal);
 								}
 							}));
-							next();
+							DungeonTurnsHandler.nextActorToPlay(this);();
 						}
 					}));
 				} else {

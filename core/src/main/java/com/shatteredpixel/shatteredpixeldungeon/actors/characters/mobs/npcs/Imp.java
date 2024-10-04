@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -56,7 +56,7 @@ public class Imp extends NPC {
 	private boolean seenBefore = false;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null){
 			die(null);
 			return true;

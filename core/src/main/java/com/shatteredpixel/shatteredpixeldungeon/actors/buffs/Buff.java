@@ -83,7 +83,7 @@ public class Buff extends Actor {
 	
 	@Override
 	public boolean playGameTurn() {
-		diactivate();
+		deactivate();
 		return true;
 	}
 	

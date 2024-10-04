@@ -21,10 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -104,26 +105,26 @@ public class DM200 extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		ventCooldown--;
 		return super.playGameTurn();
 	}
 
 	public void onZapComplete(){
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	private void zap( ){
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		ventCooldown = 30;
 
 		Ballistica trajectory = new Ballistica(position, enemy.position, Ballistica.STOP_TARGET);
 
 		for (int i : trajectory.subPath(0, trajectory.dist)){
-			GameScene.add(ActorLoop.seed(i, 20, ToxicGas.class));
+			GameScene.addMob(ActorLoop.seed(i, 20, ToxicGas.class));
 		}
-		GameScene.add(ActorLoop.seed(trajectory.collisionPos, 100, ToxicGas.class));
+		GameScene.addMob(ActorLoop.seed(trajectory.collisionPos, 100, ToxicGas.class));
 
 	}
 
@@ -149,7 +150,7 @@ public class DM200 extends Mob {
 
 				int oldPos = position;
 
-				if (getDistanceToOtherCharacter(enemy) >= 1 && Random.Int(100/ getDistanceToOtherCharacter(enemy)) == 0 && canVent(target)){
+				if (DungeonCharactersHandler.getDistanceToOtherCharacter(this,enemy) >= 1 && Random.Int(100/ getDistanceToOtherCharacter(enemy)) == 0 && canVent(target)){
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 						sprite.zap( enemy.position);
 						return false;
@@ -172,7 +173,7 @@ public class DM200 extends Mob {
 					}
 
 				} else {
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonActors.TICK );
 					return true;
 				}
 

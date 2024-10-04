@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -46,7 +45,7 @@ public class FlashingTrap extends Trap {
 	@Override
 	public void activate() {
 		
-		Character c = Actor.getCharacterOnPosition( pos );
+		Character c = DungeonCharactersHandler.getCharacterOnPosition( pos );
 		
 		if (c != null) {
 			int damage = Math.max( 0,  (4 + scalingDepth()/2) - c.getArmorPointsRolled()/2 );

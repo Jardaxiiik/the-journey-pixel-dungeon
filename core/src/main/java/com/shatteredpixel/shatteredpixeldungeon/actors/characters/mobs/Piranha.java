@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
@@ -63,7 +63,7 @@ public class Piranha extends Mob {
 	}
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		
 		if (!Dungeon.level.water[position]) {
 			dieOnLand();
@@ -125,7 +125,7 @@ public class Piranha extends Mob {
 	@Override
 	protected boolean moveCloserToTarget(int targetPosition) {
 		
-		if (rooted) {
+		if (getCharacterMovement().isRooted()) {
 			return false;
 		}
 		

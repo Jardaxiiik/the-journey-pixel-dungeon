@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -44,7 +43,7 @@ public class StoneOfAggression extends Runestone {
 	@Override
 	protected void activate(int cell) {
 		
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		
 		if (ch != null) {
 			if (ch.alignment == Character.Alignment.ENEMY) {

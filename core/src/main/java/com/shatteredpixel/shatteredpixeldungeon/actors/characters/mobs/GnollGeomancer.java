@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -31,6 +31,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Blacksmith;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -95,7 +98,7 @@ public class GnollGeomancer extends Mob {
 	private int[] sapperSpawns = null;
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (sapperSpawns == null){
 			sapperSpawns = new int[3];
 			int i = 0;
@@ -120,7 +123,7 @@ public class GnollGeomancer extends Mob {
 			throwingRocksFromPos = null;
 			throwingRockToPos = -1;
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return !attacked;
 		} else {
 			return super.playGameTurn();
@@ -212,7 +215,7 @@ public class GnollGeomancer extends Mob {
 					} if (hits == 3){
 						GLog.n( Messages.get(GnollGeomancer.this, "alert"));
 						wasSleeping = false;
-						spendTimeAdjusted(TICK);
+						spendTimeAdjusted(DungeonTurnsHandler.TICK);
 						sprite.idle();
 
 						carveRockAndDash();
@@ -299,8 +302,8 @@ public class GnollGeomancer extends Mob {
 
 	public boolean hasSapper(){
 		return sapperID != -1
-				&& getById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper) getById(sapperID)).isAlive();
+				&& DungeonActorsHandler.getById(sapperID) instanceof GnollSapper
+				&& ((GnollSapper) DungeonActorsHandler.getById(sapperID)).isAlive();
 	}
 
 	public void loseSapper(){
@@ -362,10 +365,10 @@ public class GnollGeomancer extends Mob {
 			dashPos = path.path.get(12);
 		}
 
-		if (getCharacterOnPosition(dashPos) != null || Dungeon.level.traps.get(dashPos) != null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(dashPos) != null || Dungeon.level.traps.get(dashPos) != null){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (getCharacterOnPosition(dashPos+i) == null && Dungeon.level.traps.get(dashPos+i) == null){
+				if (DungeonCharactersHandler.getCharacterOnPosition(dashPos+i) == null && Dungeon.level.traps.get(dashPos+i) == null){
 					candidates.add(dashPos+i);
 				}
 			}
@@ -410,7 +413,7 @@ public class GnollGeomancer extends Mob {
 					&& !Dungeon.level.adjacent(i, Dungeon.level.entrance())
 					&& Dungeon.level.traps.get(i) == null
 					&& Dungeon.level.plants.get(i) == null
-					&& getCharacterOnPosition(i) == null){
+					&& DungeonCharactersHandler.getCharacterOnPosition(i) == null){
 				Dungeon.level.map[i] = Terrain.MINE_BOULDER;
 			}
 		}
@@ -429,9 +432,9 @@ public class GnollGeomancer extends Mob {
 
 		int oldpos = position;
 		position = dashPos;
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonTurnsHandler.TICK);
 		abilityCooldown = 1;
-		addActor(new Pushing(this, oldpos, position));
+		DungeonActorsHandler.addActor(new Pushing(this, oldpos, position));
 
 		if (closestisAlive){
 			GnollSapper closest = null;
@@ -451,7 +454,7 @@ public class GnollGeomancer extends Mob {
 						if (!Dungeon.level.solid[dashPos+i]
 								&& Dungeon.level.traps.get(dashPos+i) == null
 								&& Dungeon.level.plants.get(dashPos+i) == null
-								&& getCharacterOnPosition(dashPos+i) == null){
+								&& DungeonCharactersHandler.getCharacterOnPosition(dashPos+i) == null){
 							candidates.add(dashPos+i);
 						}
 					}
@@ -539,7 +542,7 @@ public class GnollGeomancer extends Mob {
 		@Override
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			if (!enemyInFOV){
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 				return true;
 			} else {
 				enemySeen = true;
@@ -553,7 +556,7 @@ public class GnollGeomancer extends Mob {
 				}
 
 				if (hasSapper()){
-					((GnollSapper) getById(sapperID)).startHunting(enemy);
+					((GnollSapper) DungeonActorsHandler.getById(sapperID)).startHunting(enemy);
 				}
 
 				if (abilityCooldown-- <= 0){
@@ -598,19 +601,19 @@ public class GnollGeomancer extends Mob {
 
 						Dungeon.hero.interruptHeroPlannedAction();
 						abilityCooldown = Random.NormalIntRange(3, 5);
-						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(enemy.cooldown()), 3*DungeonTurnsHandler.TICK));
 						return true;
 					} else if (GnollGeomancer.prepRockFallAttack(enemy, GnollGeomancer.this, 6-2*curbracket, true)) {
 						lastAbilityWasRockfall = true;
 						Dungeon.hero.interruptHeroPlannedAction();
-						spendTimeAdjusted(GameMath.gate(TICK, (int)Math.ceil(enemy.cooldown()), 3*TICK));
+						spendTimeAdjusted(GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(enemy.cooldown()), 3*DungeonTurnsHandler.TICK));
 						abilityCooldown = Random.NormalIntRange(3, 5);
 						return true;
 					}
 				}
 
 				//does not perform regular attacks
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 				return true;
 			}
 		}
@@ -631,7 +634,7 @@ public class GnollGeomancer extends Mob {
 		}
 
 		//ignore rocks already being thrown
-		for (Character ch : getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof GnollGeomancer && ((GnollGeomancer) ch).throwingRocksFromPos != null){
 				for (int i : ((GnollGeomancer) ch).throwingRocksFromPos){
 					candidateRocks.remove((Integer)i);
@@ -684,7 +687,7 @@ public class GnollGeomancer extends Mob {
 						Splash.at(rockPath.collisionPos, 0x555555, 15);
 						Sample.INSTANCE.play(Assets.Sounds.ROCKS);
 
-						Character ch = getCharacterOnPosition(rockPath.collisionPos);
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition(rockPath.collisionPos);
 						if (ch == Dungeon.hero){
 							PixelScene.shake( 3, 0.7f );
 						} else {
@@ -714,7 +717,7 @@ public class GnollGeomancer extends Mob {
 						rocksInFlight--;
 						if (rocksInFlight <= 0) {
 							rocksInFlight = 0;
-							source.next();
+							source.DungeonTurnsHandler.nextActorToPlay(this);();
 							knockedCharacters.clear();
 						}
 					}
@@ -766,8 +769,8 @@ public class GnollGeomancer extends Mob {
 				//add rock cell to pos, if it is not solid, isn't the safecell, and isn't where geomancer is standing
 				if (!Dungeon.level.solid[pos]
 						&& pos != safeCell
-						&& !(getCharacterOnPosition(pos) instanceof GnollGeomancer)
-						&& !(source instanceof GnollGeomancer && getCharacterOnPosition(pos) instanceof GnollSapper)
+						&& !(DungeonCharactersHandler.getCharacterOnPosition(pos) instanceof GnollGeomancer)
+						&& !(source instanceof GnollGeomancer && DungeonCharactersHandler.getCharacterOnPosition(pos) instanceof GnollSapper)
 						&& Random.Int(1+Dungeon.level.distance(rockCenter, pos)/2) == 0) {
 					rockCells.add(pos);
 				}
@@ -778,7 +781,7 @@ public class GnollGeomancer extends Mob {
 			source.sprite.parent.add(new TargetedCell(i, 0xFF0000));
 		}
 		//don't want to overly punish players with slow move or attack speed
-		Buff.append(source, GnollRockFall.class, GameMath.gate(TICK, (int)Math.ceil(target.cooldown()), 3*TICK)).setRockPositions(rockCells);
+		Buff.append(source, GnollRockFall.class, GameMath.gate(DungeonTurnsHandler.TICK, (int)Math.ceil(target.cooldown()), 3*DungeonTurnsHandler.TICK)).setRockPositions(rockCells);
 
 		source.sprite.attack(target.position, new Callback() {
 			@Override

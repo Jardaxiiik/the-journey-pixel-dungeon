@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -123,8 +123,8 @@ public class Thief extends Mob {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		
 		if (alignment == Alignment.ENEMY && item == null
 				&& enemy instanceof Hero && steal( (Hero)enemy )) {

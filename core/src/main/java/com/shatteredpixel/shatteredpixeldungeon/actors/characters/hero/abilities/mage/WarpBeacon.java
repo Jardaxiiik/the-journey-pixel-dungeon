@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.mage;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -115,7 +114,7 @@ public class WarpBeacon extends ArmorAbility {
 						armor.updateQuickslot();
 
 						if (tracker.depth == Dungeon.depth && tracker.branch == Dungeon.branch){
-							Character existing = Actor.getCharacterOnPosition(tracker.pos);
+							Character existing = DungeonCharactersHandler.getCharacterOnPosition(tracker.pos);
 
 							if (existing != null && existing != hero){
 								if (hero.hasTalent(Talent.TELEFRAG)){
@@ -138,7 +137,7 @@ public class WarpBeacon extends ArmorAbility {
 									ArrayList<Integer> candidates = new ArrayList<>();
 									for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 										int cell = tracker.pos + n;
-										if (!Dungeon.level.solid[cell] && Actor.getCharacterOnPosition( cell ) == null
+										if (!Dungeon.level.solid[cell] && DungeonCharactersHandler.getCharacterOnPosition( cell ) == null
 												&& (!Character.hasProperty(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 											candidates.add( cell );
 										}
@@ -147,11 +146,11 @@ public class WarpBeacon extends ArmorAbility {
 
 									if (!candidates.isEmpty()){
 										ScrollOfTeleportation.appear(hero, tracker.pos);
-										Actor.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ));
+										DungeonActors.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ));
 
 										toPush.position = candidates.get(0);
 										Dungeon.level.occupyCell(toPush);
-										hero.next();
+										DungeonTurnsHandler.nextActorToPlayHero(hero);();
 									} else {
 										GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 									}
@@ -219,7 +218,7 @@ public class WarpBeacon extends ArmorAbility {
 			hero.sprite.operate(target);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			Invisibility.dispel();
-			hero.spendTimeAdjustedAndNext(Actor.TICK);
+			hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 		}
 	}
 

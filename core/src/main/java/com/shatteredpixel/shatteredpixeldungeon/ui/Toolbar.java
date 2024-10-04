@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -262,7 +262,7 @@ public class Toolbar extends Component {
 						if (Dungeon.hero.hasTalent(Talent.PATIENT_STRIKE)){
 							Buff.affect(Dungeon.hero, Talent.PatientStrikeTracker.class).pos = Dungeon.hero.position;
 						}
-						Dungeon.hero.next();
+						DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 					} else {
 						examining = false;
 						Dungeon.hero.rest(false);

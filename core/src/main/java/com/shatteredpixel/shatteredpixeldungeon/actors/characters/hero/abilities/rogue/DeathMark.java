@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.rogue;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -78,7 +77,7 @@ public class DeathMark extends ArmorAbility {
 			return;
 		}
 
-		Character ch = Actor.getCharacterOnPosition(target);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 
 		if (ch == null || !Dungeon.level.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
@@ -96,7 +95,7 @@ public class DeathMark extends ArmorAbility {
 		armor.updateQuickslot();
 		hero.sprite.zap(target);
 
-		hero.next();
+		DungeonTurnsHandler.nextActorToPlayHero(hero);();
 
 		if (hero.getBuff(DoubleMarkTracker.class) != null){
 			hero.getBuff(DoubleMarkTracker.class).detach();
@@ -121,7 +120,7 @@ public class DeathMark extends ArmorAbility {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
 				PathFinder.buildDistanceMap(ch.position, passable, 3);
 
-				for (Character near : Actor.getCharacters()) {
+				for (Character near : DungeonCharactersHandler.getCharacters()) {
 					if (near != ch && near.alignment == Character.Alignment.ENEMY
 							&& PathFinder.distance[near.position] != Integer.MAX_VALUE) {
 						if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {

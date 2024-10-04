@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.GooWarn;
@@ -50,7 +49,7 @@ public class ArcaneBomb extends Bomb {
 			PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 			for (int i = 0; i < PathFinder.distance.length; i++) {
 				if (PathFinder.distance[i] < Integer.MAX_VALUE)
-					GameScene.add(ActorLoop.seed(i, 3, GooWarn.class));
+					GameScene.addMob(ActorLoop.seed(i, 3, GooWarn.class));
 			}
 		}
 	}
@@ -72,7 +71,7 @@ public class ArcaneBomb extends Bomb {
 				if (Dungeon.level.heroFOV[i]) {
 					CellEmitter.get(i).burst(ElmoParticle.FACTORY, 10);
 				}
-				Character ch = Actor.getCharacterOnPosition(i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 				if (ch != null){
 					affected.add(ch);
 				}

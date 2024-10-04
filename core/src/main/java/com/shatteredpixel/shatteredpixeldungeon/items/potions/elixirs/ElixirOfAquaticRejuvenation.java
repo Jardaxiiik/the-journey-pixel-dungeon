@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -74,7 +74,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 		@Override
 		public boolean playGameTurn() {
 			
-			if (!target.flying && Dungeon.level.water[target.position] && target.healthPoints < target.healthMax){
+			if (!target.getCharacterMovement().isFlying() && Dungeon.level.water[target.position] && target.healthPoints < target.healthMax){
 				float healAmt = GameMath.gate( 1, target.healthMax /50f, left );
 				healAmt = Math.min(healAmt, target.healthMax - target.healthPoints);
 				if (Random.Float() < (healAmt % 1)){
@@ -100,7 +100,7 @@ public class ElixirOfAquaticRejuvenation extends Elixir {
 					((Hero) target).resting = false;
 				}
 			} else {
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonActors.TICK);
 			}
 			return true;
 		}

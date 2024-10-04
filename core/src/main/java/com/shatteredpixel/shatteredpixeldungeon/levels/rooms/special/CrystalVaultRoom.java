@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.CrystalMimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;

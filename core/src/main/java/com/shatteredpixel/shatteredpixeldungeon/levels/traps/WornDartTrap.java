@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -47,21 +47,21 @@ public class WornDartTrap extends Trap {
 	public void activate() {
 
 		//we handle this inside of a separate actor as the trap may produce a visual effect we need to pause for
-		Actor.addActor(new Actor() {
+		DungeonActors.addActor(new Actor() {
 
 			{
-				actPriority = VFX_PRIO;
+				actPriority = VFX_PRIORITY;
 			}
 
 			@Override
-			protected boolean playGameTurn() {
-				Actor.removeActor(this);
-				Character target = Actor.getCharacterOnPosition(pos);
+            public boolean playGameTurn() {
+				DungeonActors.removeActor(this);
+				Character target = DungeonCharactersHandler.getCharacterOnPosition(pos);
 
 				//find the closest char that can be aimed at
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
-					for (Character ch : Actor.getCharacters()){
+					for (Character ch : DungeonCharactersHandler.getCharacters()){
 						if (!ch.isAlive()) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.position);
 						if (ch.invisible > 0) curDist += 1000;
@@ -88,7 +88,7 @@ public class WornDartTrap extends Trap {
 										Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));
 										finalTarget.sprite.bloodBurstA(finalTarget.sprite.center(), dmg);
 										finalTarget.sprite.flash();
-										next();
+										DungeonTurnsHandler.nextActorToPlay(this);();
 									}
 								});
 						return false;

@@ -63,7 +63,7 @@ public class ArtifactRecharge extends Buff {
 		if (left < 0){ // we expire after 0 to be more consistent with wand recharging visually
 			detach();
 		} else {
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 		}
 		
 		return true;

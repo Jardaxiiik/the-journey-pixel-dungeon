@@ -22,11 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -109,7 +111,7 @@ public class RipperDemon extends Mob {
 	private int lastEnemyPos = -1;
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (state == WANDERING){
 			leapPos = -1;
 		}
@@ -142,7 +144,7 @@ public class RipperDemon extends Mob {
 
 				leapCooldown = Random.NormalIntRange(2, 4);
 
-				if (rooted){
+				if (getCharacterMovement().isRooted()){
 					leapPos = -1;
 					return true;
 				}
@@ -150,7 +152,7 @@ public class RipperDemon extends Mob {
 				Ballistica b = new Ballistica(position, leapPos, Ballistica.STOP_TARGET | Ballistica.STOP_SOLID);
 				leapPos = b.collisionPos;
 
-				final Character leapVictim = getCharacterOnPosition(leapPos);
+				final Character leapVictim = DungeonCharactersHandler.getCharacterOnPosition(leapPos);
 				final int endPos;
 
 				//ensure there is somewhere to land after leaping
@@ -158,7 +160,7 @@ public class RipperDemon extends Mob {
 					int bouncepos = -1;
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 						if ((bouncepos == -1 || Dungeon.level.trueDistance(position, leapPos+i) < Dungeon.level.trueDistance(position, bouncepos))
-								&& getCharacterOnPosition(leapPos+i) == null && Dungeon.level.passable[leapPos+i]){
+								&& DungeonCharactersHandler.getCharacterOnPosition(leapPos+i) == null && Dungeon.level.passable[leapPos+i]){
 							bouncepos = leapPos+i;
 						}
 					}
@@ -179,7 +181,7 @@ public class RipperDemon extends Mob {
 					public void call() {
 
 						if (leapVictim != null && alignment != leapVictim.alignment){
-							if (isTargetHitByAttack(RipperDemon.this, leapVictim, INFINITE_ACCURACY, false)) {
+							if (ActionHit.isTargetHitByAttack(RipperDemon.this, leapVictim, INFINITE_ACCURACY, false)) {
 								Buff.affect(leapVictim, Bleeding.class).set(0.75f * getDamageRoll());
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
@@ -190,14 +192,14 @@ public class RipperDemon extends Mob {
 						}
 
 						if (endPos != leapPos){
-							addActor(new Pushing(RipperDemon.this, leapPos, endPos));
+							DungeonActorsHandler.addActor(new Pushing(RipperDemon.this, leapPos, endPos));
 						}
 
 						position = endPos;
 						leapPos = -1;
 						sprite.idle();
 						Dungeon.level.occupyCell(RipperDemon.this);
-						next();
+						DungeonTurnsHandler.nextActorToPlay(this);();
 					}
 				});
 				return false;
@@ -218,7 +220,7 @@ public class RipperDemon extends Mob {
 					return true;
 				}
 
-				if (leapCooldown <= 0 && enemyInFOV && !rooted
+				if (leapCooldown <= 0 && enemyInFOV && !getCharacterMovement().isRooted()
 						&& Dungeon.level.distance(position, enemy.position) >= 3) {
 
 					int targetPos = enemy.position;
@@ -261,7 +263,7 @@ public class RipperDemon extends Mob {
 					return moveSprite( oldPos, position);
 
 				} else {
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonTurnsHandler.TICK);
 					if (!enemyInFOV) {
 						sprite.showLost();
 						state = WANDERING;

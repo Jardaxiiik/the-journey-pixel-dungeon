@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -150,20 +150,20 @@ public class Pickaxe extends MeleeWeapon {
 	@Override
 	public int proc(Character attacker, Character defender, int damage ) {
 		if (Blacksmith.Quest.oldBloodQuest() && !bloodStained && defender instanceof Bat) {
-			Actor.addActor(new Actor() {
+			DungeonActors.addActor(new Actor() {
 
 				{
-					actPriority = VFX_PRIO;
+					actPriority = VFX_PRIORITY;
 				}
 
 				@Override
-				protected boolean playGameTurn() {
+                public boolean playGameTurn() {
 					if (!defender.isAlive()){
 						bloodStained = true;
 						updateQuickslot();
 					}
 
-					Actor.removeActor(this);
+					DungeonActors.removeActor(this);
 					return true;
 				}
 			});
@@ -199,7 +199,7 @@ public class Pickaxe extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.getCharacterOnPosition(target);
+		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;

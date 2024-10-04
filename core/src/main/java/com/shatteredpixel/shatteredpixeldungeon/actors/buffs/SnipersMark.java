@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -132,7 +132,7 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 		SpiritBow.SpiritArrow arrow = bow.knockArrow();
 		if (arrow == null) return;
 		
-		Character ch = (Character) Actor.getById(object);
+		Character ch = (Character) DungeonActors.getById(object);
 		if (ch == null) return;
 		
 		int cell = QuickSlotButton.autoAim(ch, arrow);

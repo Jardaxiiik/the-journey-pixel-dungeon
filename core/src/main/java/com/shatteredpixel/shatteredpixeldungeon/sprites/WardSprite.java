@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.sprites;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
@@ -65,8 +64,8 @@ public class WardSprite extends MobSprite {
 		idle();
 		flash();
 		emitter().burst(MagicMissile.WardParticle.UP, 2);
-		if (Actor.getCharacterOnPosition(pos) != null){
-			parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(pos).sprite.center()));
+		if (DungeonCharactersHandler.getCharacterOnPosition(pos) != null){
+			parent.add(new Beam.DeathRay(center(), DungeonCharactersHandler.getCharacterOnPosition(pos).sprite.center()));
 		} else {
 			parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 		}

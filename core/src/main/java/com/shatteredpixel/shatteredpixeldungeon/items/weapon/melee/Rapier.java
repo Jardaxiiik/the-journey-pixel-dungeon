@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -78,7 +77,7 @@ public class Rapier extends MeleeWeapon {
 			return;
 		}
 
-		Character enemy = Actor.getCharacterOnPosition(target);
+		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 		//duelist can lunge out of her FOV, but this wastes the ability instead of cancelling if there is no target
 		if (Dungeon.level.heroFOV[target]) {
 			if (enemy == null || enemy == hero || hero.isCharmedBy(enemy)) {
@@ -87,18 +86,18 @@ public class Rapier extends MeleeWeapon {
 			}
 		}
 
-		if (hero.rooted || Dungeon.level.distance(hero.position, target) < 2
+		if (hero.getCharacterMovement().isRooted() || Dungeon.level.distance(hero.position, target) < 2
 				|| Dungeon.level.distance(hero.position, target)-1 > wep.reachFactor(hero)){
 			GLog.w(Messages.get(wep, "ability_bad_position"));
-			if (hero.rooted) PixelScene.shake( 1, 1f );
+			if (hero.getCharacterMovement().isRooted()) PixelScene.shake( 1, 1f );
 			return;
 		}
 
 		int lungeCell = -1;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (Dungeon.level.distance(hero.position +i, target) <= wep.reachFactor(hero)
-					&& Actor.getCharacterOnPosition(hero.position +i) == null
-					&& (Dungeon.level.passable[hero.position +i] || (Dungeon.level.avoid[hero.position +i] && hero.flying))){
+					&& DungeonCharactersHandler.getCharacterOnPosition(hero.position +i) == null
+					&& (Dungeon.level.passable[hero.position +i] || (Dungeon.level.avoid[hero.position +i] && hero.getCharacterMovement().isFlying()))){
 				if (lungeCell == -1 || Dungeon.level.trueDistance(hero.position + i, target) < Dungeon.level.trueDistance(lungeCell, target)){
 					lungeCell = hero.position + i;
 				}

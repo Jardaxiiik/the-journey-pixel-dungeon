@@ -22,9 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -110,7 +109,7 @@ public class WandOfRegrowth extends Wand {
 			if (!(terr == Terrain.EMPTY || terr == Terrain.EMBERS || terr == Terrain.EMPTY_DECO ||
 					terr == Terrain.GRASS || terr == Terrain.HIGH_GRASS || terr == Terrain.FURROWED_GRASS)) {
 				i.remove();
-			} else if (Character.hasProperty(Actor.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)) {
+			} else if (Character.hasProperty(DungeonCharactersHandler.getCharacterOnPosition(cell), Character.Property.IMMOVABLE)) {
 				i.remove();
 			} else if (Dungeon.level.plants.get(cell) != null){
 				i.remove();
@@ -119,7 +118,7 @@ public class WandOfRegrowth extends Wand {
 					Level.set(cell, Terrain.GRASS);
 					GameScene.updateMap( cell );
 				}
-				Character ch = Actor.getCharacterOnPosition(cell);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 				if (ch != null){
 					if (ch instanceof DwarfKing){
 						Statistics.qualifiedForBossChallengeBadge = false;
@@ -135,17 +134,17 @@ public class WandOfRegrowth extends Wand {
 		if (chargesPerCast() >= 3){
 			Lotus l = new Lotus();
 			l.setLevel(buffedLvl());
-			if (cells.contains(target) && Actor.getCharacterOnPosition(target) == null){
+			if (cells.contains(target) && DungeonCharactersHandler.getCharacterOnPosition(target) == null){
 				cells.remove((Integer)target);
 				l.position = target;
-				GameScene.add(l);
+				GameScene.addMob(l);
 			} else {
 				for (int i = bolt.path.size()-1; i >= 0; i--){
 					int c = bolt.path.get(i);
-					if (cells.contains(c) && Actor.getCharacterOnPosition(c) == null){
+					if (cells.contains(c) && DungeonCharactersHandler.getCharacterOnPosition(c) == null){
 						cells.remove((Integer)c);
 						l.position = c;
-						GameScene.add(l);
+						GameScene.addMob(l);
 						break;
 					}
 				}
@@ -435,7 +434,7 @@ public class WandOfRegrowth extends Wand {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			super.playGameTurn();
 
 			if (--healthPoints <= 0){

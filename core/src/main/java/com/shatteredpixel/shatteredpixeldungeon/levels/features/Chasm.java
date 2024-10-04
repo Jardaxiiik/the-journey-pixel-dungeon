@@ -23,7 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.features;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDeath;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -150,7 +151,7 @@ public class Chasm implements Hero.Doom {
 	}
 
 	public static void mobFall( Mob mob ) {
-		if (mob.isAlive()) mob.die( Chasm.class );
+		if (mob.isAlive()) ActionDeath.die(mob, Chasm.class );
 		
 		if (mob.sprite != null) ((MobSprite)mob.sprite).fall();
 	}
@@ -158,7 +159,7 @@ public class Chasm implements Hero.Doom {
 	public static class Falling extends Buff {
 		
 		{
-			actPriority = VFX_PRIO;
+			actPriority = VFX_PRIORITY;
 		}
 		
 		@Override

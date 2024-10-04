@@ -23,12 +23,13 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DwarfKing;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -124,8 +125,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 
 	@Override
 	public boolean playGameTurn() {
-		comboTime-=TICK;
-		spendTimeAdjusted(TICK);
+		comboTime-= DungeonTurnsHandler.TICK;
+		spendTimeAdjusted(DungeonTurnsHandler.TICK);
 		if (comboTime <= 0) {
 			detach();
 		}
@@ -267,8 +268,8 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			parryUsed = true;
 			comboTime = 5f;
 			Invisibility.dispel();
-			Buff.affect(target, ParryTracker.class, Actor.TICK);
-			((Hero)target).spendTimeAdjustedAndNext(Actor.TICK);
+			Buff.affect(target, ParryTracker.class, DungeonTurnsHandler.TICK);
+			((Hero)target).spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 			Dungeon.hero.busy();
 		} else {
 			moveBeingUsed = move;
@@ -277,7 +278,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	public static class ParryTracker extends FlavourBuff{
-		{ actPriority = HERO_PRIO+1;}
+		{ actPriority = HERO_PRIORITY +1;}
 
 		public boolean parried;
 
@@ -289,7 +290,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	public static class RiposteTracker extends Buff{
-		{ actPriority = VFX_PRIO;}
+		{ actPriority = VFX_PRIORITY;}
 
 		public Character enemy;
 
@@ -301,7 +302,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					@Override
 					public void call() {
 						target.getBuff(Combo.class).doAttack(enemy);
-						next();
+						DungeonTurnsHandler.nextActorToPlay(this);();
 					}
 				});
 				detach();
@@ -356,7 +357,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					if (enemy.isAlive() && count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1) {
 						dist++;
 						Buff.prolong(enemy, Vertigo.class, 3);
-					} else if (!enemy.flying) {
+					} else if (!enemy.getCharacterMovement().isFlying()) {
 						while (dist > trajectory.dist ||
 								(dist > 0 && Dungeon.level.pit[trajectory.path.get(dist)])) {
 							dist--;
@@ -372,7 +373,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				case CRUSH:
 					WandOfBlastWave.BlastWave.blast(enemy.position);
 					PathFinder.buildDistanceMap(target.position, BArray.not(Dungeon.level.solid, null), 3);
-					for (Character ch : Actor.getCharacters()) {
+					for (Character ch : DungeonCharactersHandler.getCharacters()) {
 						if (ch != enemy && ch.alignment == Character.Alignment.ENEMY
 								&& PathFinder.distance[ch.position] < Integer.MAX_VALUE) {
 							int aoeHit = Math.round(target.getDamageRoll() * 0.25f * count);
@@ -461,7 +462,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Character enemy = Actor.getCharacterOnPosition( cell );
+			final Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 			if (enemy == null
 					|| enemy == target
 					|| !Dungeon.level.heroFOV[cell]
@@ -476,9 +477,9 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					Ballistica c = new Ballistica(target.position, enemy.position, Ballistica.PROJECTILE);
 					if (c.collisionPos == enemy.position){
 						final int leapPos = c.path.get(c.dist-1);
-						if (!Dungeon.level.passable[leapPos] && !(target.flying && Dungeon.level.avoid[leapPos])){
+						if (!Dungeon.level.passable[leapPos] && !(target.getCharacterMovement().isFlying() && Dungeon.level.avoid[leapPos])){
 							GLog.w(Messages.get(Combo.class, "bad_target"));
-						} else if (Dungeon.hero.rooted) {
+						} else if (Dungeon.hero.getCharacterMovement().isRooted()) {
 							PixelScene.shake( 1, 1f );
 							GLog.w(Messages.get(Combo.class, "bad_target"));
 						} else {

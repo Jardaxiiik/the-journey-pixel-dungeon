@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Ghost;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
@@ -102,7 +103,7 @@ public class GreatCrab extends Crab {
 			}
 			return INFINITE_EVASION;
 		}
-		return super.getEvasionAgainstAttacker( enemy );
+		return ActionHit.getEvasionAgainstAttacker(this,enemy);
 	}
 
 	@Override

@@ -58,7 +58,7 @@ public class Kinetic extends Weapon.Enchantment {
 	public static class KineticTracker extends Buff {
 
 		{
-			actPriority = Actor.VFX_PRIO;
+			actPriority = Actor.VFX_PRIORITY;
 		}
 
 		public int conservedDamage;
@@ -112,7 +112,7 @@ public class Kinetic extends Weapon.Enchantment {
 			preservedDamage -= Math.max(preservedDamage*.025f, 0.1f);
 			if (preservedDamage <= 0) detach();
 			
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 		

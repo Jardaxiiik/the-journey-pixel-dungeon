@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -34,8 +35,8 @@ public class Stone extends Armor.Glyph {
 	public int proc(Armor armor, Character attacker, Character defender, int damage) {
 		
 		testing = true;
-		float evasion = defender.getEvasionAgainstAttacker(attacker);
-		float accuracy = attacker.getAccuracyAgainstTarget(defender);
+		float evasion = ActionHit.getEvasionAgainstAttacker(defender,attacker);
+		float accuracy = ActionHit.getAccuracyAgainstTarget(attacker,defender);
 		testing = false;
 
 		evasion *= genericProcChanceMultiplier(defender);

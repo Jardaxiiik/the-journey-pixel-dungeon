@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import static com.watabou.utils.Random.NormalFloat;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Sacrificial;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -119,7 +119,7 @@ public class Bleeding extends Buff {
 					MeleeWeapon.onAbilityKill(Dungeon.hero, target);
 				}
 				
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonActors.TICK );
 			} else {
 				detach();
 			}

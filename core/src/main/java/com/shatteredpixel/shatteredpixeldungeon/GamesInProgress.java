@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
@@ -141,9 +142,9 @@ public class GamesInProgress {
 		info.str = Dungeon.hero.attributeStrength;
 		info.strBonus = Dungeon.hero.getAttributeStrength() - Dungeon.hero.attributeStrength;
 		info.exp = Dungeon.hero.exp;
-		info.healthPoint = Dungeon.hero.healthPoints;
-		info.ht = Dungeon.hero.healthMax;
-		info.shield = Dungeon.hero.getShielding();
+		info.healthPoint = Dungeon.hero.getCharacterHealth().getHealthPoints();
+		info.ht = Dungeon.hero.getCharacterHealth().getHealthMax();
+		info.shield = Dungeon.hero.getCharacterHealth().getCachedShield();
 		info.heroClass = Dungeon.hero.heroClass;
 		info.subClass = Dungeon.hero.subClass;
 		info.armorTier = Dungeon.hero.tier();

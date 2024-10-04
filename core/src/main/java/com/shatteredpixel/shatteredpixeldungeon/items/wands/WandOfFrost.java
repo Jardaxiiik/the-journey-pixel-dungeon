@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -78,7 +77,7 @@ public class WandOfFrost extends DamageWand {
 
 		}
 
-		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 		if (ch != null){
 
 			int damage = damageRoll();
@@ -136,7 +135,7 @@ public class WandOfFrost extends DamageWand {
 				//need to delay this through an actor so that the freezing isn't broken by taking damage from the staff hit.
 				new FlavourBuff() {
 					{
-						actPriority = VFX_PRIO;
+						actPriority = VFX_PRIORITY;
 					}
 
 					public boolean playGameTurn() {

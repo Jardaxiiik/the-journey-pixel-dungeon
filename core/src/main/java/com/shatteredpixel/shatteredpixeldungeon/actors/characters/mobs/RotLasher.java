@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -54,7 +54,7 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (healthPoints < healthMax && (enemy == null || !Dungeon.level.adjacent(position, enemy.position))) {
 			sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(Math.min(5, healthMax - healthPoints)), FloatingText.HEALING);
 			healthPoints = Math.min(healthMax, healthPoints + 5);
@@ -73,10 +73,10 @@ public class RotLasher extends Mob {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		Buff.affect( enemy, Cripple.class, 2f );
-		return super.attackProc(enemy, damage);
+		return ActionAttack.attackProc(this,enemy, damage);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class RotLasher extends Mob {
 
 		@Override
 		protected boolean noticeEnemy() {
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return super.noticeEnemy();
 		}
 	}

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -99,7 +99,7 @@ public class Brute extends Mob {
 		if (Dungeon.level.heroFOV[position]) {
 			SpellSprite.show( this, SpellSprite.BERSERK);
 		}
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		hasRaged = true;
 	}
 	
@@ -137,7 +137,7 @@ public class Brute extends Mob {
 				target.die(null);
 			}
 			
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			
 			return true;
 		}

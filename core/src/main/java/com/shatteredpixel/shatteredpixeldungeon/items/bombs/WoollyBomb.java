@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -55,12 +54,12 @@ public class WoollyBomb extends Bomb {
 
 		for (int i : spawnPoints){
 			if (Dungeon.level.insideMap(i)
-					&& Actor.getCharacterOnPosition(i) == null
+					&& Character.getCharacterOnPosition(i) == null
 					&& !(Dungeon.level.pit[i])) {
 				Sheep sheep = new Sheep();
 				sheep.lifespan = Dungeon.bossLevel() ? 20 : 200;
 				sheep.position = i;
-				GameScene.add(sheep);
+				GameScene.addMob(sheep);
 				Dungeon.level.occupyCell(sheep);
 				CellEmitter.get(i).burst(Speck.factory(Speck.WOOL), 4);
 			}

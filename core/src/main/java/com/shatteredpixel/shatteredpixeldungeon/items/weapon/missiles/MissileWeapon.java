@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -173,7 +172,7 @@ abstract public class MissileWeapon extends Weapon {
 		}
 
 		if (projecting
-				&& (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.getCharacterOnPosition(dst) != null)
+				&& (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || DungeonCharactersHandler.getCharacterOnPosition(dst) != null)
 				&& Dungeon.level.distance(user.position, dst) <= Math.round(4 * Enchantment.genericProcChanceMultiplier(user))){
 			return dst;
 		} else {
@@ -213,7 +212,7 @@ abstract public class MissileWeapon extends Weapon {
 
 	@Override
 	protected void onThrow( int cell ) {
-		Character enemy = Actor.getCharacterOnPosition( cell );
+		Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		if (enemy == null || enemy == curUser) {
 			parent = null;
 
@@ -221,7 +220,7 @@ abstract public class MissileWeapon extends Weapon {
 			if (curUser.hasTalent(Talent.SEER_SHOT)
 					&& curUser.heroClass != HeroClass.HUNTRESS
 					&& curUser.getBuff(Talent.SeerShotCooldown.class) == null){
-				if (Actor.getCharacterOnPosition(cell) == null) {
+				if (DungeonCharactersHandler.getCharacterOnPosition(cell) == null) {
 					RevealedArea a = Buff.affect(curUser, RevealedArea.class, 5 * curUser.pointsInTalent(Talent.SEER_SHOT));
 					a.depth = Dungeon.depth;
 					a.pos = cell;

@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -56,7 +55,7 @@ public class GatewayTrap extends Trap {
 
 		if (telePos == -1){
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
-				Character ch = Actor.getCharacterOnPosition(pos + i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos + i);
 				if (ch != null){
 					if (ScrollOfTeleportation.teleportChar(ch)) {
 						if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
@@ -86,14 +85,14 @@ public class GatewayTrap extends Trap {
 			ArrayList<Integer> telePositions = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 				if (Dungeon.level.passable[telePos+i]
-						&& Actor.getCharacterOnPosition( telePos+i ) == null){
+						&& DungeonCharactersHandler.getCharacterOnPosition( telePos+i ) == null){
 					telePositions.add(telePos+i);
 				}
 			}
 			Random.shuffle(telePositions);
 
 			if (Dungeon.level.passable[telePos]
-					&& Actor.getCharacterOnPosition( telePos ) == null){
+					&& DungeonCharactersHandler.getCharacterOnPosition( telePos ) == null){
 				telePositions.add(0, telePos);
 			}
 
@@ -106,7 +105,7 @@ public class GatewayTrap extends Trap {
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 
-				Character ch = Actor.getCharacterOnPosition(pos + i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos + i);
 				if (ch != null && !Character.hasProperty(ch, Character.Property.IMMOVABLE)){
 					int newPos = -1;
 					if (Character.hasProperty(ch, Character.Property.LARGE)){

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
@@ -251,11 +251,11 @@ public class TimekeepersHourglass extends Artifact {
 					}
 				}
 			} else if (cursed && Random.Int(10) == 0)
-				((Hero) target).spendTimeAdjusted( TICK );
+				((Hero) target).spendTimeAdjusted( DungeonActors.TICK );
 
 			updateQuickslot();
 
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 
 			return true;
 		}
@@ -289,7 +289,7 @@ public class TimekeepersHourglass extends Artifact {
 
 				target.invisible++;
 				target.paralysed++;
-				target.next();
+				target.DungeonTurnsHandler.nextActorToPlay(this);();
 
 				updateQuickslot();
 
@@ -395,7 +395,7 @@ public class TimekeepersHourglass extends Artifact {
 			super.detach();
 			activeBuff = null;
 			triggerPresses();
-			target.next();
+			target.DungeonTurnsHandler.nextActorToPlay(this);();
 		}
 
 		@Override

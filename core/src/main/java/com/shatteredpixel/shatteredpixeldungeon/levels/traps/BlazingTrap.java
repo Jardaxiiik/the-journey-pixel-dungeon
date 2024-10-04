@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -46,9 +46,9 @@ public class BlazingTrap extends Trap {
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE) {
 				if (Dungeon.level.pit[i] || Dungeon.level.water[i])
-					GameScene.add(ActorLoop.seed(i, 1, Fire.class));
+					GameScene.addMob(ActorLoop.seed(i, 1, Fire.class));
 				else
-					GameScene.add(ActorLoop.seed(i, 5, Fire.class));
+					GameScene.addMob(ActorLoop.seed(i, 5, Fire.class));
 				CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
 			}
 		}

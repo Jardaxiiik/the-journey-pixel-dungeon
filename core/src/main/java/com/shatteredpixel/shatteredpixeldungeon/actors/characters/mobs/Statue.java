@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
@@ -84,7 +84,7 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (levelGenStatue && Dungeon.level.visited[position]) {
 			Notes.add( Notes.Landmark.STATUE );
 		}
@@ -138,8 +138,8 @@ public class Statue extends Mob {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		damage = weapon.proc( this, enemy, damage );
 		if (!enemy.isAlive() && enemy == Dungeon.hero){
 			Dungeon.fail(this);

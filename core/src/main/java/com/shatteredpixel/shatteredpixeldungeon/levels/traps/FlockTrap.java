@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Sheep;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -55,12 +54,12 @@ public class FlockTrap extends Trap {
 		for (int i : spawnPoints){
 			Trap t;
 			if (Dungeon.level.insideMap(i)
-					&& Actor.getCharacterOnPosition(i) == null
+					&& Character.getCharacterOnPosition(i) == null
 					&& !(Dungeon.level.pit[i])) {
 				Sheep sheep = new Sheep();
 				sheep.lifespan = 6;
 				sheep.position = i;
-				GameScene.add(sheep);
+				GameScene.addMob(sheep);
 				CellEmitter.get(i).burst(Speck.factory(Speck.WOOL), 4);
 				//before the tile is pressed, directly trigger traps to avoid sfx spam
 				if ((t = Dungeon.level.traps.get(i)) != null && t.active){

@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -69,7 +68,7 @@ public class ScrollOfSirensSong extends ExoticScroll {
 
 			Mob target = null;
 			if (cell != null){
-				Character ch = Actor.getCharacterOnPosition(cell);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 				if (ch != null && ch.alignment != Character.Alignment.ALLY && ch instanceof Mob){
 					target = (Mob)ch;
 				}

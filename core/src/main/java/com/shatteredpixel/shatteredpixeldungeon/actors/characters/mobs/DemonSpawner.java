@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
@@ -30,6 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -84,7 +85,7 @@ public class DemonSpawner extends Mob {
 	public boolean spawnRecorded = false;
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (!spawnRecorded){
 			Statistics.spawnersAlive++;
 			spawnRecorded = true;
@@ -108,7 +109,7 @@ public class DemonSpawner extends Mob {
 
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
-				if (Dungeon.level.passable[position +n] && getCharacterOnPosition( position +n ) == null) {
+				if (Dungeon.level.passable[position +n] && DungeonCharactersHandler.getCharacterOnPosition( position +n ) == null) {
 					candidates.add( position +n );
 				}
 			}
@@ -119,11 +120,11 @@ public class DemonSpawner extends Mob {
 				spawn.position = Random.element( candidates );
 				spawn.state = spawn.HUNTING;
 
-				GameScene.add( spawn, 1 );
+				GameScene.addMob( spawn, 1 );
 				Dungeon.level.occupyCell(spawn);
 
 				if (sprite.visible) {
-					addActor(new Pushing(spawn, position, spawn.position));
+					DungeonActorsHandler.addActor(new Pushing(spawn, position, spawn.position));
 				}
 
 				spawnCooldown += 60;

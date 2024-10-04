@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
@@ -63,7 +62,7 @@ public class DisplacingDart extends TippedDart {
 						&& PathFinder.distance[pos] >= 8
 						&& PathFinder.distance[pos] <= 10
 						&& (!Character.hasProperty(defender, Character.Property.LARGE) || Dungeon.level.openSpace[pos])
-						&& Actor.getCharacterOnPosition(pos) == null){
+						&& DungeonCharactersHandler.getCharacterOnPosition(pos) == null){
 
 					if (Dungeon.level.heroFOV[pos]){
 						visiblePositions.add(pos);

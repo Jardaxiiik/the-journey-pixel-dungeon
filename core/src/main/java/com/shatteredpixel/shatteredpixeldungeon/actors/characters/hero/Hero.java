@@ -24,7 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionInteract;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionSpendTime;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
@@ -69,6 +74,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Snake;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -172,7 +179,7 @@ import java.util.LinkedHashMap;
 public class Hero extends Character {
 
 	{
-		actPriority = HERO_PRIO;
+		actPriority = HERO_PRIORITY;
 		
 		alignment = Alignment.ALLY;
 	}
@@ -411,12 +418,12 @@ public class Hero extends Character {
 	}
 
 	@Override
-	public boolean blockSound(float pitch) {
+	public boolean willBlockSound(float pitch) {
 		if ( belongings.weapon() != null && belongings.weapon().defenseFactor(this) >= 4 ){
 			Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, pitch);
 			return true;
 		}
-		return super.blockSound(pitch);
+		return super.willBlockSound(pitch);
 	}
 
 	public void live() {
@@ -447,7 +454,7 @@ public class Hero extends Character {
 		//temporarily set the hero's weapon to the missile weapon being used
 		//TODO improve this!
 		belongings.thrownWeapon = wep;
-		boolean hit = attack( enemy );
+		boolean hit = 				ActionAttack.attack( this, enemy, 1f, 0f, 1f);
 		Invisibility.dispel();
 		belongings.thrownWeapon = null;
 
@@ -661,7 +668,7 @@ public class Hero extends Character {
 	}
 
 	public boolean canAttack(Character enemy){
-		if (enemy == null || position == enemy.position || !Actor.getCharacters().contains(enemy)) {
+		if (enemy == null || position == enemy.position || !DungeonCharactersHandler.getCharacters().contains(enemy)) {
 			return false;
 		}
 
@@ -719,19 +726,19 @@ public class Hero extends Character {
 	@Override
 	public void spendTime(float time) {
 		justMoved = false;
-		super.spendTime(time);
+		ActionSpendTime.spendTime(this,time);
 	}
 
 	public void spendTimeAndNext(float time ) {
 		busy();
 		spendTime( time );
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public void spendTimeAdjustedAndNext(float time ) {
 		busy();
 		spendTimeAdjusted( time );
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 	
 	@Override
@@ -762,7 +769,7 @@ public class Hero extends Character {
 			
 			curAction = null;
 			
-			spendTimeAdjustedAndNext( TICK );
+			spendTimeAdjustedAndNext( DungeonTurnsHandler.TICK );
 			return false;
 		}
 		
@@ -771,13 +778,13 @@ public class Hero extends Character {
 			
 			if (resting) {
 				spendTime( TIME_TO_REST );
-				next();
+				DungeonTurnsHandler.nextActorToPlay(this);();
 			} else {
 				ready();
 			}
 
 			//if we just loaded into a level and have a search buff, make sure to process them
-			if(Actor.now() == 0){
+			if(DungeonTurnsHandler.getNow() == 0){
 				if (getBuff(Foresight.class) != null){
 					search(false);
 				} else if (getBuff(TalismanOfForesight.Foresight.class) != null){
@@ -867,12 +874,12 @@ public class Hero extends Character {
 		curAction = lastAction;
 		lastAction = null;
 		isHeroPlannedActionInterruptable = false;
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	private boolean canSelfTrample = false;
 	public boolean canSelfTrample(){
-		return canSelfTrample && !rooted && !flying &&
+		return canSelfTrample && !getCharacterMovement().isRooted() && !getCharacterMovement().isFlying() &&
 				//standing in high grass
 				(Dungeon.level.map[position] == Terrain.HIGH_GRASS ||
 				//standing in furrowed grass and not huntress
@@ -903,11 +910,11 @@ public class Hero extends Character {
 		
 		Character ch = action.ch;
 
-		if (ch.isAlive() && ch.canInteract(this)) {
+		if (ch.isAlive() && ActionInteract.canInteract(ch,this)) {
 			
 			ready();
 			sprite.turnTo(position, ch.position);
-			return ch.interact(this);
+			return ActionInteract.interact(ch,this);
 			
 		} else {
 			
@@ -1027,7 +1034,7 @@ public class Hero extends Character {
 
 					//allow the hero to move between levels even if they can't collect the item
 					if (Dungeon.level.getTransition(position) != null){
-						throwItems();
+						ActionThrowItems.throwItems(this);
 					} else {
 						heap.sprite.drop();
 					}
@@ -1187,7 +1194,7 @@ public class Hero extends Character {
 										GLog.i(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
 									}
 								}
-								spendTimeAdjusted(-Actor.TICK); //picking up the gold doesn't spend a turn here
+								spendTimeAdjusted(-DungeonTurnsHandler.TICK); //picking up the gold doesn't spend a turn here
 							} else {
 								Dungeon.level.dropItemOnPosition( gold, position).sprite.drop();
 							}
@@ -1246,12 +1253,12 @@ public class Hero extends Character {
 									for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 										GameScene.updateMap( action.dst+i );
 									}
-									spendTimeAdjustedAndNext(TICK);
+									spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 									ready();
 								}
 							});
 						} else {
-							spendTimeAdjustedAndNext(TICK);
+							spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 							ready();
 						}
 
@@ -1276,7 +1283,7 @@ public class Hero extends Character {
 		int stairs = action.dst;
 		LevelTransition transition = Dungeon.level.getTransition(stairs);
 
-		if (rooted) {
+		if (getCharacterMovement().isRooted()) {
 			PixelScene.shake(1, 1f);
 			ready();
 			return false;
@@ -1355,8 +1362,8 @@ public class Hero extends Character {
 	}
 	
 	@Override
-	public int attackProc(final Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(final Character enemy, int damage ) {
+		damage = ActionAttack(this, enemy, damage );
 
 		KindOfWeapon wep;
 		if (RingOfForce.fightingUnarmed(this) && !RingOfForce.unarmedGetsWeaponEnchantment(this)){
@@ -1372,19 +1379,19 @@ public class Hero extends Character {
 		switch (subClass) {
 		case SNIPER:
 			if (wep instanceof MissileWeapon && !(wep instanceof SpiritBow.SpiritArrow) && enemy != this) {
-				Actor.addActor(new Actor() {
+				DungeonActorsHandler.addActor(new Actor() {
 					
 					{
-						actPriority = VFX_PRIO;
+						actPriority = VFX_PRIORITY;
 					}
 					
 					@Override
-					protected boolean playGameTurn() {
+                    public boolean playGameTurn() {
 						if (enemy.isAlive()) {
 							int bonusTurns = hasTalent(Talent.SHARED_UPGRADES) ? wep.buffedLvl() : 0;
 							Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns).set(enemy.getId(), bonusTurns);
 						}
-						Actor.removeActor(this);
+						DungeonActorsHandler.removeActor(this);
 						return true;
 					}
 				});
@@ -1522,7 +1529,7 @@ public class Hero extends Character {
 				if (!mindVisionEnemies.contains(m) && QuickSlotButton.autoAim(m) != -1){
 					if (target == null){
 						target = m;
-					} else if (getDistanceToOtherCharacter(target) > getDistanceToOtherCharacter(m)) {
+					} else if (DungeonCharactersHandler.getDistanceToOtherCharacter(this,target) > DungeonCharactersHandler.getDistanceToOtherCharacter(this,m)) {
 						target = m;
 					}
 					if (m instanceof Snake && Dungeon.level.distance(m.position, position) <= 4
@@ -1577,7 +1584,7 @@ public class Hero extends Character {
 		if (target == position)
 			return false;
 
-		if (rooted) {
+		if (getCharacterMovement().isRooted()) {
 			PixelScene.shake( 1, 1f );
 			return false;
 		}
@@ -1588,7 +1595,7 @@ public class Hero extends Character {
 
 			path = null;
 
-			if (Actor.getCharacterOnPosition( target ) == null) {
+			if (DungeonCharactersHandler.getCharacterOnPosition( target ) == null) {
 				if (Dungeon.level.passable[target] || Dungeon.level.avoid[target]) {
 					step = target;
 				}
@@ -1607,7 +1614,7 @@ public class Hero extends Character {
 			else if (path.getLast() != target)
 				newPath = true;
 			else {
-				if (!Dungeon.level.passable[path.get(0)] || Actor.getCharacterOnPosition(path.get(0)) != null) {
+				if (!Dungeon.level.passable[path.get(0)] || DungeonCharactersHandler.getCharacterOnPosition(path.get(0)) != null) {
 					newPath = true;
 				}
 			}
@@ -1641,12 +1648,12 @@ public class Hero extends Character {
 			float delay = 1 / getSpeed();
 
 			if (Dungeon.level.pit[step] && !Dungeon.level.solid[step]
-					&& (!flying || getBuff(Levitation.class) != null && getBuff(Levitation.class).detachesWithinDelay(delay))){
+					&& (!getCharacterMovement().isFlying() || getBuff(Levitation.class) != null && getBuff(Levitation.class).detachesWithinDelay(delay))){
 				if (!Chasm.jumpConfirmed){
 					Chasm.heroJump(this);
 					interruptHeroPlannedAction();
 				} else {
-					flying = false;
+					getCharacterMovement().setFlying(false);
 					removeBuff(getBuff(Levitation.class)); //directly remove to prevent cell pressing
 					Chasm.heroFall(target);
 				}
@@ -1659,7 +1666,7 @@ public class Hero extends Character {
 			}
 			
 			sprite.move(position, step);
-			moveToPosition(step);
+			ActionMove.moveToPosition(this,step);
 
 			spendTimeAdjusted( delay );
 			justMoved = true;
@@ -1687,7 +1694,7 @@ public class Hero extends Character {
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
 		}
 		
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		Heap heap = Dungeon.level.heaps.get( cell );
 
 		if (Dungeon.level.map[cell] == Terrain.ALCHEMY && cell != position) {
@@ -1938,7 +1945,7 @@ public class Hero extends Character {
 
 				ankh.detach(belongings.backpack);
 
-				for (Character ch : Actor.getCharacters()) {
+				for (Character ch : DungeonCharactersHandler.getCharacters()) {
 					if (ch instanceof DriedRose.GhostHero) {
 						((DriedRose.GhostHero) ch).sayAnhk();
 						return;
@@ -1972,7 +1979,7 @@ public class Hero extends Character {
 			return;
 		}
 		
-		Actor.fixTime();
+		DungeonTurnsHandler.fixTime();
 		super.die(source);
 		reallyDie(source);
 	}
@@ -2023,7 +2030,7 @@ public class Hero extends Character {
 			items.remove( item );
 		}
 
-		for (Character c : Actor.getCharacters()){
+		for (Character c : DungeonCharactersHandler.getCharacters()){
 			if (c instanceof DriedRose.GhostHero){
 				((DriedRose.GhostHero) c).sayHeroKilled();
 			}
@@ -2065,9 +2072,9 @@ public class Hero extends Character {
 	public void moveToPosition(int newPosition, boolean travelling) {
 		boolean wasHighGrass = Dungeon.level.map[newPosition] == Terrain.HIGH_GRASS;
 
-		super.moveToPosition(newPosition, travelling);
+		ActionMove.moveToPosition(this,newPosition, travelling);
 		
-		if (!flying && travelling) {
+		if (!getCharacterMovement().isFlying() && travelling) {
 			if (Dungeon.level.water[position]) {
 				Sample.INSTANCE.play( Assets.Sounds.WATER, 1, Random.Float( 0.8f, 1.25f ) );
 			} else if (Dungeon.level.map[position] == Terrain.EMPTY_SP) {
@@ -2099,8 +2106,7 @@ public class Hero extends Character {
 		boolean wasEnemy = enemy.alignment == Alignment.ENEMY
 				|| (enemy instanceof Mimic && enemy.alignment == Alignment.NEUTRAL);
 
-		boolean hit = attack( enemy );
-		
+		boolean hit = ActionAttack.attack( this, enemy, 1f, 0f, 1f);
 		Invisibility.dispel();
 		spendTimeAdjusted( attackDelay() );
 
@@ -2394,9 +2400,9 @@ public class Hero extends Character {
 	}
 
 	@Override
-	public void next() {
+	public void DungeonTurnsHandler.nextActorToPlay(this);() {
 		if (isAlive())
-			super.next();
+			super.DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public static interface Doom {

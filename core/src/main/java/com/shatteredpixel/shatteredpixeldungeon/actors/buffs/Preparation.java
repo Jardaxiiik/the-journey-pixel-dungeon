@@ -22,12 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.NPC;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -138,7 +138,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 			if (AttackLevel.getLvl(turnsInvis).blinkDistance() > 0 && target == Dungeon.hero){
 				ActionIndicator.setAction(this);
 			}
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 		} else {
 			detach();
 		}
@@ -271,7 +271,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
-			final Character enemy = Actor.getCharacterOnPosition( cell );
+			final Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 			if (enemy == null || Dungeon.hero.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell] || enemy == Dungeon.hero){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {
@@ -279,7 +279,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				//just attack them then!
 				if (Dungeon.hero.canAttack(enemy)){
 					Dungeon.hero.curAction = new HeroAction.Attack( enemy );
-					Dungeon.hero.next();
+					DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 					return;
 				}
 				
@@ -289,8 +289,8 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				int dest = -1;
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 					//cannot blink into a cell that's occupied or impassable, only over them
-					if (Actor.getCharacterOnPosition(cell+i) != null)     continue;
-					if (!Dungeon.level.passable[cell+i] && !(target.flying && Dungeon.level.avoid[cell+i])) {
+					if (DungeonCharactersHandler.getCharacterOnPosition(cell+i) != null)     continue;
+					if (!Dungeon.level.passable[cell+i] && !(target.getCharacterMovement().isFlying() && Dungeon.level.avoid[cell+i])) {
 						continue;
 					}
 
@@ -305,9 +305,9 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 
 				}
 
-				if (dest == -1 || PathFinder.distance[dest] == Integer.MAX_VALUE || Dungeon.hero.rooted){
+				if (dest == -1 || PathFinder.distance[dest] == Integer.MAX_VALUE || Dungeon.hero.getCharacterMovement().isRooted()){
 					GLog.w(Messages.get(Preparation.class, "out_of_reach"));
-					if (Dungeon.hero.rooted) PixelScene.shake( 1, 1f );
+					if (Dungeon.hero.getCharacterMovement().isRooted()) PixelScene.shake( 1, 1f );
 					return;
 				}
 				
@@ -324,7 +324,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
 
 				Dungeon.hero.curAction = new HeroAction.Attack( enemy );
-				Dungeon.hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 			}
 		}
 		

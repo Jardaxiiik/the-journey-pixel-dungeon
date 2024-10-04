@@ -23,10 +23,12 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Effects;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -79,7 +81,7 @@ public class WandOfBlastWave extends DamageWand {
 
 		//throws other chars around the center.
 		for (int i  : PathFinder.OFFSETS_NEIGHBOURS8){
-			Character ch = Actor.getCharacterOnPosition(bolt.collisionPos + i);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos + i);
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
@@ -95,7 +97,7 @@ public class WandOfBlastWave extends DamageWand {
 		}
 
 		//throws the char at the center of the blast
-		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 		if (ch != null){
 			wandProc(ch, chargesPerCast());
 			ch.receiveDamageFromSource(damageRoll(), this);
@@ -120,7 +122,7 @@ public class WandOfBlastWave extends DamageWand {
 		boolean collided = dist == trajectory.dist;
 
 		if (dist <= 0
-				|| ch.rooted
+				|| ch.getCharacterMovement().isRooted()
 				|| ch.getProperties().contains(Character.Property.IMMOVABLE)) return;
 
 		//large characters cannot be moved into non-open space
@@ -134,7 +136,7 @@ public class WandOfBlastWave extends DamageWand {
 			}
 		}
 
-		if (Actor.getCharacterOnPosition(trajectory.path.get(dist)) != null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(trajectory.path.get(dist)) != null){
 			dist--;
 			collided = true;
 		}
@@ -149,9 +151,9 @@ public class WandOfBlastWave extends DamageWand {
 		final boolean finalCollided = collided && collideDmg;
 		final int initialpos = ch.position;
 
-		Actor.addActor(new Pushing(ch, ch.position, newPos, new Callback() {
+		DungeonActorsHandler.addActor(new Pushing(ch, ch.position, newPos, new Callback() {
 			public void call() {
-				if (initialpos != ch.position || Actor.getCharacterOnPosition(newPos) != null) {
+				if (initialpos != ch.position || DungeonCharactersHandler.getCharacterOnPosition(newPos) != null) {
 					//something caused movement or added chars before pushing resolved, cancel to be safe.
 					ch.sprite.place(ch.position);
 					return;
@@ -188,14 +190,14 @@ public class WandOfBlastWave extends DamageWand {
 		//acts like elastic enchantment
 		//we delay this with an actor to prevent conflicts with regular elastic
 		//so elastic always fully resolves first, then this effect activates
-		Actor.addActor(new Actor() {
+		DungeonActorsHandler.addActor(new Actor() {
 			{
-				actPriority = VFX_PRIO+9; //act after pushing effects
+				actPriority = VFX_PRIORITY +9; //act after pushing effects
 			}
 
 			@Override
-			protected boolean playGameTurn() {
-				Actor.removeActor(this);
+            public boolean playGameTurn() {
+				DungeonActorsHandler.removeActor(this);
 				if (defender.isAlive()) {
 					new BlastWaveOnHit().proc(staff, attacker, defender, damage);
 				}

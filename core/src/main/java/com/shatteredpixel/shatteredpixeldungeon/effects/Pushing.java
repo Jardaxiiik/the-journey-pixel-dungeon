@@ -21,9 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.watabou.noosa.Camera;
@@ -43,7 +44,7 @@ public class Pushing extends Actor {
 	private Callback callback;
 
 	{
-		actPriority = VFX_PRIO+10;
+		actPriority = VFX_PRIORITY +10;
 	}
 	
 	public Pushing(Character ch, int from, int to ) {
@@ -63,8 +64,8 @@ public class Pushing extends Actor {
 	}
 	
 	@Override
-	protected boolean playGameTurn() {
-		Actor.removeActor( Pushing.this );
+    public boolean playGameTurn() {
+		DungeonActorsHandler.removeActor( Pushing.this );
 
 		if (sprite != null && sprite.parent != null) {
 			if (Dungeon.level.heroFOV[from] || Dungeon.level.heroFOV[to]){
@@ -78,7 +79,7 @@ public class Pushing extends Actor {
 		}
 
 		//so that all pushing effects at the same time go simultaneously
-		for ( Actor actor : Actor.getAll() ){
+		for ( Actor actor : DungeonActorsHandler.getAll() ){
 			if (actor instanceof Pushing && actor.cooldown() == 0)
 				return true;
 		}
@@ -123,11 +124,11 @@ public class Pushing extends Actor {
 				sprite.point(end);
 				
 				killAndErase();
-				Actor.removeActor(Pushing.this);
+				DungeonActorsHandler.removeActor(Pushing.this);
 				if (callback != null) callback.call();
 				GameScene.sortMobSprites();
 
-				next();
+				DungeonTurnsHandler.nextActorToPlay(this);();
 			}
 		}
 	}

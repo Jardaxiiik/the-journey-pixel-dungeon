@@ -23,7 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -89,7 +91,7 @@ public class Goo extends Mob {
 
 	@Override
 	public int getEvasionAgainstAttacker(Character enemy) {
-		return (int)(super.getEvasionAgainstAttacker(enemy) * ((healthPoints *2 <= healthMax)? 1.5 : 1));
+		return (int)(ActionHit.getEvasionAgainstAttacker(this,enemy) * ((healthPoints *2 <= healthMax)? 1.5 : 1));
 	}
 
 	@Override
@@ -151,8 +153,8 @@ public class Goo extends Mob {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		if (Random.Int( 3 ) == 0) {
 			Buff.affect( enemy, Ooze.class ).set( Ooze.DURATION );
 			enemy.sprite.burst( 0x000000, 5 );
@@ -197,7 +199,7 @@ public class Goo extends Mob {
 				if (pumpedUp >= 2){
 					((GooSprite)sprite).triggerEmitters();
 				}
-				attack(targetCharacter);
+				ActionAttack.attack( this, targetCharacter, 1f, 0f, 1f);
 				Invisibility.dispel(this);
 				spendTimeAdjusted( getAttackDelay() );
 			}
@@ -314,7 +316,7 @@ public class Goo extends Mob {
 			BossHealthBar.assignBoss(this);
 			Dungeon.level.seal();
 			yell(Messages.get(this, "notice"));
-			for (Character ch : getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}

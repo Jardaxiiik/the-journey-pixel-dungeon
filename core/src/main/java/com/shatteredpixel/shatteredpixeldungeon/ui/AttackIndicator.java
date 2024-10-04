@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
@@ -182,7 +182,7 @@ public class AttackIndicator extends Tag {
 		super.onClick();
 		if (enabled && Dungeon.hero.ready) {
 			if (Dungeon.hero.chooseHeroActionBasedOnTile( lastTarget.position)) {
-				Dungeon.hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 			}
 		}
 	}

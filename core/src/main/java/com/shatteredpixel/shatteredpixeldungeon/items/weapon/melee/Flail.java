@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -68,14 +68,14 @@ public class Flail extends MeleeWeapon {
 	public float accuracyFactor(Character owner, Character target) {
 		SpinAbilityTracker spin = owner.getBuff(SpinAbilityTracker.class);
 		if (spin != null) {
-			Actor.addActor(new Actor() {
-				{ actPriority = VFX_PRIO; }
+			DungeonActors.addActor(new Actor() {
+				{ actPriority = VFX_PRIORITY; }
 				@Override
-				protected boolean playGameTurn() {
+                public boolean playGameTurn() {
 					if (owner instanceof Hero && !target.isAlive()){
 						onAbilityKill((Hero)owner, target);
 					}
-					Actor.removeActor(this);
+					DungeonActors.removeActor(this);
 					return true;
 				}
 			});
@@ -116,7 +116,7 @@ public class Flail extends MeleeWeapon {
 		Buff.prolong(hero, SpinAbilityTracker.class, 3f);
 		Sample.INSTANCE.play(Assets.Sounds.CHAINS, 1, 1, 0.9f + 0.1f*spin.spins);
 		hero.sprite.operate(hero.position);
-		hero.spendTimeAdjustedAndNext(Actor.TICK);
+		hero.spendTimeAdjustedAndNext(DungeonActors.TICK);
 		BuffIndicator.refreshHero();
 
 		afterAbilityUsed(hero);

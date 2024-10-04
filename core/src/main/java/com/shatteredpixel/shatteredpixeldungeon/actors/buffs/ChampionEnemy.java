@@ -22,12 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -124,10 +125,10 @@ public abstract class ChampionEnemy extends Buff {
 		@Override
 		public void detach() {
 			//don't trigger when killed by being knocked into a pit
-			if (target.flying || !Dungeon.level.pit[target.position]) {
+			if (target.getCharacterMovement().isFlying() || !Dungeon.level.pit[target.position]) {
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 					if (!Dungeon.level.solid[target.position + i] && !Dungeon.level.water[target.position + i]) {
-						GameScene.add(ActorLoop.seed(target.position + i, 2, Fire.class));
+						GameScene.addMob(ActorLoop.seed(target.position + i, 2, Fire.class));
 					}
 				}
 			}
@@ -161,7 +162,7 @@ public abstract class ChampionEnemy extends Buff {
 				return false;
 			} else {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				for (Character ch : Actor.getCharacters()) {
+				for (Character ch : DungeonCharactersHandler.getCharacters()) {
 					//our own tile is always passable
 					passable[ch.position] = ch == target;
 				}
@@ -208,7 +209,7 @@ public abstract class ChampionEnemy extends Buff {
 				return false;
 			} else {
 				boolean[] passable = BArray.not(Dungeon.level.solid, null);
-				for (Character ch : Actor.getCharacters()) {
+				for (Character ch : DungeonCharactersHandler.getCharacters()) {
 					//our own tile is always passable
 					passable[ch.position] = ch == target;
 				}
@@ -243,7 +244,7 @@ public abstract class ChampionEnemy extends Buff {
 		@Override
 		public boolean playGameTurn() {
 			multiplier += 0.01f;
-			spendTimeAdjusted(4*TICK);
+			spendTimeAdjusted(4* DungeonTurnsHandler.TICK);
 			return true;
 		}
 

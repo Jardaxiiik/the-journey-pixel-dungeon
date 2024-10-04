@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.CorrosiveGas;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
@@ -70,14 +70,14 @@ public class PrismaticImage extends NPC {
 	private int deathTimer = -1;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		
 		if (!isAlive()){
 			deathTimer--;
 			
 			if (deathTimer > 0) {
 				sprite.alpha((deathTimer + 3) / 8f);
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonActors.TICK);
 			} else {
 				destroy();
 				sprite.die();
@@ -92,7 +92,7 @@ public class PrismaticImage extends NPC {
 		}
 		
 		if ( hero == null ){
-			hero = (Hero) Actor.getById(heroID);
+			hero = (Hero) DungeonActors.getById(heroID);
 			if ( hero == null ){
 				destroy();
 				sprite.die();
@@ -179,7 +179,7 @@ public class PrismaticImage extends NPC {
 
 			//if the hero has more/less evasion, 50% of it is applied
 			//includes ring of evasion and armor boosts
-			return super.getEvasionAgainstAttacker(enemy) * (baseEvasion + heroEvasion) / 2;
+			return ActionHit.getEvasionAgainstAttacker(this,enemy) * (baseEvasion + heroEvasion) / 2;
 		} else {
 			return 0;
 		}
@@ -225,20 +225,20 @@ public class PrismaticImage extends NPC {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
+	public int attackProc_1(Character enemy, int damage ) {
 		
 		if (enemy instanceof Mob) {
 			((Mob)enemy).startHunting( this );
 		}
 		
-		return super.attackProc( enemy, damage );
+		return ActionAttack.attackProc(this, enemy, damage );
 	}
 	
 	@Override
 	public CharSprite sprite() {
 		CharSprite s = super.sprite();
 		
-		hero = (Hero)Actor.getById(heroID);
+		hero = (Hero)DungeonActors.getById(heroID);
 		if (hero != null) {
 			armTier = hero.tier();
 		}

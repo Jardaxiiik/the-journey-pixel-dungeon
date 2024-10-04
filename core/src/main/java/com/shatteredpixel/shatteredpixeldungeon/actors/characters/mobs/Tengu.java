@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -40,6 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -90,8 +91,8 @@ public class Tengu extends Mob {
 		evasionSkill = 15;
 		
 		HUNTING = new Hunting();
-		
-		flying = true; //doesn't literally fly, but he is fleet-of-foot enough to avoid hazards
+
+		getCharacterMovement().setFlying(true); //doesn't literally fly, but he is fleet-of-foot enough to avoid hazards
 		
 		properties.add(Property.BOSS);
 		
@@ -122,7 +123,7 @@ public class Tengu extends Mob {
 	//Tengu is immune to debuffs and damage when removed from the level
 	@Override
 	public boolean addBuff(Buff buff) {
-		if (getCharacters().contains(this) || buff instanceof Doom || loading){
+		if (DungeonCharactersHandler.getCharacters().contains(this) || buff instanceof Doom || loading){
 			return super.addBuff(buff);
 		}
 		return false;
@@ -160,15 +161,15 @@ public class Tengu extends Mob {
 		//phase 2 of the fight is over
 		if (healthPoints == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
 			//let full attack action complete first
-			addActor(new Actor() {
+			DungeonActorsHandler.addActor(new Actor() {
 
 				{
-					actPriority = VFX_PRIO;
+					actPriority = VFX_PRIORITY;
 				}
 
 				@Override
-				protected boolean playGameTurn() {
-					Actor.removeActor(this);
+                public boolean playGameTurn() {
+					DungeonActorsHandler.removeActor(this);
 					((PrisonBossLevel)Dungeon.level).progress();
 					return true;
 				}
@@ -186,15 +187,15 @@ public class Tengu extends Mob {
 		//if tengu has lost a certain amount of hp, jump
 		} else if (newBracket != curbracket) {
 			//let full attack action complete first
-			addActor(new Actor() {
+			DungeonActorsHandler.addActor(new Actor() {
 
 				{
-					actPriority = VFX_PRIO;
+					actPriority = VFX_PRIORITY;
 				}
 
 				@Override
-				protected boolean playGameTurn() {
-					Actor.removeActor(this);
+                public boolean playGameTurn() {
+					DungeonActorsHandler.removeActor(this);
 					jump();
 					return true;
 				}
@@ -263,7 +264,7 @@ public class Tengu extends Mob {
 					tries--;
 				} while ( tries > 0 && (level.trueDistance(newPos, enemy.position) <= 3.5f
 						|| level.trueDistance(newPos, Dungeon.hero.position) <= 3.5f
-						|| getCharacterOnPosition(newPos) != null));
+						|| DungeonCharactersHandler.getCharacterOnPosition(newPos) != null));
 
 				if (tries <= 0) newPos = position;
 
@@ -292,7 +293,7 @@ public class Tengu extends Mob {
 								level.distance(newPos, Dungeon.hero.position) < 5 ||
 								level.distance(newPos, Dungeon.hero.position) > 7 ||
 								level.distance(newPos, position) < 5 ||
-								getCharacterOnPosition(newPos) != null ||
+								DungeonCharactersHandler.getCharacterOnPosition(newPos) != null ||
 								Dungeon.level.heaps.get(newPos) != null));
 
 				if (tries <= 0) newPos = position;
@@ -335,7 +336,7 @@ public class Tengu extends Mob {
 			if (healthPoints <= healthMax /2) BossHealthBar.bleed(true);
 			if (healthPoints == healthMax) {
 				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.getName()));
-				for (Character ch : getCharacters()){
+				for (Character ch : DungeonCharactersHandler.getCharacters()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayBoss();
 					}
@@ -416,7 +417,7 @@ public class Tengu extends Mob {
 					return useAbility();
 				}
 				
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonTurnsHandler.TICK);
 				return true;
 				
 			}
@@ -536,13 +537,13 @@ public class Tengu extends Mob {
 			if (targetAbilityUses() - abilitiesUsed >= 4) {
 				//spend no time
 			} else {
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			}
 		} else {
 			if (targetAbilityUses() - abilitiesUsed >= 4) {
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			} else {
-				spendTimeAdjusted(2 * TICK);
+				spendTimeAdjusted(2 * DungeonTurnsHandler.TICK);
 			}
 		}
 		
@@ -591,7 +592,7 @@ public class Tengu extends Mob {
 							@Override
 							public void call() {
 								item.onThrow(finalTargetCell);
-								thrower.next();
+								thrower.DungeonTurnsHandler.nextActorToPlay(this);();
 							}
 						});
 		return true;
@@ -623,7 +624,7 @@ public class Tengu extends Mob {
 				for (int cell = 0; cell < PathFinder.distance.length; cell++) {
 
 					if (PathFinder.distance[cell] < Integer.MAX_VALUE) {
-						Character ch = Actor.getCharacterOnPosition(cell);
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 						if (ch != null && !(ch instanceof Tengu)) {
 							int dmg = Random.NormalIntRange(5 + Dungeon.scalingDepth(), 10 + Dungeon.scalingDepth() * 2);
 							dmg -= ch.getArmorPointsRolled();
@@ -659,7 +660,7 @@ public class Tengu extends Mob {
 			}
 			
 			timer--;
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		}
 
@@ -789,13 +790,13 @@ public class Tengu extends Mob {
 				curCells = new int[toCells.size()];
 				int i = 0;
 				for (Integer c : toCells){
-					GameScene.add(ActorLoop.seed(c, 2, FireActorLoop.class));
+					GameScene.addMob(ActorLoop.seed(c, 2, FireActorLoop.class));
 					curCells[i] = c;
 					i++;
 				}
 			}
 			
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		}
 		
@@ -862,7 +863,7 @@ public class Tengu extends Mob {
 						if (cur[cell] > 0 && off[cell] == 0){
 
 							//similar to fire.burn(), but Tengu is immune, and hero loses score
-							Character ch = Actor.getCharacterOnPosition( cell );
+							Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 							if (ch != null && !ch.isImmuneToEffectType(Fire.class) && !(ch instanceof Tengu)) {
 								Buff.affect( ch, Burning.class ).reignite( ch );
 							}
@@ -959,7 +960,7 @@ public class Tengu extends Mob {
 							@Override
 							public void call() {
 								item.onThrow(finalTargetCell);
-								thrower.next();
+								thrower.DungeonTurnsHandler.nextActorToPlay(this);();
 							}
 						});
 		return true;
@@ -1001,15 +1002,15 @@ public class Tengu extends Mob {
 				spreadblob();
 			}
 			
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		}
 		
 		private void spreadblob(){
-			GameScene.add(ActorLoop.seed(shockerPos, 1, ShockerActorLoop.class));
+			GameScene.addMob(ActorLoop.seed(shockerPos, 1, ShockerActorLoop.class));
 			for (int i = shockingOrdinals ? 0 : 1; i < PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE.length; i += 2){
 				if (!Dungeon.level.solid[shockerPos+PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i]]) {
-					GameScene.add(ActorLoop.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerActorLoop.class));
+					GameScene.addMob(ActorLoop.seed(shockerPos + PathFinder.OFFSETS_NEIGHBOURS8_CLOCKWISE[i], 2, ShockerActorLoop.class));
 				}
 			}
 		}
@@ -1057,7 +1058,7 @@ public class Tengu extends Mob {
 
 							shocked = true;
 							
-							Character ch = Actor.getCharacterOnPosition(cell);
+							Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 							if (ch != null && !(ch instanceof Tengu)){
 								ch.receiveDamageFromSource(2 + Dungeon.scalingDepth(), new Electricity());
 								

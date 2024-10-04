@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.watabou.utils.Bundle;
@@ -82,17 +81,17 @@ public class DirectableAlly extends NPC {
 
 	public void directTocell( int cell ){
 		if (!Dungeon.level.heroFOV[cell]
-				|| Actor.getCharacterOnPosition(cell) == null
-				|| (Actor.getCharacterOnPosition(cell) != Dungeon.hero && Actor.getCharacterOnPosition(cell).alignment != Character.Alignment.ENEMY)){
+				|| DungeonCharactersHandler.getCharacterOnPosition(cell) == null
+				|| (DungeonCharactersHandler.getCharacterOnPosition(cell) != Dungeon.hero && DungeonCharactersHandler.getCharacterOnPosition(cell).alignment != Character.Alignment.ENEMY)){
 			defendPos( cell );
 			return;
 		}
 
-		if (Actor.getCharacterOnPosition(cell) == Dungeon.hero){
+		if (DungeonCharactersHandler.getCharacterOnPosition(cell) == Dungeon.hero){
 			followHero();
 
-		} else if (Actor.getCharacterOnPosition(cell).alignment == Character.Alignment.ENEMY){
-			targetChar(Actor.getCharacterOnPosition(cell));
+		} else if (DungeonCharactersHandler.getCharacterOnPosition(cell).alignment == Character.Alignment.ENEMY){
+			targetChar(DungeonCharactersHandler.getCharacterOnPosition(cell));
 
 		}
 	}
@@ -147,7 +146,7 @@ public class DirectableAlly extends NPC {
 						defendingPos = position;
 						movingToDefendPos = false;
 					}
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonActors.TICK );
 				}
 
 			}

@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -72,13 +71,13 @@ public class DisarmingTrap extends Trap{
 			}
 		}
 
-		if (Actor.getCharacterOnPosition(pos) instanceof Statue){
-			Actor.getCharacterOnPosition(pos).die(this);
+		if (Character.getCharacterOnPosition(pos) instanceof Statue){
+			Character.getCharacterOnPosition(pos).die(this);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 			CellEmitter.get(pos).burst(Speck.factory(Speck.LIGHT), 4);
 		}
 
-		if (Dungeon.hero.position == pos && !Dungeon.hero.flying){
+		if (Dungeon.hero.position == pos && !Dungeon.hero.getCharacterMovement().isFlying()){
 			Hero hero = Dungeon.hero;
 			KindOfWeapon weapon = hero.belongings.weapon;
 

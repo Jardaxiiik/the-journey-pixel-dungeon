@@ -37,7 +37,7 @@ public class ConfusionTrap extends Trap {
 	@Override
 	public void activate() {
 
-		GameScene.add(ActorLoop.seed(pos, 300 + 20 * scalingDepth(), ConfusionGas.class));
+		GameScene.addMob(ActorLoop.seed(pos, 300 + 20 * scalingDepth(), ConfusionGas.class));
 		Sample.INSTANCE.play(Assets.Sounds.GAS);
 
 	}

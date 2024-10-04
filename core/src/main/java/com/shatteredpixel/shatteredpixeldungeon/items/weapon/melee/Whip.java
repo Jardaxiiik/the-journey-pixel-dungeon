@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -58,7 +57,7 @@ public class Whip extends MeleeWeapon {
 		Character closest = null;
 
 		hero.belongings.abilityWeapon = this;
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch.alignment == Character.Alignment.ENEMY
 					&& !hero.isCharmedBy(ch)
 					&& Dungeon.level.heroFOV[ch.position]

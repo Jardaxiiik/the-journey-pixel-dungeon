@@ -42,7 +42,7 @@ public class CorrosionTrap extends Trap {
 
 		corrosiveGas.setStrength(1+scalingDepth()/4);
 
-		GameScene.add(corrosiveGas);
+		GameScene.addMob(corrosiveGas);
 
 	}
 }

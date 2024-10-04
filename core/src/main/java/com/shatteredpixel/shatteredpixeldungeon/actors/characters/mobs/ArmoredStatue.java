@@ -21,7 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
@@ -133,7 +134,7 @@ public class ArmoredStatue extends Statue {
 
 	@Override
 	public int getEvasionAgainstAttacker(Character enemy) {
-		return Math.round(armor.evasionFactor(this, super.getEvasionAgainstAttacker(enemy)));
+		return Math.round(armor.evasionFactor(this, ActionHit.getEvasionAgainstAttacker(this,enemy)));
 	}
 
 	@Override

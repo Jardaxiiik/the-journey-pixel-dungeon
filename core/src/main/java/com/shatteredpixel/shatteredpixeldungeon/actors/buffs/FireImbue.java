@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -69,8 +69,8 @@ public class FireImbue extends Buff {
 			GameScene.updateMap(target.position);
 		}
 
-		spendTimeAdjusted(TICK);
-		left -= TICK;
+		spendTimeAdjusted(DungeonActors.TICK);
+		left -= DungeonActors.TICK;
 		if (left <= 0){
 			detach();
 		}

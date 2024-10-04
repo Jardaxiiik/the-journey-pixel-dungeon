@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -91,7 +90,7 @@ public class RockfallTrap extends Trap {
 				seen = true;
 			}
 
-			Character ch = Actor.getCharacterOnPosition( cell );
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 
 			if (ch != null && ch.isAlive()){
 				int damage = Random.NormalIntRange(5+scalingDepth(), 10+scalingDepth()*2);

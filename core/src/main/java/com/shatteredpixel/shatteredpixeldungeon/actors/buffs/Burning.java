@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
@@ -152,14 +152,14 @@ public class Burning extends Buff implements Hero.Doom {
 		}
 		
 		if (Dungeon.level.flamable[target.position] && ActorLoop.volumeAt(target.position, Fire.class) == 0) {
-			GameScene.add( ActorLoop.seed( target.position, 4, Fire.class ) );
+			GameScene.addMob( ActorLoop.seed( target.position, 4, Fire.class ) );
 		}
 		
-		spendTimeAdjusted( TICK );
-		left -= TICK;
+		spendTimeAdjusted( DungeonActors.TICK );
+		left -= DungeonActors.TICK;
 		
 		if (left <= 0 ||
-			(Dungeon.level.water[target.position] && !target.flying)) {
+			(Dungeon.level.water[target.position] && !target.getCharacterMovement().isFlying())) {
 			
 			detach();
 		}

@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
@@ -59,7 +58,7 @@ public class ShrapnelBomb extends Bomb {
 				if (Dungeon.level.heroFOV[i] && !Dungeon.level.solid[i]) {
 					CellEmitter.center( i ).burst( BlastParticle.FACTORY, 5 );
 				}
-				Character ch = Actor.getCharacterOnPosition(i);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 				if (ch != null){
 					affected.add(ch);
 				}

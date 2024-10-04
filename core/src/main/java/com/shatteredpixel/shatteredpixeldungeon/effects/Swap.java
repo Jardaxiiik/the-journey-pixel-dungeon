@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -55,7 +55,7 @@ public class Swap extends Actor {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		return false;
 	}
 
@@ -68,8 +68,8 @@ public class Swap extends Actor {
 		}
 
 		if (eff1 == null && eff2 == null) {
-			Actor.removeActor( this );
-			next();
+			DungeonActors.removeActor( this );
+			DungeonTurnsHandler.nextActorToPlay(this);();
 
 			int pos = ch1.position;
 			ch1.position = ch2.position;

@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
@@ -56,7 +55,7 @@ public class SummoningTrap extends Trap {
 
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			int p = pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+			if (DungeonCharactersHandler.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 				candidates.add( p );
 			}
 		}
@@ -80,7 +79,7 @@ public class SummoningTrap extends Trap {
 			if (mob != null) {
 				mob.state = mob.WANDERING;
 				mob.position = point;
-				GameScene.add(mob, DELAY);
+				GameScene.addMob(mob, DELAY);
 				mobs.add(mob);
 			}
 		}

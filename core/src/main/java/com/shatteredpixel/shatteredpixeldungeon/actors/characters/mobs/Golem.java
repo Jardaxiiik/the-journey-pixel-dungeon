@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -120,19 +120,19 @@ public class Golem extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		selfTeleCooldown--;
 		enemyTeleCooldown--;
 		if (teleporting){
 			((GolemSprite)sprite).teleParticles(false);
-			if (getCharacterOnPosition(target) == null && Dungeon.level.openSpace[target]) {
+			if (DungeonCharactersHandler.getCharacterOnPosition(target) == null && Dungeon.level.openSpace[target]) {
 				ScrollOfTeleportation.appear(this, target);
 				selfTeleCooldown = 30;
 			} else {
 				target = Dungeon.level.randomDestination(this);
 			}
 			teleporting = false;
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 		return super.playGameTurn();
@@ -140,16 +140,16 @@ public class Golem extends Mob {
 
 	public void onZapComplete(){
 		teleportEnemy();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	public void teleportEnemy(){
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonActors.TICK);
 
 		int bestPos = enemy.position;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (Dungeon.level.passable[position + i]
-				&& getCharacterOnPosition(position +i) == null
+				&& DungeonCharactersHandler.getCharacterOnPosition(position +i) == null
 				&& Dungeon.level.trueDistance(position +i, enemy.position) > Dungeon.level.trueDistance(bestPos, enemy.position)){
 				bestPos = position +i;
 			}
@@ -194,10 +194,10 @@ public class Golem extends Mob {
 			} else if (!Dungeon.bossLevel() && target != -1 && target != position && selfTeleCooldown <= 0) {
 				((GolemSprite)sprite).teleParticles(true);
 				teleporting = true;
-				spendTimeAdjusted( 2*TICK );
+				spendTimeAdjusted( 2*DungeonActors.TICK );
 			} else {
 				target = randomDestination();
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonActors.TICK );
 			}
 
 			return true;
@@ -240,7 +240,7 @@ public class Golem extends Mob {
 					}
 
 				} else {
-					spendTimeAdjusted( TICK );
+					spendTimeAdjusted( DungeonActors.TICK );
 					return true;
 				}
 

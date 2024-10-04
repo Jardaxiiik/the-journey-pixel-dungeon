@@ -21,7 +21,6 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
@@ -43,8 +42,8 @@ public class Corrosion extends Armor.Glyph {
 			int pos = defender.position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
 				Splash.at(pos+i, 0x000000, 5);
-				if (Actor.getCharacterOnPosition(pos+i) != null)
-					Buff.affect(Actor.getCharacterOnPosition(pos+i), Ooze.class).set( Ooze.DURATION/2 );
+				if (DungeonCharactersHandler.getCharacterOnPosition(pos+i) != null)
+					Buff.affect(DungeonCharactersHandler.getCharacterOnPosition(pos+i), Ooze.class).set( Ooze.DURATION/2 );
 			}
 		}
 

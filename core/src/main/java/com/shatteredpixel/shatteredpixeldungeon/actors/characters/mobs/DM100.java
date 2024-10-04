@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -94,7 +95,7 @@ public class DM100 extends Mob implements Callback {
 			spendTimeAdjusted( TIME_TO_ZAP );
 
 			Invisibility.dispel(this);
-			if (isTargetHitByAttack( this, targetCharacter, true )) {
+			if (ActionHit.isTargetHitByAttack( this, targetCharacter, true )) {
 				int dmg = Random.NormalIntRange(3, 10);
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 				targetCharacter.receiveDamageFromSource( dmg, new LightningBolt() );
@@ -129,7 +130,7 @@ public class DM100 extends Mob implements Callback {
 	
 	@Override
 	public void call() {
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 	
 }

@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Acidic;
@@ -80,7 +79,7 @@ public class DistortionTrap extends Trap{
 
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			int p = pos + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+			if (DungeonCharactersHandler.getCharacterOnPosition( p ) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 				candidates.add( p );
 			}
 		}
@@ -144,7 +143,7 @@ public class DistortionTrap extends Trap{
 			mob.maxLvl = Hero.MAX_LEVEL-1;
 			mob.state = mob.WANDERING;
 			mob.position = point;
-			GameScene.add(mob, DELAY);
+			GameScene.addMob(mob, DELAY);
 			mobs.add(mob);
 		}
 

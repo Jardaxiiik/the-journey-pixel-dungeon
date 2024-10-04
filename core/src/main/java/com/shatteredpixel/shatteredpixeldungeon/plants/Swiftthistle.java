@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.plants;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
@@ -156,7 +156,7 @@ public class Swiftthistle extends Plant {
 		public void detach(){
 			super.detach();
 			triggerPresses();
-			target.next();
+			target.DungeonTurnsHandler.nextActorToPlay(this);();
 		}
 
 		@Override

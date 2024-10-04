@@ -22,9 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -125,7 +124,7 @@ public class WandOfCorruption extends Wand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 
 		if (ch != null){
 			

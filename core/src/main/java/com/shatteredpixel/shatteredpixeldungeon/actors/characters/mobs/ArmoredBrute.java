@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -56,7 +56,7 @@ public class ArmoredBrute extends Brute {
 		if (Dungeon.level.heroFOV[position]) {
 			sprite.showStatus( CharSprite.WARNING, Messages.get(this, "enraged") );
 		}
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		hasRaged = true;
 	}
 	
@@ -85,7 +85,7 @@ public class ArmoredBrute extends Brute {
 				target.die(null);
 			}
 			
-			spendTimeAdjusted( 3*TICK );
+			spendTimeAdjusted( 3*DungeonActors.TICK );
 			
 			return true;
 		}

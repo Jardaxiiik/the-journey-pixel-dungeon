@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -238,12 +238,12 @@ public class Item implements Bundlable {
 						TippedDart.lostDarts = 0;
 						if (!d.collect()){
 							//have to handle this in an actor as we can't manipulate the heap during pickup
-							Actor.addActor(new Actor() {
-								{ actPriority = VFX_PRIO; }
+							DungeonActors.addActor(new Actor() {
+								{ actPriority = VFX_PRIORITY; }
 								@Override
-								protected boolean playGameTurn() {
+                                public boolean playGameTurn() {
 									Dungeon.level.dropItemOnPosition(d, Dungeon.hero.position).sprite.drop();
-									Actor.removeActor(this);
+									DungeonActors.removeActor(this);
 									return true;
 								}
 							});
@@ -604,7 +604,7 @@ public class Item implements Bundlable {
 
 		throwSound();
 
-		Character enemy = Actor.getCharacterOnPosition( cell );
+		Character enemy = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		QuickSlotButton.target(enemy);
 		
 		final float delay = castDelay(user, dst);
@@ -631,7 +631,7 @@ public class Item implements Bundlable {
 							}
 							if (user.getBuff(Talent.LethalMomentumTracker.class) != null){
 								user.getBuff(Talent.LethalMomentumTracker.class).detach();
-								user.next();
+								user.DungeonTurnsHandler.nextActorToPlay(this);();
 							} else {
 								user.spendTimeAdjustedAndNext(delay);
 							}
@@ -649,7 +649,7 @@ public class Item implements Bundlable {
 							Item i = Item.this.detach(user.belongings.backpack);
 							user.spendTimeAdjusted(delay);
 							if (i != null) i.onThrow(cell);
-							user.next();
+							user.DungeonTurnsHandler.nextActorToPlay(this);();
 						}
 					});
 		}

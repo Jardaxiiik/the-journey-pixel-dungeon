@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Elemental;
@@ -168,12 +167,12 @@ public class CeremonialCandle extends Item {
 			}
 				
 			Elemental.NewbornFireElemental elemental = new Elemental.NewbornFireElemental();
-			Character ch = Actor.getCharacterOnPosition( ritualPos );
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition( ritualPos );
 			if (ch != null) {
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = ritualPos + n;
-					if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && Actor.getCharacterOnPosition( cell ) == null) {
+					if ((Dungeon.level.passable[cell] || Dungeon.level.avoid[cell]) && DungeonCharactersHandler.getCharacterOnPosition( cell ) == null) {
 						candidates.add( cell );
 					}
 				}
@@ -186,7 +185,7 @@ public class CeremonialCandle extends Item {
 				elemental.position = ritualPos;
 			}
 			elemental.state = elemental.HUNTING;
-			GameScene.add(elemental, 1);
+			GameScene.addMob(elemental, 1);
 
 			if (Dungeon.level instanceof PrisonLevel){
 				((PrisonLevel) Dungeon.level).updateWandmakerQuestMusic();

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.duelist;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.BlobImmunity;
@@ -84,13 +84,13 @@ public class Feint extends ArmorAbility {
 			return;
 		}
 
-		if (Dungeon.hero.rooted){
+		if (Dungeon.hero.getCharacterMovement().isRooted()){
 			PixelScene.shake( 1, 1f );
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
 		}
 
-		if (Dungeon.level.solid[target] || Actor.getCharacterOnPosition(target) != null){
+		if (Dungeon.level.solid[target] || DungeonCharactersHandler.getCharacterOnPosition(target) != null){
 			GLog.w(Messages.get(this, "bad_location"));
 			return;
 		}
@@ -112,7 +112,7 @@ public class Feint extends ArmorAbility {
 
 		AfterImage image = new AfterImage();
 		image.position = hero.position;
-		GameScene.add(image, 1);
+		GameScene.addMob(image, 1);
 
 		int imageAttackPos;
 		Character enemyTarget = TargetHealthIndicator.instance.target();
@@ -164,7 +164,7 @@ public class Feint extends ArmorAbility {
 			healthPoints = healthMax = 1;
 
 			//fades just before the hero's next action
-			actPriority = Actor.HERO_PRIO+1;
+			actPriority = Actor.HERO_PRIORITY +1;
 		}
 
 		@Override
@@ -173,7 +173,7 @@ public class Feint extends ArmorAbility {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			destroy();
 			sprite.die();
 			return true;

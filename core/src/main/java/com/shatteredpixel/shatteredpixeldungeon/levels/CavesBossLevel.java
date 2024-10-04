@@ -24,7 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -33,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DM300;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Pylon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -231,7 +233,7 @@ public class CavesBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
@@ -289,7 +291,7 @@ public class CavesBossLevel extends Level {
 			dropped.seen = heap.seen;
 		}
 
-		Character ch = Actor.getCharacterOnPosition( entrance );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( entrance );
 		if (ch != null) {
 			int n;
 			do {
@@ -310,8 +312,8 @@ public class CavesBossLevel extends Level {
 		boss.state = boss.WANDERING;
 		do {
 			boss.position = pointToCell(Random.element(mainArena.getPoints()));
-		} while (!openSpace[boss.position] || map[boss.position] == Terrain.EMPTY_SP || Actor.getCharacterOnPosition(boss.position) != null);
-		GameScene.add( boss );
+		} while (!openSpace[boss.position] || map[boss.position] == Terrain.EMPTY_SP || DungeonCharactersHandler.getCharacterOnPosition(boss.position) != null);
+		GameScene.addMob( boss );
 
 		Game.runOnRenderThread(new Callback() {
 			@Override
@@ -379,7 +381,7 @@ public class CavesBossLevel extends Level {
 
 		for( int i = (mainArena.top-1)*width; i <length; i++){
 			if (map[i] == Terrain.INACTIVE_TRAP || map[i] == Terrain.WATER || map[i] == Terrain.CUSTOM_DECO){
-				GameScene.add(ActorLoop.seed(i, 1, PylonEnergy.class));
+				GameScene.addMob(ActorLoop.seed(i, 1, PylonEnergy.class));
 			}
 		}
 
@@ -735,7 +737,7 @@ public class CavesBossLevel extends Level {
 						for (int k : pylonPositions) {
 							if (k == j) {
 								if (Dungeon.level.locked
-										&& !(Actor.getCharacterOnPosition(k) instanceof Pylon)) {
+										&& !(DungeonCharactersHandler.getCharacterOnPosition(k) instanceof Pylon)) {
 									data[i] = 38;
 								} else {
 									data[i] = -1;
@@ -823,10 +825,10 @@ public class CavesBossLevel extends Level {
 
 					if (off[cell] > 0){
 
-						Character ch = Actor.getCharacterOnPosition(cell);
-						if (ch != null && !(ch instanceof DM300) && !ch.flying) {
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
+						if (ch != null && !(ch instanceof DM300) && !ch.getCharacterMovement().isFlying()) {
 							Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
-							ch.receiveDamageFromSource( Random.NormalIntRange(6, 12), new Electricity());
+							ActionHealth.receiveDamageFromSource( ch, Random.NormalIntRange(6, 12), new Electricity());
 							ch.sprite.flash();
 
 							if (ch == Dungeon.hero){
@@ -858,7 +860,7 @@ public class CavesBossLevel extends Level {
 			@Override
 			public void emit(com.watabou.noosa.particles.Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){
-					for (Character c : Actor.getCharacters()){
+					for (Character c : DungeonCharactersHandler.getCharacters()){
 						if (c instanceof Pylon && c.alignment != Character.Alignment.NEUTRAL){
 							energySourceSprite = c.sprite;
 							break;

@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -44,7 +43,7 @@ public class StoneOfBlink extends Runestone {
 	
 	@Override
 	protected void onThrow(int cell) {
-		if (Actor.getCharacterOnPosition(cell) != null && throwPath.dist >= 1){
+		if (Character.getCharacterOnPosition(cell) != null && throwPath.dist >= 1){
 			cell = throwPath.path.get(throwPath.dist-1);
 		}
 		throwPath = null;

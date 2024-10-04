@@ -22,7 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
@@ -55,8 +56,8 @@ public class Eye extends Mob {
 		
 		EXP = 13;
 		maxLvl = 26;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 
 		HUNTING = new Hunting();
 		
@@ -107,7 +108,7 @@ public class Eye extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (beamCharged && state != HUNTING){
 			beamCharged = false;
 			sprite.idle();
@@ -177,12 +178,12 @@ public class Eye extends Mob {
 
 			}
 
-			Character ch = getCharacterOnPosition( pos );
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition( pos );
 			if (ch == null) {
 				continue;
 			}
 
-			if (isTargetHitByAttack( this, ch, true )) {
+			if (ActionHit.isTargetHitByAttack( this, ch, true )) {
 				int dmg = Random.NormalIntRange( 30, 50 );
 				dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 				ch.receiveDamageFromSource( dmg, new DeathGaze() );

@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -69,7 +68,7 @@ public class WandOfLivingEarth extends DamageWand {
 	
 	@Override
 	public void onZap(Ballistica bolt) {
-		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 		int damage = damageRoll();
 		int armorToAdd = damage;
 
@@ -124,7 +123,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS9) {
 					int c = bolt.collisionPos + n;
-					if (passable[c] && Actor.getCharacterOnPosition( c ) == null
+					if (passable[c] && DungeonCharactersHandler.getCharacterOnPosition( c ) == null
 						&& (closest == -1 || (Dungeon.level.trueDistance(c, curUser.position) < (Dungeon.level.trueDistance(closest, curUser.position))))) {
 						closest = c;
 					}
@@ -137,7 +136,7 @@ public class WandOfLivingEarth extends DamageWand {
 					return; //do not spawn guardian or detach buff
 				} else {
 					guardian.position = closest;
-					GameScene.add(guardian, 1);
+					GameScene.addMob(guardian, 1);
 					Dungeon.level.occupyCell(guardian);
 				}
 
@@ -147,7 +146,7 @@ public class WandOfLivingEarth extends DamageWand {
 
 			} else {
 				guardian.position = bolt.collisionPos;
-				GameScene.add(guardian, 1);
+				GameScene.addMob(guardian, 1);
 				Dungeon.level.occupyCell(guardian);
 			}
 
@@ -346,9 +345,9 @@ public class WandOfLivingEarth extends DamageWand {
 		}
 
 		@Override
-		public int attackProc(Character enemy, int damage) {
+		public int attackProc_1(Character enemy, int damage) {
 			if (enemy instanceof Mob) ((Mob)enemy).startHunting(this);
-			return super.attackProc(enemy, damage);
+			return ActionAttack.attackProc(this,enemy, damage);
 		}
 
 		@Override

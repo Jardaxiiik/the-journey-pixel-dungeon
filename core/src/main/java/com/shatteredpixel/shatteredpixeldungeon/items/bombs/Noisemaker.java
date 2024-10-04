@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bombs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
@@ -61,7 +61,7 @@ public class Noisemaker extends Bomb {
 		private int left;
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			if (!triggered){
 				//acts like a normal fuse until first trigger
 				return super.playGameTurn();
@@ -75,7 +75,7 @@ public class Noisemaker extends Bomb {
 							trigger(heap);
 
 						//check if there is a nearby char, blow up if there is
-						} else if (Actor.getCharacterOnPosition(heap.pos) != null)  {
+						} else if (Character.getCharacterOnPosition(heap.pos) != null)  {
 
 
 							heap.items.remove(bomb);
@@ -88,7 +88,7 @@ public class Noisemaker extends Bomb {
 						//otherwise tick down our counter to alert
 						} else {
 
-							spendTimeAdjusted(TICK);
+							spendTimeAdjusted(DungeonActors.TICK);
 							left--;
 
 							if (left <= 0){
@@ -108,7 +108,7 @@ public class Noisemaker extends Bomb {
 
 				//can't find our bomb, something must have removed it, do nothing.
 				bomb.fuse = null;
-				Actor.removeActor( this );
+				DungeonActors.removeActor( this );
 				return true;
 			}
 		}

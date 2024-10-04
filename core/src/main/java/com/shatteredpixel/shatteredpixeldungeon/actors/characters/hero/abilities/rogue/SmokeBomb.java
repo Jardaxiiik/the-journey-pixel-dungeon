@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.rogue;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
@@ -87,7 +86,7 @@ public class SmokeBomb extends ArmorAbility {
 	protected void activate(ClassArmor armor, Hero hero, Integer target) {
 		if (target != null) {
 
-			if (target != hero.position && hero.rooted){
+			if (target != hero.position && hero.getCharacterMovement().isRooted()){
 				PixelScene.shake( 1, 1f );
 				return;
 			}
@@ -96,7 +95,7 @@ public class SmokeBomb extends ArmorAbility {
 
 			if ( PathFinder.distance[target] == Integer.MAX_VALUE ||
 					!Dungeon.level.heroFOV[target] ||
-					(target != hero.position && Actor.getCharacterOnPosition( target ) != null)) {
+					(target != hero.position && DungeonCharactersHandler.getCharacterOnPosition( target ) != null)) {
 
 				GLog.w( Messages.get(this, "fov") );
 				return;
@@ -117,7 +116,7 @@ public class SmokeBomb extends ArmorAbility {
 				}
 
 				if (hero.hasTalent(Talent.BODY_REPLACEMENT)) {
-					for (Character ch : Actor.getCharacters()){
+					for (Character ch : DungeonCharactersHandler.getCharacters()){
 						if (ch instanceof NinjaLog){
 							ch.die(null);
 						}
@@ -125,7 +124,7 @@ public class SmokeBomb extends ArmorAbility {
 
 					NinjaLog n = new NinjaLog();
 					n.position = hero.position;
-					GameScene.add(n);
+					GameScene.addMob(n);
 					Dungeon.level.occupyCell(n);
 				}
 
@@ -145,9 +144,9 @@ public class SmokeBomb extends ArmorAbility {
 			GameScene.updateFog();
 
 			if (!shadowStepping) {
-				hero.spendTimeAdjustedAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 			} else {
-				hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(hero);();
 			}
 		}
 	}

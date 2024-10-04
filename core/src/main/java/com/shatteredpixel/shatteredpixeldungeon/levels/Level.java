@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -54,6 +54,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Piranha;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Blacksmith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Sheep;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WindParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
@@ -626,7 +629,7 @@ public abstract class Level implements Bundlable {
 
         //spend the hero's partial turns,  so the hero cannot take partial turns between floors
         Dungeon.hero.spentTimeRoundUp();
-        for (Actor a : Actor.getAll()) {
+        for (Actor a : DungeonActorsHandler.getAll()) {
             //also adjust any other actors that are now ahead of the hero due to this
             if (a.cooldown() < Dungeon.hero.cooldown()) {
                 a.spentTimeRoundUp();
@@ -724,9 +727,9 @@ public abstract class Level implements Bundlable {
     public Actor addRespawner() {
         if (respawner == null) {
             respawner = new Respawner();
-            Actor.addActorWithDelay(respawner, respawnCooldown());
+            DungeonActorsHandler.addActorWithDelay(respawner, respawnCooldown());
         } else {
-            Actor.addActor(respawner);
+            DungeonActorsHandler.addActor(respawner);
             if (respawner.cooldown() > respawnCooldown()) {
                 respawner.resetCooldown();
             }
@@ -740,7 +743,7 @@ public abstract class Level implements Bundlable {
         }
 
         @Override
-        protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 
             if (Dungeon.level.mobCount() < Dungeon.level.mobLimit()) {
 
@@ -748,7 +751,7 @@ public abstract class Level implements Bundlable {
                     spendTimeAdjusted(Dungeon.level.respawnCooldown());
                 } else {
                     //try again in 1 turn
-                    spendTimeAdjusted(TICK);
+                    spendTimeAdjusted(DungeonTurnsHandler.TICK);
                 }
 
             } else {
@@ -792,7 +795,7 @@ public abstract class Level implements Bundlable {
         } while ((mob.position == -1 || PathFinder.distance[mob.position] < disLimit) && tries > 0);
 
         if (Dungeon.hero.isAlive() && mob.position != -1 && PathFinder.distance[mob.position] >= disLimit) {
-            GameScene.add(mob);
+            GameScene.addMob(mob);
             if (!mob.getBuffs(ChampionEnemy.class).isEmpty()) {
                 GLog.w(Messages.get(ChampionEnemy.class, "warn"));
             }
@@ -816,7 +819,7 @@ public abstract class Level implements Bundlable {
         } while ((Dungeon.level == this && heroFOV[cell])
                 || !passable[cell]
                 || (Character.hasProperty(ch, Character.Property.LARGE) && !openSpace[cell])
-                || Actor.getCharacterOnPosition(cell) != null);
+                || DungeonCharactersHandler.getCharacterOnPosition(cell) != null);
         return cell;
     }
 
@@ -1009,7 +1012,7 @@ public abstract class Level implements Bundlable {
                 GameScene.discard(heap);
             } else {
                 heaps.put(position, heap);
-                GameScene.add(heap);
+                GameScene.addMob(heap);
             }
 
         } else if (heap.type == Heap.Type.LOCKED_CHEST || heap.type == Heap.Type.CRYSTAL_CHEST) {
@@ -1057,10 +1060,10 @@ public abstract class Level implements Bundlable {
 
         GameScene.plantSeed(pos);
 
-        for (Character ch : Actor.getCharacters()) {
+        for (Character ch : DungeonCharactersHandler.getCharacters()) {
             if (ch instanceof WandOfRegrowth.Lotus
                     && ((WandOfRegrowth.Lotus) ch).inRange(pos)
-                    && Actor.getCharacterOnPosition(pos) != null) {
+                    && DungeonCharactersHandler.getCharacterOnPosition(pos) != null) {
                 plant.trigger();
                 return null;
             }
@@ -1149,7 +1152,7 @@ public abstract class Level implements Bundlable {
             Web.affectChar(ch);
         }
 
-        if (!ch.flying) {
+        if (!ch.getCharacterMovement().isFlying()) {
 
             if ((map[ch.position] == Terrain.GRASS || map[ch.position] == Terrain.EMBERS)
                     && ch == Dungeon.hero && Dungeon.hero.hasTalent(Talent.REJUVENATING_STEPS)
@@ -1422,7 +1425,7 @@ public abstract class Level implements Bundlable {
             }
 
             for (TalismanOfForesight.CharAwareness a : c.getBuffs(TalismanOfForesight.CharAwareness.class)) {
-                Character ch = (Character) Actor.getById(a.charID);
+                Character ch = (Character) DungeonActorsHandler.getById(a.charID);
                 if (ch == null || !ch.isAlive()) {
                     continue;
                 }

@@ -21,13 +21,14 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
@@ -48,8 +49,8 @@ public class Swarm extends Mob {
 
 		EXP = 3;
 		maxLvl = 9;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
@@ -88,7 +89,7 @@ public class Swarm extends Mob {
 			int[] neighbours = {position + 1, position - 1, position + Dungeon.level.width(), position - Dungeon.level.width()};
 			for (int n : neighbours) {
 				if (!Dungeon.level.solid[n]
-						&& getCharacterOnPosition( n ) == null
+						&& DungeonCharactersHandler.getCharacterOnPosition( n ) == null
 						&& (Dungeon.level.passable[n] || Dungeon.level.avoid[n])
 						&& (!getProperties().contains(Property.LARGE) || Dungeon.level.openSpace[n])) {
 					candidates.add( n );
@@ -100,10 +101,10 @@ public class Swarm extends Mob {
 				Swarm clone = split();
 				clone.position = Random.element( candidates );
 				clone.state = clone.HUNTING;
-				GameScene.add( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
+				GameScene.addMob( clone, SPLIT_DELAY ); //we add before assigning HP due to ascension
 
 				clone.healthPoints = (healthPoints - damage) / 2;
-				addActor( new Pushing( clone, position, clone.position) );
+				DungeonActorsHandler.addActor( new Pushing( clone, position, clone.position) );
 
 				Dungeon.level.occupyCell(clone);
 				

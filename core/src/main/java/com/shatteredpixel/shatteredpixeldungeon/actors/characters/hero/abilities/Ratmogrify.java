@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -35,6 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Rat;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
@@ -79,7 +81,7 @@ public class Ratmogrify extends ArmorAbility {
 			return;
 		}
 
-		Character ch = Actor.getCharacterOnPosition(target);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 
 		if (ch == null || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "no_target"));
@@ -93,7 +95,7 @@ public class Ratmogrify extends ArmorAbility {
 
 				for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 					int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-					if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
+					if (DungeonCharactersHandler.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 						spawnPoints.add( p );
 					}
 				}
@@ -107,7 +109,7 @@ public class Ratmogrify extends ArmorAbility {
 					rat.alignment = Character.Alignment.ALLY;
 					rat.state = rat.HUNTING;
 					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
-					GameScene.add( rat );
+					GameScene.addMob( rat );
 					ScrollOfTeleportation.appear( rat, spawnPoints.get( index ) );
 
 					spawnPoints.remove( index );
@@ -146,7 +148,7 @@ public class Ratmogrify extends ArmorAbility {
 				}
 			}
 
-			Actor.removeActor( ch );
+			DungeonCharactersHandler.removeCharacter(ch);
 			ch.sprite.killAndErase();
 			Dungeon.level.mobs.remove(ch);
 
@@ -154,7 +156,7 @@ public class Ratmogrify extends ArmorAbility {
 				ch.addBuff(champ);
 			}
 
-			GameScene.add(rat);
+			GameScene.addMob(rat);
 
 			TargetHealthIndicator.instance.target(null);
 			CellEmitter.get(rat.position).burst(Speck.factory(Speck.WOOL), 4);
@@ -171,7 +173,7 @@ public class Ratmogrify extends ArmorAbility {
 		armor.charge -= chargeUse(hero);
 		armor.updateQuickslot();
 		Invisibility.dispel();
-		hero.spendTimeAdjustedAndNext(Actor.TICK);
+		hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 
 	}
 
@@ -229,12 +231,12 @@ public class Ratmogrify extends ArmorAbility {
 		private float timeLeft = 6f;
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			if (timeLeft <= 0){
 				Mob original = getOriginal();
 				this.original = null;
 				original.clearTime();
-				GameScene.add(original);
+				GameScene.addMob(original);
 
 				EXP = 0;
 				destroy();
@@ -260,7 +262,7 @@ public class Ratmogrify extends ArmorAbility {
 		}
 
 		public int getAccuracyAgainstTarget(Character target) {
-			return original.getAccuracyAgainstTarget(target);
+			return ActionHit.getAccuracyAgainstTarget(original,target);
 		}
 
 		public int getArmorPointsRolled() {

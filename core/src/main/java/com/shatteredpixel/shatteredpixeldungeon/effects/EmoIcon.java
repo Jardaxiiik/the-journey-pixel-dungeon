@@ -41,7 +41,7 @@ public class EmoIcon extends Image {
 		super();
 		
 		this.owner = owner;
-		GameScene.add( this );
+		GameScene.addMob( this );
 	}
 	
 	@Override

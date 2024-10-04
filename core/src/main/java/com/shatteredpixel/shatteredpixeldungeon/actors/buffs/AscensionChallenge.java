@@ -22,9 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.Ratmogrify;
@@ -55,6 +54,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Swarm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Warlock;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Shopkeeper;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -127,7 +128,7 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null
 				&& Dungeon.hero.getBuff(AscensionChallenge.class).stacks >= 2f){
 			for (Mob m : Dungeon.level.mobs){
-				if (m.alignment == Character.Alignment.ENEMY && m.getDistanceToOtherCharacter(Dungeon.hero) > 8) {
+				if (m.alignment == Character.Alignment.ENEMY && DungeonCharactersHandler(m,Dungeon.hero) > 8) {
 					m.travelToPosition(Dungeon.hero.position);
 				}
 			}
@@ -272,7 +273,7 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.bossLevel()){
 			if (justAscended) {
 				GLog.p(Messages.get(this, "break"));
-				for (Character ch : Actor.getCharacters()){
+				for (Character ch : DungeonCharactersHandler.getCharacters()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayAppeared();
 					}
@@ -319,7 +320,7 @@ public class AscensionChallenge extends Buff {
 			damageInc = 0;
 		}
 
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonTurnsHandler.TICK);
 		return true;
 	}
 

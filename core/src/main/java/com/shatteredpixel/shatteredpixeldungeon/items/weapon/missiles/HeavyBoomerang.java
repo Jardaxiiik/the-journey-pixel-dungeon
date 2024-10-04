@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -114,7 +113,7 @@ public class HeavyBoomerang extends MissileWeapon {
 			if (returnDepth == Dungeon.depth){
 				left--;
 				if (left <= 0){
-					final Character returnTarget = Actor.getCharacterOnPosition(returnPos);
+					final Character returnTarget = DungeonCharactersHandler.getCharacterOnPosition(returnPos);
 					final Character target = this.target;
 					MissileSprite visual = ((MissileSprite) Dungeon.hero.sprite.parent.recycle(MissileSprite.class));
 					visual.reset( thrownPos,
@@ -143,7 +142,7 @@ public class HeavyBoomerang extends MissileWeapon {
 											} else {
 												Dungeon.level.dropItemOnPosition(boomerang, returnPos).sprite.drop();
 											}
-											CircleBack.this.next();
+											CircleBack.this.DungeonTurnsHandler.nextActorToPlay(this);();
 										}
 									});
 					visual.alpha(0f);
@@ -153,7 +152,7 @@ public class HeavyBoomerang extends MissileWeapon {
 					return false;
 				}
 			}
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			return true;
 		}
 		

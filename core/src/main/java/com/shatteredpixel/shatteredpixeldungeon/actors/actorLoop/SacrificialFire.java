@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -76,7 +75,7 @@ public class SacrificialFire extends ActorLoop {
 
 					if (off[cell] > 0){
 						for (int k : PathFinder.OFFSETS_NEIGHBOURS9){
-							Character ch = Actor.getCharacterOnPosition( cell+k );
+							Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell+k );
 							if (ch != null){
 								if (Dungeon.level.heroFOV[cell+k] && ch.getBuff( Marked.class ) == null) {
 									CellEmitter.get(cell+k).burst( SacrificialParticle.FACTORY, 5 );

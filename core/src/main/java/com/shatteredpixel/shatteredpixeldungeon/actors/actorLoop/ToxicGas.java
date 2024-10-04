@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
@@ -45,7 +44,7 @@ public class ToxicGas extends ActorLoop implements Hero.Doom {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
+				if (cur[cell] > 0 && (ch = DungeonCharactersHandler.getCharacterOnPosition( cell )) != null) {
 					if (!ch.isImmuneToEffectType(this.getClass())) {
 
 						ch.receiveDamageFromSource(damage, this);

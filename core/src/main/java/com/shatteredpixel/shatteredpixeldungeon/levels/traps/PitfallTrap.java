@@ -21,12 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.PitfallParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -111,10 +111,10 @@ public class PitfallTrap extends Trap {
 						Dungeon.level.heaps.remove(cell);
 					}
 
-					Character ch = Actor.getCharacterOnPosition(cell);
+					Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 
 					//don't trigger on flying chars, or immovable neutral chars
-					if (ch != null && !ch.flying
+					if (ch != null && !ch.getCharacterMovement().isFlying()
 						&& !(ch.alignment == Character.Alignment.NEUTRAL && Character.hasProperty(ch, Character.Property.IMMOVABLE))) {
 						if (ch == Dungeon.hero) {
 							Chasm.heroFall(cell);

@@ -22,13 +22,14 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -184,7 +185,7 @@ public class UnstableSpellbook extends Artifact {
 
 	//forces the reading of a regular scroll if the player tried to exploit by quitting the game when the menu was up
 	public static class ExploitHandler extends Buff {
-		{ actPriority = VFX_PRIO; }
+		{ actPriority = VFX_PRIORITY; }
 
 		public Scroll scroll;
 
@@ -310,7 +311,7 @@ public class UnstableSpellbook extends Artifact {
 
 			updateQuickslot();
 
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK );
 
 			return true;
 		}

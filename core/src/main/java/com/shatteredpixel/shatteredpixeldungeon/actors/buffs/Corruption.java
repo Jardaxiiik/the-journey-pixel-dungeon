@@ -37,7 +37,7 @@ public class Corruption extends AllyBuff {
 
 	//corrupted enemies are usually fully healed and cleansed of most debuffs
 	public static void corruptionHeal(Character target){
-		target.healthPoints = target.healthMax;
+		target.getCharacterHealth().setHealthPoints(target.getCharacterHealth().getHealthMax());
 		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(target.healthMax), FloatingText.HEALING);
 		for (Buff buff : target.getBuffs()) {
 			if (buff.type == Buff.buffType.NEGATIVE
@@ -57,7 +57,7 @@ public class Corruption extends AllyBuff {
 		if (damage > 0)
 			target.receiveDamageFromSource(damage, this);
 
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonActors.TICK);
 
 		return true;
 	}

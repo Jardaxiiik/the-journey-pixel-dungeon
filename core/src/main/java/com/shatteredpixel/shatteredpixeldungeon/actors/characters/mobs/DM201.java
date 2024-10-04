@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.CorrosiveGas;
@@ -61,17 +61,17 @@ public class DM201 extends DM200 {
 
 	public void onZapComplete(){
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 
 	private void zap( ){
 		threatened = false;
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonActors.TICK);
 
-		GameScene.add(ActorLoop.seed(enemy.position, 15, CorrosiveGas.class).setStrength(8));
+		GameScene.addMob(ActorLoop.seed(enemy.position, 15, CorrosiveGas.class).setStrength(8));
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!Dungeon.level.solid[enemy.position +i]) {
-				GameScene.add(ActorLoop.seed(enemy.position + i, 5, CorrosiveGas.class).setStrength(8));
+				GameScene.addMob(ActorLoop.seed(enemy.position + i, 5, CorrosiveGas.class).setStrength(8));
 			}
 		}
 

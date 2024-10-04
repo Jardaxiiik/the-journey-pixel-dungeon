@@ -21,10 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -135,7 +134,7 @@ public class CellSelector extends ScrollArea {
 		//Resets char and item sprite positions with the new camera zoom
 		//This is important as sprites are centered on a 16x16 tile, but may have any sprite size
 		//This can lead to none-whole coordinate, which need to be aligned with the zoom
-		for (Character c : Actor.getCharacters()){
+		for (Character c : DungeonCharactersHandler.getCharacters()){
 			if (c.sprite != null && !c.sprite.isMoving){
 				c.sprite.point(c.sprite.worldToCamera(c.position));
 			}
@@ -409,7 +408,7 @@ public class CellSelector extends ScrollArea {
 		if (cell != Dungeon.hero.position && cell != lastCellMoved){
 			lastCellMoved = cell;
 			if (Dungeon.hero.chooseHeroActionBasedOnTile( cell )) {
-				Dungeon.hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(Dungeon.hero);();
 			}
 			return true;
 

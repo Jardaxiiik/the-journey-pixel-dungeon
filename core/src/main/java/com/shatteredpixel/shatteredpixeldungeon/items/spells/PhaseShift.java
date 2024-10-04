@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -44,7 +43,7 @@ public class PhaseShift extends TargetedSpell {
 	
 	@Override
 	protected void affectTarget(Ballistica bolt, Hero hero) {
-		final Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		final Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 		
 		if (ch != null) {
 			if (ScrollOfTeleportation.teleportChar(ch)){

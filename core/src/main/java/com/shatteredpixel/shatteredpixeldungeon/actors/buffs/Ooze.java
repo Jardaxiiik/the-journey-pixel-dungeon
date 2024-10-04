@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -91,8 +91,8 @@ public class Ooze extends Buff {
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "ondeath") );
 			}
-			spendTimeAdjusted( TICK );
-			left -= TICK;
+			spendTimeAdjusted( DungeonActors.TICK );
+			left -= DungeonActors.TICK;
 			if (left <= 0){
 				detach();
 			}

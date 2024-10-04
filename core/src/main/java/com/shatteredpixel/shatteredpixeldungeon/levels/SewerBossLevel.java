@@ -160,7 +160,7 @@ public class SewerBossLevel extends SewerLevel {
 			int cell = pointToCell(p);
 			if (passable[cell]
 					&& roomEntrance.inside(p)
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}

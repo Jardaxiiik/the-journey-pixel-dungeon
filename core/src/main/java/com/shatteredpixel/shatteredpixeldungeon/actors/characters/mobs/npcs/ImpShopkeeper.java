@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ImpSprite;
@@ -35,7 +35,7 @@ public class ImpShopkeeper extends Shopkeeper {
 	private boolean seenBefore = false;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 
 		if (!seenBefore && Dungeon.level.heroFOV[position]) {
 			if (Dungeon.hero.getBuff(AscensionChallenge.class) == null) {

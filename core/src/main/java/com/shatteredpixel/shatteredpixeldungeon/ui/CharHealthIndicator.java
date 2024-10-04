@@ -33,7 +33,7 @@ public class CharHealthIndicator extends HealthBar {
 	
 	public CharHealthIndicator( Character c ){
 		target = c;
-		GameScene.add(this);
+		GameScene.addMob(this);
 	}
 	
 	@Override

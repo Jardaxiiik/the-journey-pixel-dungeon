@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
@@ -42,7 +42,7 @@ public class Levitation extends FlavourBuff {
 	@Override
 	public boolean attachTo( Character target ) {
 		if (super.attachTo( target )) {
-			target.flying = true;
+			target.getCharacterMovement().setFlying(true);
 			Roots.detach( target, Roots.class );
 			return true;
 		} else {
@@ -52,7 +52,7 @@ public class Levitation extends FlavourBuff {
 	
 	@Override
 	public void detach() {
-		target.flying = false;
+		target.getCharacterMovement().setFlying(false);
 		super.detach();
 		//only press tiles if we're current in the game screen
 		if (JourneyPixelDungeon.scene() instanceof GameScene) {

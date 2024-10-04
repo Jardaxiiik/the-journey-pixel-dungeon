@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
@@ -117,7 +116,7 @@ public class LloydsBeacon extends Artifact {
 			}
 			
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
-				Character ch = Actor.getCharacterOnPosition(hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i]);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i]);
 				if (ch != null && ch.alignment == Character.Alignment.ENEMY) {
 					GLog.w( Messages.get(this, "creatures") );
 					return;
@@ -163,7 +162,7 @@ public class LloydsBeacon extends Artifact {
 					if (m.position == hero.position){
 						//displace mob
 						for(int i : PathFinder.OFFSETS_NEIGHBOURS8){
-							if (Actor.getCharacterOnPosition(m.position +i) == null && Dungeon.level.passable[m.position + i]){
+							if (DungeonCharactersHandler.getCharacterOnPosition(m.position +i) == null && Dungeon.level.passable[m.position + i]){
 								m.position += i;
 								m.sprite.point(m.sprite.worldToCamera(m.position));
 								break;
@@ -198,12 +197,12 @@ public class LloydsBeacon extends Artifact {
 			charge -= Dungeon.scalingDepth() > 20 ? 2 : 1;
 			updateQuickslot();
 
-			if (Actor.getCharacterOnPosition(target) == curUser){
+			if (DungeonCharactersHandler.getCharacterOnPosition(target) == curUser){
 				ScrollOfTeleportation.teleportChar(curUser);
 				curUser.spendTimeAdjustedAndNext(1f);
 			} else {
 				final Ballistica bolt = new Ballistica( curUser.position, target, Ballistica.MAGIC_BOLT );
-				final Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+				final Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 
 				if (ch == curUser){
 					ScrollOfTeleportation.teleportChar(curUser);
@@ -325,7 +324,7 @@ public class LloydsBeacon extends Artifact {
 			}
 
 			updateQuickslot();
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonActors.TICK );
 			return true;
 		}
 	}

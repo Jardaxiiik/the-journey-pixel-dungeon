@@ -22,10 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
@@ -204,7 +203,7 @@ public enum Talent {
 			} else {
 				detach();
 			}
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK );
 			return true;
 		}
 
@@ -244,7 +243,7 @@ public enum Talent {
 			if (pos != target.position) {
 				detach();
 			} else {
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			}
 			return true;
 		}
@@ -519,7 +518,7 @@ public enum Talent {
 	}
 
 	public static class WarriorFoodImmunity extends FlavourBuff{
-		{ actPriority = HERO_PRIO+1; }
+		{ actPriority = HERO_PRIORITY +1; }
 	}
 
 	public static float itemIDSpeedFactor( Hero hero, Item item ){
@@ -571,7 +570,7 @@ public enum Talent {
 			}
 			Random.shuffle(grassCells);
 			for (int grassCell : grassCells){
-				Character ch = Actor.getCharacterOnPosition(grassCell);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(grassCell);
 				if (ch != null && ch.alignment == Character.Alignment.ENEMY){
 					//1/2 turns of roots
 					Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));

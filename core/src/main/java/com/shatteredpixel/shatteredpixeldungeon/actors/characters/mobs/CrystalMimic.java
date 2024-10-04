@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
@@ -109,7 +109,7 @@ public class CrystalMimic extends Mimic {
 		} else {
 			Buff.affect(this, Haste.class, 1f);
 		}
-		if (getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
+		if (DungeonCharactersHandler.getCharacters().contains(this) && Dungeon.level.heroFOV[position]) {
 			enemy = Dungeon.hero;
 			target = Dungeon.hero.position;
 			GLog.w(Messages.get(this, "reveal") );
@@ -119,14 +119,14 @@ public class CrystalMimic extends Mimic {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage) {
+	public int attackProc_1(Character enemy, int damage) {
 		if (alignment == Alignment.NEUTRAL && enemy == Dungeon.hero){
 			steal( Dungeon.hero );
 
 		} else {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Dungeon.level.passable[position +i] && getCharacterOnPosition(position +i) == null){
+				if (Dungeon.level.passable[position +i] && DungeonCharactersHandler.getCharacterOnPosition(position +i) == null){
 					candidates.add(position + i);
 				}
 			}
@@ -137,7 +137,7 @@ public class CrystalMimic extends Mimic {
 
 			if (alignment == Alignment.ENEMY) state = FLEEING;
 		}
-		return super.attackProc(enemy, damage);
+		return ActionAttack.attackProc(this,enemy, damage);
 	}
 
 	protected void steal( Hero hero ) {
@@ -193,7 +193,7 @@ public class CrystalMimic extends Mimic {
 		protected void nowhereToRun() {
 			super.nowhereToRun();
 			if (state == HUNTING){
-				spendTimeAdjusted(-TICK); //crystal mimics are fast!
+				spendTimeAdjusted(-DungeonActors.TICK); //crystal mimics are fast!
 			}
 		}
 	}

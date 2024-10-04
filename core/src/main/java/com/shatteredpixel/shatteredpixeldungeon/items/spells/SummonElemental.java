@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -90,31 +89,31 @@ public class SummonElemental extends Spell {
 
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
+			if (DungeonCharactersHandler.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 				spawnPoints.add( p );
 			}
 		}
 
 		if (!spawnPoints.isEmpty()){
 
-			for (Character ch : Actor.getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof Elemental && ch.getBuff(InvisAlly.class) != null){
 					ScrollOfTeleportation.appear( ch, Random.element(spawnPoints) );
 					((Elemental) ch).state = ((Elemental) ch).HUNTING;
-					curUser.spendTimeAdjustedAndNext(Actor.TICK);
+					curUser.spendTimeAdjustedAndNext(DungeonActors.TICK);
 					return;
 				}
 			}
 
 			Elemental elemental = Reflection.newInstance(summonClass);
-			GameScene.add( elemental );
+			GameScene.addMob( elemental );
 			Buff.affect(elemental, InvisAlly.class);
 			elemental.setSummonedALly();
 			elemental.healthPoints = elemental.healthMax;
 			ScrollOfTeleportation.appear( elemental, Random.element(spawnPoints) );
 			Invisibility.dispel(curUser);
 			curUser.sprite.operate(curUser.position);
-			curUser.spendTimeAdjustedAndNext(Actor.TICK);
+			curUser.spendTimeAdjustedAndNext(DungeonActors.TICK);
 
 			summonClass = Elemental.AllyNewBornElemental.class;
 

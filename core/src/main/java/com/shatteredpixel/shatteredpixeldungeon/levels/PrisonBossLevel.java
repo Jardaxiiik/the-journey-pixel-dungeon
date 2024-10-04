@@ -24,7 +24,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDeath;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -34,6 +35,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Tengu;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -290,12 +293,12 @@ public class PrisonBossLevel extends Level {
 		CustomTilemap vis = new ExitVisual();
 		vis.pos(11, 10);
 		customTiles.add(vis);
-		GameScene.add(vis, false);
+		GameScene.addMob(vis, false);
 		
 		vis = new ExitVisualWalls();
 		vis.pos(11, 10);
 		customWalls.add(vis);
-		GameScene.add(vis, true);
+		GameScene.addMob(vis, true);
 		
 		Painter.set(this, tenguCell.left+4, tenguCell.top, Terrain.DOOR);
 		
@@ -386,10 +389,10 @@ public class PrisonBossLevel extends Level {
 				int tenguPos = pointToCell(tenguCellCenter);
 				
 				//if something is occupying Tengu's space, try to put him in an adjacent cell
-				if (Actor.getCharacterOnPosition(tenguPos) != null){
+				if (DungeonCharactersHandler.getCharacterOnPosition(tenguPos) != null){
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (Actor.getCharacterOnPosition(tenguPos + i) == null){
+						if (DungeonCharactersHandler.getCharacterOnPosition(tenguPos + i) == null){
 							candidates.add(tenguPos + i);
 						}
 					}
@@ -414,7 +417,7 @@ public class PrisonBossLevel extends Level {
 				
 				tengu.state = tengu.HUNTING;
 				tengu.position = tenguPos;
-				GameScene.add( tengu );
+				GameScene.addMob( tengu );
 				tengu.notice();
 				
 				state = State.FIGHT_START;
@@ -435,7 +438,7 @@ public class PrisonBossLevel extends Level {
 				cleanMapState();
 
 				Doom d = tengu.getBuff(Doom.class);
-				Actor.removeActor(tengu);
+				DungeonActorsHandler.removeActor(tengu);
 				mobs.remove(tengu);
 				TargetHealthIndicator.instance.target(null);
 				tengu.sprite.kill();
@@ -458,7 +461,7 @@ public class PrisonBossLevel extends Level {
 				
 				tengu.state = tengu.HUNTING;
 				tengu.position = (arena.left + arena.width()/2) + width()*(arena.top+2);
-				GameScene.add(tengu);
+				GameScene.addMob(tengu);
 				tengu.timeToNow();
 				tengu.notice();
 				
@@ -500,7 +503,7 @@ public class PrisonBossLevel extends Level {
 					mobs.add(m);
 				}
 				
-				tengu.die(Dungeon.hero);
+				ActionDeath.die(tengu,Dungeon.hero);
 				
 				clearEntities(tenguCell);
 				cleanMapState();
@@ -667,7 +670,7 @@ public class PrisonBossLevel extends Level {
 				if (ActorLoop.volumeAt(cell, StormCloud.class) == 0
 						&& ActorLoop.volumeAt(cell, Regrowth.class) <= 9
 						&& Dungeon.level.plants.get(cell) == null
-						&& Actor.getCharacterOnPosition(cell) == null) {
+						&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null) {
 					Level.set(cell, Terrain.SECRET_TRAP);
 					setTrap(new TenguDartTrap().hide(), cell);
 					CellEmitter.get(cell).burst(Speck.factory(Speck.LIGHT), 2);
@@ -680,7 +683,7 @@ public class PrisonBossLevel extends Level {
 		FadingTraps t = new FadingTraps();
 		t.fadeDelay = 2f;
 		t.setCoveringArea(tenguCell);
-		GameScene.add(t, false);
+		GameScene.addMob(t, false);
 		customTiles.add(t);
 	}
 	
@@ -690,7 +693,7 @@ public class PrisonBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = ENTRANCE_POS + i;
 			if (passable[cell]
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
@@ -797,15 +800,15 @@ public class PrisonBossLevel extends Level {
 			}
 			
 			vis.alpha( initialAlpha );
-			Actor.addActorWithDelay(new Actor() {
+			DungeonActorsHandler.addActorWithDelay(new Actor() {
 				
 				{
-					actPriority = HERO_PRIO+1;
+					actPriority = HERO_PRIORITY +1;
 				}
 				
 				@Override
-				protected boolean playGameTurn() {
-					Actor.removeActor(this);
+                public boolean playGameTurn() {
+					DungeonActorsHandler.removeActor(this);
 					
 					if (vis != null && vis.parent != null) {
 						Dungeon.level.customTiles.remove(FadingTraps.this);

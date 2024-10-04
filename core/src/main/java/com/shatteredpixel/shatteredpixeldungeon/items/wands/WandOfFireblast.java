@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
@@ -104,10 +103,10 @@ public class WandOfFireblast extends DamageWand {
 					Dungeon.level.heaps.get(cell).burn();
 				}
 			} else {
-				GameScene.add( ActorLoop.seed( cell, 1+chargesPerCast(), Fire.class ) );
+				GameScene.addMob( ActorLoop.seed( cell, 1+chargesPerCast(), Fire.class ) );
 			}
 
-			Character ch = Actor.getCharacterOnPosition( cell );
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 			if (ch != null) {
 				affectedCharacters.add(ch);
 			}
@@ -125,7 +124,7 @@ public class WandOfFireblast extends DamageWand {
 				if (Dungeon.level.trueDistance(cell+i, bolt.collisionPos) < Dungeon.level.trueDistance(cell, bolt.collisionPos)
 						&& Dungeon.level.flamable[cell+i]
 						&& Fire.volumeAt(cell+i, Fire.class) == 0){
-					GameScene.add( ActorLoop.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
+					GameScene.addMob( ActorLoop.seed( cell+i, 1+chargesPerCast(), Fire.class ) );
 				}
 			}
 		}

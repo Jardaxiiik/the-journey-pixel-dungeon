@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.warrior;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
@@ -67,7 +66,7 @@ public class HeroicLeap extends ArmorAbility {
 	public void activate( ClassArmor armor, Hero hero, Integer target ) {
 		if (target != null) {
 
-			if (hero.rooted){
+			if (hero.getCharacterMovement().isRooted()){
 				PixelScene.shake( 1, 1f );
 				return;
 			}
@@ -77,7 +76,7 @@ public class HeroicLeap extends ArmorAbility {
 
 			//can't occupy the same cell as another char, so move back one.
 			int backTrace = route.dist-1;
-			while (Actor.getCharacterOnPosition( cell ) != null && cell != hero.position) {
+			while (DungeonCharactersHandler.getCharacterOnPosition( cell ) != null && cell != hero.position) {
 				cell = route.path.get(backTrace);
 				backTrace--;
 			}
@@ -96,7 +95,7 @@ public class HeroicLeap extends ArmorAbility {
 					GameScene.updateFog();
 
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
-						Character mob = Actor.getCharacterOnPosition(hero.position + i);
+						Character mob = DungeonCharactersHandler.getCharacterOnPosition(hero.position + i);
 						if (mob != null && mob != hero && mob.alignment != Character.Alignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
 								int damage = Random.NormalIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
@@ -119,7 +118,7 @@ public class HeroicLeap extends ArmorAbility {
 					PixelScene.shake(2, 0.5f);
 
 					Invisibility.dispel();
-					hero.spendTimeAdjustedAndNext(Actor.TICK);
+					hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 
 					if (hero.getBuff(DoubleJumpTracker.class) != null){
 						hero.getBuff(DoubleJumpTracker.class).detach();

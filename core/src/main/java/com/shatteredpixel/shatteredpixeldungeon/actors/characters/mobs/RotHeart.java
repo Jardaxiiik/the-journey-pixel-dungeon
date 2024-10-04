@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
@@ -56,7 +56,7 @@ public class RotHeart extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		alerted = false;
 		return super.playGameTurn();
 	}
@@ -82,7 +82,7 @@ public class RotHeart extends Mob {
 			}
 		}
 
-		GameScene.add(ActorLoop.seed(position, 5 + 3*openNearby, ToxicGas.class));
+		GameScene.addMob(ActorLoop.seed(position, 5 + 3*openNearby, ToxicGas.class));
 
 		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}

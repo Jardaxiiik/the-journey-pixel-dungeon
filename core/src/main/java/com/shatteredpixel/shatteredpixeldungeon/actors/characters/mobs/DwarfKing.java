@@ -25,9 +25,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -35,6 +35,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Sheep;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
@@ -148,9 +151,9 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (position == CityBossLevel.throne){
-			throwItems();
+			ActionThrowItems.throwItems(this);
 		}
 
 		if (phase == 1) {
@@ -163,7 +166,7 @@ public class DwarfKing extends Mob {
 			}
 
 			if (paralysed > 0){
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonTurnsHandler.TICK);
 				return true;
 			}
 
@@ -182,12 +185,12 @@ public class DwarfKing extends Mob {
 
 				if (lastAbility == LINK && lifeLinkSubject()){
 					abilityCooldown += Random.NormalIntRange(MIN_COOLDOWN, MAX_COOLDOWN);
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				} else if (teleportSubject()) {
 					lastAbility = TELE;
 					abilityCooldown += Random.NormalIntRange(MIN_COOLDOWN, MAX_COOLDOWN);
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				}
 
@@ -207,7 +210,7 @@ public class DwarfKing extends Mob {
 					}
 					summonSubject(3, DKGhoul.class);
 					summonSubject(3, DKGhoul.class);
-					spendTimeAdjusted(3 * TICK);
+					spendTimeAdjusted(3 * DungeonTurnsHandler.TICK);
 					summonsMade += 2;
 					return true;
 				} else if (getShielding() <= 300 && summonsMade < 12){
@@ -224,7 +227,7 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKWarlock.class);
 					}
 					summonsMade += 3;
-					spendTimeAdjusted(3*TICK);
+					spendTimeAdjusted(3*DungeonTurnsHandler.TICK);
 					return true;
 				} else if (getShielding() <= 150 && summonsMade < 18) {
 					if (summonsMade == 12) {
@@ -236,16 +239,16 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKGhoul.class);
 						summonSubject(3, DKGhoul.class);
 						summonsMade += 4;
-						spendTimeAdjusted(3*TICK);
+						spendTimeAdjusted(3*DungeonTurnsHandler.TICK);
 					} else {
 						summonSubject(3, DKGolem.class);
 						summonSubject(3, DKGolem.class);
 						summonsMade += 2;
-						spendTimeAdjusted(TICK);
+						spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					}
 					return true;
 				} else {
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				}
 			} else {
@@ -257,7 +260,7 @@ public class DwarfKing extends Mob {
 						yell(Messages.get(this, "wave_1"));
 					}
 					summonSubject(3, DKGhoul.class);
-					spendTimeAdjusted(3 * TICK);
+					spendTimeAdjusted(3 * DungeonTurnsHandler.TICK);
 					summonsMade++;
 					return true;
 				} else if (getShielding() <= 200 && summonsMade < 8) {
@@ -272,7 +275,7 @@ public class DwarfKing extends Mob {
 						summonSubject(3, DKGhoul.class);
 					}
 					summonsMade++;
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				} else if (getShielding() <= 100 && summonsMade < 12) {
 					sprite.centerEmitter().start(Speck.factory(Speck.SCREAM), 0.4f, 2);
@@ -283,10 +286,10 @@ public class DwarfKing extends Mob {
 					summonSubject(4, DKGhoul.class);
 					summonSubject(4, DKGhoul.class);
 					summonsMade = 12;
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				} else {
-					spendTimeAdjusted(TICK);
+					spendTimeAdjusted(DungeonTurnsHandler.TICK);
 					return true;
 				}
 			}
@@ -386,7 +389,7 @@ public class DwarfKing extends Mob {
 			Ballistica trajectory = new Ballistica(enemy.position, position, Ballistica.STOP_TARGET);
 			int targetCell = trajectory.path.get(trajectory.dist+1);
 			//if the position opposite the direction of the hero is open, go there
-			if (getCharacterOnPosition(targetCell) == null && !Dungeon.level.solid[targetCell]){
+			if (DungeonCharactersHandler.getCharacterOnPosition(targetCell) == null && !Dungeon.level.solid[targetCell]){
 				bestPos = targetCell;
 
 			//Otherwise go to the neighbour cell that's open and is furthest
@@ -394,7 +397,7 @@ public class DwarfKing extends Mob {
 				bestDist = Dungeon.level.trueDistance(position, enemy.position);
 
 				for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-					if (getCharacterOnPosition(position +i) == null
+					if (DungeonCharactersHandler.getCharacterOnPosition(position +i) == null
 							&& !Dungeon.level.solid[position +i]
 							&& Dungeon.level.trueDistance(position +i, enemy.position) > bestDist){
 						bestPos = position +i;
@@ -403,14 +406,14 @@ public class DwarfKing extends Mob {
 				}
 			}
 
-			addActor(new Pushing(this, position, bestPos));
+			DungeonActorsHandler.addActor(new Pushing(this, position, bestPos));
 			position = bestPos;
 
 			//find closest cell that's adjacent to enemy, place subject there
 			bestDist = Dungeon.level.trueDistance(enemy.position, position);
 			bestPos = enemy.position;
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (getCharacterOnPosition(enemy.position +i) == null
+				if (DungeonCharactersHandler.getCharacterOnPosition(enemy.position +i) == null
 						&& !Dungeon.level.solid[enemy.position +i]
 						&& Dungeon.level.trueDistance(enemy.position +i, position) < bestDist){
 					bestPos = enemy.position +i;
@@ -431,7 +434,7 @@ public class DwarfKing extends Mob {
 		if (!BossHealthBar.isAssigned()) {
 			BossHealthBar.assignBoss(this);
 			yell(Messages.get(this, "notice"));
-			for (Character ch : getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof DriedRose.GhostHero){
 					((DriedRose.GhostHero) ch).sayBoss();
 				}
@@ -589,7 +592,7 @@ public class DwarfKing extends Mob {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			partnerID = -2; //no partners
 			return super.playGameTurn();
 		}
@@ -657,10 +660,10 @@ public class DwarfKing extends Mob {
 				}
 				particles = null;
 
-				if (Actor.getCharacterOnPosition(pos) != null){
+				if (DungeonCharactersHandler.getCharacterOnPosition(pos) != null){
 					ArrayList<Integer> candidates = new ArrayList<>();
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-						if (Dungeon.level.passable[pos+i] && Actor.getCharacterOnPosition(pos+i) == null){
+						if (Dungeon.level.passable[pos+i] && DungeonCharactersHandler.getCharacterOnPosition(pos+i) == null){
 							candidates.add(pos+i);
 						}
 					}
@@ -670,22 +673,22 @@ public class DwarfKing extends Mob {
 				}
 
 				//kill sheep that are right on top of the spawner instead of failing to spawn
-				if (Actor.getCharacterOnPosition(pos) instanceof Sheep){
-					Actor.getCharacterOnPosition(pos).die(null);
+				if (DungeonCharactersHandler.getCharacterOnPosition(pos) instanceof Sheep){
+					DungeonCharactersHandler.getCharacterOnPosition(pos).die(null);
 				}
 
-				if (Actor.getCharacterOnPosition(pos) == null) {
+				if (DungeonCharactersHandler.getCharacterOnPosition(pos) == null) {
 					Mob m = Reflection.newInstance(summon);
 					m.position = pos;
 					m.maxLvl = -2;
-					GameScene.add(m);
+					GameScene.addMob(m);
 					Dungeon.level.occupyCell(m);
 					m.state = m.HUNTING;
 					if (((DwarfKing)target).phase == 2){
 						Buff.affect(m, KingDamager.class);
 					}
 				} else {
-					Character ch = Actor.getCharacterOnPosition(pos);
+					Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos);
 					ch.receiveDamageFromSource(Random.NormalIntRange(20, 40), this);
 					if (((DwarfKing)target).phase == 2){
 						if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES)){
@@ -703,7 +706,7 @@ public class DwarfKing extends Mob {
 				detach();
 			}
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonTurnsHandler.TICK);
 			return true;
 		}
 
@@ -755,7 +758,7 @@ public class DwarfKing extends Mob {
 			if (target.alignment != Alignment.ENEMY){
 				detach();
 			}
-			spendTimeAdjusted( TICK );
+			spendTimeAdjusted( DungeonTurnsHandler.TICK);
 			return true;
 		}
 

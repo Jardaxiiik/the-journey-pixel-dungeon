@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Regrowth;
@@ -44,7 +44,7 @@ public class FungalSpinner extends Spinner {
 
 	@Override
 	protected void applyWebToCell(int cell) {
-		GameScene.add(ActorLoop.seed(cell, 40, Regrowth.class));
+		GameScene.addMob(ActorLoop.seed(cell, 40, Regrowth.class));
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class FungalSpinner extends Spinner {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage) {
+	public int attackProc_1(Character enemy, int damage) {
 		return damage; //does not apply poison
 	}
 

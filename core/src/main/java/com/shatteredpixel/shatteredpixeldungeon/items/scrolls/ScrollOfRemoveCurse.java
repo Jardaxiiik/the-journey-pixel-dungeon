@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Degrade;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -53,8 +52,8 @@ public class ScrollOfRemoveCurse extends InventoryScroll {
 
 		TormentedSpirit spirit = null;
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			if (Actor.getCharacterOnPosition(curUser.position +i) instanceof TormentedSpirit){
-				spirit = (TormentedSpirit) Actor.getCharacterOnPosition(curUser.position +i);
+			if (Character.getCharacterOnPosition(curUser.position +i) instanceof TormentedSpirit){
+				spirit = (TormentedSpirit) Character.getCharacterOnPosition(curUser.position +i);
 			}
 		}
 		if (spirit != null){

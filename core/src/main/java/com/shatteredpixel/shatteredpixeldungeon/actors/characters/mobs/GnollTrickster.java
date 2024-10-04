@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
@@ -72,8 +72,8 @@ public class GnollTrickster extends Gnoll {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		//The gnoll's attacks get more severe the more the player lets it hit them
 		combo++;
 		int effect = Random.Int(4)+combo;
@@ -83,7 +83,7 @@ public class GnollTrickster extends Gnoll {
 			if (effect >=6 && enemy.getBuff(Burning.class) == null){
 
 				if (Dungeon.level.flamable[enemy.position])
-					GameScene.add(ActorLoop.seed(enemy.position, 4, Fire.class));
+					GameScene.addMob(ActorLoop.seed(enemy.position, 4, Fire.class));
 				Buff.affect(enemy, Burning.class).reignite( enemy );
 
 			} else

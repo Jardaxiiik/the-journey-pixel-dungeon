@@ -23,7 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -115,7 +116,7 @@ public abstract class Shaman extends Mob {
 
 		Invisibility.dispel(this);
 		Character enemy = this.enemy;
-		if (isTargetHitByAttack( this, enemy, true )) {
+		if (ActionHit.isTargetHitByAttack( this, enemy, true )) {
 			
 			if (Random.Int( 2 ) == 0) {
 				debuff( enemy );
@@ -140,7 +141,7 @@ public abstract class Shaman extends Mob {
 	
 	public void onZapComplete() {
 		zap();
-		next();
+		DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 	
 	@Override

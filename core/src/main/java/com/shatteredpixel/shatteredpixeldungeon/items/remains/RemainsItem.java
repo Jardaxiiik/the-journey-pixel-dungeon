@@ -54,7 +54,7 @@ public abstract class RemainsItem extends Item {
 
 			doEffect(hero);
 
-			hero.spendTimeAdjustedAndNext(Actor.TICK);
+			hero.spendTimeAdjustedAndNext(DungeonActors.TICK);
 			detach(hero.belongings.backpack);
 		}
 	}

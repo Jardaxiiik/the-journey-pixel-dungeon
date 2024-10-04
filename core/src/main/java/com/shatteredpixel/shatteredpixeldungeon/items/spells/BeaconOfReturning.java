@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -114,14 +113,14 @@ public class BeaconOfReturning extends Spell {
 		
 		if (returnDepth == Dungeon.depth && returnBranch == Dungeon.branch) {
 
-			Character existing = Actor.getCharacterOnPosition(returnPos);
+			Character existing = DungeonCharactersHandler.getCharacterOnPosition(returnPos);
 			if (existing != null && existing != hero){
 				Character toPush = !Character.hasProperty(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 				ArrayList<Integer> candidates = new ArrayList<>();
 				for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 					int cell = returnPos + n;
-					if (!Dungeon.level.solid[cell] && Actor.getCharacterOnPosition( cell ) == null
+					if (!Dungeon.level.solid[cell] && DungeonCharactersHandler.getCharacterOnPosition( cell ) == null
 							&& (!Character.hasProperty(toPush, Character.Property.LARGE) || Dungeon.level.openSpace[cell])) {
 						candidates.add( cell );
 					}
@@ -132,7 +131,7 @@ public class BeaconOfReturning extends Spell {
 					if (toPush == hero){
 						returnPos = candidates.get(0);
 					} else {
-						Actor.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ) );
+						DungeonActors.addActor( new Pushing( toPush, toPush.position, candidates.get(0) ) );
 						toPush.position = candidates.get(0);
 						Dungeon.level.occupyCell(toPush);
 					}

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -218,7 +218,7 @@ public class HallsBossLevel extends Level {
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			int cell = entrance() + i;
 			if (passable[cell]
-					&& Actor.getCharacterOnPosition(cell) == null
+					&& DungeonCharactersHandler.getCharacterOnPosition(cell) == null
 					&& (!Character.hasProperty(ch, Character.Property.LARGE) || openSpace[cell])){
 				candidates.add(cell);
 			}
@@ -256,23 +256,23 @@ public class HallsBossLevel extends Level {
 		boss.position = exit() + width*3;
 
 		//push any char that is already here away
-		if (Actor.getCharacterOnPosition(boss.position) != null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(boss.position) != null){
 			ArrayList<Integer> candidates = new ArrayList<>();
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-				if (Actor.getCharacterOnPosition(boss.position + i) == null){
+				if (DungeonCharactersHandler.getCharacterOnPosition(boss.position + i) == null){
 					candidates.add(boss.position + i);
 				}
 			}
-			Character ch = Actor.getCharacterOnPosition(boss.position);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(boss.position);
 			if (!candidates.isEmpty()){
 				ch.position = Random.element(candidates);
 			} else {
 				ch.position = boss.position +2*width;
 			}
-			Actor.addActor(new Pushing(ch, boss.position, ch.position));
+			DungeonActors.addActor(new Pushing(ch, boss.position, ch.position));
 		}
 
-		GameScene.add( boss );
+		GameScene.addMob( boss );
 	}
 
 	@Override

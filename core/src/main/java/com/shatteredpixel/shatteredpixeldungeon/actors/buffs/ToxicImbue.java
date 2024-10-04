@@ -62,10 +62,10 @@ public class ToxicImbue extends Buff {
 
 	@Override
 	public boolean playGameTurn() {
-		GameScene.add(ActorLoop.seed(target.position, 50, ToxicGas.class));
+		GameScene.addMob(ActorLoop.seed(target.position, 50, ToxicGas.class));
 
-		spendTimeAdjusted(TICK);
-		left -= TICK;
+		spendTimeAdjusted(DungeonActors.TICK);
+		left -= DungeonActors.TICK;
 		if (left <= 0){
 			detach();
 		}

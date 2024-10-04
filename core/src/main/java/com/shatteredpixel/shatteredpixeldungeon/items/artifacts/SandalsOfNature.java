@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
@@ -293,7 +293,7 @@ public class SandalsOfNature extends Artifact {
 				hero.sprite.operate( hero.position);
 				Sample.INSTANCE.play( Assets.Sounds.PLANT );
 				hero.busy();
-				hero.spendTimeAdjusted( Actor.TICK );
+				hero.spendTimeAdjusted( DungeonActors.TICK );
 				if (seeds.size() >= 3+(level()*3)){
 					seeds.clear();
 					upgrade();
@@ -329,7 +329,7 @@ public class SandalsOfNature extends Artifact {
 					Invisibility.dispel(curUser);
 
 					Plant plant = ((Plant.Seed) Reflection.newInstance(curSeedEffect)).couch(cell, null);
-					plant.activate(Actor.getCharacterOnPosition(cell));
+					plant.activate(Character.getCharacterOnPosition(cell));
 					Sample.INSTANCE.play(Assets.Sounds.PLANT);
 					Sample.INSTANCE.playDelayed(Assets.Sounds.TRAMPLE, 0.25f, 1, Random.Float( 0.96f, 1.05f ) );
 

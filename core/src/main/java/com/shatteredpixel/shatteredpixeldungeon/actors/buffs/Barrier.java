@@ -62,7 +62,7 @@ public class Barrier extends ShieldBuff {
 			detach();
 		}
 		
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		
 		return true;
 	}

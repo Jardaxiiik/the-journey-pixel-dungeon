@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Blizzard;
@@ -211,11 +210,11 @@ public class MagicalFireRoom extends SpecialRoom {
 
 						//spread fire to nearby flammable cells
 						if (Dungeon.level.flamable[cell] && (fire == null || fire.volume == 0 || fire.cur[cell] == 0)){
-							GameScene.add(ActorLoop.seed(cell, 4, Fire.class));
+							GameScene.addMob(ActorLoop.seed(cell, 4, Fire.class));
 						}
 
 						//ignite adjacent chars
-						Character ch = Actor.getCharacterOnPosition(cell);
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 						if (ch != null && !ch.isImmuneToEffectType(getClass())) {
 							Buff.affect(ch, Burning.class).reignite(ch, 4f);
 						}

@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.MirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -66,7 +65,7 @@ public class ScrollOfMirrorImage extends Scroll {
 		
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-			if (Actor.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
+			if (Character.getCharacterOnPosition( p ) == null && Dungeon.level.passable[p]) {
 				respawnPoints.add( p );
 			}
 		}
@@ -77,7 +76,7 @@ public class ScrollOfMirrorImage extends Scroll {
 			
 			MirrorImage mob = new MirrorImage();
 			mob.duplicate( hero );
-			GameScene.add( mob );
+			GameScene.addMob( mob );
 			ScrollOfTeleportation.appear( mob, respawnPoints.get( index ) );
 			
 			respawnPoints.remove( index );

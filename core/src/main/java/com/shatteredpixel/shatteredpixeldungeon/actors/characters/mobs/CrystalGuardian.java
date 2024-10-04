@@ -22,7 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
@@ -65,9 +67,9 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		if (recovering){
-			throwItems();
+			ActionThrowItems.throwItems(this);
 			healthPoints = Math.min(healthMax, healthPoints +5);
 			if (Dungeon.level.heroFOV[position]) {
 				sprite.showStatusWithIcon(CharSprite.POSITIVE, "5", FloatingText.HEALING);
@@ -76,7 +78,7 @@ public class CrystalGuardian extends Mob{
 				recovering = false;
 				if (sprite instanceof CrystalGuardianSprite) ((CrystalGuardianSprite) sprite).endCrumple();
 			}
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 		return super.playGameTurn();
@@ -95,7 +97,7 @@ public class CrystalGuardian extends Mob{
 	@Override
 	public int getEvasionAgainstAttacker(Character enemy) {
 		if (recovering) return 0;
-		else            return super.getEvasionAgainstAttacker(enemy);
+		else            return ActionHit.getEvasionAgainstAttacker(this,enemy);
 	}
 
 	@Override

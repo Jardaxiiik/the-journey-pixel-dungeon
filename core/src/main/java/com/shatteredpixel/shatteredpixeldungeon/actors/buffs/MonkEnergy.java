@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -32,6 +32,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.RipperDemon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.YogDzewa;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -107,7 +110,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			BuffIndicator.refreshHero();
 		}
 
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonTurnsHandler.TICK);
 		return true;
 	}
 
@@ -335,7 +338,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				Character enemy = Actor.getCharacterOnPosition(target);
+				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
@@ -364,7 +367,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 								public void call() {
 									hero.attack(enemy, 1, 0, Character.INFINITE_ACCURACY);
 									Invisibility.dispel();
-									hero.next();
+									DungeonTurnsHandler.nextActorToPlayHero(hero);();
 									tracker.detach();
 									Buff.affect(hero, MonkEnergy.class).abilityUsed(Flurry.this);
 									if (hero.getBuff(JustHitTracker.class) != null) {
@@ -377,7 +380,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 							});
 						} else {
 							Invisibility.dispel();
-							hero.next();
+							DungeonTurnsHandler.nextActorToPlayHero(hero);();
 							tracker.detach();
 							Buff.affect(hero, MonkEnergy.class).abilityUsed(Flurry.this);
 							if (hero.getBuff(JustHitTracker.class) != null) {
@@ -409,7 +412,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				Buff.prolong(hero, FocusBuff.class, 30f);
 
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
-					hero.next();
+					DungeonTurnsHandler.nextActorToPlayHero(hero);();
 				} else {
 					hero.spendTimeAdjustedAndNext(1f);
 				}
@@ -444,7 +447,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 			public static class FocusActivation extends FlavourBuff {
 
 				{
-					actPriority = VFX_PRIO;
+					actPriority = VFX_PRIORITY;
 				}
 
 			}
@@ -479,7 +482,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					range += 3;
 				}
 
-				if (Dungeon.hero.rooted){
+				if (Dungeon.hero.getCharacterMovement().isRooted()){
 					PixelScene.shake( 1, 1f );
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_bad_position"));
 					return;
@@ -493,7 +496,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				Ballistica dash = new Ballistica(hero.position, target, Ballistica.PROJECTILE);
 
 				if (!dash.collisionPos.equals(target)
-						|| Actor.getCharacterOnPosition(target) != null
+						|| DungeonCharactersHandler.getCharacterOnPosition(target) != null
 						|| (Dungeon.level.solid[target] && !Dungeon.level.passable[target])){
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_bad_position"));
 					return;
@@ -510,7 +513,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						}
 						hero.position = target;
 						Dungeon.level.occupyCell(hero);
-						hero.next();
+						DungeonTurnsHandler.nextActorToPlayHero(hero);();
 					}
 				});
 
@@ -547,7 +550,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					return;
 				}
 
-				Character enemy = Actor.getCharacterOnPosition(target);
+				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
@@ -589,7 +592,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						Buff.affect(hero, MonkEnergy.class).abilityUsed(DragonKick.this);
 
 						if (empowered){
-							for (Character ch : Actor.getCharacters()){
+							for (Character ch : DungeonCharactersHandler.getCharacters()){
 								if (ch != enemy
 										&& ch.alignment == Character.Alignment.ENEMY
 										&& Dungeon.level.adjacent(ch.position, hero.position)){
@@ -640,7 +643,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 
 				//we process this as 5x wait actions instead of one 5 tick action to prevent
 				// effects like time freeze from eating the whole action duration
-				for (int i = 0; i < 5; i++) hero.spendTime(Actor.TICK);
+				for (int i = 0; i < 5; i++) hero.spendTime(DungeonTurnsHandler.TICK);
 
 				if (Buff.affect(hero, MonkEnergy.class).abilitiesEmpowered(hero)){
 					int toHeal = Math.round((hero.healthMax - hero.healthPoints)/5f);
@@ -650,29 +653,29 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 					Buff.affect(hero, MeditateResistance.class, hero.cooldown());
 				}
 
-				Actor.addActorWithDelay(new Actor() {
+				DungeonActorsHandler.addActorWithDelay(new Actor() {
 
 					{
-						actPriority = VFX_PRIO;
+						actPriority = VFX_PRIORITY;
 					}
 
 					@Override
-					protected boolean playGameTurn() {
+                    public boolean playGameTurn() {
 						Buff.affect(hero, Recharging.class, 8f);
 						Buff.affect(hero, ArtifactRecharge.class).prolong(8f).ignoreHornOfPlenty = false;
-						Actor.removeActor(this);
+						DungeonActorsHandler.removeActor(this);
 						return true;
 					}
 				}, hero.cooldown()-1);
 
-				hero.next();
+				DungeonTurnsHandler.nextActorToPlayHero(hero);();
 				hero.busy();
 				Buff.affect(hero, MonkEnergy.class).abilityUsed(this);
 			}
 
 			public static class MeditateResistance extends FlavourBuff{
 				{
-					actPriority = HERO_PRIO+1; //ends just before the hero acts
+					actPriority = HERO_PRIORITY +1; //ends just before the hero acts
 				}
 			};
 		}

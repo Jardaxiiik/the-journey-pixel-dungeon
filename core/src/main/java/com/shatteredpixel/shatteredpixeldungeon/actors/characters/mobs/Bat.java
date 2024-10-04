@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -41,8 +41,8 @@ public class Bat extends Mob {
 		
 		EXP = 7;
 		maxLvl = 15;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 		
 		loot = new PotionOfHealing();
 		lootChance = 0.1667f; //by default, see lootChance()
@@ -64,8 +64,8 @@ public class Bat extends Mob {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		int reg = Math.min( damage - 4, healthMax - healthPoints);
 		
 		if (reg > 0) {

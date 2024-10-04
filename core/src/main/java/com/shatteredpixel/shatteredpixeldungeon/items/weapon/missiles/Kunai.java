@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
@@ -44,7 +43,7 @@ public class Kunai extends MissileWeapon {
 	
 	@Override
 	protected void onThrow(int cell) {
-		enemy = Actor.getCharacterOnPosition(cell);
+		enemy = DungeonCharactersHandler.getCharacterOnPosition(cell);
 		super.onThrow(cell);
 	}
 	

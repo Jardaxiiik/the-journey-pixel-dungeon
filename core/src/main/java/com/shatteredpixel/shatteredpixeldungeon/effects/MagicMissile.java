@@ -266,8 +266,8 @@ public class MagicMissile extends Emitter {
 	//convenience method for the common case of a bolt going from a character to a tile or enemy
 	public static MagicMissile boltFromChar(Group group, int type, Visual sprite, int to, Callback callback){
 		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
-		if (Actor.getCharacterOnPosition(to) != null){
-			missile.reset(type, sprite.center(), Actor.getCharacterOnPosition(to).sprite.destinationCenter(), callback);
+		if (Character.getCharacterOnPosition(to) != null){
+			missile.reset(type, sprite.center(), Character.getCharacterOnPosition(to).sprite.destinationCenter(), callback);
 		} else {
 			missile.reset(type, sprite, to, callback);
 		}

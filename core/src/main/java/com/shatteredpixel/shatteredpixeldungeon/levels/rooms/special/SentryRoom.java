@@ -24,8 +24,9 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
@@ -228,14 +229,14 @@ public class SentryRoom extends SpecialRoom {
 		private EmptyRoom room;
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 				fieldOfView = new boolean[Dungeon.level.length()];
 			}
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
 
 			if (getProperties().contains(Property.IMMOVABLE)){
-				throwItems();
+				ActionThrowItems.throwItems(this);
 			}
 
 			if (Dungeon.hero != null){
@@ -277,7 +278,7 @@ public class SentryRoom extends SpecialRoom {
 		}
 
 		public void onZapComplete(){
-			if (isTargetHitByAttack(this, Dungeon.hero, true)) {
+			if (ActionHit.isTargetHitByAttack(this, Dungeon.hero, true)) {
 				Dungeon.hero.receiveDamageFromSource(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
 				if (!Dungeon.hero.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
@@ -365,8 +366,8 @@ public class SentryRoom extends SpecialRoom {
 			idle();
 			flash();
 			emitter().burst(MagicMissile.WardParticle.UP, 2);
-			if (Actor.getCharacterOnPosition(pos) != null){
-				parent.add(new Beam.DeathRay(center(), Actor.getCharacterOnPosition(pos).sprite.center()));
+			if (DungeonCharactersHandler.getCharacterOnPosition(pos) != null){
+				parent.add(new Beam.DeathRay(center(), DungeonCharactersHandler.getCharacterOnPosition(pos).sprite.center()));
 			} else {
 				parent.add(new Beam.DeathRay(center(), DungeonTilemap.raisedTileCenterToWorld(pos)));
 			}

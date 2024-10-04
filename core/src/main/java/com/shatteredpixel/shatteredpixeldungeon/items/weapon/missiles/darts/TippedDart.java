@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
@@ -158,7 +157,7 @@ public abstract class TippedDart extends Dart {
 		//checks both destination and source position
 		float lotusPreserve = 0f;
 		if (targetPos != -1){
-			for (Character ch : Actor.getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (ch instanceof WandOfRegrowth.Lotus){
 					WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 					if (l.inRange(targetPos)){
@@ -169,7 +168,7 @@ public abstract class TippedDart extends Dart {
 			targetPos = -1;
 		}
 		int p = curUser == null ? Dungeon.hero.position : curUser.position;
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) ch;
 				if (l.inRange(p)){

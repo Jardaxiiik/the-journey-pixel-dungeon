@@ -23,13 +23,13 @@ package com.shatteredpixel.shatteredpixeldungeon.plants;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -57,7 +57,7 @@ public abstract class Plant implements Bundlable {
 
 	public void trigger(){
 
-		Character ch = Actor.getCharacterOnPosition(pos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos);
 
 		if (ch instanceof Hero){
 			((Hero) ch).interruptHeroPlannedAction();
@@ -82,7 +82,7 @@ public abstract class Plant implements Bundlable {
 		}
 
 		float seedChance = 0f;
-		for (Character c : Actor.getCharacters()){
+		for (Character c : DungeonCharactersHandler.getCharacters()){
 			if (c instanceof WandOfRegrowth.Lotus){
 				WandOfRegrowth.Lotus l = (WandOfRegrowth.Lotus) c;
 				if (l.inRange(pos)){

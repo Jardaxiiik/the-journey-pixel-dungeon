@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -69,7 +69,7 @@ public class Shopkeeper extends NPC {
 	private int turnsSinceHarmed = -1;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 
 		if (Dungeon.level.visited[position]){
 			Notes.add(Notes.Landmark.SHOP);
@@ -80,7 +80,7 @@ public class Shopkeeper extends NPC {
 		}
 
 		sprite.turnTo(position, Dungeon.hero.position);
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonActors.TICK );
 		return super.playGameTurn();
 	}
 	

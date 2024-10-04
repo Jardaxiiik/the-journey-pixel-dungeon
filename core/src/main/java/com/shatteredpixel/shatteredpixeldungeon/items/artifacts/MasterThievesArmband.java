@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.artifacts;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -115,10 +114,10 @@ public class MasterThievesArmband extends Artifact {
 
 			if (target == null) {
 				return;
-			} else if (!Dungeon.level.adjacent(curUser.position, target) || Actor.getCharacterOnPosition(target) == null){
+			} else if (!Dungeon.level.adjacent(curUser.position, target) || DungeonCharactersHandler.getCharacterOnPosition(target) == null){
 				GLog.w( Messages.get(MasterThievesArmband.class, "no_target") );
 			} else {
-				Character ch = Actor.getCharacterOnPosition(target);
+				Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 				if (ch instanceof Shopkeeper){
 					GLog.w( Messages.get(MasterThievesArmband.class, "steal_shopkeeper") );
 				} else if (ch.alignment != Character.Alignment.ENEMY){
@@ -186,7 +185,7 @@ public class MasterThievesArmband extends Artifact {
 								upgrade();
 							}
 							Item.updateQuickslot();
-							curUser.next();
+							curUser.DungeonTurnsHandler.nextActorToPlay(this);();
 						}
 					});
 
@@ -256,7 +255,7 @@ public class MasterThievesArmband extends Artifact {
 				Dungeon.gold--;
 			}
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 

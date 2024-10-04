@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
@@ -47,10 +46,10 @@ public class Regrowth extends ActorLoop {
 						int c = Dungeon.level.map[cell];
 						int c1 = c;
 						if (c == Terrain.EMPTY || c == Terrain.EMBERS || c == Terrain.EMPTY_DECO) {
-							c1 = (cur[cell] > 9 && Actor.getCharacterOnPosition( cell ) == null)
+							c1 = (cur[cell] > 9 && DungeonCharactersHandler.getCharacterOnPosition( cell ) == null)
 									? Terrain.HIGH_GRASS : Terrain.GRASS;
 						} else if ((c == Terrain.GRASS || c == Terrain.FURROWED_GRASS)
-								&& cur[cell] > 9 && Dungeon.level.plants.get(cell) == null && Actor.getCharacterOnPosition( cell ) == null ) {
+								&& cur[cell] > 9 && Dungeon.level.plants.get(cell) == null && DungeonCharactersHandler.getCharacterOnPosition( cell ) == null ) {
 							c1 = Terrain.HIGH_GRASS;
 						}
 
@@ -59,11 +58,11 @@ public class Regrowth extends ActorLoop {
 							GameScene.updateMap( cell );
 						}
 
-						Character ch = Actor.getCharacterOnPosition( cell );
+						Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 						if (ch != null
 								&& !ch.isImmuneToEffectType(this.getClass())
 								&& off[cell] > 1) {
-							Buff.prolong( ch, Roots.class, TICK );
+							Buff.prolong( ch, Roots.class, DungeonTurnsHandler.TICK);
 						}
 					}
 				}

@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.rogue;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionInteract;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
@@ -98,7 +98,7 @@ public class ShadowClone extends ArmorAbility {
 			ArrayList<Integer> spawnPoints = new ArrayList<>();
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.getCharacterOnPosition(p) == null && Dungeon.level.passable[p]) {
+				if (DungeonCharactersHandler.getCharacterOnPosition(p) == null && Dungeon.level.passable[p]) {
 					spawnPoints.add(p);
 				}
 			}
@@ -109,12 +109,12 @@ public class ShadowClone extends ArmorAbility {
 
 				ally = new ShadowAlly(hero.lvl);
 				ally.position = Random.element(spawnPoints);
-				GameScene.add(ally);
+				GameScene.addMob(ally);
 
 				ShadowAlly.appear(ally, ally.position);
 
 				Invisibility.dispel();
-				hero.spendTimeAdjustedAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 
 			} else {
 				GLog.w(Messages.get(SpiritHawk.class, "no_space"));
@@ -134,7 +134,7 @@ public class ShadowClone extends ArmorAbility {
 	}
 
 	private static ShadowAlly getShadowAlly(){
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof ShadowAlly){
 				return (ShadowAlly) ch;
 			}
@@ -170,7 +170,7 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			int oldPos = position;
 			boolean result = super.playGameTurn();
 			//partially simulates how the hero switches to idle animation
@@ -216,8 +216,8 @@ public class ShadowClone extends ArmorAbility {
 		}
 
 		@Override
-		public int attackProc(Character enemy, int damage ) {
-			damage = super.attackProc( enemy, damage );
+		public int attackProc_1(Character enemy, int damage ) {
+			damage = ActionAttack(this, enemy, damage );
 			if (Random.Int(4) < Dungeon.hero.pointsInTalent(Talent.SHADOW_BLADE)
 					&& Dungeon.hero.belongings.weapon() != null){
 				return Dungeon.hero.belongings.weapon().proc( this, enemy, damage );
@@ -290,7 +290,7 @@ public class ShadowClone extends ArmorAbility {
 
 		@Override
 		public boolean canInteract(Character c) {
-			if (super.canInteract(c)){
+			if (ActionInteract.canInteract(this,c)){
 				return true;
 			} else if (Dungeon.level.distance(position, c.position) <= Dungeon.hero.pointsInTalent(Talent.PERFECT_COPY)) {
 				return true;
@@ -306,7 +306,7 @@ public class ShadowClone extends ArmorAbility {
 			}
 
 			//some checks from super.interact
-			if (!Dungeon.level.passable[position] && !c.flying){
+			if (!Dungeon.level.passable[position] && !c.getCharacterMovement().isFlying()){
 				return true;
 			}
 

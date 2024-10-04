@@ -21,11 +21,11 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 
 public class GrippingTrap extends Trap {
@@ -41,9 +41,9 @@ public class GrippingTrap extends Trap {
 	@Override
 	public void activate() {
 
-		Character c = Actor.getCharacterOnPosition( pos );
+		Character c = DungeonCharactersHandler.getCharacterOnPosition( pos );
 
-		if (c != null && !c.flying) {
+		if (c != null && !c.getCharacterMovement().isFlying()) {
 			int damage = Math.max( 0,  (2 + scalingDepth()/2) - c.getArmorPointsRolled()/2 );
 			Buff.affect( c, Bleeding.class ).set( damage );
 			Buff.prolong( c, Cripple.class, Cripple.DURATION);

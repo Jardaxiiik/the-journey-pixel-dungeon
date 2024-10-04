@@ -21,9 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.mechanics;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +120,7 @@ public class Ballistica {
 					&& cell != sourcePos
 					&& !Dungeon.level.passable[cell]
 					&& !Dungeon.level.avoid[cell]
-					&& Actor.getCharacterOnPosition(cell) == null) {
+					&& Character.getCharacterOnPosition(cell) == null) {
 				collide(path.get(path.size() - 1));
 			}
 
@@ -134,7 +133,7 @@ public class Ballistica {
 					collide(cell);
 				}
 			}
-			if (collisionPos == null && cell != sourcePos && stopChars && Actor.getCharacterOnPosition( cell ) != null) {
+			if (collisionPos == null && cell != sourcePos && stopChars && Character.getCharacterOnPosition( cell ) != null) {
 				collide(cell);
 			}
 			if (collisionPos == null && cell == to && stopTarget){

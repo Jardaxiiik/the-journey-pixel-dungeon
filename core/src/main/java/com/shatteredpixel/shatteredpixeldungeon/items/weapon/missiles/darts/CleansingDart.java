@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
@@ -61,7 +61,7 @@ public class CleansingDart extends TippedDart {
 			if (defender instanceof Mob) {
 				//need to delay this so damage from the dart doesn't break wandering
 				new FlavourBuff(){
-					{actPriority = VFX_PRIO;}
+					{actPriority = VFX_PRIORITY;}
 					public boolean playGameTurn() {
 						if (((Mob) defender).state == ((Mob) defender).HUNTING || ((Mob) defender).state == ((Mob) defender).FLEEING){
 							((Mob) defender).state = ((Mob) defender).WANDERING;

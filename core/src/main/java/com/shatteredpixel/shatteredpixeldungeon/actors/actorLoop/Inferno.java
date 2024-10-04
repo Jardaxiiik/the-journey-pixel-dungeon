@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -71,7 +71,7 @@ public class Inferno extends ActorLoop {
 						|| cur[cell+Dungeon.level.width()] > 0)) {
 
 					if (fire == null || fire.cur == null || fire.cur[cell] == 0) {
-						GameScene.add(Fire.seed(cell, 4, Fire.class));
+						GameScene.addMob(Fire.seed(cell, 4, Fire.class));
 					}
 
 				}

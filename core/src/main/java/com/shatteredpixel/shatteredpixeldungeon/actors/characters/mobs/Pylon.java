@@ -23,7 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
@@ -73,14 +74,14 @@ public class Pylon extends Mob {
 	private int targetNeighbor = Random.Int(8);
 
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		//char logic
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];
 		}
 		Dungeon.level.updateFieldOfView( this, fieldOfView );
 
-		throwItems();
+		ActionThrowItems.throwItems(this);
 
 		sprite.hideAlert();
 		sprite.hideLost();
@@ -92,7 +93,7 @@ public class Pylon extends Mob {
 		//end of char/mob logic
 
 		if (alignment == Alignment.NEUTRAL){
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 
@@ -126,12 +127,12 @@ public class Pylon extends Mob {
 		}
 
 		for (int cell : shockCells) {
-			shockChar(getCharacterOnPosition(cell));
+			shockChar(DungeonCharactersHandler.getCharacterOnPosition(cell));
 		}
 
 		targetNeighbor = (targetNeighbor+1)%8;
 
-		spendTimeAdjusted(TICK);
+		spendTimeAdjusted(DungeonActors.TICK);
 
 		return true;
 	}

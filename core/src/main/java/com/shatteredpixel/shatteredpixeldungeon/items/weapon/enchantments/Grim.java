@@ -67,7 +67,7 @@ public class Grim extends Weapon.Enchantment {
 	public static class GrimTracker extends Buff {
 
 		{
-			actPriority = Actor.VFX_PRIO;
+			actPriority = Actor.VFX_PRIORITY;
 		}
 
 		public float maxChance;

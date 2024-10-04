@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.mage;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
@@ -209,7 +208,7 @@ public class ElementalBlast extends ArmorAbility {
 							//*** Wand of Lightning ***
 							if (finalWandCls == WandOfLightning.class){
 								if (Dungeon.level.water[cell]){
-									GameScene.add( ActorLoop.seed( cell, 4, Electricity.class ) );
+									GameScene.addMob( ActorLoop.seed( cell, 4, Electricity.class ) );
 								}
 
 							//*** Wand of Fireblast ***
@@ -222,7 +221,7 @@ public class ElementalBlast extends ArmorAbility {
 									freeze.clear(cell);
 								}
 								if (Dungeon.level.flamable[cell]){
-									GameScene.add( ActorLoop.seed( cell, 4, Fire.class ) );
+									GameScene.addMob( ActorLoop.seed( cell, 4, Fire.class ) );
 								}
 
 							//*** Wand of Frost ***
@@ -266,7 +265,7 @@ public class ElementalBlast extends ArmorAbility {
 							}
 
 							//### Deal damage ###
-							Character mob = Actor.getCharacterOnPosition(cell);
+							Character mob = DungeonCharactersHandler.getCharacterOnPosition(cell);
 							int damage = Math.round(Random.NormalIntRange(15, 25)
 									* effectMulti
 									* damageFactors.get(finalWandCls));
@@ -419,7 +418,7 @@ public class ElementalBlast extends ArmorAbility {
 							Buff.affect(hero, Barrier.class).setShield(shielding);
 						}
 
-						hero.spendTimeAdjustedAndNext(Actor.TICK);
+						hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 					}
 				}
 		);

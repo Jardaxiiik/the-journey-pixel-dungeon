@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
@@ -66,7 +65,7 @@ public class Freezing extends ActorLoop {
 	}
 	
 	public static void freeze( int cell ){
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		if (ch != null && !ch.isImmuneToEffectType(Freezing.class)) {
 			if (ch.getBuff(Frost.class) != null){
 				Buff.affect(ch, Frost.class, 2f);
@@ -107,7 +106,7 @@ public class Freezing extends ActorLoop {
 	//legacy functionality from before this was a proper blob. Returns true if this cell is visible
 	public static boolean affect( int cell ) {
 		
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		if (ch != null) {
 			if (Dungeon.level.water[ch.position]){
 				Buff.prolong(ch, Frost.class, Frost.DURATION * 3);

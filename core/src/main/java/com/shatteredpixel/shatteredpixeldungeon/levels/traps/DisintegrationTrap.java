@@ -23,9 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.JourneyPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
@@ -49,12 +48,12 @@ public class DisintegrationTrap extends Trap {
 
 	@Override
 	public void activate() {
-		Character target = Actor.getCharacterOnPosition(pos);
+		Character target = DungeonCharactersHandler.getCharacterOnPosition(pos);
 		
 		//find the closest char that can be aimed at
 		if (target == null){
 			float closestDist = Float.MAX_VALUE;
-			for (Character ch : Actor.getCharacters()){
+			for (Character ch : DungeonCharactersHandler.getCharacters()){
 				if (!ch.isAlive()) continue;
 				float curDist = Dungeon.level.trueDistance(pos, ch.position);
 				if (ch.invisible > 0) curDist += 1000;

@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -68,7 +67,7 @@ public class WandOfTransfusion extends Wand {
 
 		int cell = beam.collisionPos;
 
-		Character ch = Actor.getCharacterOnPosition(cell);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 
 		if (ch instanceof Mob){
 			

@@ -22,8 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.huntress;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
@@ -95,7 +95,7 @@ public class SpiritHawk extends ArmorAbility {
 			ArrayList<Integer> spawnPoints = new ArrayList<>();
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				int p = hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i];
-				if (Actor.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
+				if (DungeonCharactersHandler.getCharacterOnPosition(p) == null && (Dungeon.level.passable[p] || Dungeon.level.avoid[p])) {
 					spawnPoints.add(p);
 				}
 			}
@@ -106,13 +106,13 @@ public class SpiritHawk extends ArmorAbility {
 
 				ally = new HawkAlly();
 				ally.position = Random.element(spawnPoints);
-				GameScene.add(ally);
+				GameScene.addMob(ally);
 
 				ScrollOfTeleportation.appear(ally, ally.position);
 				Dungeon.observe();
 
 				Invisibility.dispel();
-				hero.spendTimeAdjustedAndNext(Actor.TICK);
+				hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 
 			} else {
 				GLog.w(Messages.get(this, "no_space"));
@@ -132,7 +132,7 @@ public class SpiritHawk extends ArmorAbility {
 	}
 
 	private static HawkAlly getHawk(){
-		for (Character ch : Actor.getCharacters()){
+		for (Character ch : DungeonCharactersHandler.getCharacters()){
 			if (ch instanceof HawkAlly){
 				return (HawkAlly) ch;
 			}
@@ -148,7 +148,7 @@ public class SpiritHawk extends ArmorAbility {
 			healthPoints = healthMax = 10;
 			evasionSkill = 60;
 
-			flying = true;
+			getCharacterMovement().setFlying(true);
 			viewDistance = (int)GameMath.gate(6, 6+Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE), 8);
 			baseSpeed = 2f + Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
 			attacksAutomatically = false;
@@ -172,7 +172,7 @@ public class SpiritHawk extends ArmorAbility {
 				dodgesUsed++;
 				return Character.INFINITE_EVASION;
 			}
-			return super.getEvasionAgainstAttacker(enemy);
+			return ActionHit.getEvasionAgainstAttacker(this,enemy);
 		}
 
 		@Override
@@ -181,8 +181,8 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		public int attackProc(Character enemy, int damage) {
-			damage = super.attackProc( enemy, damage );
+		public int attackProc_1(Character enemy, int damage) {
+			damage = ActionAttack(this, enemy, damage );
 			switch (Dungeon.hero.pointsInTalent(Talent.GO_FOR_THE_EYES)){
 				case 1:
 					Buff.prolong( enemy, Blindness.class, 2);
@@ -206,7 +206,7 @@ public class SpiritHawk extends ArmorAbility {
 		}
 
 		@Override
-		protected boolean playGameTurn() {
+        public boolean playGameTurn() {
 			if (timeRemaining <= 0){
 				die(null);
 				Dungeon.hero.interruptHeroPlannedAction();

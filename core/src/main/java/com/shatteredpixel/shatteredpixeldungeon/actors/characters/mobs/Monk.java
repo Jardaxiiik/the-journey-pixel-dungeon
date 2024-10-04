@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Imp;
@@ -81,7 +82,7 @@ public class Monk extends Mob {
 	protected float focusCooldown = 0;
 	
 	@Override
-	protected boolean playGameTurn() {
+    public boolean playGameTurn() {
 		boolean result = super.playGameTurn();
 		if (getBuff(Focus.class) == null && state == HUNTING && focusCooldown <= 0) {
 			Buff.affect( this, Focus.class );
@@ -108,7 +109,7 @@ public class Monk extends Mob {
 		if (getBuff(Focus.class) != null && paralysed == 0 && state != SLEEPING){
 			return INFINITE_EVASION;
 		}
-		return super.getEvasionAgainstAttacker( enemy );
+		return ActionHit.getEvasionAgainstAttacker(this,enemy);
 	}
 	
 	@Override

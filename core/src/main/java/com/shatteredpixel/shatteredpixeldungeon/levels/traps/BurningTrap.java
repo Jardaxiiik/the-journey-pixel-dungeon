@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -43,7 +43,7 @@ public class BurningTrap extends Trap {
 		
 		for( int i : PathFinder.OFFSETS_NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
-				GameScene.add( ActorLoop.seed( pos+i, 2, Fire.class ) );
+				GameScene.addMob( ActorLoop.seed( pos+i, 2, Fire.class ) );
 				CellEmitter.get( pos+i ).burst( FlameParticle.FACTORY, 5 );
 			}
 		}

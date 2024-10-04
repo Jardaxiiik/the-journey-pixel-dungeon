@@ -94,7 +94,7 @@ public class TengusMask extends Item {
 		
 		detach( curUser.belongings.backpack );
 		
-		curUser.spendTimeAdjusted( Actor.TICK );
+		curUser.spendTimeAdjusted( DungeonActors.TICK );
 		curUser.busy();
 		
 		curUser.subClass = way;

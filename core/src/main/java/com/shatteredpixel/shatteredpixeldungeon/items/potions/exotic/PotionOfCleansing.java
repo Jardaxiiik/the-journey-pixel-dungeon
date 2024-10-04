@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -53,7 +52,7 @@ public class PotionOfCleansing extends ExoticPotion {
 	
 	@Override
 	public void shatter(int cell) {
-		if (Actor.getCharacterOnPosition(cell) == null){
+		if (DungeonCharactersHandler.getCharacterOnPosition(cell) == null){
 			super.shatter(cell);
 		} else {
 			splash( cell );
@@ -62,8 +61,8 @@ public class PotionOfCleansing extends ExoticPotion {
 				identify();
 			}
 			
-			if (Actor.getCharacterOnPosition(cell) != null){
-				cleanse(Actor.getCharacterOnPosition(cell));
+			if (DungeonCharactersHandler.getCharacterOnPosition(cell) != null){
+				cleanse(DungeonCharactersHandler.getCharacterOnPosition(cell));
 			}
 		}
 	}

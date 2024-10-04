@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
@@ -70,7 +69,7 @@ public class GeyserTrap extends Trap {
 		}
 
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
-			Character ch = Actor.getCharacterOnPosition(pos + i);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos + i);
 			if (ch != null){
 
 				//does the equivalent of a bomb's damage against fiery enemies.
@@ -93,7 +92,7 @@ public class GeyserTrap extends Trap {
 			}
 		}
 
-		Character ch = Actor.getCharacterOnPosition(pos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(pos);
 		if (ch != null){
 			int targetpos = -1;
 			if (centerKnockBackDirection != -1){

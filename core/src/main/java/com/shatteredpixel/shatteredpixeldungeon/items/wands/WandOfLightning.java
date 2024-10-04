@@ -23,9 +23,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.wands;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.DwarfKing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -116,7 +115,7 @@ public class WandOfLightning extends DamageWand {
 		PathFinder.buildDistanceMap( ch.position, BArray.not( Dungeon.level.solid, null ), dist );
 		for (int i = 0; i < PathFinder.distance.length; i++) {
 			if (PathFinder.distance[i] < Integer.MAX_VALUE){
-				Character n = Actor.getCharacterOnPosition( i );
+				Character n = DungeonCharactersHandler.getCharacterOnPosition( i );
 				if (n == Dungeon.hero && PathFinder.distance[i] > 1)
 					//the hero is only zapped if they are adjacent
 					continue;
@@ -141,7 +140,7 @@ public class WandOfLightning extends DamageWand {
 
 		int cell = bolt.collisionPos;
 
-		Character ch = Actor.getCharacterOnPosition( cell );
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		if (ch != null) {
 			if (ch instanceof DwarfKing){
 				Statistics.qualifiedForBossChallengeBadge = false;

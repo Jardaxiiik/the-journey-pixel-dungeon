@@ -23,8 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.TenguDartTrap;
@@ -63,11 +62,11 @@ public class ForceCube extends MissileWeapon {
 		Dungeon.level.pressCell(cell);
 		
 		ArrayList<Character> targets = new ArrayList<>();
-		if (Actor.getCharacterOnPosition(cell) != null) targets.add(Actor.getCharacterOnPosition(cell));
+		if (DungeonCharactersHandler.getCharacterOnPosition(cell) != null) targets.add(DungeonCharactersHandler.getCharacterOnPosition(cell));
 		
 		for (int i : PathFinder.OFFSETS_NEIGHBOURS8){
 			if (!(Dungeon.level.traps.get(cell+i) instanceof TenguDartTrap)) Dungeon.level.pressCell(cell+i);
-			if (Actor.getCharacterOnPosition(cell + i) != null) targets.add(Actor.getCharacterOnPosition(cell + i));
+			if (DungeonCharactersHandler.getCharacterOnPosition(cell + i) != null) targets.add(DungeonCharactersHandler.getCharacterOnPosition(cell + i));
 		}
 		
 		for (Character target : targets){

@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass;
@@ -138,7 +138,7 @@ public class ArcaneResin extends Item {
 					Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 					curUser.sprite.emitter().start( Speck.factory( Speck.UP ), 0.2f, 3 );
 
-					curUser.spendTimeAdjustedAndNext(Actor.TICK);
+					curUser.spendTimeAdjustedAndNext(DungeonActors.TICK);
 					GLog.p(Messages.get(ArcaneResin.class, "apply"));
 				}
 			}

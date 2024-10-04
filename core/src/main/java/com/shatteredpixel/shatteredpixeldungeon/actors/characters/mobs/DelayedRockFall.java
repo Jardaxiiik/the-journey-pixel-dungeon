@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -57,7 +56,7 @@ public class DelayedRockFall extends FlavourBuff {
 		for (int i : rockPositions){
 			CellEmitter.get( i ).start( Speck.factory( Speck.ROCK ), 0.07f, 10 );
 
-			Character ch = Actor.getCharacterOnPosition(i);
+			Character ch = DungeonCharactersHandler.getCharacterOnPosition(i);
 			if (ch != null){
 				affectChar(ch);
 			} else {

@@ -21,8 +21,9 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.watabou.utils.Bundle;
@@ -106,7 +107,7 @@ public class ActorLoop extends Actor {
 	@Override
 	public boolean playGameTurn() {
 		
-		spendTimeAdjusted( TICK );
+		spendTimeAdjusted( DungeonTurnsHandler.TICK);
 		
 		if (volume > 0) {
 
@@ -239,7 +240,7 @@ public class ActorLoop extends Actor {
 		if (gas == null) {
 			gas = Reflection.newInstance(type);
 			//this ensures that gasses do not get an 'extra turn' if they are added by a mob or buff
-			if (Actor.getCurrentActorPriority() < gas.actPriority) {
+			if (DungeonTurnsHandler.getCurrentActorPriority() < gas.actPriority) {
 				gas.spendTimeAdjusted(1f);
 			}
 		}

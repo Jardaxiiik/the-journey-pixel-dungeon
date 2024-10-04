@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
@@ -98,7 +97,7 @@ public class CorpseDust extends Item {
 		public boolean playGameTurn() {
 			if (target instanceof Hero && ((Hero) target).belongings.getItem(CorpseDust.class) == null){
 				spawnPower = 0;
-				spendTimeAdjusted(TICK);
+				spendTimeAdjusted(DungeonActors.TICK);
 				return true;
 			}
 
@@ -124,7 +123,7 @@ public class CorpseDust extends Item {
 				for (int i = 0; i < Dungeon.level.length(); i++){
 					if (Dungeon.level.heroFOV[i]
 							&& !Dungeon.level.solid[i]
-							&& Actor.getCharacterOnPosition( i ) == null
+							&& Character.getCharacterOnPosition( i ) == null
 							&& Dungeon.level.distance(i, Dungeon.hero.position) > minDist){
 						candidates.add(i);
 					}
@@ -136,7 +135,7 @@ public class CorpseDust extends Item {
 				}
 			}
 
-			spendTimeAdjusted(TICK);
+			spendTimeAdjusted(DungeonActors.TICK);
 			return true;
 		}
 

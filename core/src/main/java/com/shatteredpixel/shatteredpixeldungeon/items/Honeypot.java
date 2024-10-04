@@ -22,11 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Bee;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -77,7 +78,7 @@ public class Honeypot extends Item {
 				}
 			}
 
-			hero.next();
+			DungeonTurnsHandler.nextActorToPlayHero(hero);();
 
 		}
 	}
@@ -99,12 +100,12 @@ public class Honeypot extends Item {
 		}
 		
 		int newPos = pos;
-		if (Actor.getCharacterOnPosition( pos ) != null) {
+		if (DungeonCharactersHandler.getCharacterOnPosition( pos ) != null) {
 			ArrayList<Integer> candidates = new ArrayList<>();
 			
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS4) {
 				int c = pos + n;
-				if (!Dungeon.level.solid[c] && Actor.getCharacterOnPosition( c ) == null) {
+				if (!Dungeon.level.solid[c] && DungeonCharactersHandler.getCharacterOnPosition( c ) == null) {
 					candidates.add( c );
 				}
 			}
@@ -119,8 +120,8 @@ public class Honeypot extends Item {
 			bee.healthPoints = bee.healthMax;
 			bee.position = newPos;
 			
-			GameScene.add( bee );
-			if (newPos != pos) Actor.addActor( new Pushing( bee, pos, newPos ) );
+			GameScene.addMob( bee );
+			if (newPos != pos) DungeonActorsHandler.addActor( new Pushing( bee, pos, newPos ) );
 
 			bee.sprite.alpha( 0 );
 			bee.sprite.parent.add( new AlphaTweener( bee.sprite, 1, 0.15f ) );
@@ -209,7 +210,7 @@ public class Honeypot extends Item {
 		//returns up to quantity bees which match the current pot Pos
 		private ArrayList<Bee> findBees( int potPos ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Character c : Actor.getCharacters()){
+			for (Character c : DungeonCharactersHandler.getCharacters()){
 				if (c instanceof Bee && ((Bee) c).potPos() == potPos){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {
@@ -224,7 +225,7 @@ public class Honeypot extends Item {
 		//returns up to quantity bees which match the current pot holder
 		private ArrayList<Bee> findBees( Character potHolder ){
 			ArrayList<Bee> bees = new ArrayList<>();
-			for (Character c : Actor.getCharacters()){
+			for (Character c : DungeonCharactersHandler.getCharacters()){
 				if (c instanceof Bee && ((Bee) c).potHolderID() == potHolder.getId()){
 					bees.add((Bee) c);
 					if (bees.size() >= quantity) {

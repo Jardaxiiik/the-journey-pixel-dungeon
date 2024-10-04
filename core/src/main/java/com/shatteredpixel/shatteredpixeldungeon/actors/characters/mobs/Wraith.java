@@ -21,7 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ChallengeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -46,8 +47,8 @@ public class Wraith extends Mob {
 		EXP = 0;
 
 		maxLvl = -2;
-		
-		flying = true;
+
+		getCharacterMovement().setFlying(true);
 
 		properties.add(Property.UNDEAD);
 		properties.add(Property.INORGANIC);
@@ -80,7 +81,7 @@ public class Wraith extends Mob {
 	
 	public void adjustStats( int level ) {
 		this.level = level;
-		evasionSkill = getAccuracyAgainstTarget( null ) * 5;
+		evasionSkill = ActionHit.getAccuracyAgainstTarget( this,null ) * 5;
 		enemySeen = true;
 	}
 
@@ -110,7 +111,7 @@ public class Wraith extends Mob {
 	}
 
 	public static Wraith spawnAt( int pos, Class<? extends Wraith> wraithClass ) {
-		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && getCharacterOnPosition( pos ) == null) {
+		if ((!Dungeon.level.solid[pos] || Dungeon.level.passable[pos]) && DungeonCharactersHandler.getCharacterOnPosition( pos ) == null) {
 
 			Wraith w;
 			//if no wraith type is specified, 1/100 chance for exotic, otherwise normal
@@ -126,7 +127,7 @@ public class Wraith extends Mob {
 			w.adjustStats( Dungeon.scalingDepth() );
 			w.position = pos;
 			w.state = w.HUNTING;
-			GameScene.add( w, SPAWN_DELAY );
+			GameScene.addMob( w, SPAWN_DELAY );
 			Dungeon.level.occupyCell(w);
 
 			w.sprite.alpha( 0 );

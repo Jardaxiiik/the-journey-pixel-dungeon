@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
 import com.badlogic.gdx.graphics.Pixmap;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.Image;

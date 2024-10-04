@@ -21,8 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -42,7 +41,7 @@ public class StenchGas extends ActorLoop {
 		for (int i = area.left; i < area.right; i++){
 			for (int j = area.top; j < area.bottom; j++){
 				cell = i + j*Dungeon.level.width();
-				if (cur[cell] > 0 && (ch = Actor.getCharacterOnPosition( cell )) != null) {
+				if (cur[cell] > 0 && (ch = DungeonCharactersHandler.getCharacterOnPosition( cell )) != null) {
 					if (!ch.isImmuneToEffectType(this.getClass()))
 						Buff.prolong( ch, Paralysis.class, Paralysis.DURATION/5 );
 				}

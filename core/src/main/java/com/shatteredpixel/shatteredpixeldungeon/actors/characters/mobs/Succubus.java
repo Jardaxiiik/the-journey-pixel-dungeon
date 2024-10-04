@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -73,8 +73,8 @@ public class Succubus extends Mob {
 	}
 	
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		
 		if (enemy.getBuff(Charm.class) != null ){
 			int shield = (healthPoints - healthMax) + (5 + damage);
@@ -108,7 +108,7 @@ public class Succubus extends Mob {
 	
 	@Override
 	protected boolean moveCloserToTarget(int targetPosition) {
-		if (fieldOfView[targetPosition] && Dungeon.level.distance(position, targetPosition) > 2 && blinkCooldown <= 0 && !rooted) {
+		if (fieldOfView[targetPosition] && Dungeon.level.distance(position, targetPosition) > 2 && blinkCooldown <= 0 && !getCharacterMovement().isRooted()) {
 			
 			if (blink(targetPosition)) {
 				spendTimeAdjusted(-1 / getSpeed());
@@ -131,7 +131,7 @@ public class Succubus extends Mob {
 		int cell = route.collisionPos;
 
 		//can't occupy the same cell as another char, so move back one.
-		if (getCharacterOnPosition( cell ) != null && cell != this.position)
+		if (DungeonCharactersHandler.getCharacterOnPosition( cell ) != null && cell != this.position)
 			cell = route.path.get(route.dist-1);
 
 		if (Dungeon.level.avoid[ cell ] || (getProperties().contains(Property.LARGE) && !Dungeon.level.openSpace[cell])){
@@ -139,7 +139,7 @@ public class Succubus extends Mob {
 			for (int n : PathFinder.OFFSETS_NEIGHBOURS8) {
 				cell = route.collisionPos + n;
 				if (Dungeon.level.passable[cell]
-						&& getCharacterOnPosition( cell ) == null
+						&& DungeonCharactersHandler.getCharacterOnPosition( cell ) == null
 						&& (!getProperties().contains(Property.LARGE) || Dungeon.level.openSpace[cell])) {
 					candidates.add( cell );
 				}

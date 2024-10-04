@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -59,7 +59,7 @@ public class Viscosity extends Glyph {
 	public static class ViscosityTracker extends Buff {
 
 		{
-			actPriority = Actor.VFX_PRIO;
+			actPriority = Actor.VFX_PRIORITY;
 		}
 
 		private int level = 0;
@@ -126,7 +126,7 @@ public class Viscosity extends Glyph {
 		@Override
 		public boolean attachTo( Character target ) {
 			if (super.attachTo( target )) {
-				postpone( TICK );
+				postpone( DungeonTurnsHandler.TICK);
 				return true;
 			} else {
 				return false;
@@ -160,7 +160,7 @@ public class Viscosity extends Glyph {
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 				}
-				spendTimeAdjusted( TICK );
+				spendTimeAdjusted( DungeonTurnsHandler.TICK);
 
 				damage -= damageThisTick;
 				if (damage <= 0) {

@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StenchGas;
@@ -61,8 +61,8 @@ public class FetidRat extends Rat {
 	}
 
 	@Override
-	public int attackProc(Character enemy, int damage ) {
-		damage = super.attackProc( enemy, damage );
+	public int attackProc_1(Character enemy, int damage ) {
+		damage = ActionAttack.attackProc(this, enemy, damage );
 		if (Random.Int(3) == 0) {
 			Buff.affect(enemy, Ooze.class).set( Ooze.DURATION );
 		}
@@ -73,7 +73,7 @@ public class FetidRat extends Rat {
 	@Override
 	public int getDamageReceivedFromEnemyReducedByDefense(Character enemy, int damage ) {
 
-		GameScene.add(ActorLoop.seed(position, 20, StenchGas.class));
+		GameScene.addMob(ActorLoop.seed(position, 20, StenchGas.class));
 
 		return super.getDamageReceivedFromEnemyReducedByDefense(enemy, damage);
 	}

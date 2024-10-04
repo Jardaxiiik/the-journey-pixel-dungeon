@@ -22,7 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.warrior;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Combo;
@@ -34,6 +36,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubCl
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mimic;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
@@ -111,12 +115,12 @@ public class Shockwave extends ArmorAbility {
 
 						for (int cell : cone.cells){
 
-							Character ch = Actor.getCharacterOnPosition(cell);
+							Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 							if (ch != null && ch.alignment != hero.alignment){
 								int scalingStr = hero.getAttributeStrength()-10;
 								int damage = Random.NormalIntRange(5 + scalingStr, 10 + 2*scalingStr);
 								damage = Math.round(damage * (1f + 0.2f*hero.pointsInTalent(Talent.SHOCK_FORCE)));
-								damage -= ch.getArmorPointsRolled();
+								damage -= ActionDefense.getArmorPointsRolled(ch);
 
 								if (hero.pointsInTalent(Talent.STRIKING_WAVE) == 4){
 									Buff.affect(hero, Talent.StrikingWaveTracker.class, 0f);
@@ -125,13 +129,13 @@ public class Shockwave extends ArmorAbility {
 								if (Random.Int(10) < 3*hero.pointsInTalent(Talent.STRIKING_WAVE)){
 									boolean wasEnemy = ch.alignment == Character.Alignment.ENEMY
 											|| (ch instanceof Mimic && ch.alignment == Character.Alignment.NEUTRAL);
-									damage = hero.attackProc(ch, damage);
-									ch.receiveDamageFromSource(damage, hero);
+									damage = ActionAttack.attackProc(hero,ch, damage);
+									ActionHealth.receiveDamageFromSource(ch,damage, hero);
 									if (hero.subClass == HeroSubClass.GLADIATOR && wasEnemy){
 										Buff.affect( hero, Combo.class ).hit( ch );
 									}
 								} else {
-									ch.receiveDamageFromSource(damage, hero);
+									ActionHealth.receiveDamageFromSource(ch,damage, hero);
 								}
 								if (ch.isAlive()){
 									if (Random.Int(4) < hero.pointsInTalent(Talent.SHOCK_FORCE)){
@@ -145,7 +149,7 @@ public class Shockwave extends ArmorAbility {
 						}
 
 						Invisibility.dispel();
-						hero.spendTimeAdjustedAndNext(Actor.TICK);
+						hero.spendTimeAdjustedAndNext(DungeonTurnsHandler.TICK);
 
 					}
 				});

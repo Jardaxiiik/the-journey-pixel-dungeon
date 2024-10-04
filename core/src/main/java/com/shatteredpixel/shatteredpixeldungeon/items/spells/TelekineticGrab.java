@@ -22,8 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -57,11 +56,11 @@ public class TelekineticGrab extends TargetedSpell {
 
 	@Override
 	protected void affectTarget(Ballistica bolt, Hero hero) {
-		Character ch = Actor.getCharacterOnPosition(bolt.collisionPos);
+		Character ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.collisionPos);
 
 		//special logic for DK when he is on his throne
 		if (ch == null && bolt.path.size() > bolt.dist+1){
-			ch = Actor.getCharacterOnPosition(bolt.path.get(bolt.dist+1));
+			ch = DungeonCharactersHandler.getCharacterOnPosition(bolt.path.get(bolt.dist+1));
 			if (!(ch instanceof DwarfKing && Dungeon.level.solid[ch.position])){
 				ch = null;
 			}
