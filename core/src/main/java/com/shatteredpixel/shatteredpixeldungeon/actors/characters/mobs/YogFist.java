@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -343,7 +344,7 @@ public abstract class YogFist extends Mob {
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 			}
 
 			for (int i : PathFinder.OFFSETS_NEIGHBOURS9){
@@ -502,15 +503,15 @@ public abstract class YogFist extends Mob {
 				enemy.receiveDamageFromSource( Random.NormalIntRange(10, 20), new LightBeam() );
 				Buff.prolong( enemy, Blindness.class, Blindness.DURATION/2f );
 
-				if (!enemy.isAlive() && enemy == Dungeon.hero) {
+				if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
-					GLog.n( Messages.get(Character.class, "kill", getName()) );
+					GLog.n( Messages.get(Character.class, "kill", ActionAppearance.getName(this)) );
 				}
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 			}
 
 		}
@@ -519,7 +520,7 @@ public abstract class YogFist extends Mob {
 		public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 			int beforeHP = healthPoints;
 			super.receiveDamageFromSource(dmg, sourceOfDamage);
-			if (isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
+			if (ActionHealth.isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
 				healthPoints = healthMax /2;
 				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*1.5f );
 				int i;
@@ -533,7 +534,7 @@ public abstract class YogFist extends Mob {
 				state = WANDERING;
 				GameScene.flash(0x80FFFFFF);
 				GLog.w( Messages.get( this, "teleport" ));
-			} else if (!isAlive()){
+			} else if (!ActionHealth.isAlive()){
 				Buff.prolong( Dungeon.hero, Blindness.class, Blindness.DURATION*3f );
 				GameScene.flash(0x80FFFFFF);
 			}
@@ -572,15 +573,15 @@ public abstract class YogFist extends Mob {
 					l.weaken(50);
 				}
 
-				if (!enemy.isAlive() && enemy == Dungeon.hero) {
+				if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
-					GLog.n( Messages.get(Character.class, "kill", getName()) );
+					GLog.n( Messages.get(Character.class, "kill", ActionAppearance.getName(this)) );
 				}
 
 			} else {
 
-				enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+				enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 			}
 
 		}
@@ -589,7 +590,7 @@ public abstract class YogFist extends Mob {
 		public void receiveDamageFromSource(int dmg, Object sourceOfDamage) {
 			int beforeHP = healthPoints;
 			super.receiveDamageFromSource(dmg, sourceOfDamage);
-			if (isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
+			if (ActionHealth.isAlive() && beforeHP > healthMax /2 && healthPoints < healthMax /2){
 				healthPoints = healthMax /2;
 				Light l = Dungeon.hero.getBuff(Light.class);
 				if (l != null){
@@ -606,7 +607,7 @@ public abstract class YogFist extends Mob {
 				state = WANDERING;
 				GameScene.flash(0, false);
 				GLog.w( Messages.get( this, "teleport" ));
-			} else if (!isAlive()){
+			} else if (!ActionHealth.isAlive()){
 				Light l = Dungeon.hero.getBuff(Light.class);
 				if (l != null){
 					l.detach();

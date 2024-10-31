@@ -50,7 +50,7 @@ public class Vampiric extends Weapon.Enchantment {
 			int healAmt = Math.round(damage * 0.5f * powerMulti);
 			healAmt = Math.min( healAmt, attacker.healthMax - attacker.healthPoints);
 			
-			if (healAmt > 0 && attacker.isAlive()) {
+			if (healAmt > 0 && attacker.ActionHealth.isAlive()) {
 				
 				attacker.healthPoints += healAmt;
 				attacker.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString( healAmt ), FloatingText.HEALING );

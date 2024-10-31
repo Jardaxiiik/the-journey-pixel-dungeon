@@ -23,10 +23,10 @@ public class ActionHandler {
     }
 
     public static boolean playGameTurnCharacter(Character character) {
-        if (character.getFieldOfView() == null || character.getFieldOfView().length != Dungeon.level.length()){
-            character.setFieldOfView(new boolean[Dungeon.level.length()]);
+        if (character.fieldOfView == null || character.fieldOfView.length != Dungeon.level.length()){
+            character.fieldOfView = new boolean[Dungeon.level.length()];
         }
-        Dungeon.level.updateFieldOfView( character, character.getFieldOfView() );
+        Dungeon.level.updateFieldOfView( character, character.fieldOfView );
 
         //throw any items that are on top of an immovable char
         if (character.getProperties().contains(Character.Property.IMMOVABLE)){

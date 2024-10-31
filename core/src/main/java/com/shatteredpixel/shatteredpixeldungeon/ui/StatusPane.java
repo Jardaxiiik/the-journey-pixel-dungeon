@@ -25,7 +25,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CircleArc;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
@@ -244,7 +243,7 @@ public class StatusPane extends Component {
 		int shield = Dungeon.hero.getShielding();
 		int max = Dungeon.hero.healthMax;
 
-		if (!Dungeon.hero.isAlive()) {
+		if (!Dungeon.hero.ActionHealth.isAlive()) {
 			avatar.tint(0x000000, 0.5f);
 		} else if ((health/(float)max) < 0.3f) {
 			warning += Game.elapsed * 5f *(0.4f - (health/(float)max));

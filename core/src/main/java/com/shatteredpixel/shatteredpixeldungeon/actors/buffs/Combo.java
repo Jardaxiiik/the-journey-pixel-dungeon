@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
@@ -94,7 +95,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		count++;
 		comboTime = 5f;
 
-		if (!enemy.isAlive() || (enemy.getBuff(Corruption.class) != null && enemy.healthPoints == enemy.healthMax)){
+		if (!ActionHealth.isAlive(enemy) || (enemy.getBuff(Corruption.class) != null && enemy.healthPoints == enemy.healthMax)){
 			comboTime = Math.max(comboTime, 15*((Hero)target).pointsInTalent(Talent.CLEAVE));
 		}
 
@@ -354,7 +355,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
 					//knock them back along that ballistica, ensuring they don't fall into a pit
 					int dist = 2;
-					if (enemy.isAlive() && count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1) {
+					if (ActionHealth.isAlive(enemy) && count >= 7 && hero.pointsInTalent(Talent.ENHANCED_COMBO) >= 1) {
 						dist++;
 						Buff.prolong(enemy, Vertigo.class, 3);
 					} else if (!enemy.getCharacterMovement().isFlying()) {
@@ -374,7 +375,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 					WandOfBlastWave.BlastWave.blast(enemy.position);
 					PathFinder.buildDistanceMap(target.position, BArray.not(Dungeon.level.solid, null), 3);
 					for (Character ch : DungeonCharactersHandler.getCharacters()) {
-						if (ch != enemy && ch.alignment == Character.Alignment.ENEMY
+						if (ch != enemy && ch.alignment == CharacterAlignment.ENEMY
 								&& PathFinder.distance[ch.position] < Integer.MAX_VALUE) {
 							int aoeHit = Math.round(target.getDamageRoll() * 0.25f * count);
 							aoeHit /= 2;
@@ -389,7 +390,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							ch.sprite.bloodBurstA(target.sprite.center(), aoeHit);
 							ch.sprite.flash();
 
-							if (!ch.isAlive()) {
+							if (!ActionHealth.isAlive(ch)) {
 								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.getBuff(BrokenSeal.WarriorShield.class) != null) {
 									BrokenSeal.WarriorShield shield = hero.getBuff(BrokenSeal.WarriorShield.class);
 									int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
@@ -423,7 +424,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			case FURY:
 				count--;
 				//fury attacks as many times as you have combo count
-				if (count > 0 && enemy.isAlive() && hero.canAttack(enemy) &&
+				if (count > 0 && ActionHealth.isAlive(enemy) && hero.canAttack(enemy) &&
 						(wasAlly || enemy.alignment != target.alignment)){
 					target.sprite.attack(enemy.position, new Callback() {
 						@Override
@@ -446,7 +447,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				break;
 		}
 
-		if (!enemy.isAlive() || (!wasAlly && enemy.alignment == target.alignment)) {
+		if (!ActionHealth.isAlive(enemy) || (!wasAlly && enemy.alignment == target.alignment)) {
 			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.getBuff(BrokenSeal.WarriorShield.class) != null){
 				BrokenSeal.WarriorShield shield = hero.getBuff(BrokenSeal.WarriorShield.class);
 				int shieldAmt = Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f);
@@ -466,7 +467,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 			if (enemy == null
 					|| enemy == target
 					|| !Dungeon.level.heroFOV[cell]
-					|| target.isCharmedBy( enemy )) {
+					|| ActionBuffs.isCharmedBy(target,enemy)) {
 				GLog.w(Messages.get(Combo.class, "bad_target"));
 
 			} else if (!((Hero)target).canAttack(enemy)){

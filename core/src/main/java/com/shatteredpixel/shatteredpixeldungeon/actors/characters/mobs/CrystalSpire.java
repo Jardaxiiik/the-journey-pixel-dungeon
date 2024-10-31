@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -105,7 +106,7 @@ public class CrystalSpire extends Mob {
 		enemy = Dungeon.hero;
 
 		//crystal can still track an invisible hero
-		enemySeen = enemy.isAlive() && fieldOfView[enemy.position];
+		enemySeen = ActionHealth.isAlive(enemy) && fieldOfView[enemy.position];
 		//end of char/mob logic
 
 		if (!targetedCells.isEmpty()){
@@ -156,14 +157,14 @@ public class CrystalSpire extends Mob {
 						}
 					}
 
-					if (ch.isAlive()){
+					if (ActionHealth.isAlive(ch)){
 						if (movePos != i){
 							DungeonActorsHandler.addActor(new Pushing(ch, i, movePos));
 							ch.position = movePos;
 							Dungeon.level.occupyCell(ch);
 						}
 					} else if (ch == Dungeon.hero){
-						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 						Dungeon.fail(this);
 					}
 				}
@@ -334,7 +335,7 @@ public class CrystalSpire extends Mob {
 
 					BossHealthBar.bleed(healthPoints <= healthMax /3);
 
-					if (isAlive()) {
+					if (ActionHealth.isAlive()) {
 						Sample.INSTANCE.play(Assets.Sounds.SHATTER, 1f, Random.Float(1.15f, 1.25f));
 						((CrystalSpireSprite) sprite).updateIdle();
 					} else {

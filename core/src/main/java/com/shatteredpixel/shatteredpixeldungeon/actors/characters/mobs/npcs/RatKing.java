@@ -129,7 +129,7 @@ public class RatKing extends NPC {
 					public void call() {
 						GameScene.show(new WndOptions(
 								sprite(),
-								Messages.titleCase(getName()),
+								Messages.titleCase(ActionAppearance.getName(this)),
 								Messages.get(RatKing.class, "crown_desc"),
 								Messages.get(RatKing.class, "crown_yes"),
 								Messages.get(RatKing.class, "crown_info"),

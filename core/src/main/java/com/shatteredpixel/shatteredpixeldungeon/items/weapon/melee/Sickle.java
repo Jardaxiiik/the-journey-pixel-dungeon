@@ -74,7 +74,7 @@ public class Sickle extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
@@ -100,7 +100,7 @@ public class Sickle extends MeleeWeapon {
 
 				Invisibility.dispel();
 				hero.spendTimeAdjustedAndNext(hero.attackDelay());
-				if (!enemy.isAlive()){
+				if (!ActionHealth.isAlive(enemy)){
 					wep.onAbilityKill(hero, enemy);
 				}
 				wep.afterAbilityUsed(hero);

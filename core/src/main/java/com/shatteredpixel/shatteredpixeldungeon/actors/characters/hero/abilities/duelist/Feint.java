@@ -116,7 +116,7 @@ public class Feint extends ArmorAbility {
 
 		int imageAttackPos;
 		Character enemyTarget = TargetHealthIndicator.instance.target();
-		if (enemyTarget != null && enemyTarget.alignment == Character.Alignment.ENEMY){
+		if (enemyTarget != null && enemyTarget.alignment == CharacterAlignment.ENEMY){
 			imageAttackPos = enemyTarget.position;
 		} else {
 			imageAttackPos = image.position + (image.position - target);
@@ -136,7 +136,7 @@ public class Feint extends ArmorAbility {
 
 		for (Mob m : Dungeon.level.mobs.toArray( new Mob[0] )){
 			if ((m.isTargeting(hero) && m.state == m.HUNTING) ||
-					(m.alignment == Character.Alignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.position, image.position) <= 2)){
+					(m.alignment == CharacterAlignment.ENEMY && m.state != m.PASSIVE && Dungeon.level.distance(m.position, image.position) <= 2)){
 				m.startHunting(image);
 			}
 		}

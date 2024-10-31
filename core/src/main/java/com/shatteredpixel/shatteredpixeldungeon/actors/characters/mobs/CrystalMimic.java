@@ -58,7 +58,7 @@ public class CrystalMimic extends Mimic {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "crystal_chest");
 		} else {
-			return super.getName();
+			return ActionAppearance.getName(this);
 		}
 	}
 

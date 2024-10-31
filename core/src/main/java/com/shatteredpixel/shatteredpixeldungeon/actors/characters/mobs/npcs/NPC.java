@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Mob;
 
 public abstract class NPC extends Mob {
@@ -29,7 +30,7 @@ public abstract class NPC extends Mob {
 		healthPoints = healthMax = 1;
 		EXP = 0;
 
-		alignment = Alignment.NEUTRAL;
+		alignment = CharacterAlignment.NEUTRAL;
 		state = PASSIVE;
 	}
 

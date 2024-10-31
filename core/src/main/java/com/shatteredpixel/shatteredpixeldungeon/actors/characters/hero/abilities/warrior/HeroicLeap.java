@@ -96,7 +96,7 @@ public class HeroicLeap extends ArmorAbility {
 
 					for (int i : PathFinder.OFFSETS_NEIGHBOURS8) {
 						Character mob = DungeonCharactersHandler.getCharacterOnPosition(hero.position + i);
-						if (mob != null && mob != hero && mob.alignment != Character.Alignment.ALLY) {
+						if (mob != null && mob != hero && mob.alignment != CharacterAlignment.ALLY) {
 							if (hero.hasTalent(Talent.BODY_SLAM)){
 								int damage = Random.NormalIntRange(hero.pointsInTalent(Talent.BODY_SLAM), 4*hero.pointsInTalent(Talent.BODY_SLAM));
 								damage += Math.round(hero.getArmorPointsRolled()*0.25f*hero.pointsInTalent(Talent.BODY_SLAM));

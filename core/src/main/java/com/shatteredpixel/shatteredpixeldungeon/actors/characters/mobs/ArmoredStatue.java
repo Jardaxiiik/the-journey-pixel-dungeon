@@ -128,8 +128,8 @@ public class ArmoredStatue extends Statue {
 	}
 
 	@Override
-	public float getStealth() {
-		return armor.stealthFactor(this, super.getStealth());
+	public float getStealth1() {
+		return armor.stealthFactor(this, super.getStealth1());
 	}
 
 	@Override

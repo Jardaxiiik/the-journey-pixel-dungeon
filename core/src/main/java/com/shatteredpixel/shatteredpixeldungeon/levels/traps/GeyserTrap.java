@@ -81,7 +81,7 @@ public class GeyserTrap extends Trap {
 					}
 				}
 
-				if (ch.isAlive()) {
+				if (ActionHealth.isAlive(ch)) {
 					//trace a ballistica to our target (which will also extend past them)
 					Ballistica trajectory = new Ballistica(pos, ch.position, Ballistica.STOP_TARGET);
 					//trim it to just be the part that goes past them
@@ -122,7 +122,7 @@ public class GeyserTrap extends Trap {
 				}
 			}
 
-			if (ch.isAlive() && targetpos != -1){
+			if (ActionHealth.isAlive(ch) && targetpos != -1){
 				//trace a ballistica in the direction of our target
 				Ballistica trajectory = new Ballistica(pos, targetpos, Ballistica.MAGIC_BOLT);
 				//knock them back along that ballistica

@@ -120,7 +120,7 @@ public class MasterThievesArmband extends Artifact {
 				Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
 				if (ch instanceof Shopkeeper){
 					GLog.w( Messages.get(MasterThievesArmband.class, "steal_shopkeeper") );
-				} else if (ch.alignment != Character.Alignment.ENEMY){
+				} else if (ch.alignment != CharacterAlignment.ENEMY){
 					GLog.w( Messages.get(MasterThievesArmband.class, "no_target") );
 				} else if (ch instanceof Mob) {
 					curUser.busy();

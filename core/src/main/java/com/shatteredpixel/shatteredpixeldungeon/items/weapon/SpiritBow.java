@@ -113,10 +113,10 @@ public class SpiritBow extends Weapon {
 					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
 						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
 						plant.pos = defender.position;
-						plant.activate( defender.isAlive() ? defender : null );
+						plant.activate( defender.ActionHealth.isAlive() ? defender : null );
 					}
 
-					if (!defender.isAlive()){
+					if (!defender.ActionHealth.isAlive()){
 						NaturesPower.naturesPowerTracker tracker = attacker.getBuff(NaturesPower.naturesPowerTracker.class);
 						if (tracker != null){
 							tracker.extend(((Hero) attacker).pointsInTalent(Talent.WILD_MOMENTUM));
@@ -406,7 +406,7 @@ public class SpiritBow extends Weapon {
 								new Callback() {
 									@Override
 									public void call() {
-										if (enemy.isAlive()) {
+										if (ActionHealth.isAlive(enemy)) {
 											curUser = user;
 											onThrow(cell);
 										}

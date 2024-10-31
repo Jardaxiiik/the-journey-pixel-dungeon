@@ -117,7 +117,7 @@ public class LloydsBeacon extends Artifact {
 			
 			for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 				Character ch = DungeonCharactersHandler.getCharacterOnPosition(hero.position + PathFinder.OFFSETS_NEIGHBOURS8[i]);
-				if (ch != null && ch.alignment == Character.Alignment.ENEMY) {
+				if (ch != null && ch.alignment == CharacterAlignment.ENEMY) {
 					GLog.w( Messages.get(this, "creatures") );
 					return;
 				}

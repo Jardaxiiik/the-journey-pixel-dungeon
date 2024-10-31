@@ -22,7 +22,7 @@ public class DungeonCharactersHandler {
 
     public static synchronized void addCharacter(Character ch, float time) {
         characters.add( ch );
-        for (Buff buff : ch.getBuffs()) {
+        for (Buff buff : ch.buffs) {
             DungeonActorsHandler.addActor(buff);
         }
     }

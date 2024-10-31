@@ -13,7 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 public class ActionSpeed {
 
     public static float getSpeed(Character character) {
-        float speed = character.getBaseSpeed();
+        float speed = character.baseMovementSpeed;
         if ( character.getBuff( Cripple.class ) != null ) speed /= 2f;
         if ( character.getBuff( Stamina.class ) != null) speed *= 1.5f;
         if ( character.getBuff( Adrenaline.class ) != null) speed *= 2f;

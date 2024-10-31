@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -49,7 +50,7 @@ public class ScrollOfTerror extends Scroll {
 		int count = 0;
 		Mob affected = null;
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob.alignment != Character.Alignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
+			if (mob.alignment != CharacterAlignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
 				Buff.affect( mob, Terror.class, Terror.DURATION ).object = curUser.getId();
 
 				if (mob.getBuff(Terror.class) != null){
@@ -64,7 +65,7 @@ public class ScrollOfTerror extends Scroll {
 			GLog.i( Messages.get(this, "none") );
 			break;
 		case 1:
-			GLog.i( Messages.get(this, "one", affected.getName()) );
+			GLog.i( Messages.get(this, "one", ActionAppearance.getName(affected)) );
 			break;
 		default:
 			GLog.i( Messages.get(this, "many") );

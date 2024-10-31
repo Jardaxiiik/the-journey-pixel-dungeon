@@ -127,13 +127,13 @@ public abstract class Shaman extends Mob {
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.receiveDamageFromSource( dmg, new EarthenBolt() );
 			
-			if (!enemy.isAlive() && enemy == Dungeon.hero) {
+			if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero) {
 				Badges.validateDeathFromEnemyMagic();
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "bolt_kill") );
 			}
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 		}
 	}
 	

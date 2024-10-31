@@ -115,7 +115,7 @@ public class PitfallTrap extends Trap {
 
 					//don't trigger on flying chars, or immovable neutral chars
 					if (ch != null && !ch.getCharacterMovement().isFlying()
-						&& !(ch.alignment == Character.Alignment.NEUTRAL && Character.hasProperty(ch, Character.Property.IMMOVABLE))) {
+						&& !(ch.alignment == CharacterAlignment.NEUTRAL && Character.hasProperty(ch, Character.Property.IMMOVABLE))) {
 						if (ch == Dungeon.hero) {
 							Chasm.heroFall(cell);
 							herofell = true;

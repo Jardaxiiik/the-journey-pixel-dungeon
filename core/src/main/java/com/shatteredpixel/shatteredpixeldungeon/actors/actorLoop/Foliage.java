@@ -64,7 +64,7 @@ public class Foliage extends ActorLoop {
 		}
 		
 		Hero hero = Dungeon.hero;
-		if (hero.isAlive() && cur[hero.position] > 0) {
+		if (hero.ActionHealth.isAlive() && cur[hero.position] > 0) {
 			Shadows s = Buff.affect( hero, Shadows.class );
 			if (s != null){
 				s.prolong();

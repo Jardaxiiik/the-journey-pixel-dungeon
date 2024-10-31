@@ -79,7 +79,7 @@ public class PoisonDartTrap extends Trap {
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
 					for (Character ch : DungeonCharactersHandler.getCharacters()){
-						if (!ch.isAlive()) continue;
+						if (!ActionHealth.isAlive(ch)) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.position);
 						if (ch.invisible > 0) curDist += 1000;
 						Ballistica bolt = new Ballistica(pos, ch.position, Ballistica.PROJECTILE);
@@ -105,7 +105,7 @@ public class PoisonDartTrap extends Trap {
 												Statistics.qualifiedForBossChallengeBadge = false;
 												Statistics.bossScores[1] -= 100;
 											}
-											if (!finalTarget.isAlive()) {
+											if (!finalTarget.ActionHealth.isAlive()) {
 												Dungeon.fail(PoisonDartTrap.this);
 											}
 										}

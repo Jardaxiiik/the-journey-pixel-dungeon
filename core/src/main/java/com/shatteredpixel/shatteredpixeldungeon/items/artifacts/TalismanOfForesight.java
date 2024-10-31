@@ -181,7 +181,7 @@ public class TalismanOfForesight extends Artifact {
 					}
 
 					Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
-					if (ch != null && ch.alignment != Character.Alignment.NEUTRAL && ch.alignment != curUser.alignment){
+					if (ch != null && ch.alignment != CharacterAlignment.NEUTRAL && ch.alignment != curUser.alignment){
 						Buff.append(curUser, CharAwareness.class, 5 + 2*level()).charID = ch.getId();
 
 						if (!curUser.fieldOfView[ch.position]){

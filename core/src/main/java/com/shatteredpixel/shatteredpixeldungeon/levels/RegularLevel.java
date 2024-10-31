@@ -710,7 +710,7 @@ public abstract class RegularLevel extends Level {
 
 		//There are no statues or mimics (unless they were made allies)
 		for (Mob m : mobs.toArray(new Mob[0])){
-			if (m.alignment != Character.Alignment.ALLY){
+			if (m.alignment != CharacterAlignment.ALLY){
 				if (m instanceof Statue && ((Statue) m).levelGenStatue){
 					return false;
 				} else if (m instanceof Mimic){

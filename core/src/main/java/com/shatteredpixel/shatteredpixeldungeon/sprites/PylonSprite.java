@@ -61,7 +61,7 @@ public class PylonSprite extends MobSprite {
 	@Override
 	public void link(Character ch) {
 		super.link(ch);
-		if (ch instanceof Pylon && ch.alignment == Character.Alignment.ENEMY){
+		if (ch instanceof Pylon && ch.alignment == CharacterAlignment.ENEMY){
 			activate();
 		}
 		renderShadow = false;

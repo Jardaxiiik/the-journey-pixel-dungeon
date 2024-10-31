@@ -96,7 +96,7 @@ public class Corrosion extends Buff implements Hero.Doom {
 
 	@Override
 	public boolean playGameTurn() {
-		if (target.isAlive()) {
+		if (target.ActionHealth.isAlive()) {
 			target.receiveDamageFromSource((int)damage, this);
 			if (damage < (Dungeon.scalingDepth()/2)+2) {
 				damage++;

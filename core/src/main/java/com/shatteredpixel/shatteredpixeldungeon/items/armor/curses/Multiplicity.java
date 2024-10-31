@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PinCushion;
@@ -97,9 +98,9 @@ public class Multiplicity extends Armor.Glyph {
 							m.healthPoints = m.healthMax;
 
 							//don't duplicate stuck projectiles
-							m.removeBuff(m.getBuff(PinCushion.class));
+							ActionBuffs.removeBuff(m,m.getBuff(PinCushion.class));
 							//don't duplicate pending damage to dwarf king
-							m.removeBuff(DwarfKing.KingDamager.class);
+							ActionBuffs.removeBuff(m,DwarfKing.KingDamager.class);
 							
 							//If a thief has stolen an item, that item is not duplicated.
 							if (m instanceof Thief) {

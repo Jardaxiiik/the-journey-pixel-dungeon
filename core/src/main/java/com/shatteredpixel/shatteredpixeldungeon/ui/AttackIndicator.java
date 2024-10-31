@@ -100,7 +100,7 @@ public class AttackIndicator extends Tag {
 			active = true;
 			if (bg.width > 0 && sprite != null)sprite.visible = true;
 
-			if (Dungeon.hero.isAlive()) {
+			if (Dungeon.hero.ActionHealth.isAlive()) {
 
 				enable(Dungeon.hero.ready);
 

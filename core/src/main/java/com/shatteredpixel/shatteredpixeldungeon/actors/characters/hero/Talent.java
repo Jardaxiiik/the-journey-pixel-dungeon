@@ -571,7 +571,7 @@ public enum Talent {
 			Random.shuffle(grassCells);
 			for (int grassCell : grassCells){
 				Character ch = DungeonCharactersHandler.getCharacterOnPosition(grassCell);
-				if (ch != null && ch.alignment == Character.Alignment.ENEMY){
+				if (ch != null && ch.alignment == CharacterAlignment.ENEMY){
 					//1/2 turns of roots
 					Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));
 				}
@@ -683,7 +683,7 @@ public enum Talent {
 			Buff.affect(enemy, SuckerPunchTracker.class);
 		}
 
-		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Character.Alignment.ENEMY) {
+		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && ActionHealth.isAlive(enemy) && enemy.alignment == CharacterAlignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
 				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.getId();
 			} else if (hero.getBuff(FollowupStrikeTracker.class) != null
@@ -708,7 +708,7 @@ public enum Talent {
 			}
 		}
 
-		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Character.Alignment.ENEMY) {
+		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == CharacterAlignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
 				if (!(hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow)) {
 					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.getId();

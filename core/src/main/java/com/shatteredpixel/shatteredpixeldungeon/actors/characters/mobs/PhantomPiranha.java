@@ -55,7 +55,7 @@ public class PhantomPiranha extends Piranha {
 		}
 		super.receiveDamageFromSource(dmg, sourceOfDamage);
 
-		if (isAlive() && !(sourceOfDamage instanceof Corruption)) {
+		if (ActionHealth.isAlive() && !(sourceOfDamage instanceof Corruption)) {
 			if (dmgSource != null) {
 				if (!Dungeon.level.adjacent(position, dmgSource.position)) {
 					ArrayList<Integer> candidates = new ArrayList<>();

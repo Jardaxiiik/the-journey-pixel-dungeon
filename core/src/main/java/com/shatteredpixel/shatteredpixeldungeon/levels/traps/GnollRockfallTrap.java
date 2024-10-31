@@ -78,7 +78,7 @@ public class GnollRockfallTrap extends RockfallTrap {
 
 			Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 
-			if (ch != null && ch.isAlive() && !(ch instanceof GnollGeomancer)){
+			if (ch != null && ActionHealth.isAlive(ch) && !(ch instanceof GnollGeomancer)){
 				//deals notably less damage than a regular rockfall trap, but ignores armor
 				int damage = Random.NormalIntRange(6, 12);
 				ch.receiveDamageFromSource( Math.max(damage, 0) , this);
@@ -86,7 +86,7 @@ public class GnollRockfallTrap extends RockfallTrap {
 				//guards take full paralysis, otherwise just a little
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
 
-				if (!ch.isAlive() && ch == Dungeon.hero){
+				if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero){
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 				}

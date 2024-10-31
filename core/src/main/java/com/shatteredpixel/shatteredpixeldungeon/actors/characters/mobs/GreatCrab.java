@@ -43,7 +43,7 @@ public class GreatCrab extends Crab {
 
 		healthPoints = healthMax = 25;
 		evasionSkill = 0; //see damage()
-		baseSpeed = 1f;
+		baseMovementSpeed = 1f;
 
 		EXP = 6;
 

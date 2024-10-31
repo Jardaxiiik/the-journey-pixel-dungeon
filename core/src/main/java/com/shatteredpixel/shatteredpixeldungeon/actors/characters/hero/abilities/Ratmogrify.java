@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -106,7 +108,7 @@ public class Ratmogrify extends ArmorAbility {
 					int index = Random.index( spawnPoints );
 
 					Rat rat = new Rat();
-					rat.alignment = Character.Alignment.ALLY;
+					rat.alignment = CharacterAlignment.ALLY;
 					rat.state = rat.HUNTING;
 					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
 					GameScene.addMob( rat );
@@ -117,7 +119,7 @@ public class Ratmogrify extends ArmorAbility {
 				}
 
 			}
-		} else if (ch.alignment != Character.Alignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat){
+		} else if (ch.alignment != CharacterAlignment.ENEMY || !(ch instanceof Mob) || ch instanceof Rat){
 			GLog.w(Messages.get(this, "cant_transform"));
 			return;
 		} else if (ch instanceof TransmogRat){
@@ -143,7 +145,7 @@ public class Ratmogrify extends ArmorAbility {
 			//preserve champion enemy buffs
 			HashSet<ChampionEnemy> champBuffs = ch.getBuffs(ChampionEnemy.class);
 			for (ChampionEnemy champ : champBuffs){
-				if (ch.removeBuff(champ)) {
+				if (ActionBuffs.removeBuff(ch,champ)) {
 					ch.sprite.clearAura();
 				}
 			}
@@ -153,7 +155,7 @@ public class Ratmogrify extends ArmorAbility {
 			Dungeon.level.mobs.remove(ch);
 
 			for (ChampionEnemy champ : champBuffs){
-				ch.addBuff(champ);
+				ActionBuffs.addBuff(ch,champ);
 			}
 
 			GameScene.addMob(rat);
@@ -165,7 +167,7 @@ public class Ratmogrify extends ArmorAbility {
 			Dungeon.level.occupyCell(rat);
 
 			//for rare cases where a buff was keeping a mob alive (e.g. gnoll brutes)
-			if (!rat.isAlive()){
+			if (!rat.ActionHealth.isAlive()){
 				rat.die(this);
 			}
 		}
@@ -291,7 +293,7 @@ public class Ratmogrify extends ArmorAbility {
 
 		@Override
 		public String getName() {
-			return Messages.get(this, "name", original.getName());
+			return Messages.get(this, "name", ActionAppearance.getName(original));
 		}
 
 		{

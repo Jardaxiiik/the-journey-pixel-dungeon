@@ -45,7 +45,7 @@ public class ScrollOfRage extends Scroll {
 		detach(curUser.belongings.backpack);
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 			mob.travelToPosition( curUser.position);
-			if (mob.alignment != Character.Alignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
+			if (mob.alignment != CharacterAlignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
 				Buff.prolong(mob, Amok.class, 5f);
 			}
 		}

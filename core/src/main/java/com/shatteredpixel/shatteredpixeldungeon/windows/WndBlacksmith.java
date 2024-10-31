@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Belongings;
@@ -64,7 +65,7 @@ public class WndBlacksmith extends Window {
 
 		IconTitle titlebar = new IconTitle();
 		titlebar.icon( troll.sprite() );
-		titlebar.label( Messages.titleCase( troll.getName() ) );
+		titlebar.label( Messages.titleCase( ActionAppearance.getName(troll) ) );
 		titlebar.setRect( 0, 0, width, 0 );
 		add( titlebar );
 
@@ -81,7 +82,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.getName() ),
+						Messages.titleCase( ActionAppearance.getName(troll) ),
 						Messages.get(WndBlacksmith.class, "pickaxe_verify") + (pickaxeCost == 0 ? "\n\n" + Messages.get(WndBlacksmith.class, "pickaxe_free") : ""),
 						Messages.get(WndBlacksmith.class, "pickaxe_yes"),
 						Messages.get(WndBlacksmith.class, "pickaxe_no")
@@ -144,7 +145,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.getName() ),
+						Messages.titleCase( ActionAppearance.getName(troll) ),
 						Messages.get(WndBlacksmith.class, "smith_verify"),
 						Messages.get(WndBlacksmith.class, "smith_yes"),
 						Messages.get(WndBlacksmith.class, "smith_no")
@@ -169,7 +170,7 @@ public class WndBlacksmith extends Window {
 			protected void onClick() {
 				GameScene.show(new WndOptions(
 						troll.sprite(),
-						Messages.titleCase( troll.getName() ),
+						Messages.titleCase( ActionAppearance.getName(troll) ),
 						Messages.get(WndBlacksmith.class, "cashout_verify", Blacksmith.Quest.favor),
 						Messages.get(WndBlacksmith.class, "cashout_yes"),
 						Messages.get(WndBlacksmith.class, "cashout_no")
@@ -223,7 +224,7 @@ public class WndBlacksmith extends Window {
 
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon( troll.sprite() );
-			titlebar.label( Messages.titleCase( troll.getName() ) );
+			titlebar.label( Messages.titleCase( ActionAppearance.getName(troll) ) );
 			titlebar.setRect( 0, 0, WIDTH, 0 );
 			add( titlebar );
 
@@ -458,7 +459,7 @@ public class WndBlacksmith extends Window {
 
 			IconTitle titlebar = new IconTitle();
 			titlebar.icon(troll.sprite());
-			titlebar.label(Messages.titleCase(troll.getName()));
+			titlebar.label(Messages.titleCase(ActionAppearance.getName(troll)));
 
 			RenderedTextBlock message = PixelScene.renderTextBlock( Messages.get(this, "prompt"), 6 );
 

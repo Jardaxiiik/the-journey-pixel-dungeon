@@ -161,7 +161,7 @@ public class WandOfCorruption extends Wand {
 			enemyResist *= 1 + 4*Math.pow(enemy.healthPoints /(float)enemy.healthMax, 2);
 			
 			//debuffs placed on the enemy reduce their resistance
-			for (Buff buff : enemy.getBuffs()){
+			for (Buff buff : enemy.buffs){
 				if (MAJOR_DEBUFFS.containsKey(buff.getClass()))         enemyResist *= (1f-MAJOR_DEBUFF_WEAKEN);
 				else if (MINOR_DEBUFFS.containsKey(buff.getClass()))    enemyResist *= (1f-MINOR_DEBUFF_WEAKEN);
 				else if (buff.type == Buff.buffType.NEGATIVE)           enemyResist *= (1f-MINOR_DEBUFF_WEAKEN);
@@ -195,7 +195,7 @@ public class WandOfCorruption extends Wand {
 		
 		//do not consider buffs which are already assigned, or that the enemy is immune to.
 		HashMap<Class<? extends Buff>, Float> debuffs = new HashMap<>(category);
-		for (Buff existing : enemy.getBuffs()){
+		for (Buff existing : enemy.buffs){
 			if (debuffs.containsKey(existing.getClass())) {
 				debuffs.put(existing.getClass(), 0f);
 			}

@@ -25,10 +25,14 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Bones;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionInteract;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionSound;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionSpendTime;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
@@ -76,6 +80,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Snake;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -181,7 +186,7 @@ public class Hero extends Character {
 	{
 		actPriority = HERO_PRIORITY;
 		
-		alignment = Alignment.ALLY;
+		alignment = CharacterAlignment.ALLY;
 	}
 	
 	public static final int MAX_LEVEL = 30;
@@ -333,9 +338,9 @@ public class Hero extends Character {
 		info.level = bundle.getInt( LEVEL );
 		info.str = bundle.getInt( STRENGTH );
 		info.exp = bundle.getInt( EXPERIENCE );
-		info.healthPoint = bundle.getInt( Character.TAG_HP );
-		info.ht = bundle.getInt( Character.TAG_HT );
-		info.shield = bundle.getInt( Character.TAG_SHLD );
+		info.healthPoint = bundle.getInt( Character.BUNDLE_TAG_HP);
+		info.ht = bundle.getInt( Character.BUNDLE_TAG_HT);
+		info.shield = bundle.getInt( Character.BUNDLE_TAG_SHLD);
 		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		Belongings.preview( info, bundle );
@@ -411,9 +416,9 @@ public class Hero extends Character {
 			belongings.attackingWeapon().hitSound(pitch);
 		} else if (RingOfForce.getBuffedBonus(this, RingOfForce.Force.class) > 0) {
 			//pitch deepens by 2.5% (additive) per point of strength, down to 75%
-			super.playHitSound( pitch * GameMath.gate( 0.75f, 1.25f - 0.025f* getAttributeStrength(), 1f) );
+			ActionSound.playHitSound( this,pitch * GameMath.gate( 0.75f, 1.25f - 0.025f* getAttributeStrength(), 1f) );
 		} else {
-			super.playHitSound(pitch * 1.1f);
+			ActionSound.playHitSound(this,pitch * 1.1f);
 		}
 	}
 
@@ -423,11 +428,11 @@ public class Hero extends Character {
 			Sample.INSTANCE.play( Assets.Sounds.HIT_PARRY, 1, pitch);
 			return true;
 		}
-		return super.willBlockSound(pitch);
+		return ActionSound.willBlockSound(this,pitch);
 	}
 
 	public void live() {
-		for (Buff b : getBuffs()){
+		for (Buff b : buffs){
 			if (!b.revivePersists) b.detach();
 		}
 		Buff.affect( this, Regeneration.class );
@@ -499,7 +504,7 @@ public class Hero extends Character {
 	public int getEvasionAgainstAttacker(Character enemy ) {
 
 		if (getBuff(Combo.ParryTracker.class) != null){
-			if (canAttack(enemy) && !isCharmedBy(enemy)){
+			if (canAttack(enemy) && !ActionBuffs.isCharmedBy(this,enemy)){
 				Buff.affect(this, Combo.RiposteTracker.class).enemy = enemy;
 			}
 			return INFINITE_EVASION;
@@ -561,7 +566,7 @@ public class Hero extends Character {
 			return Messages.get(Monk.class, "parried");
 		}
 
-		return super.getDefenseVerb();
+		return ActionDefense.getDefenseVerb(this);
 	}
 
 	@Override
@@ -664,7 +669,7 @@ public class Hero extends Character {
 		if (getAttributeStrength() < ((Weapon)w).STRReq())       return false;
 		if (w instanceof Flail)                 return false;
 
-		return super.canDoSurpriseAttack();
+		return ActionAttack.canDoSurpriseAttack(this);
 	}
 
 	public boolean canAttack(Character enemy){
@@ -860,7 +865,7 @@ public class Hero extends Character {
 	}
 	
 	public void interruptHeroPlannedAction() {
-		if (isAlive() && curAction != null &&
+		if (ActionHealth.isAlive() && curAction != null &&
 			((curAction instanceof HeroAction.Move && curAction.dst != position) ||
 			(curAction instanceof HeroAction.LvlTransition))) {
 			lastAction = curAction;
@@ -910,7 +915,7 @@ public class Hero extends Character {
 		
 		Character ch = action.ch;
 
-		if (ch.isAlive() && ActionInteract.canInteract(ch,this)) {
+		if (ActionHealth.isAlive(ch) && ActionInteract.canInteract(ch,this)) {
 			
 			ready();
 			sprite.turnTo(position, ch.position);
@@ -1312,7 +1317,7 @@ public class Hero extends Character {
 
 		enemy = action.target;
 
-		if (enemy.isAlive() && canAttack( enemy ) && !isCharmedBy( enemy ) && enemy.invisible == 0) {
+		if (ActionHealth.isAlive(enemy) && canAttack( enemy ) && !ActionBuffs.isCharmedBy(this,enemy) && enemy.invisible == 0) {
 
 			if (heroClass != HeroClass.DUELIST
 					&& hasTalent(Talent.AGGRESSIVE_BARRIER)
@@ -1387,7 +1392,7 @@ public class Hero extends Character {
 					
 					@Override
                     public boolean playGameTurn() {
-						if (enemy.isAlive()) {
+						if (ActionHealth.isAlive(enemy)) {
 							int bonusTurns = hasTalent(Talent.SHARED_UPGRADES) ? wep.buffedLvl() : 0;
 							Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns).set(enemy.getId(), bonusTurns);
 						}
@@ -1499,7 +1504,7 @@ public class Hero extends Character {
 		if (flashIntensity >= 0.05f){
 			flashIntensity = Math.min(1/3f, flashIntensity); //cap intensity at 1/3
 			GameScene.flash( (int)(0xFF*flashIntensity) << 16 );
-			if (isAlive()) {
+			if (ActionHealth.isAlive()) {
 				if (flashIntensity >= 1/6f) {
 					Sample.INSTANCE.play(Assets.Sounds.HEALTH_CRITICAL, 1/3f + flashIntensity * 2f);
 				} else {
@@ -1545,7 +1550,7 @@ public class Hero extends Character {
 
 		Character lastTarget = QuickSlotButton.lastTarget;
 		if (target != null && (lastTarget == null ||
-							!lastTarget.isAlive() || !lastTarget.isActive() ||
+							!lastTarget.ActionHealth.isAlive() || !lastTarget.ActionSpendTime.isActive() ||
 							lastTarget.alignment == Alignment.ALLY ||
 							!fieldOfView[lastTarget.position])){
 			QuickSlotButton.target(target);
@@ -1653,8 +1658,8 @@ public class Hero extends Character {
 					Chasm.heroJump(this);
 					interruptHeroPlannedAction();
 				} else {
-					getCharacterMovement().setFlying(false);
-					removeBuff(getBuff(Levitation.class)); //directly remove to prevent cell pressing
+					isFlying = false;
+					ActionBuffs.removeBuff(this,getBuff(Levitation.class)); //directly remove to prevent cell pressing
 					Chasm.heroFall(target);
 				}
 				canSelfTrample = false;
@@ -1875,7 +1880,7 @@ public class Hero extends Character {
 			return false;
 		}
 
-		boolean added = super.addBuff( buff );
+		boolean added = ActionBuffs.addBuff( this, buff );
 
 		if (sprite != null && added) {
 			String msg = buff.heroMessage();
@@ -1896,7 +1901,7 @@ public class Hero extends Character {
 	
 	@Override
 	public boolean removeBuff(Buff buff ) {
-		if (super.removeBuff( buff )) {
+		if (ActionBuffs.removeBuff( this,buff )) {
 			BuffIndicator.refreshHero();
 			return true;
 		}
@@ -1904,8 +1909,8 @@ public class Hero extends Character {
 	}
 	
 	@Override
-	public float getStealth() {
-		float stealth = super.getStealth();
+	public float getStealth1() {
+		float stealth = super.getStealth1();
 		
 		if (belongings.armor() != null){
 			stealth = belongings.armor().stealthFactor(this, stealth);
@@ -2057,14 +2062,14 @@ public class Hero extends Character {
 	private Berserk berserk;
 
 	@Override
-	public boolean isAlive() {
+	public boolean ActionHealth.isAlive() {
 		
 		if (healthPoints <= 0){
 			if (berserk == null) berserk = getBuff(Berserk.class);
 			return berserk != null && berserk.berserking();
 		} else {
 			berserk = null;
-			return super.isAlive();
+			return super.ActionHealth.isAlive();
 		}
 	}
 
@@ -2197,7 +2202,7 @@ public class Hero extends Character {
 		curAction = null;
 
 		if (!ready) {
-			super.onOperateComplete();
+			com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler.nextActorToPlay(this);
 		}
 	}
 
@@ -2218,7 +2223,7 @@ public class Hero extends Character {
 
 	public boolean search( boolean intentional ) {
 		
-		if (!isAlive()) return false;
+		if (!com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth.isAlive(this)) return false;
 		
 		boolean smthFound = false;
 
@@ -2401,7 +2406,7 @@ public class Hero extends Character {
 
 	@Override
 	public void DungeonTurnsHandler.nextActorToPlay(this);() {
-		if (isAlive())
+		if (ActionHealth.isAlive())
 			super.DungeonTurnsHandler.nextActorToPlay(this);();
 	}
 

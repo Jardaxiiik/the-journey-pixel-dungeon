@@ -39,7 +39,7 @@ public class Corruption extends AllyBuff {
 	public static void corruptionHeal(Character target){
 		target.getCharacterHealth().setHealthPoints(target.getCharacterHealth().getHealthMax());
 		target.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(target.healthMax), FloatingText.HEALING);
-		for (Buff buff : target.getBuffs()) {
+		for (Buff buff : target.buffs) {
 			if (buff.type == Buff.buffType.NEGATIVE
 					&& !(buff instanceof SoulMark)) {
 				buff.detach();

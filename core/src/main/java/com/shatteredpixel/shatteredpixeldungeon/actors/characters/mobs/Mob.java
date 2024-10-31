@@ -24,9 +24,12 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -97,7 +100,7 @@ public abstract class Mob extends Character {
 	{
 		actPriority = MOB_PRIO;
 		
-		alignment = Alignment.ENEMY;
+		alignment = CharacterAlignment.ENEMY;
 	}
 
 	public AiState SLEEPING     = new Sleeping();
@@ -234,7 +237,7 @@ public abstract class Mob extends Character {
 		
 		enemy = chooseEnemy();
 		
-		boolean enemyInFOV = enemy != null && enemy.isAlive() && fieldOfView[enemy.position] && enemy.invisible <= 0;
+		boolean enemyInFOV = enemy != null && ActionHealth.isAlive(enemy) && fieldOfView[enemy.position] && enemy.invisible <= 0;
 
 		//prevents action, but still updates enemy seen status
 		if (getBuff(Feint.AfterImage.FeintConfusion.class) != null){
@@ -285,7 +288,7 @@ public abstract class Mob extends Character {
 		//find a new enemy if..
 		boolean newEnemy = false;
 		//we have no enemy, or the current one is dead/missing
-		if ( enemy == null || !enemy.isAlive() || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING) {
+		if ( enemy == null || !ActionHealth.isAlive(enemy) || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING) {
 			newEnemy = true;
 		//We are amoked and current enemy is the hero
 		} else if (getBuff( Amok.class ) != null && enemy == Dungeon.hero) {
@@ -411,7 +414,7 @@ public abstract class Mob extends Character {
 	
 	@Override
 	public boolean addBuff(Buff buff ) {
-		if (super.addBuff( buff )) {
+		if (ActionBuffs.addBuff(this, buff )) {
 			if (buff instanceof Amok || buff instanceof AllyBuff) {
 				state = HUNTING;
 			} else if (buff instanceof Terror || buff instanceof Dread) {
@@ -427,7 +430,7 @@ public abstract class Mob extends Character {
 	
 	@Override
 	public boolean removeBuff(Buff buff ) {
-		if (super.removeBuff( buff )) {
+		if (ActionBuffs.removeBuff( this,buff )) {
 			if ((buff instanceof Terror && getBuff(Dread.class) == null)
 					|| (buff instanceof Dread && getBuff(Terror.class) == null)) {
 				if (enemySeen) {
@@ -643,7 +646,7 @@ public abstract class Mob extends Character {
 		ActionAttack.attack( this, enemy, 1f, 0f, 1f);
 		Invisibility.dispel(this);
 		spendTimeAdjusted( getAttackDelay() );
-		super.onAttackComplete();
+		DungeonTurnsHandler.nextActorToPlay(this);
 	}
 	
 	@Override
@@ -724,12 +727,12 @@ public abstract class Mob extends Character {
 	public boolean isSurprisedBy(Character enemy, boolean attacking ){
 		return enemy == Dungeon.hero
 				&& (enemy.invisible > 0 || !enemySeen || (fieldOfView != null && fieldOfView.length == Dungeon.level.length() && !fieldOfView[enemy.position]))
-				&& (!attacking || enemy.canDoSurpriseAttack());
+				&& (!attacking || ActionAttack.canDoSurpriseAttack(enemy));
 	}
 
 	//whether the hero should interact with the mob (true) or attack it (false)
 	public boolean shouldHeroInteract(){
-		return alignment != Alignment.ENEMY && getBuff(Amok.class) == null;
+		return alignment != CharacterAlignment.ENEMY && getBuff(Amok.class) == null;
 	}
 
 	public void startHunting(Character ch ) {
@@ -777,7 +780,7 @@ public abstract class Mob extends Character {
 			GameScene.updateFog(position, 2);
 		}
 
-		if (Dungeon.hero.isAlive()) {
+		if (Dungeon.hero.ActionHealth.isAlive()) {
 			
 			if (alignment == Alignment.ENEMY) {
 				Statistics.enemiesSlain++;
@@ -835,7 +838,7 @@ public abstract class Mob extends Character {
 
 		}
 
-		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[position]) {
+		if (Dungeon.hero.ActionHealth.isAlive() && !Dungeon.level.heroFOV[position]) {
 			GLog.i( Messages.get(this, "died") );
 		}
 
@@ -976,7 +979,7 @@ public abstract class Mob extends Character {
 	
 	public void yell( String str ) {
 		GLog.newLine();
-		GLog.n( "%s: \"%s\" ", Messages.titleCase(getName()), str );
+		GLog.n( "%s: \"%s\" ", Messages.titleCase(ActionAppearance.getName(this)), str );
 	}
 
 	public interface AiState {
@@ -991,7 +994,7 @@ public abstract class Mob extends Character {
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 
 			//debuffs cause mobs to wake as well
-			for (Buff b : getBuffs()){
+			for (Buff b : buffs){
 				if (b.type == Buff.buffType.NEGATIVE){
 					awaken(enemyInFOV);
 					if (state == SLEEPING){
@@ -1003,7 +1006,7 @@ public abstract class Mob extends Character {
 
 			if (enemyInFOV) {
 
-				float enemyStealth = enemy.getStealth();
+				float enemyStealth = enemy.stealth;
 
 				if (enemy instanceof Hero && ((Hero) enemy).hasTalent(Talent.SILENT_STEPS)){
 					if (Dungeon.level.distance(position, enemy.position) >= 4 - ((Hero) enemy).pointsInTalent(Talent.SILENT_STEPS)) {
@@ -1058,7 +1061,7 @@ public abstract class Mob extends Character {
 
 		@Override
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
-			if (enemyInFOV && (justAlerted || Random.Float( DungeonCharactersHandler.getDistanceToOtherCharacter((Character) this, enemy ) / 2f + enemy.getStealth() ) < 1)) {
+			if (enemyInFOV && (justAlerted || Random.Float( DungeonCharactersHandler.getDistanceToOtherCharacter((Character) this, enemy ) / 2f + enemy.stealth ) < 1)) {
 
 				return noticeEnemy();
 
@@ -1121,7 +1124,7 @@ public abstract class Mob extends Character {
 		@Override
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted ) {
 			enemySeen = enemyInFOV;
-			if (enemyInFOV && !isCharmedBy( enemy ) && canAttackEnemy( enemy )) {
+			if (enemyInFOV && !ActionBuffs.isCharmedBy(this,enemy) && canAttackEnemy( enemy )) {
 
 				target = enemy.position;
 				return attackCharacter( enemy );

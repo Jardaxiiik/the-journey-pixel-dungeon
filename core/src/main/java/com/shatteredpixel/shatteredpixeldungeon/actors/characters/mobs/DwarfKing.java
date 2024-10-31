@@ -512,7 +512,7 @@ public class DwarfKing extends Mob {
 			summonsMade = 1; //monk/warlock on 3rd summon
 			sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.4f, 2 );
 			Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
-			yell(  Messages.get(this, "enraged", Dungeon.hero.getName()) );
+			yell(  Messages.get(this, "enraged", ActionAppearance.getName(Dungeon.hero)) );
 			BossHealthBar.bleed(true);
 			Game.runOnRenderThread(new Callback() {
 				@Override
@@ -531,8 +531,8 @@ public class DwarfKing extends Mob {
 	}
 
 	@Override
-	public boolean isAlive() {
-		return super.isAlive() || phase != 3;
+	public boolean ActionHealth.isAlive() {
+		return super.ActionHealth.isAlive() || phase != 3;
 	}
 
 	@Override
@@ -697,7 +697,7 @@ public class DwarfKing extends Mob {
 							target.receiveDamageFromSource(target.healthMax /12, new KingDamager());
 						}
 					}
-					if (!ch.isAlive() && ch == Dungeon.hero) {
+					if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero) {
 						Dungeon.fail(DwarfKing.class);
 						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", Messages.get(DwarfKing.class, "name"))));
 					}

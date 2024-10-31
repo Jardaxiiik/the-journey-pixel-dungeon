@@ -76,7 +76,7 @@ public class WandOfTransfusion extends Wand {
 			//this wand does different things depending on the target.
 			
 			//heals/shields an ally or a charmed enemy while damaging self
-			if (ch.alignment == Character.Alignment.ALLY || ch.getBuff(Charm.class) != null){
+			if (ch.alignment == CharacterAlignment.ALLY || ch.getBuff(Charm.class) != null){
 				
 				// 5% of max hp
 				int selfDmg = Math.round(curUser.healthMax *0.05f);
@@ -108,7 +108,7 @@ public class WandOfTransfusion extends Wand {
 
 			//for enemies...
 			//(or for mimics which are hiding, special case)
-			} else if (ch.alignment == Character.Alignment.ENEMY || ch instanceof Mimic) {
+			} else if (ch.alignment == CharacterAlignment.ENEMY || ch instanceof Mimic) {
 
 				//grant a self-shield, and...
 				Buff.affect(curUser, Barrier.class).setShield((5 + buffedLvl()));
@@ -139,7 +139,7 @@ public class WandOfTransfusion extends Wand {
 		
 		curUser.receiveDamageFromSource(damage, this);
 
-		if (!curUser.isAlive()){
+		if (!curUser.ActionHealth.isAlive()){
 			Badges.validateDeathFromFriendlyMagic();
 			Dungeon.fail( this );
 			GLog.n( Messages.get(this, "ondeath") );

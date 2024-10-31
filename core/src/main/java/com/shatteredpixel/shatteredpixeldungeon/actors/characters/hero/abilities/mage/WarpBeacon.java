@@ -131,7 +131,7 @@ public class WarpBeacon extends ArmorAbility {
 									Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 								}
 
-								if (existing.isAlive()){
+								if (existing.ActionHealth.isAlive()){
 									Character toPush = Character.hasProperty(existing, Character.Property.IMMOVABLE) ? hero : existing;
 
 									ArrayList<Integer> candidates = new ArrayList<>();

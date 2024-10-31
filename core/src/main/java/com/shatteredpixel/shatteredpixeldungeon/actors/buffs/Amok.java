@@ -41,10 +41,10 @@ public class Amok extends FlavourBuff {
 	@Override
 	public void detach() {
 		//if our target is an enemy, reset any enemy-to-enemy aggro involving it
-		if (target.isAlive()) {
-			if (target.alignment == Character.Alignment.ENEMY) {
+		if (target.ActionHealth.isAlive()) {
+			if (target.alignment == CharacterAlignment.ENEMY) {
 				for (Mob m : Dungeon.level.mobs) {
-					if (m.alignment == Character.Alignment.ENEMY && m.isTargeting(target)) {
+					if (m.alignment == CharacterAlignment.ENEMY && m.isTargeting(target)) {
 						m.startHunting(null);
 					}
 					if (target instanceof Mob && ((Mob) target).isTargeting(m)){

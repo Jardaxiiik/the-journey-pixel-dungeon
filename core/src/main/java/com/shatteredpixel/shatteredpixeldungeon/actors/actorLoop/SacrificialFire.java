@@ -215,7 +215,7 @@ public class SacrificialFire extends ActorLoop {
 
 		@Override
 		public void detach() {
-			if (!target.isAlive()) {
+			if (!target.ActionHealth.isAlive()) {
 				SacrificialFire fire = (SacrificialFire) Dungeon.level.blobs.get(SacrificialFire.class);
 				if (fire != null) {
 					fire.sacrifice(target);

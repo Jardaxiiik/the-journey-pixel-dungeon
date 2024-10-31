@@ -124,7 +124,7 @@ public class DistortionTrap extends Trap{
 						case 2:
 							mob = Mimic.spawnAt(point, false);
 							((Mimic)mob).stopHiding();
-							mob.alignment = Character.Alignment.ENEMY;
+							mob.alignment = CharacterAlignment.ENEMY;
 							break;
 						case 3:
 							mob = Statue.random(false);

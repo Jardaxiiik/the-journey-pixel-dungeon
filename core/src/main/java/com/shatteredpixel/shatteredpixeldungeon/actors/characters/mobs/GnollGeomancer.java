@@ -288,9 +288,9 @@ public class GnollGeomancer extends Mob {
 	private boolean inFinalBracket = false;
 
 	@Override
-	public boolean isAlive() {
+	public boolean ActionHealth.isAlive() {
 		//cannot die until final HP bracket, regardless of incoming dmg
-		return super.isAlive() || !inFinalBracket;
+		return super.ActionHealth.isAlive() || !inFinalBracket;
 	}
 
 	public void linkSapper( GnollSapper sapper ){
@@ -303,7 +303,7 @@ public class GnollGeomancer extends Mob {
 	public boolean hasSapper(){
 		return sapperID != -1
 				&& DungeonActorsHandler.getById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper) DungeonActorsHandler.getById(sapperID)).isAlive();
+				&& ((GnollSapper) DungeonActorsHandler.getById(sapperID)).ActionHealth.isAlive();
 	}
 
 	public void loseSapper(){
@@ -697,9 +697,9 @@ public class GnollGeomancer extends Mob {
 						if (ch != null && !(ch instanceof GnollGeomancer)){
 							ch.receiveDamageFromSource(Random.NormalIntRange(6, 12), new GnollGeomancer.Boulder());
 
-							if (ch.isAlive()){
+							if (ActionHealth.isAlive(ch)){
 								Buff.prolong( ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3 );
-							} else if (!ch.isAlive() && ch == Dungeon.hero) {
+							} else if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero) {
 								Badges.validateDeathFromEnemyMagic();
 								Dungeon.fail( source.getClass() );
 								GLog.n( Messages.get( GnollGeomancer.class, "rock_kill") );
@@ -799,7 +799,7 @@ public class GnollGeomancer extends Mob {
 		@Override
 		public void affectChar(Character ch) {
 			ch.receiveDamageFromSource(Random.NormalIntRange(6, 12), this);
-			if (ch.isAlive()) {
+			if (ActionHealth.isAlive(ch)) {
 				Buff.prolong(ch, Paralysis.class, ch instanceof GnollGuard ? 10 : 3);
 			} else if (ch == Dungeon.hero){
 				Dungeon.fail( target );

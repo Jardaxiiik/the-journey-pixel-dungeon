@@ -46,7 +46,7 @@ public class ScrollOfDread extends ExoticScroll {
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 
 		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob.alignment != Character.Alignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
+			if (mob.alignment != CharacterAlignment.ALLY && Dungeon.level.heroFOV[mob.position]) {
 				if (!mob.isImmuneToEffectType(Dread.class)){
 					Buff.affect( mob, Dread.class ).object = curUser.getId();
 				} else {

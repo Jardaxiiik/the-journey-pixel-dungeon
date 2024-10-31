@@ -138,10 +138,10 @@ public class SpectralNecromancer extends Necromancer {
 				Character blocker = DungeonCharactersHandler.getCharacterOnPosition(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.receiveDamageFromSource( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
-					if (blocker == Dungeon.hero && !blocker.isAlive()){
+					if (blocker == Dungeon.hero && !blocker.ActionHealth.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
-						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 					}
 				}
 

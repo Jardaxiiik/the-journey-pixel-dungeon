@@ -72,7 +72,7 @@ public class Flail extends MeleeWeapon {
 				{ actPriority = VFX_PRIORITY; }
 				@Override
                 public boolean playGameTurn() {
-					if (owner instanceof Hero && !target.isAlive()){
+					if (owner instanceof Hero && !target.ActionHealth.isAlive()){
 						onAbilityKill((Hero)owner, target);
 					}
 					DungeonActors.removeActor(this);

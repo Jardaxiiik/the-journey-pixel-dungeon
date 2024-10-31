@@ -46,7 +46,7 @@ public class CleansingDart extends TippedDart {
 			PotionOfCleansing.cleanse(defender, PotionOfCleansing.Cleanse.DURATION*2f);
 			return 0;
 		} else {
-			for (Buff b : defender.getBuffs()){
+			for (Buff b : defender.buffs){
 				if (!(b instanceof ChampionEnemy)
 						&& b.type == Buff.buffType.POSITIVE
 						&& !(b instanceof Crossbow.ChargedShot)){
@@ -54,7 +54,7 @@ public class CleansingDart extends TippedDart {
 				}
 			}
 			//for when cleansed effects were keeping defender alive (e.g. raging brutes)
-			if (!defender.isAlive()){
+			if (!defender.ActionHealth.isAlive()){
 				defender.die(attacker);
 				return super.proc(attacker, defender, damage);
 			}

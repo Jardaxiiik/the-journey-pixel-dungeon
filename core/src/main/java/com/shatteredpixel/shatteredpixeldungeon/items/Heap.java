@@ -98,7 +98,7 @@ public class Heap implements Bundlable {
 			if (Wraith.spawnAt( pos ) == null) {
 				hero.sprite.emitter().burst( ShadowParticle.CURSE, 6 );
 				ActionHealth.receiveDamageFromSource( hero,hero.healthPoints / 2, this );
-				if (!hero.isAlive()){
+				if (!hero.ActionHealth.isAlive()){
 					Dungeon.fail(Wraith.class);
 					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", Messages.get(Wraith.class, "name"))));
 				}

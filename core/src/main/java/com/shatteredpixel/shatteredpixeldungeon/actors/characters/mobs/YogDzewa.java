@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDeath;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
@@ -181,7 +182,7 @@ public class YogDzewa extends Mob {
 		//mob logic
 		enemy = chooseEnemy();
 
-		enemySeen = enemy != null && enemy.isAlive() && fieldOfView[enemy.position] && enemy.invisible <= 0;
+		enemySeen = enemy != null && ActionHealth.isAlive(enemy) && fieldOfView[enemy.position] && enemy.invisible <= 0;
 		//end of char/mob logic
 
 		if (phase == 0){
@@ -256,13 +257,13 @@ public class YogDzewa extends Mob {
 							ch.sprite.flash();
 							CellEmitter.center(position).burst(PurpleParticle.BURST, Random.IntRange(1, 2));
 						}
-						if (!ch.isAlive() && ch == Dungeon.hero) {
+						if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero) {
 							Badges.validateDeathFromEnemyMagic();
 							Dungeon.fail(this);
-							GLog.n(Messages.get(Character.class, "kill", getName()));
+							GLog.n(Messages.get(Character.class, "kill", ActionAppearance.getName(this)));
 						}
 					} else {
-						ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.getDefenseVerb() );
+						ch.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(ch) );
 					}
 				}
 				targetedCells.clear();
@@ -379,8 +380,8 @@ public class YogDzewa extends Mob {
 	}
 
 	@Override
-	public boolean isAlive() {
-		return super.isAlive() || phase != 5;
+	public boolean ActionHealth.isAlive() {
+		return super.ActionHealth.isAlive() || phase != 5;
 	}
 
 	@Override
@@ -473,7 +474,7 @@ public class YogDzewa extends Mob {
 
 	public void updateVisibility( Level level ){
 		int viewDistance = 4;
-		if (phase > 1 && isAlive()){
+		if (phase > 1 && ActionHealth.isAlive()){
 			viewDistance = 4 - (phase-1);
 		}
 		level.viewDistance = (int)GameMath.gate(1, viewDistance, level.viewDistance);

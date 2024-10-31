@@ -93,7 +93,7 @@ public class Eye extends Mob {
 		if (beamCooldown == 0) {
 			Ballistica aim = new Ballistica(position, enemy.position, Ballistica.STOP_SOLID);
 
-			if (enemy.invisible == 0 && !isCharmedBy(enemy) && fieldOfView[enemy.position]
+			if (enemy.invisible == 0 && !ActionBuffs.isCharmedBy(this,enemy) && fieldOfView[enemy.position]
 					&& (super.canAttackEnemy(enemy) || aim.subPath(1, aim.dist).contains(enemy.position))){
 				beam = aim;
 				beamTarget = enemy.position;
@@ -193,13 +193,13 @@ public class Eye extends Mob {
 					CellEmitter.center( pos ).burst( PurpleParticle.BURST, Random.IntRange( 1, 2 ) );
 				}
 
-				if (!ch.isAlive() && ch == Dungeon.hero) {
+				if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "deathgaze_kill") );
 				}
 			} else {
-				ch.sprite.showStatus( CharSprite.NEUTRAL,  ch.getDefenseVerb() );
+				ch.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(ch) );
 			}
 		}
 

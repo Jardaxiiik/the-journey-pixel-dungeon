@@ -324,7 +324,7 @@ public class Toolbar extends Component {
 
 			@Override
 			protected void onClick() {
-				if (Dungeon.hero != null && (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
+				if (Dungeon.hero != null && (Dungeon.hero.ready || !Dungeon.hero.ActionHealth.isAlive())) {
 					if (SPDSettings.interfaceSize() == 2) {
 						GameScene.toggleInvPane();
 					} else {
@@ -645,8 +645,8 @@ public class Toolbar extends Component {
 	public void update() {
 		super.update();
 		
-		if (lastEnabled != (Dungeon.hero.ready && Dungeon.hero.isAlive())) {
-			lastEnabled = (Dungeon.hero.ready && Dungeon.hero.isAlive());
+		if (lastEnabled != (Dungeon.hero.ready && Dungeon.hero.ActionHealth.isAlive())) {
+			lastEnabled = (Dungeon.hero.ready && Dungeon.hero.ActionHealth.isAlive());
 			
 			for (Gizmo tool : members.toArray(new Gizmo[0])) {
 				if (tool instanceof Tool) {
@@ -655,7 +655,7 @@ public class Toolbar extends Component {
 			}
 		}
 		
-		if (!Dungeon.hero.isAlive()) {
+		if (!Dungeon.hero.ActionHealth.isAlive()) {
 			btnInventory.enable(true);
 		}
 	}

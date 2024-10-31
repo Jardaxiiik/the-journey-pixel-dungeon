@@ -128,11 +128,11 @@ public class CrystalGuardian extends Mob{
 	}
 
 	@Override
-	public boolean isAlive() {
+	public boolean ActionHealth.isAlive() {
 		if (healthPoints <= 0){
 			healthPoints = 1;
 
-			for (Buff b : getBuffs()){
+			for (Buff b : buffs){
 				if (!(b instanceof Doom || b instanceof Cripple)) {
 					b.detach();
 				}
@@ -143,7 +143,7 @@ public class CrystalGuardian extends Mob{
 				if (sprite != null) ((CrystalGuardianSprite) sprite).crumple();
 			}
 		}
-		return super.isAlive();
+		return super.ActionHealth.isAlive();
 	}
 
 	@Override

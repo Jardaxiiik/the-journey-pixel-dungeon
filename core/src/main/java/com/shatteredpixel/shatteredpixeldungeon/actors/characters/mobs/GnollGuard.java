@@ -60,7 +60,7 @@ public class GnollGuard extends Mob {
 	public boolean hasSapper(){
 		return sapperID != -1
 				&& DungeonActors.getById(sapperID) instanceof GnollSapper
-				&& ((GnollSapper) DungeonActors.getById(sapperID)).isAlive();
+				&& ((GnollSapper) DungeonActors.getById(sapperID)).ActionHealth.isAlive();
 	}
 
 	public void loseSapper(){

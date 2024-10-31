@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.DarkBlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.EmoIcon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
@@ -222,10 +223,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 		isMoving = true;
 		
-		if (visible && Dungeon.level.water[from] && !ch.getCharacterMovement().isFlying()) {
+		if (visible && Dungeon.level.water[from] && !ch.isFlying) {
 			GameScene.ripple( from );
 		}
-
 	}
 	
 	public static void setMoveInterval( float interval){
@@ -748,13 +748,12 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			if (anim == attack) {
 				
 				idle();
-				ch.onAttackComplete();
+				DungeonTurnsHandler.nextActorToPlay(ch);
 				
 			} else if (anim == operate) {
 				
 				idle();
-				ch.onOperateComplete();
-				
+				DungeonTurnsHandler.nextActorToPlay(ch);
 			}
 			
 		}

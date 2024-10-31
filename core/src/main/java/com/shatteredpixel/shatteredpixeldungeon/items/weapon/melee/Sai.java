@@ -69,7 +69,7 @@ public class Sai extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
@@ -96,7 +96,7 @@ public class Sai extends MeleeWeapon {
 				}
 
 				boolean hit = hero.attack(enemy, 1f + boostPerHit*recentHits, 0, Character.INFINITE_ACCURACY);
-				if (hit && !enemy.isAlive()){
+				if (hit && !ActionHealth.isAlive(enemy)){
 					wep.onAbilityKill(hero, enemy);
 				}
 

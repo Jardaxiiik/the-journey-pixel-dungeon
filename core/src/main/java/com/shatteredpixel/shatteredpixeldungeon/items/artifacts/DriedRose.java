@@ -181,7 +181,7 @@ public class DriedRose extends Artifact {
 					hero.sprite.operate(hero.position);
 
 					if (!firstSummon) {
-						ghost.yell( Messages.get(GhostHero.class, "hello", Messages.titleCase(Dungeon.hero.getName())) );
+						ghost.yell( Messages.get(GhostHero.class, "hello", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))) );
 						Sample.INSTANCE.play( Assets.Sounds.GHOST );
 						firstSummon = true;
 						
@@ -393,7 +393,7 @@ public class DriedRose extends Artifact {
 				}
 			}
 
-			if (ghost != null && !ghost.isAlive()){
+			if (ghost != null && !ghost.ActionHealth.isAlive()){
 				ghost = null;
 			}
 			
@@ -584,7 +584,7 @@ public class DriedRose extends Artifact {
 				this.receiveDamageFromSource(1, new NoRoseDamage());
 			}
 			
-			if (!isAlive()) {
+			if (!ActionHealth.isAlive()) {
 				return true;
 			}
 			return super.playGameTurn();
@@ -636,9 +636,9 @@ public class DriedRose extends Artifact {
 			damage = ActionAttack.attackProc(this,enemy, damage);
 			if (rose != null && rose.weapon != null) {
 				damage = rose.weapon.proc( this, enemy, damage );
-				if (!enemy.isAlive() && enemy == Dungeon.hero){
+				if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero){
 					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 				}
 			}
 			return damage;
@@ -697,8 +697,8 @@ public class DriedRose extends Artifact {
 		}
 		
 		@Override
-		public float getStealth() {
-			float stealth = super.getStealth();
+		public float getStealth1() {
+			float stealth = super.getStealth1();
 			
 			if (rose != null && rose.armor != null){
 				stealth = rose.armor.stealthFactor(this, stealth);

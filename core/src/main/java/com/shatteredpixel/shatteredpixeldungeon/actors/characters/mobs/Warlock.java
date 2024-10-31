@@ -120,13 +120,13 @@ public class Warlock extends Mob implements Callback {
 			dmg = Math.round(dmg * AscensionChallenge.statModifier(this));
 			enemy.receiveDamageFromSource( dmg, new DarkBolt() );
 			
-			if (enemy == Dungeon.hero && !enemy.isAlive()) {
+			if (enemy == Dungeon.hero && !ActionHealth.isAlive(enemy)) {
 				Badges.validateDeathFromEnemyMagic();
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "bolt_kill") );
 			}
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 		}
 	}
 	

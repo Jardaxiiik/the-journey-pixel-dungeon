@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.huntress;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -145,12 +146,12 @@ public class SpiritHawk extends ArmorAbility {
 		{
 			spriteClass = HawkSprite.class;
 
-			healthPoints = healthMax = 10;
+			characterWithStats.healthPoints = characterWithStats.healthMax = 10;
 			evasionSkill = 60;
 
-			getCharacterMovement().setFlying(true);
-			viewDistance = (int)GameMath.gate(6, 6+Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE), 8);
-			baseSpeed = 2f + Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
+			characterMovement.isFlying = true;
+			characterVision.viewDistance = (int)GameMath.gate(6, 6+Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE), 8);
+			characterMovement.baseMovementSpeed = 2f + Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
 			attacksAutomatically = false;
 
 			immunities.addAll(new BlobImmunity().immunities());
@@ -170,7 +171,7 @@ public class SpiritHawk extends ArmorAbility {
 			if (Dungeon.hero.hasTalent(Talent.SWIFT_SPIRIT) &&
 					dodgesUsed < 2*Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)) {
 				dodgesUsed++;
-				return Character.INFINITE_EVASION;
+				return INFINITE_EVASION;
 			}
 			return ActionHit.getEvasionAgainstAttacker(this,enemy);
 		}
@@ -182,7 +183,7 @@ public class SpiritHawk extends ArmorAbility {
 
 		@Override
 		public int attackProc_1(Character enemy, int damage) {
-			damage = ActionAttack(this, enemy, damage );
+			damage = ActionAttack.attackProc(this, enemy, damage );
 			switch (Dungeon.hero.pointsInTalent(Talent.GO_FOR_THE_EYES)){
 				case 1:
 					Buff.prolong( enemy, Blindness.class, 2);
@@ -213,7 +214,7 @@ public class SpiritHawk extends ArmorAbility {
 				return true;
 			}
 			viewDistance = 6+Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE);
-			baseSpeed = 2f + Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT)/2f;
+            baseMovementSpeed = 2f + (Dungeon.hero.pointsInTalent(Talent.SWIFT_SPIRIT) / 2f);
 			boolean result = super.playGameTurn();
 			Dungeon.level.updateFieldOfView( this, fieldOfView );
 			GameScene.updateFog(position, viewDistance+(int)Math.ceil(getSpeed()));

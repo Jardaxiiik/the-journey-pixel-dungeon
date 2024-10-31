@@ -122,7 +122,7 @@ public class WndWandmaker extends Window {
 			Dungeon.level.dropItemOnPosition( reward, wandmaker.position).sprite.drop();
 		}
 		
-		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(Dungeon.hero.getName())) );
+		wandmaker.yell( Messages.get(this, "farewell", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))) );
 		wandmaker.destroy();
 		
 		wandmaker.sprite.die();

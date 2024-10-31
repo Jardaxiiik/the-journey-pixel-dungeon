@@ -46,7 +46,7 @@ public class StoneOfAggression extends Runestone {
 		Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 		
 		if (ch != null) {
-			if (ch.alignment == Character.Alignment.ENEMY) {
+			if (ch.alignment == CharacterAlignment.ENEMY) {
 				Buff.prolong(ch, Aggression.class, Aggression.DURATION / 4f);
 			} else {
 				Buff.prolong(ch, Aggression.class, Aggression.DURATION);
@@ -79,7 +79,7 @@ public class StoneOfAggression extends Runestone {
 
 		@Override
 		public float iconFadePercent() {
-			if (target.alignment == Character.Alignment.ENEMY){
+			if (target.alignment == CharacterAlignment.ENEMY){
 				return Math.max(0, (DURATION/4f - visualcooldown()) / (DURATION/4f));
 			} else {
 				return Math.max(0, (DURATION - visualcooldown()) / DURATION);
@@ -89,10 +89,10 @@ public class StoneOfAggression extends Runestone {
 		@Override
 		public void detach() {
 			//if our target is an enemy, reset any enemy-to-enemy aggro involving it
-			if (target.isAlive()) {
-				if (target.alignment == Character.Alignment.ENEMY) {
+			if (target.ActionHealth.isAlive()) {
+				if (target.alignment == CharacterAlignment.ENEMY) {
 					for (Mob m : Dungeon.level.mobs) {
-						if (m.alignment == Character.Alignment.ENEMY && m.isTargeting(target)) {
+						if (m.alignment == CharacterAlignment.ENEMY && m.isTargeting(target)) {
 							m.startHunting(null);
 						}
 						if (target instanceof Mob && ((Mob) target).isTargeting(m)){

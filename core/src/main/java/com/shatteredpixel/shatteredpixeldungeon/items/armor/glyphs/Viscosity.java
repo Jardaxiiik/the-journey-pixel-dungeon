@@ -149,11 +149,11 @@ public class Viscosity extends Glyph {
 		
 		@Override
 		public boolean playGameTurn() {
-			if (target.isAlive()) {
+			if (target.ActionHealth.isAlive()) {
 
 				int damageThisTick = Math.max(1, (int)(damage*0.1f));
 				target.receiveDamageFromSource( damageThisTick, this );
-				if (target == Dungeon.hero && !target.isAlive()) {
+				if (target == Dungeon.hero && !target.ActionHealth.isAlive()) {
 
 					Badges.validateDeathFromFriendlyMagic();
 

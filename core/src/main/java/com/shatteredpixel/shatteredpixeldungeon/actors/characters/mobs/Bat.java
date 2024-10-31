@@ -37,7 +37,7 @@ public class Bat extends Mob {
 		
 		healthPoints = healthMax = 30;
 		evasionSkill = 15;
-		baseSpeed = 2f;
+		baseMovementSpeed = 2f;
 		
 		EXP = 7;
 		maxLvl = 15;

@@ -128,7 +128,7 @@ public class AscensionChallenge extends Buff {
 		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null
 				&& Dungeon.hero.getBuff(AscensionChallenge.class).stacks >= 2f){
 			for (Mob m : Dungeon.level.mobs){
-				if (m.alignment == Character.Alignment.ENEMY && DungeonCharactersHandler(m,Dungeon.hero) > 8) {
+				if (m.alignment == CharacterAlignment.ENEMY && DungeonCharactersHandler(m,Dungeon.hero) > 8) {
 					m.travelToPosition(Dungeon.hero.position);
 				}
 			}
@@ -138,7 +138,7 @@ public class AscensionChallenge extends Buff {
 	//mobs move at 2x speed when not hunting/fleeing at 4 stacks or higher
 	public static float enemySpeedModifier(Mob m){
 		if (Dungeon.hero.getBuff(AscensionChallenge.class) != null
-				&& m.alignment == Character.Alignment.ENEMY
+				&& m.alignment == CharacterAlignment.ENEMY
 				&& Dungeon.hero.getBuff(AscensionChallenge.class).stacks >= 4f
 				&& m.state != m.HUNTING && m.state != m.FLEEING){
 			return 2;
@@ -310,7 +310,7 @@ public class AscensionChallenge extends Buff {
 				target.receiveDamageFromSource((int)damageInc, this);
 				damageInc -= (int)damageInc;
 
-				if (target == Dungeon.hero && !target.isAlive()){
+				if (target == Dungeon.hero && !target.ActionHealth.isAlive()){
 					Badges.validateDeathFromFriendlyMagic();
 					GLog.n(Messages.get(this, "on_kill"));
 					Dungeon.fail(Amulet.class);

@@ -15,18 +15,18 @@ import java.util.ArrayList;
 public class ActionThrowItems {
 
     public static void throwItems(Character character){
-        Heap heap = Dungeon.level.heaps.get(character.getCharacterMovement().getPosition()());
+        Heap heap = Dungeon.level.heaps.get(character.position);
         if (heap != null && heap.type == Heap.Type.HEAP
                 && !(heap.peek() instanceof Tengu.BombAbility.BombItem)
                 && !(heap.peek() instanceof Tengu.ShockerAbility.ShockerItem)) {
             ArrayList<Integer> candidates = new ArrayList<>();
             for (int n : PathFinder.OFFSETS_NEIGHBOURS8){
-                if (Dungeon.level.passable[character.getCharacterMovement().getPosition()() +n]){
-                    candidates.add(character.getCharacterMovement().getPosition()() +n);
+                if (Dungeon.level.passable[character.position +n]){
+                    candidates.add(character.position+n);
                 }
             }
             if (!candidates.isEmpty()){
-                Dungeon.level.dropItemOnPosition( heap.pickUp(), Random.element(candidates) ).sprite.drop(character.getCharacterMovement().getPosition()());
+                Dungeon.level.dropItemOnPosition( heap.pickUp(), Random.element(candidates) ).sprite.drop(character.position);
             }
         }
     }

@@ -203,7 +203,7 @@ public abstract class Scroll extends Item {
 				updateQuickslot();
 			}
 			
-			if (Dungeon.hero.isAlive()) {
+			if (Dungeon.hero.ActionHealth.isAlive()) {
 				Catalog.setSeen(getClass());
 			}
 		}

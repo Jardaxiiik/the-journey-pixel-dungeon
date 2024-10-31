@@ -82,7 +82,7 @@ public class DeathMark extends ArmorAbility {
 		if (ch == null || !Dungeon.level.heroFOV[target]){
 			GLog.w(Messages.get(this, "no_target"));
 			return;
-		} else if (ch.alignment != Character.Alignment.ENEMY){
+		} else if (ch.alignment != CharacterAlignment.ENEMY){
 			GLog.w(Messages.get(this, "ally_target"));
 			return;
 		}
@@ -121,7 +121,7 @@ public class DeathMark extends ArmorAbility {
 				PathFinder.buildDistanceMap(ch.position, passable, 3);
 
 				for (Character near : DungeonCharactersHandler.getCharacters()) {
-					if (near != ch && near.alignment == Character.Alignment.ENEMY
+					if (near != ch && near.alignment == CharacterAlignment.ENEMY
 							&& PathFinder.distance[near.position] != Integer.MAX_VALUE) {
 						if (Dungeon.hero.pointsInTalent(Talent.FEAR_THE_REAPER) == 4) {
 							Buff.prolong(near, Terror.class, 5f).object = Dungeon.hero.getId();
@@ -191,14 +191,14 @@ public class DeathMark extends ArmorAbility {
 		public void detach() {
 			super.detach();
 			target.deathMarked = false;
-			if (!target.isAlive()){
+			if (!target.ActionHealth.isAlive()){
 				target.sprite.flash();
 				target.sprite.bloodBurstA(target.sprite.center(), target.healthMax *2);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STAB);
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
 				target.die(this);
 				int shld = Math.round(initialHP * (0.125f*Dungeon.hero.pointsInTalent(Talent.DEATHLY_DURABILITY)));
-				if (shld > 0 && target.alignment != Character.Alignment.ALLY){
+				if (shld > 0 && target.alignment != CharacterAlignment.ALLY){
 					Dungeon.hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shld), FloatingText.SHIELDING);
 					Buff.affect(Dungeon.hero, Barrier.class).setShield(shld);
 				}

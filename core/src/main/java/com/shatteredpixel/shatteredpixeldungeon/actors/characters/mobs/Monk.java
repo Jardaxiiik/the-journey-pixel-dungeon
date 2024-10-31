@@ -116,7 +116,7 @@ public class Monk extends Mob {
 	public String getDefenseVerb() {
 		Focus f = getBuff(Focus.class);
 		if (f == null) {
-			return super.getDefenseVerb();
+			return ActionDefense.getDefenseVerb(this);
 		} else {
 			f.detach();
 			if (sprite != null && sprite.visible) {

@@ -29,7 +29,7 @@ import com.watabou.utils.Bundle;
 public class DirectableAlly extends NPC {
 
 	{
-		alignment = Character.Alignment.ALLY;
+		alignment = CharacterAlignment.ALLY;
 		intelligentAlly = true;
 		WANDERING = new Wandering();
 		HUNTING = new Hunting();
@@ -82,7 +82,7 @@ public class DirectableAlly extends NPC {
 	public void directTocell( int cell ){
 		if (!Dungeon.level.heroFOV[cell]
 				|| DungeonCharactersHandler.getCharacterOnPosition(cell) == null
-				|| (DungeonCharactersHandler.getCharacterOnPosition(cell) != Dungeon.hero && DungeonCharactersHandler.getCharacterOnPosition(cell).alignment != Character.Alignment.ENEMY)){
+				|| (DungeonCharactersHandler.getCharacterOnPosition(cell) != Dungeon.hero && DungeonCharactersHandler.getCharacterOnPosition(cell).alignment != CharacterAlignment.ENEMY)){
 			defendPos( cell );
 			return;
 		}
@@ -90,7 +90,7 @@ public class DirectableAlly extends NPC {
 		if (DungeonCharactersHandler.getCharacterOnPosition(cell) == Dungeon.hero){
 			followHero();
 
-		} else if (DungeonCharactersHandler.getCharacterOnPosition(cell).alignment == Character.Alignment.ENEMY){
+		} else if (DungeonCharactersHandler.getCharacterOnPosition(cell).alignment == CharacterAlignment.ENEMY){
 			targetChar(DungeonCharactersHandler.getCharacterOnPosition(cell));
 
 		}

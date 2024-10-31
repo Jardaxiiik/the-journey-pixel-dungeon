@@ -84,7 +84,7 @@ public class QuickSlotButton extends Button {
 		slot = new ItemSlot() {
 			@Override
 			protected void onClick() {
-				if (!Dungeon.hero.isAlive() || !Dungeon.hero.ready){
+				if (!Dungeon.hero.ActionHealth.isAlive() || !Dungeon.hero.ready){
 					return;
 				}
 				if (targetingSlot == slotNum) {
@@ -320,8 +320,8 @@ public class QuickSlotButton extends Button {
 
 		if (lastTarget != null &&
 				DungeonCharactersHandler.getCharacters().contains( lastTarget ) &&
-				lastTarget.isAlive() &&
-				lastTarget.alignment != Character.Alignment.ALLY &&
+				lastTarget.ActionHealth.isAlive() &&
+				lastTarget.alignment != CharacterAlignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.position]) {
 
 			targetingSlot = slotNum;
@@ -390,7 +390,7 @@ public class QuickSlotButton extends Button {
 	}
 	
 	public static void target( Character target ) {
-		if (target != null && target.alignment != Character.Alignment.ALLY) {
+		if (target != null && target.alignment != CharacterAlignment.ALLY) {
 			lastTarget = target;
 			
 			TargetHealthIndicator.instance.target( target );

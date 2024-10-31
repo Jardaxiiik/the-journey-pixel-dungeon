@@ -68,13 +68,13 @@ public class Skeleton extends Mob {
 		boolean heroKilled = false;
 		for (int i = 0; i < PathFinder.OFFSETS_NEIGHBOURS8.length; i++) {
 			Character ch = DungeonCharactersHandler.getCharacterOnPosition( position + PathFinder.OFFSETS_NEIGHBOURS8[i] );
-			if (ch != null && ch.isAlive()) {
+			if (ch != null && ActionHealth.isAlive(ch)) {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
 				//armor is 2x effective against bone explosion
 				damage = Math.max( 0,  damage - (ch.getArmorPointsRolled() + ch.getArmorPointsRolled()) );
 				ch.receiveDamageFromSource( damage, this );
-				if (ch == Dungeon.hero && !ch.isAlive()) {
+				if (ch == Dungeon.hero && !ActionHealth.isAlive(ch)) {
 					heroKilled = true;
 				}
 			}

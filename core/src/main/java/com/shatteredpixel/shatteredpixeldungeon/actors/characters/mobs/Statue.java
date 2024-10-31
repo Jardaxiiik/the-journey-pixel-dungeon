@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -118,7 +119,7 @@ public class Statue extends Mob {
 	
 	@Override
 	public boolean addBuff(Buff buff) {
-		if (super.addBuff(buff)) {
+		if (ActionBuffs.addBuff(this,buff)) {
 			if (state == PASSIVE && buff.type == Buff.buffType.NEGATIVE) {
 				state = HUNTING;
 			}
@@ -141,9 +142,9 @@ public class Statue extends Mob {
 	public int attackProc_1(Character enemy, int damage ) {
 		damage = ActionAttack.attackProc(this, enemy, damage );
 		damage = weapon.proc( this, enemy, damage );
-		if (!enemy.isAlive() && enemy == Dungeon.hero){
+		if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero){
 			Dungeon.fail(this);
-			GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+			GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 		}
 		return damage;
 	}

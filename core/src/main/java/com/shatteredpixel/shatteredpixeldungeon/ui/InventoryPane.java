@@ -412,8 +412,8 @@ public class InventoryPane extends Component {
 				lastTarget != null &&
 				targetingSlot != null &&
 				DungeonCharactersHandler.getCharacters().contains( lastTarget ) &&
-				lastTarget.isAlive() &&
-				lastTarget.alignment != Character.Alignment.ALLY &&
+				lastTarget.ActionHealth.isAlive() &&
+				lastTarget.alignment != CharacterAlignment.ALLY &&
 				Dungeon.level.heroFOV[lastTarget.position]) {
 
 			targeting = true;
@@ -447,8 +447,8 @@ public class InventoryPane extends Component {
 	public synchronized void update() {
 		super.update();
 
-		if (lastEnabled != (Dungeon.hero.ready || !Dungeon.hero.isAlive())) {
-			lastEnabled = (Dungeon.hero.ready || !Dungeon.hero.isAlive());
+		if (lastEnabled != (Dungeon.hero.ready || !Dungeon.hero.ActionHealth.isAlive())) {
+			lastEnabled = (Dungeon.hero.ready || !Dungeon.hero.ActionHealth.isAlive());
 
 			boolean lostInvent = Dungeon.hero.getBuff(LostInventory.class) != null;
 			for (InventorySlot b : equipped){
@@ -552,7 +552,7 @@ public class InventoryPane extends Component {
 				return;
 			}
 
-			if (!Dungeon.hero.isAlive() || !Dungeon.hero.ready){
+			if (!Dungeon.hero.ActionHealth.isAlive() || !Dungeon.hero.ready){
 				return;
 			}
 
@@ -581,7 +581,7 @@ public class InventoryPane extends Component {
 				return;
 			}
 
-			if (!Dungeon.hero.isAlive() || !Dungeon.hero.ready){
+			if (!Dungeon.hero.ActionHealth.isAlive() || !Dungeon.hero.ready){
 				return;
 			}
 

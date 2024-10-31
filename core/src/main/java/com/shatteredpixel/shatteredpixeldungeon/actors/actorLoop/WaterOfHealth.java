@@ -47,7 +47,7 @@ public class WaterOfHealth extends WellWater {
 	@Override
 	protected boolean affectHero( Hero hero ) {
 		
-		if (!hero.isAlive()) return false;
+		if (!hero.ActionHealth.isAlive()) return false;
 		
 		Sample.INSTANCE.play( Assets.Sounds.DRINK );
 

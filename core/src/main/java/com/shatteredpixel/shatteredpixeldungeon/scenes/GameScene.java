@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.GamesInProgress;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
@@ -436,7 +437,7 @@ public class GameScene extends PixelScene {
 							break;
 					}
 				}
-				if (Dungeon.hero.isAlive()) {
+				if (Dungeon.hero.ActionHealth.isAlive()) {
 					Badges.validateNoKilling();
 				}
 				break;
@@ -594,7 +595,7 @@ public class GameScene extends PixelScene {
 		fadeIn();
 
 		//re-show WndResurrect if needed
-		if (!Dungeon.hero.isAlive()){
+		if (!Dungeon.hero.ActionHealth.isAlive()){
 			//check if hero has an unblessed ankh
 			Ankh ankh = null;
 			for (Ankh i : Dungeon.hero.belongings.getAllItems(Ankh.class)){
@@ -697,7 +698,7 @@ public class GameScene extends PixelScene {
 
 		if (!com.watabou.noosa.particles.Emitter.freezeEmitters) water.offset( 0, -5 * Game.elapsed );
 
-		if (!DungeonTurnsHandler.processing() && Dungeon.hero.isAlive()) {
+		if (!DungeonTurnsHandler.processing() && Dungeon.hero.ActionHealth.isAlive()) {
 			if (actorThread == null || !actorThread.isAlive()) {
 				
 				actorThread = new Thread() {
@@ -1358,7 +1359,7 @@ public class GameScene extends PixelScene {
 	}
 	
 	public static void bossSlain() {
-		if (Dungeon.hero.isAlive()) {
+		if (Dungeon.hero.ActionHealth.isAlive()) {
 			Banner bossSlain = new Banner( BannerSprites.get( BannerSprites.Type.BOSS_SLAIN ) );
 			bossSlain.show( 0xFFFFFF, 0.3f, 5f );
 			scene.showBanner( bossSlain );
@@ -1501,7 +1502,7 @@ public class GameScene extends PixelScene {
 		ArrayList<String> names = new ArrayList<>();
 		for (Object obj : objects){
 			if (obj instanceof Hero)        names.add(((Hero) obj).className().toUpperCase(Locale.ENGLISH));
-			else if (obj instanceof Mob)    names.add(Messages.titleCase( ((Mob)obj).getName() ));
+			else if (obj instanceof Mob)    names.add(Messages.titleCase( ActionAppearance.getName(((Mob)obj)) ));
 			else if (obj instanceof Heap)   names.add(Messages.titleCase( ((Heap)obj).title() ));
 			else if (obj instanceof Plant)  names.add(Messages.titleCase( ((Plant) obj).name() ));
 			else if (obj instanceof Trap)   names.add(Messages.titleCase( ((Trap) obj).name() ));
@@ -1512,7 +1513,7 @@ public class GameScene extends PixelScene {
 	public static void examineObject(Object o){
 		if (o == Dungeon.hero){
 			GameScene.show( new WndHero() );
-		} else if ( o instanceof Mob && ((Mob) o).isActive() ){
+		} else if ( o instanceof Mob && ((Mob) o).ActionSpendTime.isActive() ){
 			GameScene.show(new WndInfoMob((Mob) o));
 			if (o instanceof Snake && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_SURPRISE_ATKS)){
 				GLog.p(Messages.get(Guidebook.class, "hint"));
@@ -1582,7 +1583,7 @@ public class GameScene extends PixelScene {
 			} else if (objects.get(0) instanceof Hero) {
 				textLines.add(0, Messages.get(GameScene.class, "go_here"));
 			} else if (objects.get(0) instanceof Mob) {
-				if (((Mob) objects.get(0)).alignment != Character.Alignment.ENEMY) {
+				if (((Mob) objects.get(0)).alignment != CharacterAlignment.ENEMY) {
 					textLines.add(0, Messages.get(GameScene.class, "interact"));
 				} else {
 					textLines.add(0, Messages.get(GameScene.class, "attack"));

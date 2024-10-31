@@ -80,7 +80,7 @@ public class Rapier extends MeleeWeapon {
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 		//duelist can lunge out of her FOV, but this wastes the ability instead of cancelling if there is no target
 		if (Dungeon.level.heroFOV[target]) {
-			if (enemy == null || enemy == hero || hero.isCharmedBy(enemy)) {
+			if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy)) {
 				GLog.w(Messages.get(wep, "ability_no_target"));
 				return;
 			}
@@ -133,7 +133,7 @@ public class Rapier extends MeleeWeapon {
 							AttackIndicator.target(enemy);
 							if (hero.attack(enemy, dmgMulti, dmgBoost, Character.INFINITE_ACCURACY)) {
 								Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-								if (!enemy.isAlive()) {
+								if (!ActionHealth.isAlive(enemy)) {
 									wep.onAbilityKill(hero, enemy);
 								}
 							}

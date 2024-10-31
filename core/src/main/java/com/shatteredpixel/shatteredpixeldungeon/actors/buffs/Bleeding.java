@@ -92,7 +92,7 @@ public class Bleeding extends Buff {
 	
 	@Override
 	public boolean playGameTurn() {
-		if (target.isAlive()) {
+		if (target.ActionHealth.isAlive()) {
 			
 			level = NormalFloat(level / 2f, level);
 			int dmg = Math.round(level);
@@ -105,7 +105,7 @@ public class Bleeding extends Buff {
 							target.sprite.blood(), Math.min( 10 * dmg / target.healthMax, 10 ) );
 				}
 				
-				if (target == Dungeon.hero && !target.isAlive()) {
+				if (target == Dungeon.hero && !target.ActionHealth.isAlive()) {
 					if (source == Chasm.class){
 						Badges.validateDeathFromFalling();
 					} else if (source == Sacrificial.class){
@@ -115,7 +115,7 @@ public class Bleeding extends Buff {
 					GLog.n( Messages.get(this, "ondeath") );
 				}
 
-				if (source == Sickle.HarvestBleedTracker.class && !target.isAlive()){
+				if (source == Sickle.HarvestBleedTracker.class && !target.ActionHealth.isAlive()){
 					MeleeWeapon.onAbilityKill(Dungeon.hero, target);
 				}
 				

@@ -203,7 +203,7 @@ public class Honeypot extends Item {
 		}
 
 		private void updateBee( Bee bee, int cell, Character holder ){
-			if (bee != null && bee.alignment == Character.Alignment.ENEMY)
+			if (bee != null && bee.alignment == CharacterAlignment.ENEMY)
 				bee.setPotInfo( cell, holder );
 		}
 		

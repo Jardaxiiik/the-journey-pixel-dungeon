@@ -75,7 +75,7 @@ public class Electricity extends ActorLoop {
 						}
 						if (cur[cell] % 2 == 1) {
 							ch.receiveDamageFromSource(Math.round(Random.Float(2 + Dungeon.scalingDepth() / 5f)), this);
-							if (!ch.isAlive() && ch == Dungeon.hero){
+							if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero){
 								Dungeon.fail( this );
 								GLog.n( Messages.get(this, "ondeath") );
 							}

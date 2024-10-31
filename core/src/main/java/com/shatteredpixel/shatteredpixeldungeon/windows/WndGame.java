@@ -74,7 +74,7 @@ public class WndGame extends Window {
 		}
 
 		// Restart
-		if (Dungeon.hero == null || !Dungeon.hero.isAlive()) {
+		if (Dungeon.hero == null || !Dungeon.hero.ActionHealth.isAlive()) {
 
 			addButton( curBtn = new RedButton( Messages.get(this, "start") ) {
 				@Override

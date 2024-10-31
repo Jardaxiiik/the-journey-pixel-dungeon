@@ -117,18 +117,18 @@ public class Berserk extends Buff implements ActionIndicator.Action {
 					state = State.RECOVERING;
 					power = 0f;
 					BuffIndicator.refreshHero();
-					if (!target.isAlive()){
+					if (!target.ActionHealth.isAlive()){
 						target.die(this);
-						if (!target.isAlive()) Dungeon.fail(this);
+						if (!target.ActionHealth.isAlive()) Dungeon.fail(this);
 					}
 				}
 
 			} else {
 				state = State.RECOVERING;
 				power = 0f;
-				if (!target.isAlive()){
+				if (!target.ActionHealth.isAlive()){
 					target.die(this);
-					if (!target.isAlive()) Dungeon.fail(this);
+					if (!target.ActionHealth.isAlive()) Dungeon.fail(this);
 				}
 
 			}

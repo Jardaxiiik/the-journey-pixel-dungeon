@@ -78,7 +78,7 @@ public class WandOfWarding extends Wand {
 		}
 		
 		int maxWardEnergy = 0;
-		for (Buff buff : curUser.getBuffs()){
+		for (Buff buff : curUser.buffs){
 			if (buff instanceof Wand.Charger){
 				if (((Charger) buff).wand() instanceof WandOfWarding){
 					maxWardEnergy += 2 + ((Charger) buff).wand().level();
@@ -334,13 +334,13 @@ public class WandOfWarding extends Wand {
 			int dmg = Random.NormalIntRange( 2 + wandLevel, 8 + 4*wandLevel );
 			Character enemy = this.enemy;
 			enemy.receiveDamageFromSource( dmg, this );
-			if (enemy.isAlive()){
+			if (ActionHealth.isAlive(enemy)){
 				Wand.wandProc(enemy, wandLevel, 1);
 			}
 
-			if (!enemy.isAlive() && enemy == Dungeon.hero) {
+			if (!ActionHealth.isAlive(enemy) && enemy == Dungeon.hero) {
 				Badges.validateDeathFromFriendlyMagic();
-				GLog.n(Messages.capitalize(Messages.get( this, "kill", getName() )));
+				GLog.n(Messages.capitalize(Messages.get( this, "kill", ActionAppearance.getName(this) )));
 				Dungeon.fail( WandOfWarding.class );
 			}
 

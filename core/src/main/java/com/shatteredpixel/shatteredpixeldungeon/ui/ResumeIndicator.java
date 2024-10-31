@@ -80,7 +80,7 @@ public class ResumeIndicator extends Tag {
 
 	@Override
 	public void update() {
-		if (!Dungeon.hero.isAlive())
+		if (!Dungeon.hero.ActionHealth.isAlive())
 			visible = false;
 		else if (visible != (Dungeon.hero.lastAction != null)){
 			visible = Dungeon.hero.lastAction != null;

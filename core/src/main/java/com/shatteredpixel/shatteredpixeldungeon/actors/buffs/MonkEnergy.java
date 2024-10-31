@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionSpendTime;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -339,7 +340,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				}
 
 				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+				if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
 				}
@@ -361,7 +362,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						AttackIndicator.target(enemy);
 						hero.attack(enemy, 1, 0, Character.INFINITE_ACCURACY);
 
-						if (enemy.isAlive()){
+						if (ActionHealth.isAlive(enemy)){
 							hero.sprite.attack(enemy.position, new Callback() {
 								@Override
 								public void call() {
@@ -551,7 +552,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				}
 
 				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-				if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+				if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 					GLog.w(Messages.get(MeleeWeapon.class, "ability_no_target"));
 					return;
 				}
@@ -582,7 +583,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 							//knock them back along that ballistica
 							WandOfBlastWave.throwChar(enemy, trajectory, 6, true, false, hero);
 
-							if (trajectory.dist > 0 && enemy.isActive()) {
+							if (trajectory.dist > 0 && ActionSpendTime.isActive(enemy)) {
 								Buff.affect(enemy, Paralysis.class, Math.min( 6, trajectory.dist));
 							}
 						}
@@ -594,7 +595,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 						if (empowered){
 							for (Character ch : DungeonCharactersHandler.getCharacters()){
 								if (ch != enemy
-										&& ch.alignment == Character.Alignment.ENEMY
+										&& ch.alignment == CharacterAlignment.ENEMY
 										&& Dungeon.level.adjacent(ch.position, hero.position)){
 									//trace a ballistica to our target (which will also extend past them
 									Ballistica trajectory = new Ballistica(hero.position, ch.position, Ballistica.STOP_TARGET);
@@ -603,7 +604,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 									//knock them back along that ballistica
 									WandOfBlastWave.throwChar(ch, trajectory, 6, true, false, hero);
 
-									if (trajectory.dist > 0 && enemy.isActive()) {
+									if (trajectory.dist > 0 && ActionSpendTime.isActive(enemy)) {
 										Buff.affect(ch, Paralysis.class, Math.min( 6, trajectory.dist));
 									}
 								}
@@ -633,7 +634,7 @@ public class MonkEnergy extends Buff implements ActionIndicator.Action {
 				GameScene.flash(0x88000000, false);
 				Sample.INSTANCE.play(Assets.Sounds.SCAN);
 
-				for (Buff b : hero.getBuffs()){
+				for (Buff b : hero.buffs){
 					if (b.type == Buff.buffType.NEGATIVE
 							&& !(b instanceof AllyBuff)
 							&& !(b instanceof LostInventory)){

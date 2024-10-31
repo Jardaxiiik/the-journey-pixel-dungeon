@@ -181,7 +181,7 @@ public class Bomb extends Item {
 			for (Character ch : affected){
 
 				//if they have already been killed by another bomb
-				if(!ch.isAlive()){
+				if(!ActionHealth.isAlive(ch)){
 					continue;
 				}
 
@@ -198,7 +198,7 @@ public class Bomb extends Item {
 					ch.receiveDamageFromSource(dmg, this);
 				}
 				
-				if (ch == Dungeon.hero && !ch.isAlive()) {
+				if (ch == Dungeon.hero && !ActionHealth.isAlive(ch)) {
 					if (this instanceof ConjuredBomb){
 						Badges.validateDeathFromFriendlyMagic();
 					}

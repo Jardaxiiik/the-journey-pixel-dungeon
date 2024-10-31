@@ -66,7 +66,7 @@ public class ScrollOfRetribution extends Scroll {
 		for (Mob mob : targets){
 			//deals 10%HT, plus 0-90%HP based on scaling
 			mob.receiveDamageFromSource(Math.round(mob.healthMax /10f + (mob.healthPoints * power * 0.225f)), this);
-			if (mob.isAlive()) {
+			if (mob.ActionHealth.isAlive()) {
 				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}
 		}

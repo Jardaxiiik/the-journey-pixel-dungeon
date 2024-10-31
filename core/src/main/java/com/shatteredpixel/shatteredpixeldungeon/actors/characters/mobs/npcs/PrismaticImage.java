@@ -72,7 +72,7 @@ public class PrismaticImage extends NPC {
 	@Override
     public boolean playGameTurn() {
 		
-		if (!isAlive()){
+		if (!ActionHealth.isAlive()){
 			deathTimer--;
 			
 			if (deathTimer > 0) {
@@ -122,7 +122,7 @@ public class PrismaticImage extends NPC {
 
 	@Override
 	public boolean isActive() {
-		return isAlive() || deathTimer > 0;
+		return ActionHealth.isAlive() || deathTimer > 0;
 	}
 
 	private static final String HEROID	= "hero_id";

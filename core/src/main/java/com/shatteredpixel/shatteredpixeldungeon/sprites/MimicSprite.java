@@ -70,7 +70,7 @@ public class MimicSprite extends MobSprite {
 	@Override
 	public void linkVisuals(Character ch) {
 		super.linkVisuals(ch);
-		if (ch.alignment == Character.Alignment.NEUTRAL) {
+		if (ch.alignment == CharacterAlignment.NEUTRAL) {
 			hideMimic();
 		}
 	}

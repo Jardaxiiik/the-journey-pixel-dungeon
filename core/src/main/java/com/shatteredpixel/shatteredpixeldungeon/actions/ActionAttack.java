@@ -41,7 +41,7 @@ public class ActionAttack {
 
         if (target == null) return false;
 
-        boolean visibleFight = Dungeon.level.heroFOV[caster.getCharacterMovement().getPosition()] || Dungeon.level.heroFOV[target.position];
+        boolean visibleFight = Dungeon.level.heroFOV[caster.position] || Dungeon.level.heroFOV[target.position];
 
         if (target.isInvulnerableToEffectType(caster.getClass())) {
 
@@ -144,14 +144,14 @@ public class ActionAttack {
                 finalDamage = ActionAttack.attackProc(caster,target, finalDamage);
             }
             if (visibleFight) {
-                if (finalDamage > 0 || !target.willBlockSound(Random.Float(0.96f, 1.05f))) {
-                    caster.playHitSound(Random.Float(0.87f, 1.15f));
+                if (finalDamage > 0 || !ActionSound.willBlockSound(target,Random.Float(0.96f, 1.05f))) {
+                    ActionSound.playHitSound(caster,Random.Float(0.87f, 1.15f));
                 }
             }
 
             // If the enemy is already dead, interrupt the attack.
             // This matters as defence procs can sometimes inflict self-damage, such as armor glyphs.
-            if (!target.isAlive()){
+            if (!ActionHealth.isAlive(target)){
                 return true;
             }
 
@@ -160,9 +160,9 @@ public class ActionAttack {
             if (caster.getBuff(FireImbue.class) != null)  caster.getBuff(FireImbue.class).proc(target);
             if (caster.getBuff(FrostImbue.class) != null) caster.getBuff(FrostImbue.class).proc(target);
 
-            if (target.isAlive() && target.alignment != caster.alignment && prep != null && prep.canKO(target)){
-                target.getCharacterHealth().setHealthPoints(0);
-                if (!target.isAlive()) {
+            if (ActionHealth.isAlive(target) && target.alignment != caster.alignment && prep != null && prep.canKO(target)){
+                target.healthPoints = 0;
+                if (!ActionHealth.isAlive(target)) {
                     ActionDeath.die(target,caster);
                 } else {
                     //helps with triggering any on-damage effects that need to activate
@@ -176,11 +176,11 @@ public class ActionAttack {
 
             Talent.CombinedLethalityTriggerTracker combinedLethality = caster.getBuff(Talent.CombinedLethalityTriggerTracker.class);
             if (combinedLethality != null){
-                if ( target.isAlive() && target.alignment != caster.alignment && !Character.hasProperty(target, Character.Property.BOSS)
+                if ( ActionHealth.isAlive(target) && target.alignment != caster.alignment && !Character.hasProperty(target, Character.Property.BOSS)
                         && !Character.hasProperty(target, Character.Property.MINIBOSS) && caster instanceof Hero &&
                         (target.healthPoints /(float)target.healthMax) <= 0.4f*((Hero)caster).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
-                    target.getCharacterHealth().setHealthPoints(0);
-                    if (!target.isAlive()) {
+                    target.healthPoints = 0;
+                    if (!ActionHealth.isAlive(target)) {
                         ActionDeath.die(target,caster);
                     } else {
                         //helps with triggering any on-damage effects that need to activate
@@ -199,7 +199,7 @@ public class ActionAttack {
                 target.sprite.flash();
             }
 
-            if (!target.isAlive() && visibleFight) {
+            if (!ActionHealth.isAlive(target) && visibleFight) {
                 if (target == Dungeon.hero) {
 
                     if (caster == Dungeon.hero) {
@@ -211,10 +211,10 @@ public class ActionAttack {
                         Badges.validateDeathFromFriendlyMagic();
                     }
                     Dungeon.fail( caster );
-                    GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", caster.getName())) );
+                    GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(caster))) );
 
                 } else if (caster == Dungeon.hero) {
-                    GLog.i( Messages.capitalize(Messages.get(Character.class, "defeat", target.getName())) );
+                    GLog.i( Messages.capitalize(Messages.get(Character.class, "defeat", ActionAppearance.getName(target))) );
                 }
             }
 
@@ -222,7 +222,7 @@ public class ActionAttack {
 
         } else {
 
-            target.sprite.showStatus( CharSprite.NEUTRAL, target.getDefenseVerb() );
+            target.sprite.showStatus( CharSprite.NEUTRAL, ActionDefense.getDefenseVerb(target) );
             if (visibleFight) {
                 //TODO enemy.defenseSound? currently miss plays for monks/crab even when they parry
                 Sample.INSTANCE.play(Assets.Sounds.MISS);
@@ -243,4 +243,9 @@ public class ActionAttack {
     public static int getDamageRoll(Character character) {
         return 1;
     }
+
+    public static boolean canDoSurpriseAttack(Character character){
+        return true;
+    }
+
 }

@@ -104,7 +104,7 @@ public class Chasm implements Hero.Doom {
 
 		Level.beforeTransition();
 
-		if (Dungeon.hero.isAlive()) {
+		if (Dungeon.hero.ActionHealth.isAlive()) {
 			Dungeon.hero.interruptHeroPlannedAction();
 			InterlevelScene.mode = InterlevelScene.Mode.FALL;
 			if (Dungeon.level instanceof RegularLevel) {
@@ -151,7 +151,7 @@ public class Chasm implements Hero.Doom {
 	}
 
 	public static void mobFall( Mob mob ) {
-		if (mob.isAlive()) ActionDeath.die(mob, Chasm.class );
+		if (mob.ActionHealth.isAlive()) ActionDeath.die(mob, Chasm.class );
 		
 		if (mob.sprite != null) ((MobSprite)mob.sprite).fall();
 	}

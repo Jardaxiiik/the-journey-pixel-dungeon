@@ -83,7 +83,7 @@ public class ArcaneBomb extends Bomb {
 			int damage = Math.round(Random.NormalIntRange( Dungeon.scalingDepth()+5, 10 + Dungeon.scalingDepth() * 2 ));
 			float multiplier = 1f - (.16667f*Dungeon.level.distance(cell, ch.position));
 			ch.receiveDamageFromSource(Math.round(damage*multiplier), this);
-			if (ch == Dungeon.hero && !ch.isAlive()){
+			if (ch == Dungeon.hero && !ActionHealth.isAlive(ch)){
 				Badges.validateDeathFromFriendlyMagic();
 				Dungeon.fail(this);
 			}

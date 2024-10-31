@@ -337,7 +337,7 @@ public class Potion extends Item {
 				updateQuickslot();
 			}
 			
-			if (Dungeon.hero.isAlive()) {
+			if (Dungeon.hero.ActionHealth.isAlive()) {
 				Catalog.setSeen(getClass());
 			}
 		}
@@ -396,7 +396,7 @@ public class Potion extends Item {
 		}
 
 		Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
-		if (ch != null && ch.alignment == Character.Alignment.ALLY) {
+		if (ch != null && ch.alignment == CharacterAlignment.ALLY) {
 			Buff.detach(ch, Burning.class);
 			Buff.detach(ch, Ooze.class);
 		}

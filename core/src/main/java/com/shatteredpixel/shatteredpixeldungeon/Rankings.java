@@ -21,8 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon;
 
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass;
@@ -272,8 +272,8 @@ public enum Rankings {
 		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
-		for(Buff b : Dungeon.hero.getBuffs()){
-			Dungeon.hero.removeBuff(b);
+		for(Buff b : Dungeon.hero.buffs){
+			ActionBuffs.removeBuff(Dungeon.hero,b);
 		}
 
 		rec.gameData.put( HERO, Dungeon.hero );

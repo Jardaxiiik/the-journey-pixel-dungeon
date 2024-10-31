@@ -69,7 +69,7 @@ public class Spear extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
@@ -89,7 +89,7 @@ public class Spear extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 				int oldPos = enemy.position;
 				if (hero.attack(enemy, dmgMulti, 0, Character.INFINITE_ACCURACY)) {
-					if (enemy.isAlive() && enemy.position == oldPos){
+					if (ActionHealth.isAlive(enemy) && enemy.position == oldPos){
 						//trace a ballistica to our target (which will also extend past them
 						Ballistica trajectory = new Ballistica(hero.position, enemy.position, Ballistica.STOP_TARGET);
 						//trim it to just be the part that goes past them

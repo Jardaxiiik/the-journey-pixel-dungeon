@@ -29,7 +29,6 @@ import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
-import com.shatteredpixel.shatteredpixeldungeon.actions.ActionMove;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionPassable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -673,7 +672,7 @@ public class Dungeon {
 	}
 	
 	public static void saveAll() throws IOException {
-		if (hero != null && (hero.isAlive() || WndResurrect.instance != null)) {
+		if (hero != null && (hero.ActionHealth.isAlive() || WndResurrect.instance != null)) {
 			
 			DungeonTurnsHandler.fixTime();
 			updateLevelExplored();
@@ -938,7 +937,7 @@ public class Dungeon {
 
 		for (TalismanOfForesight.CharAwareness c : hero.getBuffs(TalismanOfForesight.CharAwareness.class)){
 			Character ch = (Character) DungeonActorsHandler.getById(c.charID);
-			if (ch == null || !ch.isAlive()) continue;
+			if (ch == null || !ActionHealth.isAlive(ch)) continue;
 			BArray.or( level.visited, level.heroFOV, ch.position - 1 - level.width(), 3, level.visited );
 			BArray.or( level.visited, level.heroFOV, ch.position - 1, 3, level.visited );
 			BArray.or( level.visited, level.heroFOV, ch.position - 1 + level.width(), 3, level.visited );

@@ -37,6 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Scorpio;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Spinner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.Swarm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs.npcs.Blacksmith;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -133,8 +134,7 @@ public class Pickaxe extends MeleeWeapon {
 							} else {
 								Dungeon.level.dropItemOnPosition( gold, hero.position).sprite.drop();
 							}
-							
-							hero.onOperateComplete();
+							DungeonTurnsHandler.nextActorToPlay(hero);
 						}
 					} );
 					
@@ -158,7 +158,7 @@ public class Pickaxe extends MeleeWeapon {
 
 				@Override
                 public boolean playGameTurn() {
-					if (!defender.isAlive()){
+					if (!defender.ActionHealth.isAlive()){
 						bloodStained = true;
 						updateQuickslot();
 					}
@@ -200,7 +200,7 @@ public class Pickaxe extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
 		}
@@ -228,7 +228,7 @@ public class Pickaxe extends MeleeWeapon {
 				beforeAbilityUsed(hero, enemy);
 				AttackIndicator.target(enemy);
 				if (hero.attack(enemy, damageMulti, 0, Character.INFINITE_ACCURACY)) {
-					if (enemy.isAlive()) {
+					if (ActionHealth.isAlive(enemy)) {
 						Buff.affect(enemy, Vulnerable.class, 3f);
 					} else {
 						onAbilityKill(hero, enemy);

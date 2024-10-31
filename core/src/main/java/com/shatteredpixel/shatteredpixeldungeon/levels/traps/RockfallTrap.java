@@ -92,14 +92,14 @@ public class RockfallTrap extends Trap {
 
 			Character ch = DungeonCharactersHandler.getCharacterOnPosition( cell );
 
-			if (ch != null && ch.isAlive()){
+			if (ch != null && ActionHealth.isAlive(ch)){
 				int damage = Random.NormalIntRange(5+scalingDepth(), 10+scalingDepth()*2);
 				damage -= ch.getArmorPointsRolled();
 				ch.receiveDamageFromSource( Math.max(damage, 0) , this);
 
 				Buff.prolong( ch, Paralysis.class, Paralysis.DURATION );
 
-				if (!ch.isAlive() && ch == Dungeon.hero){
+				if (!ActionHealth.isAlive(ch) && ch == Dungeon.hero){
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );
 				}

@@ -223,7 +223,7 @@ public class CursedWand {
 
 					if (toDamage == Dungeon.hero){
 						Sample.INSTANCE.play(Assets.Sounds.CURSED);
-						if (!toDamage.isAlive()) {
+						if (!toDamage.ActionHealth.isAlive()) {
 							if (user == Dungeon.hero && origin != null) {
 								Badges.validateDeathFromFriendlyMagic();
 								Dungeon.fail( origin );
@@ -362,7 +362,7 @@ public class CursedWand {
 
 				Mimic mimic = Mimic.spawnAt(spawnCell, GoldenMimic.class, false);
 				mimic.stopHiding();
-				mimic.alignment = Character.Alignment.ENEMY;
+				mimic.alignment = CharacterAlignment.ENEMY;
 				Item reward;
 				do {
 					reward = ItemGenerator.randomUsingDefaults(Random.oneOf(ItemGenerator.Category.WEAPON, ItemGenerator.Category.ARMOR,

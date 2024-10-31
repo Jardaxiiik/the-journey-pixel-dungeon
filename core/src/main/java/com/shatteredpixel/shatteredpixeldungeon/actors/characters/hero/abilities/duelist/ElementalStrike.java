@@ -190,7 +190,7 @@ public class ElementalStrike extends ArmorAbility {
 				Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
 
 				if (enemy != null) {
-					if (hero.isCharmedBy(enemy)) {
+					if (ActionBuffs.isCharmedBy(hero,enemy)) {
 						enemy = null;
 					} else if (enemy.alignment == hero.alignment) {
 						enemy = null;
@@ -228,7 +228,7 @@ public class ElementalStrike extends ArmorAbility {
 
 		int targetsHit = 0;
 		for (Character ch : DungeonCharactersHandler.getCharacters()){
-			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
+			if (ch.alignment == CharacterAlignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
 		}
@@ -287,7 +287,7 @@ public class ElementalStrike extends ArmorAbility {
 
 		int targetsHit = 0;
 		for (Character ch : DungeonCharactersHandler.getCharacters()){
-			if (ch.alignment == Character.Alignment.ENEMY && cone.cells.contains(ch.position)){
+			if (ch.alignment == CharacterAlignment.ENEMY && cone.cells.contains(ch.position)){
 				targetsHit++;
 			}
 		}
@@ -361,7 +361,7 @@ public class ElementalStrike extends ArmorAbility {
 		ArrayList<Character> affected = new ArrayList<>();
 
 		for (Character ch : DungeonCharactersHandler.getCharacters()) {
-			if (ch.alignment != Character.Alignment.ALLY && cone.cells.contains(ch.position)) {
+			if (ch.alignment != CharacterAlignment.ALLY && cone.cells.contains(ch.position)) {
 				affected.add(ch);
 			}
 		}
@@ -420,7 +420,7 @@ public class ElementalStrike extends ArmorAbility {
 		//*** Lucky ***
 		} else if (ench instanceof Lucky){
 			for (Character ch : affected){
-				if (ch.alignment == Character.Alignment.ENEMY
+				if (ch.alignment == CharacterAlignment.ENEMY
 						&& Random.Float() < 0.125f*powerMulti
 						&& ch.getBuff(ElementalStrikeLuckyTracker.class) == null) {
 					Dungeon.level.dropItemOnPosition(Lucky.genLoot(), ch.position).sprite.drop();
@@ -455,7 +455,7 @@ public class ElementalStrike extends ArmorAbility {
 						&& !ch.isImmuneToEffectType(Corruption.class)
 						&& ch.getBuff(Corruption.class) == null
 						&& ch instanceof Mob
-						&& ch.isAlive()) {
+						&& ActionHealth.isAlive(ch)) {
 					float hpMissing = 1f - (ch.healthPoints / (float)ch.healthMax);
 					float chance = 0.05f + 0.2f*hpMissing; //5-25%
 					if (Random.Float() < chance*powerMulti){

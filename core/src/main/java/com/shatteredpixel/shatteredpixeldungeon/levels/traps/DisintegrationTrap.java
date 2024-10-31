@@ -54,7 +54,7 @@ public class DisintegrationTrap extends Trap {
 		if (target == null){
 			float closestDist = Float.MAX_VALUE;
 			for (Character ch : DungeonCharactersHandler.getCharacters()){
-				if (!ch.isAlive()) continue;
+				if (!ActionHealth.isAlive(ch)) continue;
 				float curDist = Dungeon.level.trueDistance(pos, ch.position);
 				if (ch.invisible > 0) curDist += 1000;
 				Ballistica bolt = new Ballistica(pos, ch.position, Ballistica.PROJECTILE);
@@ -76,7 +76,7 @@ public class DisintegrationTrap extends Trap {
 			target.receiveDamageFromSource( Random.NormalIntRange(30, 50) + scalingDepth(), this );
 			if (target == Dungeon.hero){
 				Hero hero = (Hero)target;
-				if (!hero.isAlive()){
+				if (!hero.ActionHealth.isAlive()){
 					Badges.validateDeathFromGrimOrDisintTrap();
 					Dungeon.fail( this );
 					GLog.n( Messages.get(this, "ondeath") );

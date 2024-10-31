@@ -82,7 +82,7 @@ public class Gizmo {
 		if (parent == null) {
 			return active;
 		} else {
-			return active && parent.isActive();
+			return active && parent.ActionSpendTime.isActive();
 		}
 	}
 	

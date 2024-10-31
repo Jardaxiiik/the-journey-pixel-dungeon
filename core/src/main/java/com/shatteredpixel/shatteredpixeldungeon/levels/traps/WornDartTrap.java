@@ -62,7 +62,7 @@ public class WornDartTrap extends Trap {
 				if (target == null){
 					float closestDist = Float.MAX_VALUE;
 					for (Character ch : DungeonCharactersHandler.getCharacters()){
-						if (!ch.isAlive()) continue;
+						if (!ActionHealth.isAlive(ch)) continue;
 						float curDist = Dungeon.level.trueDistance(pos, ch.position);
 						if (ch.invisible > 0) curDist += 1000;
 						Ballistica bolt = new Ballistica(pos, ch.position, Ballistica.PROJECTILE);
@@ -82,7 +82,7 @@ public class WornDartTrap extends Trap {
 									public void call() {
 										int dmg = Random.NormalIntRange(4, 8) - finalTarget.getArmorPointsRolled();
 										finalTarget.receiveDamageFromSource(dmg, WornDartTrap.this);
-										if (finalTarget == Dungeon.hero && !finalTarget.isAlive()){
+										if (finalTarget == Dungeon.hero && !finalTarget.ActionHealth.isAlive()){
 											Dungeon.fail( WornDartTrap.this  );
 										}
 										Sample.INSTANCE.play(Assets.Sounds.HIT, 1, 1, Random.Float(0.8f, 1.25f));

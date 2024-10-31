@@ -123,7 +123,7 @@ public class Endure extends ArmorAbility {
 
 			int nearby = 0;
 			for (Character ch : DungeonCharactersHandler.getCharacters()){
-				if (ch.alignment == Character.Alignment.ENEMY && Dungeon.level.distance(target.position, ch.position) <= 2){
+				if (ch.alignment == CharacterAlignment.ENEMY && Dungeon.level.distance(target.position, ch.position) <= 2){
 					nearby ++;
 				}
 			}

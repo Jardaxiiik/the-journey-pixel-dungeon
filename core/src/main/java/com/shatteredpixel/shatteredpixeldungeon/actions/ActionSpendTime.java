@@ -7,7 +7,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Speed;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Swiftthistle;
-import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 
 /**
  * ActionSpendTime handles Character's time while performing actions.
@@ -15,7 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 public class ActionSpendTime {
     public static void makeCharacterSpendTime(Character character, float time) {
         ActionSpendTime.spendTime(character,time);
-        for (Buff b : character.getBuffs()){
+        for (Buff b : character.buffs){
             b.spendTime(time);
         }
     }
@@ -49,6 +48,10 @@ public class ActionSpendTime {
         }
 
         ActionSpendTime.spendTimeAdjusted(character, time / timeScale );
+    }
+
+    public static boolean isActive(Character character) {
+        return ActionHealth.isAlive(character);
     }
 
 }

@@ -706,7 +706,7 @@ public abstract class Level implements Bundlable {
     public int mobCount() {
         float count = 0;
         for (Mob mob : Dungeon.level.mobs.toArray(new Mob[0])) {
-            if (mob.alignment == Character.Alignment.ENEMY && !mob.getProperties().contains(Character.Property.MINIBOSS)) {
+            if (mob.alignment == CharacterAlignment.ENEMY && !mob.getProperties().contains(Character.Property.MINIBOSS)) {
                 count += mob.getSpawningWeight();
             }
         }
@@ -794,7 +794,7 @@ public abstract class Level implements Bundlable {
             tries--;
         } while ((mob.position == -1 || PathFinder.distance[mob.position] < disLimit) && tries > 0);
 
-        if (Dungeon.hero.isAlive() && mob.position != -1 && PathFinder.distance[mob.position] >= disLimit) {
+        if (Dungeon.hero.ActionHealth.isAlive() && mob.position != -1 && PathFinder.distance[mob.position] >= disLimit) {
             GameScene.addMob(mob);
             if (!mob.getBuffs(ChampionEnemy.class).isEmpty()) {
                 GLog.w(Messages.get(ChampionEnemy.class, "warn"));
@@ -1187,7 +1187,7 @@ public abstract class Level implements Bundlable {
             }
         }
 
-        if (ch.isAlive() && ch instanceof Piranha && !water[ch.position]) {
+        if (ActionHealth.isAlive(ch) && ch instanceof Piranha && !water[ch.position]) {
             ((Piranha) ch).dieOnLand();
         }
     }
@@ -1287,7 +1287,7 @@ public abstract class Level implements Bundlable {
         int cy = c.position / width();
 
         boolean sighted = c.getBuff(Blindness.class) == null && c.getBuff(Shadows.class) == null
-                && c.getBuff(TimekeepersHourglass.timeStasis.class) == null && c.isAlive();
+                && c.getBuff(TimekeepersHourglass.timeStasis.class) == null && c.ActionHealth.isAlive();
         if (sighted) {
             boolean[] blocking = null;
 
@@ -1312,7 +1312,7 @@ public abstract class Level implements Bundlable {
             }
 
             //allies and specific enemies can see through shrouding fog
-            if ((c.alignment != Character.Alignment.ALLY && !(c instanceof GnollGeomancer))
+            if ((c.alignment != CharacterAlignment.ALLY && !(c instanceof GnollGeomancer))
                     && Dungeon.level.blobs.containsKey(SmokeScreen.class)
                     && Dungeon.level.blobs.get(SmokeScreen.class).volume > 0) {
                 if (blocking == null) {
@@ -1343,7 +1343,7 @@ public abstract class Level implements Bundlable {
 
         int sense = 1;
         //Currently only the hero can get mind vision
-        if (c.isAlive() && c == Dungeon.hero) {
+        if (c.ActionHealth.isAlive() && c == Dungeon.hero) {
             for (Buff b : c.getBuffs(MindVision.class)) {
                 sense = Math.max(((MindVision) b).distance, sense);
             }
@@ -1389,7 +1389,7 @@ public abstract class Level implements Bundlable {
         }
 
         //Currently only the hero can get mind vision or awareness
-        if (c.isAlive() && c == Dungeon.hero) {
+        if (c.ActionHealth.isAlive() && c == Dungeon.hero) {
 
             if (heroMindFov == null || heroMindFov.length != length()) {
                 heroMindFov = new boolean[length];
@@ -1426,7 +1426,7 @@ public abstract class Level implements Bundlable {
 
             for (TalismanOfForesight.CharAwareness a : c.getBuffs(TalismanOfForesight.CharAwareness.class)) {
                 Character ch = (Character) DungeonActorsHandler.getById(a.charID);
-                if (ch == null || !ch.isAlive()) {
+                if (ch == null || !ActionHealth.isAlive(ch)) {
                     continue;
                 }
                 int p = ch.position;

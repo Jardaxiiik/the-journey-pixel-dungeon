@@ -72,7 +72,7 @@ public class PotionOfCleansing extends ExoticPotion {
 	}
 
 	public static void cleanse(Character ch, float duration){
-		for (Buff b : ch.getBuffs()){
+		for (Buff b : ch.buffs){
 			if (b.type == Buff.buffType.NEGATIVE
 					&& !(b instanceof AllyBuff)
 					&& !(b instanceof LostInventory)){

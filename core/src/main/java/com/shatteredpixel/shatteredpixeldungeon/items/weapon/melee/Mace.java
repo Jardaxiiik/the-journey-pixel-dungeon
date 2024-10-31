@@ -78,7 +78,7 @@ public class Mace extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(wep, "ability_no_target"));
 			return;
 		}
@@ -114,7 +114,7 @@ public class Mace extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 				if (hero.attack(enemy, dmgMulti, 0, Character.INFINITE_ACCURACY)) {
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					if (enemy.isAlive()){
+					if (ActionHealth.isAlive(enemy)){
 						Buff.affect(enemy, Daze.class, Daze.DURATION);
 					} else {
 						wep.onAbilityKill(hero, enemy);

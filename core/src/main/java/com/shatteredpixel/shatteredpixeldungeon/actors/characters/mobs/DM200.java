@@ -21,11 +21,16 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
+import static com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler.getDistanceToOtherCharacter;
+
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ActorLoop;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemGenerator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -68,7 +73,7 @@ public class DM200 extends Mob {
 
 	@Override
 	public int getArmorPointsRolled() {
-		return super.getArmorPointsRolled() + Random.NormalIntRange(0, 8);
+		return ActionDefense.getArmorPointsRolled(this) + Random.NormalIntRange(0, 8);
 	}
 
 	@Override
@@ -112,11 +117,11 @@ public class DM200 extends Mob {
 
 	public void onZapComplete(){
 		zap();
-		DungeonTurnsHandler.nextActorToPlay(this);();
+		DungeonTurnsHandler.nextActorToPlay(this);
 	}
 
 	private void zap( ){
-		spendTimeAdjusted( DungeonActors.TICK );
+		spendTimeAdjusted( DungeonTurnsHandler.TICK );
 		ventCooldown = 30;
 
 		Ballistica trajectory = new Ballistica(position, enemy.position, Ballistica.STOP_TARGET);
@@ -150,7 +155,7 @@ public class DM200 extends Mob {
 
 				int oldPos = position;
 
-				if (DungeonCharactersHandler.getDistanceToOtherCharacter(this,enemy) >= 1 && Random.Int(100/ getDistanceToOtherCharacter(enemy)) == 0 && canVent(target)){
+				if ((DungeonCharactersHandler.getDistanceToOtherCharacter( this, enemy) >= 1) && (Random.Int(100 / DungeonCharactersHandler.getDistanceToOtherCharacter(this,enemy)) == 0) && canVent(target)){
 					if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 						sprite.zap( enemy.position);
 						return false;
@@ -173,7 +178,7 @@ public class DM200 extends Mob {
 					}
 
 				} else {
-					spendTimeAdjusted( DungeonActors.TICK );
+					spendTimeAdjusted( DungeonTurnsHandler.TICK );
 					return true;
 				}
 

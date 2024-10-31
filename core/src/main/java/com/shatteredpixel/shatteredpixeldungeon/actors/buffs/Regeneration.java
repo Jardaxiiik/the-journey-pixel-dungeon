@@ -38,7 +38,7 @@ public class Regeneration extends Buff {
 	
 	@Override
 	public boolean playGameTurn() {
-		if (target.isAlive()) {
+		if (target.ActionHealth.isAlive()) {
 
 			if (target.healthPoints < regencap() && !((Hero)target).isStarving()) {
 				if (regenOn()) {

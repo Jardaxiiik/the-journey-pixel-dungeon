@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
@@ -124,7 +125,7 @@ public class Bee extends Mob {
 
 	@Override
 	public boolean addBuff(Buff buff) {
-		if (super.addBuff(buff)) {
+		if (ActionBuffs.addBuff(this,buff)) {
 			//TODO maybe handle honeyed bees with their own ally buff?
 			if (buff instanceof AllyBuff) {
 				intelligentAlly = false;
@@ -149,7 +150,7 @@ public class Bee extends Mob {
 		}else {
 			
 			//try to find a new enemy in these circumstances
-			if (enemy == null || !enemy.isAlive() || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING
+			if (enemy == null || !ActionHealth.isAlive(enemy) || !DungeonCharactersHandler.getCharacters().contains(enemy) || state == WANDERING
 					|| Dungeon.level.distance(enemy.position, potPos) > 3
 					|| (alignment == Alignment.ALLY && enemy.alignment == Alignment.ALLY)
 					|| (getBuff( Amok.class ) == null && enemy.isInvulnerableToEffectType(getClass()))){

@@ -83,8 +83,8 @@ public class WandOfLivingEarth extends DamageWand {
 		RockArmor buff = curUser.getBuff(RockArmor.class);
 		//only grant armor if we are shooting at an enemy, a hiding mimic, or the guardian
 		if ((guardian == null || ch != guardian) && (ch == null
-				|| ch.alignment == Character.Alignment.ALLY
-				|| ch.alignment == Character.Alignment.NEUTRAL && !(ch instanceof Mimic))){
+				|| ch.alignment == CharacterAlignment.ALLY
+				|| ch.alignment == CharacterAlignment.NEUTRAL && !(ch instanceof Mimic))){
 			armorToAdd = 0;
 		} else {
 			if (buff == null && guardian == null) {
@@ -140,7 +140,7 @@ public class WandOfLivingEarth extends DamageWand {
 					Dungeon.level.occupyCell(guardian);
 				}
 
-				if (ch.alignment == Character.Alignment.ENEMY || ch.getBuff(Amok.class) != null) {
+				if (ch.alignment == CharacterAlignment.ENEMY || ch.getBuff(Amok.class) != null) {
 					guardian.startHunting(ch);
 				}
 
@@ -172,7 +172,7 @@ public class WandOfLivingEarth extends DamageWand {
 				} else {
 					guardian.sprite.centerEmitter().burst(MagicMissile.EarthParticle.ATTRACT, 8 + buffedLvl() / 2);
 					guardian.setInfo(curUser, buffedLvl(), armorToAdd);
-					if (ch.alignment == Character.Alignment.ENEMY || ch.getBuff(Amok.class) != null) {
+					if (ch.alignment == CharacterAlignment.ENEMY || ch.getBuff(Amok.class) != null) {
 						guardian.startHunting(ch);
 					}
 				}

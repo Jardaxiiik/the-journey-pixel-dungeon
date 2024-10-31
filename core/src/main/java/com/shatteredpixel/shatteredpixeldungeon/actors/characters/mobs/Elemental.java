@@ -22,6 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
@@ -171,7 +173,7 @@ public abstract class Elemental extends Mob {
 			rangedProc( enemy );
 			
 		} else {
-			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.getDefenseVerb() );
+			enemy.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(enemy) );
 		}
 
 		rangedCooldown = Random.NormalIntRange( 3, 5 );
@@ -188,7 +190,7 @@ public abstract class Elemental extends Mob {
 			receiveDamageFromSource( Random.NormalIntRange( healthMax /2, healthMax * 3/5 ), buff );
 			return false;
 		} else {
-			return super.addBuff( buff );
+			return ActionBuffs.addBuff(this, buff );
 		}
 	}
 	
@@ -502,9 +504,9 @@ public abstract class Elemental extends Mob {
 			
 			for (Character ch : affected) {
 				ActionHealth.receiveDamageFromSource(ch, Math.round( damage * 0.4f ), Shocking.class );
-				if (ch == Dungeon.hero && !ch.isAlive()){
+				if (ch == Dungeon.hero && !ActionHealth.isAlive(ch)){
 					Dungeon.fail(this);
-					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+					GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 				}
 			}
 

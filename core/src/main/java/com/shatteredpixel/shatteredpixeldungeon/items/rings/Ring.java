@@ -150,7 +150,7 @@ public class Ring extends KindofMisc {
 				handler.know(this);
 			}
 
-			if (Dungeon.hero.isAlive()) {
+			if (Dungeon.hero.ActionHealth.isAlive()) {
 				Catalog.setSeen(getClass());
 			}
 		}

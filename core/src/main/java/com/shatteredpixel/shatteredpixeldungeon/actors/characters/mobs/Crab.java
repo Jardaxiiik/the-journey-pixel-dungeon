@@ -21,7 +21,10 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
+import static com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon.*;
+
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CrabSprite;
 import com.watabou.utils.Random;
@@ -31,9 +34,9 @@ public class Crab extends Mob {
 	{
 		spriteClass = CrabSprite.class;
 		
-		healthPoints = healthMax = 15;
+		healthPoints = healthMax = 15*depth;
 		evasionSkill = 5;
-		baseSpeed = 2f;
+		baseMovementSpeed = 2f;
 		
 		EXP = 4;
 		maxLvl = 9;

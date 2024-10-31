@@ -50,7 +50,7 @@ public class GoldenMimic extends Mimic {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "locked_chest");
 		} else {
-			return super.getName();
+			return ActionAppearance.getName(this);
 		}
 	}
 

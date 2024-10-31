@@ -78,7 +78,7 @@ public class Ooze extends Buff {
 
 	@Override
 	public boolean playGameTurn() {
-		if (target.isAlive()) {
+		if (target.ActionHealth.isAlive()) {
 			if (Dungeon.scalingDepth() > 5) {
 				target.receiveDamageFromSource(1 + Dungeon.scalingDepth() / 5, this);
 			} else if (Dungeon.scalingDepth() == 5){
@@ -87,7 +87,7 @@ public class Ooze extends Buff {
 				target.receiveDamageFromSource(1, this); //0.5 dmg per turn in sewers
 			}
 
-			if (!target.isAlive() && target == Dungeon.hero) {
+			if (!ActionHealth.isAlive(target) && target == Dungeon.hero) {
 				Dungeon.fail( this );
 				GLog.n( Messages.get(this, "ondeath") );
 			}

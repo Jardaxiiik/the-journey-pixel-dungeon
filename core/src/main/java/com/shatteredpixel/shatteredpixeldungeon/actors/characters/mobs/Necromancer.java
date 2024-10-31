@@ -109,7 +109,7 @@ public class Necromancer extends Mob {
 			}
 		}
 		
-		if (mySkeleton != null && mySkeleton.isAlive()){
+		if (mySkeleton != null && mySkeleton.ActionHealth.isAlive()){
 			mySkeleton.die(null);
 		}
 		
@@ -155,7 +155,7 @@ public class Necromancer extends Mob {
 	}
 	
 	public void onZapComplete(){
-		if (mySkeleton == null || mySkeleton.sprite == null || !mySkeleton.isAlive()){
+		if (mySkeleton == null || mySkeleton.sprite == null || !mySkeleton.ActionHealth.isAlive()){
 			return;
 		}
 		
@@ -218,10 +218,10 @@ public class Necromancer extends Mob {
 				Character blocker = DungeonCharactersHandler.getCharacterOnPosition(summoningPos);
 				if (blocker.alignment != alignment){
 					blocker.receiveDamageFromSource( Random.NormalIntRange(2, 10), new SummoningBlockDamage() );
-					if (blocker == Dungeon.hero && !blocker.isAlive()){
+					if (blocker == Dungeon.hero && !blocker.ActionHealth.isAlive()){
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail(this);
-						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", getName())) );
+						GLog.n( Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))) );
 					}
 				}
 
@@ -272,7 +272,7 @@ public class Necromancer extends Mob {
 			}
 			
 			if (mySkeleton != null &&
-					(!mySkeleton.isAlive()
+					(!mySkeleton.ActionHealth.isAlive()
 					|| !Dungeon.level.mobs.contains(mySkeleton)
 					|| mySkeleton.alignment != alignment)){
 				mySkeleton = null;

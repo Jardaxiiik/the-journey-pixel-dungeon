@@ -77,7 +77,7 @@ public class DungeonActorsHandler {
     //USE CAREFULLY! Manipulating time like this is useful for some gameplay effects but is tricky
     public static void makeCharacterSpendTime(Character ch, float time ){
         ActionSpendTime.spendTime(ch,time);
-        for (Buff b : ch.getBuffs()){
+        for (Buff b : ch.buffs){
             b.spendTime(time);
         }
     }

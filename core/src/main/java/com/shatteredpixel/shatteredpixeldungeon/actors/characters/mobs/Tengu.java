@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -41,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonActorsHandler;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.effects.BlobEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
@@ -124,7 +126,7 @@ public class Tengu extends Mob {
 	@Override
 	public boolean addBuff(Buff buff) {
 		if (DungeonCharactersHandler.getCharacters().contains(this) || buff instanceof Doom || loading){
-			return super.addBuff(buff);
+			return ActionBuffs.addBuff(this,buff);
 		}
 		return false;
 	}
@@ -205,8 +207,8 @@ public class Tengu extends Mob {
 	}
 	
 	@Override
-	public boolean isAlive() {
-		return super.isAlive() || Dungeon.level.mobs.contains(this); //Tengu has special death rules, see prisonbosslevel.progress()
+	public boolean ActionHealth.isAlive() {
+		return super.ActionHealth.isAlive() || Dungeon.level.mobs.contains(this); //Tengu has special death rules, see prisonbosslevel.progress()
 	}
 
 	@Override
@@ -335,14 +337,14 @@ public class Tengu extends Mob {
 			BossHealthBar.assignBoss(this);
 			if (healthPoints <= healthMax /2) BossHealthBar.bleed(true);
 			if (healthPoints == healthMax) {
-				yell(Messages.get(this, "notice_gotcha", Dungeon.hero.getName()));
+				yell(Messages.get(this, "notice_gotcha", ActionAppearance.getName(Dungeon.hero)));
 				for (Character ch : DungeonCharactersHandler.getCharacters()){
 					if (ch instanceof DriedRose.GhostHero){
 						((DriedRose.GhostHero) ch).sayBoss();
 					}
 				}
 			} else {
-				yell(Messages.get(this, "notice_have", Dungeon.hero.getName()));
+				yell(Messages.get(this, "notice_have", ActionAppearance.getName(Dungeon.hero)));
 			}
 		}
 	}
@@ -391,7 +393,7 @@ public class Tengu extends Mob {
 		public boolean playGameTurn(boolean enemyInFOV, boolean justAlerted) {
 			
 			enemySeen = enemyInFOV;
-			if (enemyInFOV && !isCharmedBy( enemy ) && canAttackEnemy( enemy )) {
+			if (enemyInFOV && !ActionBuffs.isCharmedBy(this,enemy) && canAttackEnemy( enemy )) {
 				
 				if (canUseAbility()){
 					return useAbility();
@@ -637,7 +639,7 @@ public class Tengu extends Mob {
 								Statistics.qualifiedForBossChallengeBadge = false;
 								Statistics.bossScores[1] -= 100;
 
-								if (!ch.isAlive()) {
+								if (!ActionHealth.isAlive(ch)) {
 									Dungeon.fail(Tengu.class);
 								}
 							}
@@ -1065,7 +1067,7 @@ public class Tengu extends Mob {
 								if (ch == Dungeon.hero){
 									Statistics.qualifiedForBossChallengeBadge = false;
 									Statistics.bossScores[1] -= 100;
-									if (!ch.isAlive()) {
+									if (!ActionHealth.isAlive(ch)) {
 										Dungeon.fail(Tengu.class);
 										GLog.n(Messages.get(Electricity.class, "ondeath"));
 									}

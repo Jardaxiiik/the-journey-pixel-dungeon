@@ -179,7 +179,7 @@ public class Dart extends MissileWeapon {
 						{ actPriority = VFX_PRIORITY; }
 						@Override
                         public boolean playGameTurn() {
-							if (!ch.isAlive()){
+							if (!ActionHealth.isAlive(ch)){
 								bow.onAbilityKill(Dungeon.hero, ch);
 							}
 							DungeonActorsHandler.removeActor(this);

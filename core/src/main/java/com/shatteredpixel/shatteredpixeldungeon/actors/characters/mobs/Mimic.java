@@ -21,8 +21,13 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
+import static javax.swing.text.StyleConstants.Alignment;
+
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAppearance;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -90,9 +95,9 @@ public class Mimic extends Mob {
 
 	@Override
 	public boolean addBuff(Buff buff) {
-		if (super.addBuff(buff)) {
-			if (buff.type == Buff.buffType.NEGATIVE && alignment == Alignment.NEUTRAL) {
-				alignment = Alignment.ENEMY;
+		if (ActionBuffs.addBuff(this,buff)) {
+			if (buff.type == Buff.buffType.NEGATIVE && alignment == CharacterAlignment.NEUTRAL) {
+				alignment = CharacterAlignment.ENEMY;
 				stopHiding();
 				if (sprite != null) sprite.idle();
 			}
@@ -106,7 +111,7 @@ public class Mimic extends Mob {
 		if (alignment == Alignment.NEUTRAL){
 			return Messages.get(Heap.class, "chest");
 		} else {
-			return super.getName();
+			return ActionAppearance.getName(this);
 		}
 	}
 
@@ -164,8 +169,8 @@ public class Mimic extends Mob {
 	@Override
 	public void onAttackComplete() {
 		super.onAttackComplete();
-		if (alignment == Alignment.NEUTRAL){
-			alignment = Alignment.ENEMY;
+		if (alignment == CharacterAlignment.NEUTRAL){
+			alignment = CharacterAlignment.ENEMY;
 			Dungeon.hero.spendTimeAdjustedAndNext(1f);
 		}
 	}

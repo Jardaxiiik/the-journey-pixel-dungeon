@@ -85,7 +85,7 @@ public class WandOfBlastWave extends DamageWand {
 
 			if (ch != null){
 				wandProc(ch, chargesPerCast());
-				if (ch.alignment != Character.Alignment.ALLY) ch.receiveDamageFromSource(damageRoll(), this);
+				if (ch.alignment != CharacterAlignment.ALLY) ch.receiveDamageFromSource(damageRoll(), this);
 
 				if (ch.position == bolt.collisionPos + i) {
 					Ballistica trajectory = new Ballistica(ch.position, ch.position + i, Ballistica.MAGIC_BOLT);
@@ -160,9 +160,9 @@ public class WandOfBlastWave extends DamageWand {
 				}
 				int oldPos = ch.position;
 				ch.position = newPos;
-				if (finalCollided && ch.isActive()) {
+				if (finalCollided && ch.ActionSpendTime.isActive()) {
 					ch.receiveDamageFromSource(Random.NormalIntRange(finalDist, 2*finalDist), new Knockback());
-					if (ch.isActive()) {
+					if (ch.ActionSpendTime.isActive()) {
 						Paralysis.prolong(ch, Paralysis.class, 1 + finalDist/2f);
 					} else if (ch == Dungeon.hero){
 						if (cause instanceof WandOfBlastWave || cause instanceof AquaBlast){
@@ -198,7 +198,7 @@ public class WandOfBlastWave extends DamageWand {
 			@Override
             public boolean playGameTurn() {
 				DungeonActorsHandler.removeActor(this);
-				if (defender.isAlive()) {
+				if (defender.ActionHealth.isAlive()) {
 					new BlastWaveOnHit().proc(staff, attacker, defender, damage);
 				}
 				return true;

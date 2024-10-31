@@ -361,7 +361,7 @@ public class CavesBossLevel extends Level {
 	public void activatePylon(){
 		ArrayList<Pylon> pylons = new ArrayList<>();
 		for (Mob m : mobs){
-			if (m instanceof Pylon && m.alignment == Character.Alignment.NEUTRAL){
+			if (m instanceof Pylon && m.alignment == CharacterAlignment.NEUTRAL){
 				pylons.add((Pylon) m);
 			}
 		}
@@ -837,7 +837,7 @@ public class CavesBossLevel extends Level {
 									Statistics.qualifiedForBossChallengeBadge = false;
 								}
 								Statistics.bossScores[2] -= 200;
-								if ( !ch.isAlive()) {
+								if ( !ActionHealth.isAlive(ch)) {
 									Dungeon.fail(DM300.class);
 									GLog.n(Messages.get(Electricity.class, "ondeath"));
 								}
@@ -861,7 +861,7 @@ public class CavesBossLevel extends Level {
 			public void emit(com.watabou.noosa.particles.Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){
 					for (Character c : DungeonCharactersHandler.getCharacters()){
-						if (c instanceof Pylon && c.alignment != Character.Alignment.NEUTRAL){
+						if (c instanceof Pylon && c.alignment != CharacterAlignment.NEUTRAL){
 							energySourceSprite = c.sprite;
 							break;
 						} else if (c instanceof DM300){

@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -109,14 +110,14 @@ public class DM100 extends Mob implements Callback {
 					
 					PixelScene.shake( 2, 0.3f );
 					
-					if (!targetCharacter.isAlive()) {
+					if (!targetCharacter.ActionHealth.isAlive()) {
 						Badges.validateDeathFromEnemyMagic();
 						Dungeon.fail( this );
 						GLog.n( Messages.get(this, "zap_kill") );
 					}
 				}
 			} else {
-				targetCharacter.sprite.showStatus( CharSprite.NEUTRAL,  targetCharacter.getDefenseVerb() );
+				targetCharacter.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(targetCharacter) );
 			}
 			
 			if (sprite != null && (sprite.visible || targetCharacter.sprite.visible)) {

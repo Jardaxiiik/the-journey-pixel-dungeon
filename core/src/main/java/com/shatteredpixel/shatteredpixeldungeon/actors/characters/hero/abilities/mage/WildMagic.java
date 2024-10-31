@@ -192,7 +192,7 @@ public class WildMagic extends ArmorAbility {
 		}
 
 		Character ch = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (!wands.isEmpty() && hero.isAlive()) {
+		if (!wands.isEmpty() && hero.ActionHealth.isAlive()) {
 			DungeonActors.addActor(new Actor() {
 				{
 					actPriority = VFX_PRIORITY -1;

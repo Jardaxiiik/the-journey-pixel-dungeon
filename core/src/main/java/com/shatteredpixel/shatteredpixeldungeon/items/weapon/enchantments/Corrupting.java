@@ -50,7 +50,7 @@ public class Corrupting extends Weapon.Enchantment {
 				&& !defender.isImmuneToEffectType(Corruption.class)
 				&& defender.getBuff(Corruption.class) == null
 				&& defender instanceof Mob
-				&& defender.isAlive()){
+				&& defender.ActionHealth.isAlive()){
 			
 			Mob enemy = (Mob) defender;
 			Hero hero = (attacker instanceof Hero) ? (Hero) attacker : Dungeon.hero;

@@ -169,13 +169,13 @@ public class Ghost extends NPC {
 			switch (Quest.type){
 				case 1: default:
 					questBoss = new FetidRat();
-					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(Dungeon.hero.getName())); break;
+					txt_quest = Messages.get(this, "rat_1", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))); break;
 				case 2:
 					questBoss = new GnollTrickster();
-					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(Dungeon.hero.getName())); break;
+					txt_quest = Messages.get(this, "gnoll_1", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))); break;
 				case 3:
 					questBoss = new GreatCrab();
-					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(Dungeon.hero.getName())); break;
+					txt_quest = Messages.get(this, "crab_1", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))); break;
 			}
 
 			questBoss.position = Dungeon.level.randomRespawnCell( this );

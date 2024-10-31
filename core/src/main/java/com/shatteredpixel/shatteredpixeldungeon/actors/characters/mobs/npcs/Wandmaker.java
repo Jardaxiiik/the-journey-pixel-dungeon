@@ -132,13 +132,13 @@ public class Wandmaker extends NPC {
 				String msg;
 				switch(Quest.type){
 					case 1: default:
-						msg = Messages.get(this, "reminder_dust", Messages.titleCase(Dungeon.hero.getName()));
+						msg = Messages.get(this, "reminder_dust", Messages.titleCase(ActionAppearance.getName(Dungeon.hero)));
 						break;
 					case 2:
-						msg = Messages.get(this, "reminder_ember", Messages.titleCase(Dungeon.hero.getName()));
+						msg = Messages.get(this, "reminder_ember", Messages.titleCase(ActionAppearance.getName(Dungeon.hero)));
 						break;
 					case 3:
-						msg = Messages.get(this, "reminder_berry", Messages.titleCase(Dungeon.hero.getName()));
+						msg = Messages.get(this, "reminder_berry", Messages.titleCase(ActionAppearance.getName(Dungeon.hero)));
 						break;
 				}
 				Game.runOnRenderThread(new Callback() {
@@ -161,7 +161,7 @@ public class Wandmaker extends NPC {
 					msg1 += Messages.get(this, "intro_rogue");
 					break;
 				case MAGE:
-					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.getName()));
+					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(ActionAppearance.getName(Dungeon.hero)));
 					break;
 				case HUNTRESS:
 					msg1 += Messages.get(this, "intro_huntress");
@@ -377,7 +377,7 @@ public class Wandmaker extends NPC {
 				}
 
 				//or if they are corpse dust cursed
-				for (Buff b : Dungeon.hero.getBuffs()) {
+				for (Buff b : Dungeon.hero.buffs) {
 					if (b instanceof CorpseDust.DustGhostSpawner) {
 						return true;
 					}

@@ -173,7 +173,7 @@ public class DM300 extends Mob {
 
 			//determine if DM can reach its enemy
 			boolean canReach;
-			if (enemy == null || !enemy.isAlive()){
+			if (enemy == null || !ActionHealth.isAlive(enemy)){
 				if (Dungeon.level.adjacent(position, Dungeon.hero.position)){
 					canReach = true;
 				} else {
@@ -193,12 +193,12 @@ public class DM300 extends Mob {
 				}
 			} else {
 
-				if ((enemy == null || !enemy.isAlive()) && Dungeon.hero.invisible <= 0) {
+				if ((enemy == null || !ActionHealth.isAlive(enemy)) && Dungeon.hero.invisible <= 0) {
 					enemy = Dungeon.hero;
 				}
 
 				//more aggressive ability usage when DM can't reach its target
-				if (enemy != null && enemy.isAlive() && !canReach){
+				if (enemy != null && ActionHealth.isAlive(enemy) && !canReach){
 
 					//try to fire gas at an enemy we can't reach
 					if (turnsSinceLastAbility >= MIN_COOLDOWN){
@@ -233,7 +233,7 @@ public class DM300 extends Mob {
 
 					}
 
-				} else if (enemy != null && enemy.isAlive() && fieldOfView[enemy.position]) {
+				} else if (enemy != null && ActionHealth.isAlive(enemy) && fieldOfView[enemy.position]) {
 					if (turnsSinceLastAbility > abilityCooldown) {
 
 						if (lastAbility == NONE) {
@@ -550,8 +550,8 @@ public class DM300 extends Mob {
 	}
 
 	@Override
-	public boolean isAlive() {
-		return super.isAlive() || pylonsActivated < totalPylonsToActivate();
+	public boolean ActionHealth.isAlive() {
+		return super.ActionHealth.isAlive() || pylonsActivated < totalPylonsToActivate();
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public class RipperDemon extends Mob {
 
 		HUNTING = new Hunting();
 
-		baseSpeed = 1f;
+		baseMovementSpeed = 1f;
 
 		properties.add(Property.DEMONIC);
 		properties.add(Property.UNDEAD);
@@ -186,7 +186,7 @@ public class RipperDemon extends Mob {
 								leapVictim.sprite.flash();
 								Sample.INSTANCE.play(Assets.Sounds.HIT);
 							} else {
-								enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.getDefenseVerb() );
+								enemy.sprite.showStatus( CharSprite.NEUTRAL, ActionDefense.getDefenseVerb(enemy) );
 								Sample.INSTANCE.play(Assets.Sounds.MISS);
 							}
 						}
@@ -206,7 +206,7 @@ public class RipperDemon extends Mob {
 			}
 
 			enemySeen = enemyInFOV;
-			if (enemyInFOV && !isCharmedBy( enemy ) && canAttackEnemy( enemy )) {
+			if (enemyInFOV && !ActionBuffs.isCharmedBy(this,enemy) && canAttackEnemy( enemy )) {
 
 				return attackCharacter( enemy );
 

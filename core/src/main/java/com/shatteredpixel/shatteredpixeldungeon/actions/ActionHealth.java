@@ -1,7 +1,5 @@
 package com.shatteredpixel.shatteredpixeldungeon.actions;
 
-import static com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character.NO_ARMOR_PHYSICAL_SOURCES;
-
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.actorLoop.StormCloud;
@@ -28,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.abilities.rogue.DeathMark;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
@@ -56,7 +55,7 @@ import java.util.HashSet;
 public class ActionHealth {
     public static void receiveDamageFromSource(Character target,int dmg, Object sourceOfDamage ) {
 
-        if (!target.isAlive() || dmg < 0) {
+        if (!ActionHealth.isAlive(target) || dmg < 0) {
             return;
         }
 
@@ -82,7 +81,7 @@ public class ActionHealth {
                 Character ch = (Character) DungeonActorsHandler.getById(link.object);
                 if (ch != null) {
                     ActionHealth.receiveDamageFromSource(ch,dmg, link);
-                    if (!ch.isAlive()) {
+                    if (!ActionHealth.isAlive(ch)) {
                         link.detach();
                     }
                 }
@@ -110,7 +109,7 @@ public class ActionHealth {
         if (target.getBuff(Doom.class) != null && !target.isImmuneToEffectType(Doom.class)){
             dmg *= 1.67f;
         }
-        if (target.alignment != Character.Alignment.ALLY && target.getBuff(DeathMark.DeathMarkTracker.class) != null){
+        if (target.alignment != CharacterAlignment.ALLY && target.getBuff(DeathMark.DeathMarkTracker.class) != null){
             dmg *= 1.25f;
         }
 
@@ -159,7 +158,7 @@ public class ActionHealth {
             }
         }
         shielded -= dmg;
-        target.getCharacterHealth().addHealthPoints(-dmg);
+        target.healthPoints += -dmg;
 
         if (target.healthPoints > 0 && target.getBuff(Grim.GrimTracker.class) != null){
 
@@ -169,16 +168,16 @@ public class ActionHealth {
             if (Random.Float() < finalChance) {
                 int extraDmg = Math.round(target.healthPoints * target.getResistanceMultiplierToEffectType(Grim.class));
                 dmg += extraDmg;
-                target.getCharacterHealth().addHealthPoints(-extraDmg);
+                target.healthPoints += -extraDmg;
 
                 target.sprite.emitter().burst( ShadowParticle.UP, 5 );
-                if (!target.isAlive() && target.getBuff(Grim.GrimTracker.class).qualifiesForBadge){
+                if (!ActionHealth.isAlive(target) && target.getBuff(Grim.GrimTracker.class).qualifiesForBadge){
                     Badges.validateGrimWeapon();
                 }
             }
         }
 
-        if (target.healthPoints < 0 && sourceOfDamage instanceof Character && target.alignment == Character.Alignment.ENEMY){
+        if (target.healthPoints < 0 && sourceOfDamage instanceof Character && target.alignment == CharacterAlignment.ENEMY){
             if (((Character) sourceOfDamage).getBuff(Kinetic.KineticTracker.class) != null){
                 int dmgToAdd = -target.healthPoints;
                 dmgToAdd -= ((Character) sourceOfDamage).getBuff(Kinetic.KineticTracker.class).conservedDamage;
@@ -193,7 +192,8 @@ public class ActionHealth {
         if (target.sprite != null) {
             //defaults to normal damage icon if no other ones apply
             int                                                         icon = FloatingText.PHYS_DMG;
-            if (Character.NO_ARMOR_PHYSICAL_SOURCES.contains(sourceOfDamage.getClass()))     icon = FloatingText.PHYS_DMG_NO_BLOCK;
+            //if (Character.NO_ARMOR_PHYSICAL_SOURCES.contains(sourceOfDamage.getClass()))
+            //    icon = FloatingText.PHYS_DMG_NO_BLOCK;
             if (AntiMagic.RESISTS.contains(sourceOfDamage.getClass()))             icon = FloatingText.MAGIC_DMG;
             if (sourceOfDamage instanceof Pickaxe)                                 icon = FloatingText.PICK_DMG;
 
@@ -223,13 +223,20 @@ public class ActionHealth {
             target.sprite.showStatusWithIcon(CharSprite.NEGATIVE, Integer.toString(dmg + shielded), icon);
         }
 
-        if (target.healthPoints < 0) target.getCharacterHealth().setHealthPoints(0);
+        if (target.healthPoints < 0) target.healthPoints = 0;
 
-        if (!target.isAlive()) {
+        if (!ActionHealth.isAlive(target)) {
             ActionDeath.die(target, sourceOfDamage );
         } else if (target.healthPoints == 0 && target.getBuff(DeathMark.DeathMarkTracker.class) != null){
             DeathMark.processFearTheReaper(target);
         }
+    }
+
+    //we cache this info to prevent having to call buff(...) in isAlive.
+    //This is relevant because we call isAlive during drawing, which has both performance
+    //and thread coordination implications
+    public static boolean isAlive(Character character) {
+        return character.healthPoints > 0 || character.deathMarked;
     }
 
 }

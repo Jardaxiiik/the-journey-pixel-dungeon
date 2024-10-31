@@ -64,7 +64,7 @@ public class Imp extends NPC {
 		if (!Quest.given && Dungeon.level.visited[position]) {
 			Notes.add( Notes.Landmark.IMP );
 			if (!seenBefore && Dungeon.level.heroFOV[position]) {
-				yell(Messages.get(this, "hey", Messages.titleCase(Dungeon.hero.getName())));
+				yell(Messages.get(this, "hey", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))));
 				seenBefore = true;
 			}
 		} else {
@@ -115,8 +115,8 @@ public class Imp extends NPC {
 				});
 			} else {
 				tell( Quest.alternative ?
-						Messages.get(this, "monks_2", Messages.titleCase(Dungeon.hero.getName()))
-						: Messages.get(this, "golems_2", Messages.titleCase(Dungeon.hero.getName())) );
+						Messages.get(this, "monks_2", Messages.titleCase(ActionAppearance.getName(Dungeon.hero)))
+						: Messages.get(this, "golems_2", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))) );
 			}
 			
 		} else {
@@ -140,7 +140,7 @@ public class Imp extends NPC {
 	
 	public void flee() {
 		
-		yell( Messages.get(this, "cya", Messages.titleCase(Dungeon.hero.getName())) );
+		yell( Messages.get(this, "cya", Messages.titleCase(ActionAppearance.getName(Dungeon.hero))) );
 		
 		destroy();
 		sprite.die();

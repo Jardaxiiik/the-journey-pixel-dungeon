@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonTurnsHandler;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -56,7 +57,7 @@ public class HeroSprite extends CharSprite {
 		
 		link( Dungeon.hero );
 
-		if (ch.isAlive())
+		if (ActionHealth.isAlive(ch))
 			idle();
 		else
 			die();
@@ -89,7 +90,7 @@ public class HeroSprite extends CharSprite {
 		read = new Animation( 20, false );
 		read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
 		
-		if (Dungeon.hero.isAlive())
+		if (Dungeon.hero.ActionHealth.isAlive())
 			idle();
 		else
 			die();
@@ -130,7 +131,7 @@ public class HeroSprite extends CharSprite {
 			@Override
 			public void call() {
 				idle();
-				ch.onOperateComplete();
+				DungeonTurnsHandler.nextActorToPlay(ch);
 			}
 		};
 		play( read );
@@ -150,7 +151,7 @@ public class HeroSprite extends CharSprite {
 
 	@Override
 	public void update() {
-		sleeping = ch.isAlive() && ((Hero)ch).resting;
+		sleeping = ActionHealth.isAlive(ch) && ((Hero)ch).resting;
 		
 		super.update();
 	}

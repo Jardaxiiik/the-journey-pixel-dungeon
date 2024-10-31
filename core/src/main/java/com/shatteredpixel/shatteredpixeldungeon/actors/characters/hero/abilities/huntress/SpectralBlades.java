@@ -138,7 +138,7 @@ public class SpectralBlades extends ArmorAbility {
 		for (int cell : path.path){
 			Character ch = DungeonCharactersHandler.getCharacterOnPosition(cell);
 			if (ch != null){
-				if (ch == hero || existingTargets.contains(ch) || ch.alignment == Character.Alignment.ALLY){
+				if (ch == hero || existingTargets.contains(ch) || ch.alignment == CharacterAlignment.ALLY){
 					continue;
 				} else {
 					return ch;

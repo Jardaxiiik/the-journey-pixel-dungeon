@@ -169,19 +169,19 @@ public class Ghoul extends Mob {
 	}
 
 	@Override
-	public boolean isAlive() {
-		return super.isAlive() || beingLifeLinked;
+	public boolean ActionHealth.isAlive() {
+		return super.ActionHealth.isAlive() || beingLifeLinked;
 	}
 
 	@Override
 	public boolean isActive() {
-		return !beingLifeLinked && isAlive();
+		return !beingLifeLinked && ActionHealth.isAlive();
 	}
 
 	@Override
     public synchronized void onRemove() {
 		if (beingLifeLinked) {
-			for (Buff buff : getBuffs()) {
+			for (Buff buff : buffs) {
 				if (buff instanceof SacrificialFire.Marked){
 					//don't remove and postpone so marked stays on
 					Buff.prolong(this, SacrificialFire.Marked.class, timesDowned*5);

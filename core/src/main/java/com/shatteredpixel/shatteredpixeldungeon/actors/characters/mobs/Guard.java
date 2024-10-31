@@ -174,7 +174,7 @@ public class Guard extends Mob {
 			
 			if (!chainsUsed
 					&& enemyInFOV
-					&& !isCharmedBy( enemy )
+					&& !ActionBuffs.isCharmedBy(this,enemy)
 					&& !canAttackEnemy( enemy )
 					&& Dungeon.level.distance(position, enemy.position) < 5
 

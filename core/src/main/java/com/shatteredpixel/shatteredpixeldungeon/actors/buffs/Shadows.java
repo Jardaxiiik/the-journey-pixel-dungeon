@@ -82,7 +82,7 @@ public class Shadows extends Invisibility {
 	
 	@Override
 	public boolean playGameTurn() {
-		if (target.isAlive()) {
+		if (target.ActionHealth.isAlive()) {
 			
 			spendTimeAdjusted( DungeonActors.TICK );
 			

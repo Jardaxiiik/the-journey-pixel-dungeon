@@ -23,7 +23,9 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -89,7 +91,7 @@ public class Pylon extends Mob {
 		//mob logic
 		enemy = chooseEnemy();
 
-		enemySeen = enemy != null && enemy.isAlive() && fieldOfView[enemy.position] && enemy.invisible <= 0;
+		enemySeen = enemy != null && ActionHealth.isAlive(enemy) && fieldOfView[enemy.position] && enemy.invisible <= 0;
 		//end of char/mob logic
 
 		if (alignment == Alignment.NEUTRAL){
@@ -145,7 +147,7 @@ public class Pylon extends Mob {
 			if (ch == Dungeon.hero) {
 				Statistics.qualifiedForBossChallengeBadge = false;
 				Statistics.bossScores[2] -= 100;
-				if (!ch.isAlive()) {
+				if (!ActionHealth.isAlive(ch)) {
 					Dungeon.fail(DM300.class);
 					GLog.n(Messages.get(Electricity.class, "ondeath"));
 				}
@@ -188,8 +190,8 @@ public class Pylon extends Mob {
 	@Override
 	public boolean addBuff(Buff buff) {
 		//immune to all buffs/debuffs when inactive
-		if (alignment != Alignment.NEUTRAL) {
-			return super.addBuff(buff);
+		if (alignment != CharacterAlignment.NEUTRAL) {
+			return ActionBuffs.addBuff(this,buff);
 		}
 		return false;
 	}

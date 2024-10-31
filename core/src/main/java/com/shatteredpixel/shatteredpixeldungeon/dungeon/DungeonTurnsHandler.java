@@ -2,6 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.dungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHandler;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHealth;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 
@@ -59,7 +60,7 @@ public class DungeonTurnsHandler {
         }
     }
     public static void nextActorToPlayHero(Character hero) {
-        if(hero.isAlive() && current == hero) {
+        if(ActionHealth.isAlive(hero) && current == hero) {
             current = null;
         }
     }
@@ -114,7 +115,7 @@ public class DungeonTurnsHandler {
                     current = null;
                 } else {
                     doNext = ActionHandler.playGameTurn(acting);
-                    if (doNext && (Dungeon.hero == null || !Dungeon.hero.isAlive())) {
+                    if (doNext && (Dungeon.hero == null || !ActionHealth.isAlive(Dungeon.hero))) {
                         doNext = false;
                         current = null;
                     }

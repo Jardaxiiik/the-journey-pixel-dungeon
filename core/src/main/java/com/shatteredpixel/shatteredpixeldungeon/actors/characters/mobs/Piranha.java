@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.characters.mobs;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionAttack;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -40,7 +41,7 @@ public class Piranha extends Mob {
 	{
 		spriteClass = PiranhaSprite.class;
 
-		baseSpeed = 2f;
+		baseMovementSpeed = 2f;
 		
 		EXP = 0;
 		
@@ -90,7 +91,7 @@ public class Piranha extends Mob {
 
 	@Override
 	public boolean isSurprisedBy(Character enemy, boolean attacking) {
-		if (enemy == Dungeon.hero && (!attacking || ((Hero)enemy).canDoSurpriseAttack())){
+		if (enemy == Dungeon.hero && (!attacking || ActionAttack.canDoSurpriseAttack((Hero)enemy))){
 			if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 				fieldOfView = new boolean[Dungeon.level.length()];
 				Dungeon.level.updateFieldOfView( this, fieldOfView );

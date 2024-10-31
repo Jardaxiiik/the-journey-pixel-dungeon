@@ -1,6 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actions;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Earthroot;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
@@ -24,5 +26,22 @@ public class ActionDefense {
         }
 
         return damage;
+    }
+
+    public static int getShielding(Character character){
+        if (!character.needsShieldUpdate){
+            return character.cachedShield;
+        }
+
+        character.cachedShield = 0;
+        for (ShieldBuff s : character.getBuffs(ShieldBuff.class)){
+            character.cachedShield += s.shielding();
+        }
+        character.needsShieldUpdate = false;
+        return character.cachedShield;
+    }
+
+    public static String getDefenseVerb(Character character) {
+        return Messages.get(character, "def_verb");
     }
 }

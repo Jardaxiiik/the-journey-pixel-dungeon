@@ -22,10 +22,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionBuffs;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.dungeon.DungeonCharactersHandler;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -58,8 +61,8 @@ public class Whip extends MeleeWeapon {
 
 		hero.belongings.abilityWeapon = this;
 		for (Character ch : DungeonCharactersHandler.getCharacters()){
-			if (ch.alignment == Character.Alignment.ENEMY
-					&& !hero.isCharmedBy(ch)
+			if (ch.alignment == CharacterAlignment.ENEMY
+					&& !ActionBuffs.isCharmedBy(hero,ch)
 					&& Dungeon.level.heroFOV[ch.position]
 					&& hero.canAttack(ch)){
 				targets.add(ch);
@@ -83,7 +86,7 @@ public class Whip extends MeleeWeapon {
 				beforeAbilityUsed(hero, finalClosest);
 				for (Character ch : targets) {
 					hero.attack(ch, 1, 0, ch == finalClosest ? Character.INFINITE_ACCURACY : 1);
-					if (!ch.isAlive()){
+					if (!ActionHealth.isAlive(ch)){
 						onAbilityKill(hero, ch);
 					}
 				}

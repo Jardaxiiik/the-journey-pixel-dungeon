@@ -164,7 +164,7 @@ public class Challenge extends ArmorAbility {
 
 		boolean bossTarget = Character.hasProperty(targetCh, Character.Property.BOSS);
 		for (Character characterToFreeze : DungeonCharactersHandler.getCharacters()){
-			if (characterToFreeze != targetCh && characterToFreeze.alignment != Character.Alignment.ALLY && !(characterToFreeze instanceof NPC)
+			if (characterToFreeze != targetCh && characterToFreeze.alignment != CharacterAlignment.ALLY && !(characterToFreeze instanceof NPC)
 				&& (!bossTarget || !(Character.hasProperty(targetCh, Character.Property.BOSS) || Character.hasProperty(targetCh, Character.Property.BOSS_MINION)))) {
 				ActionSpendTime.makeCharacterSpendTime(characterToFreeze,DuelParticipant.DURATION);
 				Buff.affect(characterToFreeze, SpectatorFreeze.class, DuelParticipant.DURATION);
@@ -254,7 +254,7 @@ public class Challenge extends ArmorAbility {
 		public void detach() {
 			super.detach();
 			if (target != Dungeon.hero){
-				if (!target.isAlive() || target.alignment == Dungeon.hero.alignment){
+				if (!ActionHealth.isAlive(target) || target.alignment == Dungeon.hero.alignment){
 					Sample.INSTANCE.play(Assets.Sounds.BOSS);
 
 					if (Dungeon.hero.hasTalent(Talent.INVIGORATING_VICTORY)){
@@ -286,7 +286,7 @@ public class Challenge extends ArmorAbility {
 					}
 				}
 			} else {
-				if (Dungeon.hero.isAlive()) {
+				if (Dungeon.hero.ActionHealth.isAlive()) {
 					GameScene.flash(0x80FFFFFF);
 
 					if (Dungeon.hero.hasTalent(Talent.ELIMINATION_MATCH)){

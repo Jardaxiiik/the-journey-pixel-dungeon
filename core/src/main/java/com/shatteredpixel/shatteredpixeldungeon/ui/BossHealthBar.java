@@ -102,7 +102,7 @@ public class BossHealthBar extends Component {
 			@Override
 			protected String hoverText() {
 				if (boss != null){
-					return boss.getName();
+					return ActionAppearance.getName(boss);
 				}
 				return super.hoverText();
 			}
@@ -154,7 +154,7 @@ public class BossHealthBar extends Component {
 	public void update() {
 		super.update();
 		if (boss != null){
-			if (!boss.isAlive() || !Dungeon.level.mobs.contains(boss)){
+			if (!boss.ActionHealth.isAlive() || !Dungeon.level.mobs.contains(boss)){
 				boss = null;
 				visible = active = false;
 				if (buffs != null) {
@@ -211,7 +211,7 @@ public class BossHealthBar extends Component {
 	}
 	
 	public static boolean isAssigned(){
-		return boss != null && boss.isAlive() && Dungeon.level.mobs.contains(boss);
+		return boss != null && boss.ActionHealth.isAlive() && Dungeon.level.mobs.contains(boss);
 	}
 
 	public static void bleed(boolean value){

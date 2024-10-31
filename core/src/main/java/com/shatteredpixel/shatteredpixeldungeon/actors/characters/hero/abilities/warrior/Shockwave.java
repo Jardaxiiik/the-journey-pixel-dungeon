@@ -127,8 +127,8 @@ public class Shockwave extends ArmorAbility {
 								}
 
 								if (Random.Int(10) < 3*hero.pointsInTalent(Talent.STRIKING_WAVE)){
-									boolean wasEnemy = ch.alignment == Character.Alignment.ENEMY
-											|| (ch instanceof Mimic && ch.alignment == Character.Alignment.NEUTRAL);
+									boolean wasEnemy = ch.alignment == CharacterAlignment.ENEMY
+											|| (ch instanceof Mimic && ch.alignment == CharacterAlignment.NEUTRAL);
 									damage = ActionAttack.attackProc(hero,ch, damage);
 									ActionHealth.receiveDamageFromSource(ch,damage, hero);
 									if (hero.subClass == HeroSubClass.GLADIATOR && wasEnemy){
@@ -137,7 +137,7 @@ public class Shockwave extends ArmorAbility {
 								} else {
 									ActionHealth.receiveDamageFromSource(ch,damage, hero);
 								}
-								if (ch.isAlive()){
+								if (ActionHealth.isAlive(ch)){
 									if (Random.Int(4) < hero.pointsInTalent(Talent.SHOCK_FORCE)){
 										Buff.affect(ch, Paralysis.class, 5f);
 									} else {

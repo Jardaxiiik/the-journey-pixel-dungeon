@@ -6,6 +6,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.Character;
+import com.shatteredpixel.shatteredpixeldungeon.actors.characters.CharacterAlignment;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.characters.hero.Talent;
@@ -25,7 +26,7 @@ public class ActionInteract {
         if (Dungeon.level.adjacent(caster.position, target.position)){
             return true;
         } else if (target instanceof Hero
-                && caster.alignment == Character.Alignment.ALLY
+                && caster.alignment == CharacterAlignment.ALLY
                 && !caster.hasProperty(caster, Character.Property.IMMOVABLE)
                 && Dungeon.level.distance(caster.position, target.position) <= 2*Dungeon.hero.pointsInTalent(Talent.ALLY_WARP)){
             return true;
@@ -38,7 +39,7 @@ public class ActionInteract {
 
         //don't allow char to swap onto hazard unless they're flying
         //you can swap onto a hazard though, as you're not the one instigating the swap
-        if (!Dungeon.level.passable[caster.position] && !target.getCharacterMovement().isFlying()){
+        if (!Dungeon.level.passable[caster.position] && !target.isFlying){
             return true;
         }
 
@@ -64,7 +65,7 @@ public class ActionInteract {
             if (PathFinder.distance[caster.position] == Integer.MAX_VALUE){
                 return true;
             }
-            caster.getCharacterMovement().setPosition(newPos);
+            caster.position = newPos;
             target.position = oldPos;
             ScrollOfTeleportation.appear(caster, newPos);
             ScrollOfTeleportation.appear(target, oldPos);
@@ -74,7 +75,7 @@ public class ActionInteract {
         }
 
         //can't swap places if one char has restricted movement
-        if (caster.getCharacterMovement().isRooted() || target.getCharacterMovement().isRooted() || caster.getBuff(Vertigo.class) != null || target.getBuff(Vertigo.class) != null){
+        if (caster.isRooted || target.isRooted || caster.getBuff(Vertigo.class) != null || target.getBuff(Vertigo.class) != null){
             return true;
         }
 

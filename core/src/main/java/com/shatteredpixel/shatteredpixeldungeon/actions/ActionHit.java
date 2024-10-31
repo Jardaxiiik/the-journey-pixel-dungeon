@@ -32,7 +32,7 @@ public class ActionHit {
         }
 
         //invisible chars always hit (for the hero this is surprise attacking)
-        if (attacker.invisible > 0 && attacker.canDoSurpriseAttack()){
+        if (attacker.invisible > 0 && ActionAttack.canDoSurpriseAttack(attacker)){
             acuStat = INFINITE_ACCURACY;
         }
 

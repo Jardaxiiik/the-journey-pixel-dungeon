@@ -71,7 +71,7 @@ public class Greataxe extends MeleeWeapon {
 		}
 
 		Character enemy = DungeonCharactersHandler.getCharacterOnPosition(target);
-		if (enemy == null || enemy == hero || hero.isCharmedBy(enemy) || !Dungeon.level.heroFOV[target]) {
+		if (enemy == null || enemy == hero || ActionBuffs.isCharmedBy(hero,enemy) || !Dungeon.level.heroFOV[target]) {
 			GLog.w(Messages.get(this, "ability_no_target"));
 			return;
 		}
@@ -91,7 +91,7 @@ public class Greataxe extends MeleeWeapon {
 				AttackIndicator.target(enemy);
 				if (hero.attack(enemy, 1.50f, 0, Character.INFINITE_ACCURACY)){
 					Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
-					if (!enemy.isAlive()){
+					if (!ActionHealth.isAlive(enemy)){
 						onAbilityKill(hero, enemy);
 					}
 				}

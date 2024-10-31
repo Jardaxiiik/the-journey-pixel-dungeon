@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
+import com.shatteredpixel.shatteredpixeldungeon.actions.ActionDefense;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionHit;
 import com.shatteredpixel.shatteredpixeldungeon.actions.ActionThrowItems;
 import com.shatteredpixel.shatteredpixeldungeon.dungeon.Dungeon;
@@ -280,13 +281,13 @@ public class SentryRoom extends SpecialRoom {
 		public void onZapComplete(){
 			if (ActionHit.isTargetHitByAttack(this, Dungeon.hero, true)) {
 				Dungeon.hero.receiveDamageFromSource(Random.NormalIntRange(2 + Dungeon.depth / 2, 4 + Dungeon.depth), new Eye.DeathGaze());
-				if (!Dungeon.hero.isAlive()) {
+				if (!Dungeon.hero.ActionHealth.isAlive()) {
 					Badges.validateDeathFromEnemyMagic();
 					Dungeon.fail(this);
-					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", getName())));
+					GLog.n(Messages.capitalize(Messages.get(Character.class, "kill", ActionAppearance.getName(this))));
 				}
 			} else {
-				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  Dungeon.hero.getDefenseVerb() );
+				Dungeon.hero.sprite.showStatus( CharSprite.NEUTRAL,  ActionDefense.getDefenseVerb(Dungeon.hero));
 			}
 		}
 
