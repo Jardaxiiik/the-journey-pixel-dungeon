@@ -62,18 +62,36 @@ public class AboutScene extends PixelScene {
 		Component content = list.content();
 		content.clear();
 
+		//*** Journey Pixel Dungeon Credits ***
+		CreditsBlock journeyPDCredits = new CreditsBlock(true, Window.SHPX_COLOR,
+				"Journey Pixel Dungeon",
+				Icons.SHPX.get(),
+				"Developed by: _jardaxiiik_\nBased on Shattered Pixel Dungeon's open source",
+				"ShatteredPixel.com",
+				"https://ShatteredPixel.com");
+		if (landscape()){
+			journeyPDCredits.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+		} else {
+			journeyPDCredits.setRect((w - fullWidth)/2f, 6, 120, 0);
+		}
+		content.add(journeyPDCredits);
+		addLine(journeyPDCredits.bottom() + 3, content);
+
 		//*** Shattered Pixel Dungeon Credits ***
 
-		CreditsBlock shpx = new CreditsBlock(true, Window.SHPX_COLOR,
+		CreditsBlock shpx = new CreditsBlock(false, Window.SHPX_COLOR,
 				"Shattered Pixel Dungeon",
 				Icons.SHPX.get(),
 				"Developed by: _Evan Debenham_\nBased on Pixel Dungeon's open source",
 				"ShatteredPixel.com",
 				"https://ShatteredPixel.com");
+		shpx.setSize(colWidth/2f, 0);
 		if (landscape()){
 			shpx.setRect((w - fullWidth)/2f - 6, 10, 120, 0);
+			shpx.setPos(journeyPDCredits.right(),journeyPDCredits.top()+(journeyPDCredits.height()-shpx.height()*2)/2f);
 		} else {
 			shpx.setRect((w - fullWidth)/2f, 6, 120, 0);
+			shpx.setPos(w/2f - colWidth/2f, journeyPDCredits.bottom()+5);
 		}
 		content.add(shpx);
 
